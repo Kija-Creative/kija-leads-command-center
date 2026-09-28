@@ -1,0 +1,147 @@
+[
+  {
+    "id": "dallas-home-mold-water-fire-damage-fort-worth-tx",
+    "candidate": "Dallas Home Mold Water Fire Damage",
+    "category": "Restoration / Mold",
+    "categoryKey": "restoration",
+    "city": "Fort Worth",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "4.8 rating with meaningful review volume and phone-only presence; high-ticket emergency service is attractive.",
+    "websiteStatus": "No website listed in current sources",
+    "verificationNeeded": "Confirm legal/brand identity and whether this is an independent operator rather than a lead-generation/generic listing.",
+    "ownerContact": "",
+    "phone": "469-481-1273",
+    "googleRating": 4.8,
+    "googleReviews": 90,
+    "sources": [
+      {
+        "url": "https://www.waterdamagerepair.io/business/dallas-home-mold-water-fire-damage-fort-worth-texas",
+        "label": "waterdamagerepair.io",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Needs verification before promotion",
+    "lead": null,
+    "addedAt": "2026-09-26",
+    "updatedAt": "2026-09-26",
+    "runId": ""
+  },
+  {
+    "id": "fort-worth-mobile-mechanic-fort-worth-tx",
+    "candidate": "Fort Worth Mobile Mechanic",
+    "category": "Mobile Auto Repair",
+    "categoryKey": "mobile-mechanic",
+    "city": "Fort Worth",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "Perfect rating and no website, but only 32 reviews means less proof than the main batch.",
+    "websiteStatus": "No website found",
+    "verificationNeeded": "Watch review growth and verify business longevity/coverage area before building a demo.",
+    "ownerContact": "",
+    "phone": "817-917-2882",
+    "googleRating": 5,
+    "googleReviews": 32,
+    "sources": [
+      {
+        "url": "https://radiatorrepairhub.com/business/fort-worth-mobile-mechanic-1e2cd01e-d587-43c6-aa1f-057ef6586e88",
+        "label": "radiatorrepairhub.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Needs verification before promotion",
+    "lead": null,
+    "addedAt": "2026-09-26",
+    "updatedAt": "2026-09-26",
+    "runId": ""
+  },
+  {
+    "id": "p-v-auto-services-dallas-tx",
+    "candidate": "P V Auto Services",
+    "category": "Auto Repair",
+    "categoryKey": "auto-repair",
+    "city": "Dallas",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "Nearly 200 verified Google reviews and no website, but rating is below the preferred 4.7 threshold.",
+    "websiteStatus": "No website found",
+    "verificationNeeded": "Recheck current Google rating; only promote if rating trend improves or other fit signals justify it.",
+    "ownerContact": "",
+    "phone": "214-828-9690",
+    "googleRating": 4.6,
+    "googleReviews": 196,
+    "sources": [
+      {
+        "url": "https://radiatorrepairhub.com/business/p-v-auto-services-ea8e4486-6c41-4afa-bab9-f6c04890e7a2",
+        "label": "radiatorrepairhub.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Rating below 4.7",
+    "lead": null,
+    "addedAt": "2026-09-26",
+    "updatedAt": "2026-09-26",
+    "runId": ""
+  },
+  {
+    "id": "the-parlor-barbershop-dallas-tx",
+    "candidate": "The Parlor Barbershop",
+    "category": "Barber Shop",
+    "categoryKey": "barber",
+    "city": "Dallas",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "Strong 4.9 reputation and Facebook-only presence, but current sources disagree on review count and primary phone.",
+    "websiteStatus": "No owned website; Facebook only",
+    "verificationNeeded": "Verify exact live Google profile, current review count and best contact number before promotion.",
+    "ownerContact": "Manny",
+    "phone": "469-677-0690",
+    "googleRating": 4.9,
+    "googleReviews": 94,
+    "sources": [
+      {
+        "url": "https://www.barbershopdirectories.com/texas/dallas",
+        "label": "barbershopdirectories.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Needs verification before promotion",
+    "lead": null,
+    "addedAt": "2026-09-26",
+    "updatedAt": "2026-09-26",
+    "runId": ""
+  },
+  {
+    "id": "worth-automotive-and-exhaust-fort-worth-tx",
+    "candidate": "Worth Automotive And Exhaust",
+    "category": "Auto Repair / Exhaust",
+    "categoryKey": "muffler-exhaust",
+    "city": "Fort Worth",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "Large review volume and no site, but current sources disagree slightly and rating is below preferred threshold.",
+    "websiteStatus": "No website found",
+    "verificationNeeded": "Resolve current Google rating/review count and assess whether visual exhaust work is strong enough to offset 4.6 rating.",
+    "ownerContact": "",
+    "phone": "214-757-9811",
+    "googleRating": 4.6,
+    "googleReviews": 220,
+    "sources": [
+      {
+        "url": "https://radiatorrepairhub.com/business/worth-automotive-and-exhaust-3e3ecd31-a643-48d2-b97d-a2635675a257",
+        "label": "radiatorrepairhub.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Rating below 4.7",
+    "lead": null,
+    "addedAt": "2026-09-26",
+    "updatedAt": "2026-09-26",
+    "runId": ""
+  }
+]

@@ -1,0 +1,1994 @@
+{
+  "updatedAt": "2026-09-28",
+  "consumerStats": [
+    {
+      "id": "bl-lcrs26-read-reviews",
+      "claim": "Nearly all US consumers read online reviews for local businesses.",
+      "value": "97% read reviews for local businesses",
+      "year": 2026,
+      "source": "BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)",
+      "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Quote: \"97% of consumers read reviews for local businesses\"."
+    },
+    {
+      "id": "bl-lcrs26-always-read",
+      "claim": "About two in five consumers always read reviews when browsing for businesses.",
+      "value": "41% always (29% in 2025)",
+      "year": 2026,
+      "source": "BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)",
+      "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "bl-lcrs26-star-threshold",
+      "claim": "About a third of consumers will only use a business rated 4.5 stars or higher.",
+      "value": "31% only use 4.5+ stars (17% in 2025); 68% require 4+ stars",
+      "year": 2026,
+      "source": "BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)",
+      "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Show only when the lead verified rating is 4.5 or higher."
+    },
+    {
+      "id": "bl-lcrs26-website-after-reviews",
+      "claim": "After reading positive reviews, the most common next step is checking the business website.",
+      "value": "54% check the website (32% in 2019)",
+      "year": 2026,
+      "source": "BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)",
+      "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Core stat for a business with reviews but no site."
+    },
+    {
+      "id": "bl-lcrs26-research-vs-buy",
+      "claim": "Two thirds of consumers keep researching after a positive review.",
+      "value": "66% research further; 34% ready to buy or book",
+      "year": 2026,
+      "source": "BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)",
+      "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "bl-lcrs26-direct-actions",
+      "claim": "Some consumers act right after positive reviews.",
+      "value": "31% visit, 20% contact, 20% book",
+      "year": 2026,
+      "source": "BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)",
+      "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "bl-lcrs26-positive-reviews-influence",
+      "claim": "Most consumers say positive reviews make them more likely to use a business.",
+      "value": "85% more likely; 77% less likely after negative reviews",
+      "year": 2026,
+      "source": "BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)",
+      "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "bl-lcrs26-recency",
+      "claim": "Most consumers only care about recent reviews.",
+      "value": "74% only care about reviews from the last three months",
+      "year": 2026,
+      "source": "BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)",
+      "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Use only if the lead reviews are recent; never imply stale reviews."
+    },
+    {
+      "id": "bl-lcrs26-google-reviews-share",
+      "claim": "Google remains the top place consumers read reviews.",
+      "value": "71% use Google for reviews (83% in 2025)",
+      "year": 2026,
+      "source": "BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)",
+      "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "bl-csb26-searched-3mo",
+      "claim": "Most US consumers searched online for a local business in the past three months.",
+      "value": "84%",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 3 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-decisions/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "The only CSB figure that speaks to all consumers."
+    },
+    {
+      "id": "bl-csb26-google-start",
+      "claim": "Google is where most local searches start.",
+      "value": "52% started on Google Search, 9% on Google Maps; 71% used Google Search at some point",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 2 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-channels/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "bl-csb26-multichannel",
+      "claim": "Most local searchers check more than one channel before deciding.",
+      "value": "75% used more than one channel",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 2 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-channels/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Corrected quote: \"75% of consumers used more than one channel during their most recent local business search.\""
+    },
+    {
+      "id": "bl-csb26-mobile",
+      "claim": "Most local business searches start on a phone.",
+      "value": "73% mobile, 19% computer, 8% tablet",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 2 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-channels/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Replaces old near me growth stats."
+    },
+    {
+      "id": "bl-csb26-shortlist",
+      "claim": "Consumers compare very few businesses before choosing.",
+      "value": "72% look at three or fewer",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 1 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-speed/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "bl-csb26-speed",
+      "claim": "Local buying decisions happen fast.",
+      "value": "75% decide in under 30 minutes; 28% in under five",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 1 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-speed/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "bl-csb26-walked-away",
+      "claim": "Half of recent local searchers looked at a business and decided not to contact it.",
+      "value": "52%",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 3 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-decisions/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Never claim this business lost 52% of its customers."
+    },
+    {
+      "id": "bl-csb26-no-website-putoff",
+      "claim": "Among reasons consumers gave for not contacting a business, 18% said they could not find a website.",
+      "value": "18% (rank 7 of 11)",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 3 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-decisions/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Base is consumers who were put off, not all consumers. Word it exactly this way."
+    },
+    {
+      "id": "bl-csb26-pro-website-factor",
+      "claim": "One in five put a professional-looking website in their top three reasons for choosing a business.",
+      "value": "20% (rank 9)",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 3 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-decisions/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Do not inflate."
+    },
+    {
+      "id": "bl-csb26-clear-info",
+      "claim": "Clear and complete information is the top factor in choosing which business to contact.",
+      "value": "32% clear info; 29% clear pricing or offer; 22% quick response",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 3 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-decisions/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "bl-csb26-ai-verify",
+      "claim": "Few AI search users feel ready to contact the business an AI recommends without checking elsewhere.",
+      "value": "18% ready; 43% of AI starters went on to check Google",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 2 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-channels/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "bl-csb26-manage-online",
+      "claim": "Nearly all consumers think local businesses should actively manage how they appear online.",
+      "value": "96% important; 33% essential",
+      "year": 2026,
+      "source": "BrightLocal, Consumer Search Behavior 2026 part 3 (1,227 US recent local searchers)",
+      "url": "https://www.brightlocal.com/research/consumer-search-behavior-decisions/",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Fine but optional."
+    },
+    {
+      "id": "google-2021-connections",
+      "claim": "Google says it drove over two billion direct customer connections a month for US businesses in 2020.",
+      "value": "Over 2 billion a month (calls, directions, messages, bookings, reviews)",
+      "year": 2020,
+      "source": "Google, Local is now digital (Apr 5, 2021)",
+      "url": "https://blog.google/products/ads-commerce/local-shopping-trends/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Show the year 2020. Counts Google surface actions, not website visits; never use as a website ROI stat."
+    },
+    {
+      "id": "pew-2025-smartphone",
+      "claim": "About nine in ten US adults own a smartphone.",
+      "value": "91% smartphone; 98% cellphone",
+      "year": 2025,
+      "source": "Pew Research Center, Mobile Fact Sheet (5,022 US adults)",
+      "url": "https://www.pewresearch.org/internet/fact-sheet/mobile/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": ""
+    },
+    {
+      "id": "godaddy-2023-consumers",
+      "claim": "In a 2023 GoDaddy survey, most US consumers said it is important for small businesses to have a website.",
+      "value": "89% of 1,000 US consumers",
+      "year": 2023,
+      "source": "GoDaddy press release, Dec 4, 2023 (vendor survey)",
+      "url": "https://aboutus.godaddy.net/newsroom/news-releases/press-release-details/2023/Consumer-Expectations-vs-Retailers-Reality-GoDaddy-Surveys-of-Small-Businesses-and-Consumers-Show-Disparity/default.aspx",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Always name GoDaddy and 2023 in the sentence."
+    },
+    {
+      "id": "godaddy-2023-smb-no-site",
+      "claim": "About a quarter of the small businesses in GoDaddy 2023 survey had no website.",
+      "value": "24% of 1,000 US small businesses surveyed",
+      "year": 2023,
+      "source": "GoDaddy press release, Dec 4, 2023 (vendor survey)",
+      "url": "https://aboutus.godaddy.net/newsroom/news-releases/press-release-details/2023/Consumer-Expectations-vs-Retailers-Reality-GoDaddy-Surveys-of-Small-Businesses-and-Consumers-Show-Disparity/default.aspx",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Never present as a national rate."
+    },
+    {
+      "id": "dreamhost-2026-declined",
+      "claim": "In a web host consumer survey, about two in five said they had declined to visit or buy from a business because it had no website.",
+      "value": "39%; 45% of ages 18 to 44",
+      "year": 2025,
+      "source": "DreamHost, 2026 Local Business Trust Index (1,201 US adults, fielded Nov 2025, vendor survey)",
+      "url": "https://www.dreamhost.com/blog/dreamhost-2026-local-business-trust-index/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Attribute to DreamHost every time; supporting line, never the headline."
+    },
+    {
+      "id": "dreamhost-2026-less-real",
+      "claim": "Many consumers say businesses without websites feel less real.",
+      "value": "45% less real; 46% more temporary; 69% say a website is essential for credibility",
+      "year": 2025,
+      "source": "DreamHost, 2026 Local Business Trust Index (vendor survey)",
+      "url": "https://www.dreamhost.com/blog/dreamhost-2026-local-business-trust-index/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Attribute. Never use the 41% more trustworthy headline."
+    },
+    {
+      "id": "dreamhost-2026-verify",
+      "claim": "Most consumers say they often or always check a business website to confirm what they saw on social media, Google or AI.",
+      "value": "58%",
+      "year": 2025,
+      "source": "DreamHost, 2026 Local Business Trust Index (vendor survey)",
+      "url": "https://www.dreamhost.com/blog/dreamhost-2026-local-business-trust-index/",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Attribute. BrightLocal 54% is the stronger version."
+    },
+    {
+      "id": "bl-smb25-dedicated-website",
+      "claim": "In BrightLocal 2025 survey of US SMB owners, only 40% said they have a dedicated business website.",
+      "value": "40% of 778; 35% have a GBP",
+      "year": 2025,
+      "source": "BrightLocal, SMB Marketing in 2025",
+      "url": "https://www.brightlocal.com/research/smb-marketing-2025/",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "From a platforms used for marketing question. Never restate as 60% have no website."
+    },
+    {
+      "id": "clutch-2025-offline",
+      "claim": "Clutch 2025 survey found 17% of small businesses still have no website.",
+      "value": "83% have a website; 17% offline",
+      "year": 2025,
+      "source": "Clutch press release, Aug 21, 2025",
+      "url": "https://clutch.co/press-releases/smb-websites-2025",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Sample size and geography not published."
+    },
+    {
+      "id": "sba-2026-count",
+      "claim": "There are about 36.2 million small businesses in the US.",
+      "value": "36,207,130",
+      "year": 2026,
+      "source": "SBA Office of Advocacy, FAQ 2026",
+      "url": "https://advocacy.sba.gov/2026/02/03/frequently-asked-questions-about-small-business-2026/",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Context only; mostly nonemployer firms."
+    },
+    {
+      "id": "verisign-2015-credible",
+      "claim": "In a 2015 Verisign survey, most US consumers said a business with a website is more credible than one with only a social page.",
+      "value": "84% (2015)",
+      "year": 2015,
+      "source": "Verisign, 5 Reasons Every Small Business Needs a Website (787 US consumers, Sept 2015)",
+      "url": "https://www.verisign.com/assets/ebook-5ReasonsSMBWebsite-Jan2016.pdf",
+      "verified": true,
+      "useInPitch": true,
+      "notes": "Pre 2020: always show \"2015\" in the sentence. Prefer 2026 stats."
+    },
+    {
+      "id": "verisign-2015-trust-site",
+      "claim": "In 2015, three quarters of surveyed US consumers would trust a business website over a social page or directory.",
+      "value": "76% (2015)",
+      "year": 2015,
+      "source": "Verisign, 5 Reasons Every Small Business Needs a Website",
+      "url": "https://www.verisign.com/assets/ebook-5ReasonsSMBWebsite-Jan2016.pdf",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Acceptable labelled 2015 for a Facebook-only lead."
+    },
+    {
+      "id": "google-2018-near-me",
+      "claim": "Google reported strong growth in near me mobile searches between 2015 and 2017.",
+      "value": "150%+ near me now; 200%+ open now near me",
+      "year": 2018,
+      "source": "Think with Google, May 15, 2018",
+      "url": "https://business.google.com/uk/think/marketing-strategies/near-me-searches/",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Stale. Use bl-csb26-mobile instead."
+    },
+    {
+      "id": "google-2016-visit-within-day",
+      "claim": "In a 2016 Google diary study, 76% of people who searched nearby on a smartphone visited a business within a day.",
+      "value": "76%; 28% of searches led to a purchase",
+      "year": 2016,
+      "source": "Think with Google, How Mobile Search Connects Consumers to Stores (May 2016)",
+      "url": "https://www.thinkwithgoogle.com/_qs/documents/620/mobile-search-trends-consumers-to-stores.pdf",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Old; the 28% counts searches, not people."
+    },
+    {
+      "id": "pew-2016-reviews",
+      "claim": "In 2015, most US adults at least sometimes read online reviews before a first purchase.",
+      "value": "82% at least sometimes; 40% always or almost always",
+      "year": 2015,
+      "source": "Pew Research Center, Online reviews (published Dec 19, 2016)",
+      "url": "https://www.pewresearch.org/internet/2016/12/19/online-reviews/",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Corrected year: survey fielded Nov 24 to Dec 21, 2015. Products, not local services."
+    },
+    {
+      "id": "visualobjects-2019-no-website",
+      "claim": "A Visual Objects survey in December 2019 found 37% of US small businesses had no website.",
+      "value": "37% of 500",
+      "year": 2019,
+      "source": "Visual Objects via PR Newswire, Mar 18, 2020",
+      "url": "https://www.prnewswire.com/news-releases/37-of-small-businesses-dont-have-a-website-new-data-offers-insight-into-how-a-website-can-boost-online-sales-and-visibility-301025971.html",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Superseded by Clutch 2025."
+    },
+    {
+      "id": "bl-ai-sources-2025",
+      "claim": "In a small BrightLocal test, businesses own websites were the dominant source AI tools cited for local information.",
+      "value": "Qualitative, 20 searches on 4 AI tools",
+      "year": 2025,
+      "source": "BrightLocal, AI Search Makes Local Listings More Important Than Ever",
+      "url": "https://www.brightlocal.com/blog/ai-search-using-listings-sources/",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Tiny test; internal reasoning only."
+    },
+    {
+      "id": "brightlocal-gmb-website-share",
+      "claim": "Website visits were on average 56% of actions on Google listings.",
+      "value": "56%; 33 website clicks of 59 monthly actions",
+      "year": 2018,
+      "source": "BrightLocal, Google My Business Insights Study (published 2019)",
+      "url": "https://www.brightlocal.com/research/google-my-business-insights-study/",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Data Sept 2017 to Dec 2018, 4 countries. If ever shown, label it 2017 to 2018."
+    },
+    {
+      "id": "brightlocal-gmb-automotive-calls",
+      "claim": "Automotive businesses get a high share of calls from their Google listing.",
+      "value": "Calls 46% of automotive GBP actions",
+      "year": 2018,
+      "source": "BrightLocal, Google My Business Insights Study",
+      "url": "https://www.brightlocal.com/research/google-my-business-insights-study/",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Internal: keep click to call prominent on auto demos."
+    },
+    {
+      "id": "birdeye-2026-action-share",
+      "claim": "Among enterprise brands, website visits drive the largest share of Google Business Profile engagement.",
+      "value": "47% website, 38% directions, 15% calls",
+      "year": 2026,
+      "source": "Birdeye, State of Google Business Profile 2026",
+      "url": "https://birdeye.com/blog/state-of-google-business-profiles/",
+      "verified": true,
+      "useInPitch": false,
+      "notes": "Enterprise multi-location brands, not independents."
+    }
+  ],
+  "categories": {
+    "auto-repair": {
+      "ticket": {
+        "low": 250,
+        "typical": 500,
+        "high": 750,
+        "unit": "per repair order",
+        "sources": [
+          {
+            "title": "Tekmetric Auto Repair Industry Index, September 2023",
+            "url": "https://cdn.prod.website-files.com/678cca1dba65076a9fd94f2d/678fcff9ab7bc1dc9c47eb64_Tekmetric%20Industry%20Index%202023-October-web.pdf",
+            "year": 2023,
+            "note": "Average repair order $585.91 across Tekmetric shops, H1 2023; regions $533.14 to $697.65"
+          },
+          {
+            "title": "Aftermarket Matters: PartsTech 2025 State of General Auto Repair Shops summary",
+            "url": "https://www.aftermarketmatters.com/national-news/new-report-offers-shops-tips-on-improving-average-repair-orders/",
+            "year": 2025,
+            "note": "36% of 752 shops report ARO of $500 to $749, with $250 to $499 a close second"
+          },
+          {
+            "title": "CarMD 2026 Vehicle Health Index release, PR Newswire",
+            "url": "https://www.prnewswire.com/news-releases/carmd-reports-record-check-engine-repair-costs-in-2025-as-aging-vehicles-drive-up-car-repair-trends-302749964.html",
+            "year": 2025,
+            "note": "Average check engine light repair $554 in 2025"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.5,
+        "sources": [
+          {
+            "title": "Tekmetric Auto Repair Industry Index, September 2023",
+            "url": "https://cdn.prod.website-files.com/678cca1dba65076a9fd94f2d/678fcff9ab7bc1dc9c47eb64_Tekmetric%20Industry%20Index%202023-October-web.pdf",
+            "year": 2023,
+            "note": "Regional total profit margins 53.67% to 57.78%; labor about 57% to 62%, parts about 32% to 35%"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 31,
+        "high": 42,
+        "platform": "Google Search Ads (LocaliQ automotive medians, not LSA)",
+        "sources": [
+          {
+            "title": "LocaliQ, Automotive Search Advertising Benchmarks for 2026",
+            "url": "https://localiq.com/blog/automotive-search-advertising-benchmarks/",
+            "year": 2026,
+            "note": "Medians from 1,983 US campaigns, Apr 2025 to Jun 2026: Maintenance and Tune-Ups $31.19 to Auto Service and Repair $42.10 per lead"
+          }
+        ]
+      },
+      "notes": "Typical $500 sits below Tekmetric $585.91 (software-using shops) and CarMD $554, at the bottom of the most common PartsTech band. Margin 0.50 is below every Tekmetric regional figure. Repair CPI rose 5.2% in the year to August 2026, so these figures lean low. Rented lead is a search ad lead, not an LSA charged lead; no public LSA benchmark exists for auto repair."
+    },
+    "auto-body-collision": {
+      "ticket": {
+        "low": 1698,
+        "typical": 3682,
+        "high": 5721,
+        "unit": "per repairable collision claim (total cost of repairs)",
+        "sources": [
+          {
+            "title": "CCC Crash Course 2026",
+            "url": "https://www.cccis.com/reports/crash-course-2026",
+            "year": 2025,
+            "note": "TCOR $4,818 overall; $5,721 for vehicles 6 years or newer; $3,682 for 7 years or older (derived: $5,721 minus $2,039)"
+          },
+          {
+            "title": "AAA Newsroom, ADAS repair costs",
+            "url": "https://newsroom.aaa.com/2023/12/fixing-advanced-vehicle-systems-makes-up-over-one-third-of-repair-costs-following-a-crash/",
+            "year": 2023,
+            "note": "Minor rear collision average estimate $1,698 (three 2023 vehicles)"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.4,
+        "sources": [
+          {
+            "title": "Boyd Group Services Form 40-F FY2025 MD&A",
+            "url": "https://www.sec.gov/Archives/edgar/data/2091467/000119312526112466/d106626dex992.htm",
+            "year": 2025,
+            "note": "Gross margin 46.4% (large multi-shop operator, upper anchor)"
+          },
+          {
+            "title": "FenderBender: Optimize Your Collision Repair Parts Gross Profit",
+            "url": "https://www.fenderbender.com/running-a-shop/operations/article/55292985/optimize-your-collision-repair-parts-gross-profit",
+            "year": 2025,
+            "note": "Parts gross profit 25% to 39%"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 56,
+        "high": 56,
+        "platform": "Google Search Ads (LocaliQ Body Repair and Paint median, not LSA)",
+        "sources": [
+          {
+            "title": "LocaliQ, Automotive Search Advertising Benchmarks for 2026",
+            "url": "https://localiq.com/blog/automotive-search-advertising-benchmarks/",
+            "year": 2026,
+            "note": "Body Repair and Paint $56.26 per lead median"
+          }
+        ]
+      },
+      "notes": "Typical is the CCC 2025 figure for vehicles 7 years or older, chosen over the $4,818 overall because independents without websites skew to older, customer-pay vehicles. Margin 0.40 sits below Boyd 46.4% and inside the 2002 BodyShop Business benchmark of 40% to 45% (labelled 2002, sanity check only)."
+    },
+    "tire-shop": {
+      "ticket": {
+        "low": 118,
+        "typical": 305,
+        "high": 1002,
+        "unit": "per customer visit (blended single tires, sets and service)",
+        "sources": [
+          {
+            "title": "Monro, Inc. Form 10-K fiscal 2026",
+            "url": "https://www.sec.gov/Archives/edgar/data/0000876427/000087642726000007/mnro-20260328x10k.htm",
+            "year": 2026,
+            "note": "About 3.8 million vehicles serviced on $1,157.2M sales, about $305 revenue per vehicle serviced (derived; tires 48% of sales)"
+          },
+          {
+            "title": "Modern Tire Dealer 2025 Facts Issue",
+            "url": "https://img.moderntiredealer.com/files/base/ebm/moderntiredealer/document/2025/02/67be33a0a7763b49adfd0716-modern_tire_dealer_2025_facts_issue.pdf",
+            "year": 2024,
+            "note": "Average advertised price per tire: $117.75 (195/65R15), $175.42 (225/65R17, top replacement size), $250.38 (275/55R20). A set of four in the top size is $702"
+          },
+          {
+            "title": "BLS CPI-U Table 2, August 2026",
+            "url": "https://www.bls.gov/news.release/cpi.t02.htm",
+            "year": 2026,
+            "note": "Tire CPI up only 0.4% year over year, so 2024 prices still hold"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.27,
+        "sources": [
+          {
+            "title": "Modern Tire Dealer 2025 Facts Issue",
+            "url": "https://img.moderntiredealer.com/files/base/ebm/moderntiredealer/document/2025/02/67be33a0a7763b49adfd0716-modern_tire_dealer_2025_facts_issue.pdf",
+            "year": 2024,
+            "note": "US average retail passenger tire margin 27.0% (28.5% in 2023)"
+          },
+          {
+            "title": "Monro, Inc. Form 10-K fiscal 2026",
+            "url": "https://www.sec.gov/Archives/edgar/data/0000876427/000087642726000007/mnro-20260328x10k.htm",
+            "year": 2026,
+            "note": "Blended gross margin 35.0% including service, technician labor and occupancy"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 21,
+        "high": 29,
+        "platform": "Google Search Ads (LocaliQ tire medians, not LSA)",
+        "sources": [
+          {
+            "title": "LocaliQ, Automotive Search Advertising Benchmarks for 2026",
+            "url": "https://localiq.com/blog/automotive-search-advertising-benchmarks/",
+            "year": 2026,
+            "note": "Tire and Wheel Repair $20.70, Tire Dealer $22.42, Alignment and Rotation $28.50 per lead"
+          }
+        ]
+      },
+      "notes": "Editor changed the researcher value ($702 per set at 0.30) to a per visit typical of $305 at 0.27, because not every visit is a full set of four and the fact checker flagged both as not conservative. Low is one tire in 195/65R15, high is a set of four 275/55R20. For a shop that mostly sells new sets, override the ticket to $702 and margin to about 0.30."
+    },
+    "muffler-exhaust": {
+      "ticket": {
+        "low": 120,
+        "typical": 340,
+        "high": 1511,
+        "unit": "per exhaust repair",
+        "sources": [
+          {
+            "title": "CarParts.com: Muffler Replacement Cost Estimates",
+            "url": "https://www.carparts.com/blog/muffler-replacement-cost-estimates-faqs-and-more/",
+            "year": 2025,
+            "note": "Aftermarket muffler part $50 to $250 plus $70 to $90 labor, so about $120 to $340 installed (retail part prices)"
+          },
+          {
+            "title": "RepairPal Toyota Camry Exhaust Muffler Replacement Cost Estimate",
+            "url": "https://repairpal.com/estimator/toyota/camry/exhaust-muffler-replacement-cost",
+            "year": 2026,
+            "note": "Shop estimate $587 to $623 for a common sedan"
+          },
+          {
+            "title": "RepairPal Exhaust Muffler Replacement Cost Estimate",
+            "url": "https://repairpal.com/estimator/exhaust-muffler-replacement-cost",
+            "year": 2026,
+            "note": "National $1,138 to $1,190, driven by OEM parts"
+          },
+          {
+            "title": "CarMD 2026 Vehicle Health Index release",
+            "url": "https://www.prnewswire.com/news-releases/carmd-reports-record-check-engine-repair-costs-in-2025-as-aging-vehicles-drive-up-car-repair-trends-302749964.html",
+            "year": 2025,
+            "note": "Catalytic converter replacement $1,511 (an exhaust system job, not a muffler)"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.4,
+        "sources": [
+          {
+            "title": "Monro, Inc. Form 10-K fiscal 2026",
+            "url": "https://www.sec.gov/Archives/edgar/data/0000876427/000087642726000007/mnro-20260328x10k.htm",
+            "year": 2026,
+            "note": "Gross margin 35.0% including occupancy"
+          },
+          {
+            "title": "Tekmetric Auto Repair Industry Index, September 2023",
+            "url": "https://cdn.prod.website-files.com/678cca1dba65076a9fd94f2d/678fcff9ab7bc1dc9c47eb64_Tekmetric%20Industry%20Index%202023-October-web.pdf",
+            "year": 2023,
+            "note": "Parts margins about 32% to 35%, labor about 57% to 62%"
+          }
+        ]
+      },
+      "rentedLead": null,
+      "notes": "Typical $340 is the top of the aftermarket installed range and well under the only shop estimate (RepairPal Camry $587 to $623), so it is conservative but not a sourced central value. High is a catalytic converter replacement, which exhaust shops do. Rented lead unknown: no exhaust subcategory in any benchmark."
+    },
+    "diesel-truck-repair": {
+      "ticket": {
+        "low": 300,
+        "typical": 965,
+        "high": 2000,
+        "unit": "per heavy-duty repair invoice",
+        "sources": [
+          {
+            "title": "Fleet Maintenance: Fullbay 2023 State of Heavy-Duty Repair",
+            "url": "https://www.fleetmaintenance.com/shop-operations/article/53026615/fullbay-fullbays-third-heavy-duty-report-shows-revenue-recovery-increased-technician-pay",
+            "year": 2022,
+            "note": "Average invoice roughly $965 (2022 data, when the average labor rate was $118)"
+          },
+          {
+            "title": "Schneider Owner-Operators: semi-truck maintenance costs",
+            "url": "https://schneiderowneroperators.com/owner-operator-tips/semi-truck-maintenance-cost",
+            "year": 2025,
+            "note": "Full PM service about $300; brake system overhaul upwards of $2,000"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.35,
+        "sources": []
+      },
+      "rentedLead": null,
+      "notes": "Estimate, not verified: no blended heavy-duty gross margin source exists. 0.35 is derived from the Fullbay 2025-2026 median labor rate of $149 an hour against $32 median tech pay (about 78% on labor before payroll burden) and a 21% parts margin, assuming a parts-heavy mix. Ticket typical is 2022 data left uninflated although the median labor rate has since risen to $149, which keeps it conservative. Rented lead unknown."
+    },
+    "mobile-mechanic": {
+      "ticket": {
+        "low": 120,
+        "typical": 200,
+        "high": 600,
+        "unit": "per completed mobile job",
+        "sources": [
+          {
+            "title": "Airtasker: How Much Does a Mobile Mechanic Cost in the US (2026)",
+            "url": "https://www.airtasker.com/us/costs/mobile-mechanic/how-much-does-a-mobile-mechanic-cost/",
+            "year": 2026,
+            "note": "Median $200 per completed job, range $80 to $1,000 (marketplace data)"
+          },
+          {
+            "title": "AutoNation Mobile Service: How Much Does a Mobile Mechanic Cost in 2026?",
+            "url": "https://www.autonationmobileservice.com/i/blog/how-much-does-a-mobile-mechanic-cost",
+            "year": 2026,
+            "note": "Most routine repairs $120 to $600; $80 to $170 an hour (operator pricing guide)"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.45,
+        "sources": []
+      },
+      "rentedLead": null,
+      "notes": "Estimate, not verified: no mobile-mechanic margin source found. 0.45 is shaded below the Tekmetric fixed-shop range of 53.67% to 57.78% because the business model differs. Rented lead unknown: no LSA category and no benchmark."
+    },
+    "auto-detailing": {
+      "ticket": {
+        "low": 95,
+        "typical": 144,
+        "high": 390,
+        "unit": "per detail (full mobile detail)",
+        "sources": [
+          {
+            "title": "Thumbtack: 2026 Mobile Car Detailing Prices",
+            "url": "https://www.thumbtack.com/p/mobile-car-detailing-prices",
+            "year": 2026,
+            "note": "National average $144 to $254; low $95, high $390 (marketplace estimate)"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.35,
+        "sources": []
+      },
+      "rentedLead": null,
+      "notes": "Estimate, not verified: no detailing margin source found. The only primary anchor is Mister Car Wash (2025 10-K), where labor plus chemicals are 29% of revenue and other store costs a further 42%, leaving about 29% at store level for an automated tunnel. Hand detailing is labor heavy, so 0.35 assumes a small shop paying staff; solo owners keep more. Window tint and ceramic coating pay more but were not sourced. Rented lead unknown."
+    },
+    "towing": {
+      "ticket": {
+        "low": 50,
+        "typical": 88,
+        "high": 272,
+        "unit": "per light-duty tow",
+        "sources": [
+          {
+            "title": "AAA: AAA membership costs vs savings",
+            "url": "https://discounts.aaa.com/discounts-articles/aaa-membership-costs-vs-savings",
+            "year": 2026,
+            "note": "Non-member tow $50 to $125 for 5 miles or less (undated marketing page)"
+          },
+          {
+            "title": "Texas Department of Licensing and Regulation: Consumer Information about Towing",
+            "url": "https://www.tdlr.texas.gov/towing/consumerinfo.htm?os=os",
+            "year": 2026,
+            "note": "Texas statewide maximum nonconsent tow fee $272 up to 10,000 lbs (Texas only)"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.3,
+        "sources": []
+      },
+      "rentedLead": null,
+      "notes": "Estimate, not verified: no towing margin source could be opened; 0.30 is a conservative placeholder given fuel, truck, insurance and driver commission costs. Editor lowered the researcher typical from $125 (top of AAA range) to the $88 midpoint, per the fact checker. Researcher proposed margin 0 was replaced so computeRoi does not divide by zero. The $272 high is a Texas nonconsent cap, not a national consent-tow price. Rented lead unknown."
+    },
+    "barber": {
+      "ticket": {
+        "low": 35,
+        "typical": 40,
+        "high": 45,
+        "unit": "per haircut",
+        "sources": [
+          {
+            "title": "SQUIRE State of Barbershops 2026",
+            "url": "https://getsquire.com/barbershop-trends-insights-report",
+            "year": 2026,
+            "note": "National average $43; Midwest $35, Northeast and South $40, West $45 (13.9M appointments, about 7,000 shops)"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.3,
+        "sources": [
+          {
+            "title": "SQUIRE: How Much Does a Barber Make?",
+            "url": "https://getsquire.com/business-edge/how-much-does-a-barber-make",
+            "year": 2023,
+            "note": "Commission splits leave the shop 30% to 40% of each cut"
+          },
+          {
+            "title": "Regis Corporation Form 10-K fiscal 2026",
+            "url": "https://www.sec.gov/Archives/edgar/data/716643/000071664326000031/rgs-20260630.htm",
+            "year": 2026,
+            "note": "Company-owned salon margin about 28.4% before rent, D&A and G&A (floor)"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 39,
+        "high": 39,
+        "platform": "Google Search Ads (LocaliQ Beauty and Personal Care average, industry level, not LSA)",
+        "sources": [
+          {
+            "title": "LocaliQ, Search Advertising Benchmarks for Every Industry 2026",
+            "url": "https://localiq.com/blog/search-advertising-benchmarks/",
+            "year": 2026,
+            "note": "Beauty and Personal Care average CPL $39.25; labelled average, no method published"
+          }
+        ]
+      },
+      "notes": "Typical $40 is under the $43 national average because Squire shops are appointment based. Margin lowered from the researcher 0.35 to 0.30, the shop share for commission shops before product and rent. Solo owner-barbers keep most of each cut: use an override. Squire says the average client gets about 7 haircuts a year. A $39 rented lead is close to one full haircut ticket."
+    },
+    "hair-salon": {
+      "ticket": {
+        "low": 35,
+        "typical": 89,
+        "high": 200,
+        "unit": "per salon service ticket (visit)",
+        "sources": [
+          {
+            "title": "Salon Today: Fewer Clients, Stronger Revenue (KIM Report data)",
+            "url": "https://www.salontoday.com/articles/fewer-clients-stronger-revenue-why-your-pricing-power-is-your-biggest-q1-win",
+            "year": 2026,
+            "note": "Q1 2026 average service ticket $89.28 across 10,000+ salons; mid-size salons $99.49"
+          },
+          {
+            "title": "Thumbtack: Average Hairstylist Cost",
+            "url": "https://www.thumbtack.com/p/hair-stylist-prices",
+            "year": 2026,
+            "note": "Haircuts $35 to $150 or more; color $65 to $200 or more"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.35,
+        "sources": [
+          {
+            "title": "Zenoti: Salon Commission Structures",
+            "url": "https://www.zenoti.com/thecheckin/salon-commission-structure",
+            "year": 2026,
+            "note": "Service commission 40% to 60%, 45% to 50% most common"
+          },
+          {
+            "title": "Regis Corporation Form 10-K fiscal 2026",
+            "url": "https://www.sec.gov/Archives/edgar/data/716643/000071664326000031/rgs-20260630.htm",
+            "year": 2026,
+            "note": "Company-owned salon margin about 28.4% before rent (floor)"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 39,
+        "high": 39,
+        "platform": "Google Search Ads (LocaliQ Beauty and Personal Care average, industry level, not LSA)",
+        "sources": [
+          {
+            "title": "LocaliQ, Search Advertising Benchmarks for Every Industry 2026",
+            "url": "https://localiq.com/blog/search-advertising-benchmarks/",
+            "year": 2026,
+            "note": "Beauty and Personal Care average CPL $39.25"
+          }
+        ]
+      },
+      "notes": "Margin lowered from the researcher 0.40 to 0.35: 45% to 50% commission plus 10% to 15% product leaves 35% to 45%. Booth rent and suite owners differ: use an override."
+    },
+    "nail-salon": {
+      "ticket": {
+        "low": 15,
+        "typical": 40,
+        "high": 75,
+        "unit": "per nail service visit",
+        "sources": [
+          {
+            "title": "Zenoti: nail salon prices guide",
+            "url": "https://www.zenoti.com/thecheckin/nail-salon-prices",
+            "year": 2026,
+            "note": "Older list: basic manicure $15 to $30, basic pedicure $30 to $40; benchmark summary: gel $35 to $60, acrylic full set $45 to $75 (summary has no methodology)"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.35,
+        "sources": [
+          {
+            "title": "Zenoti: How nail salons pay their employees",
+            "url": "https://www.zenoti.com/thecheckin/how-do-nail-salons-pay-their-employees",
+            "year": 2024,
+            "note": "Nail tech commission 40% to 60% of service revenue"
+          },
+          {
+            "title": "Zenoti: nail salon prices guide",
+            "url": "https://www.zenoti.com/thecheckin/nail-salon-prices",
+            "year": 2026,
+            "note": "Product cost typically 10% to 15% of service price"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 39,
+        "high": 39,
+        "platform": "Google Search Ads (LocaliQ Beauty and Personal Care average, industry level, not LSA)",
+        "sources": [
+          {
+            "title": "LocaliQ, Search Advertising Benchmarks for Every Industry 2026",
+            "url": "https://localiq.com/blog/search-advertising-benchmarks/",
+            "year": 2026,
+            "note": "Beauty and Personal Care average CPL $39.25"
+          }
+        ]
+      },
+      "notes": "Typical $40 treats a visit as one service: top of the basic pedicure range, bottom of the gel range. Margin lowered from 0.40 to 0.35, the midpoint of 25% to 50% left after commission and product. Owner-techs keep more."
+    },
+    "tattoo": {
+      "ticket": {
+        "low": 80,
+        "typical": 150,
+        "high": 1200,
+        "unit": "per tattoo session",
+        "sources": [
+          {
+            "title": "Airtasker: How Much Do Tattoos Cost in the US",
+            "url": "https://www.airtasker.com/us/costs/tattoo-artist/tattoo-cost/",
+            "year": 2026,
+            "note": "Shop minimums usually $80 to $150"
+          },
+          {
+            "title": "Tattooing 101: What to Charge for Tattoos",
+            "url": "https://tattooing101.com/learn/business/what-should-you-charge-as-a-tattoo-artist/",
+            "year": 2024,
+            "note": "Most artists $150 to $210 an hour; 8 hour half sleeve at $150 is $1,200 (undated education site)"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.4,
+        "sources": [
+          {
+            "title": "Bookedin: Tattoo Shop Booth Rental vs. Commission",
+            "url": "https://bookedin.com/blog/tattoo-booth-rental-vs-commission/",
+            "year": 2026,
+            "note": "50/50 split most common; under commission the shop covers ink, needles and consumables (vendor blog)"
+          }
+        ]
+      },
+      "rentedLead": null,
+      "notes": "Low confidence throughout: no survey-grade tattoo pricing exists. Typical is one hour at the bottom of the hourly range. Rented lead unknown: tattoo studios are LSA eligible only in California and Florida and no benchmark was found."
+    },
+    "pet-grooming": {
+      "ticket": {
+        "low": 79,
+        "typical": 79,
+        "high": 136,
+        "unit": "per full groom (one dog)",
+        "sources": [
+          {
+            "title": "Thumbtack: Average Dog Groomer Cost",
+            "url": "https://www.thumbtack.com/p/dog-grooming-prices",
+            "year": 2025,
+            "note": "Full groom $79 to $136 per session, national average $104"
+          },
+          {
+            "title": "APPA: America's Dog Owners Are Becoming Smarter Spenders",
+            "url": "https://americanpetproducts.org/news/americas-dog-owners-are-becoming-smarter-spenders",
+            "year": 2026,
+            "note": "Salon and mobile grooming spending declined in 2025; 51% groom at home"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.4,
+        "sources": [
+          {
+            "title": "Learn2GroomDogs: Paying Groomers, What is Fair?",
+            "url": "https://www.learn2groomdogs.com/paying-groomers/",
+            "year": 2017,
+            "note": "Example commission scale 38% to 44% for full grooms (2017, one salon)"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 32,
+        "high": 32,
+        "platform": "Google Search Ads (LocaliQ Animals and Pets average, industry level, not LSA)",
+        "sources": [
+          {
+            "title": "LocaliQ, Search Advertising Benchmarks for Every Industry 2026",
+            "url": "https://localiq.com/blog/search-advertising-benchmarks/",
+            "year": 2026,
+            "note": "Animals and Pets average CPL $31.50"
+          }
+        ]
+      },
+      "notes": "Typical intentionally equals the $79 low-end average, not the $104 national average, because of the 2025 trade-down trend. Margin 0.40 assumes about a 50% groomer commission plus supplies; the only commission source is from 2017. Solo groomers keep more."
+    },
+    "general": {
+      "ticket": {
+        "low": 40,
+        "typical": 150,
+        "high": 500,
+        "unit": "per job (blended local service, derived)",
+        "sources": []
+      },
+      "grossMargin": {
+        "typical": 0.4,
+        "sources": []
+      },
+      "rentedLead": {
+        "low": 53,
+        "high": 54,
+        "platform": "Google LSA (SearchLight, February 2026)",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "Blended $53 per lead across 888 contractors; General and All Trades $54; cost per paying customer $233"
+          }
+        ]
+      },
+      "notes": "Estimate, not verified: ticket is derived, not measured: $150 is the median of the auto and personal care category typical values in this file, $40 is the lowest and $500 the auto repair typical. Margin 0.40 is the SPEC fallback and the median of the sourced margins. Replace with a category benchmark whenever one exists. Rented lead is home services LSA data and fits contractor-style leads only."
+    },
+    "hvac": {
+      "ticket": {
+        "low": 150,
+        "typical": 320,
+        "high": 12500,
+        "unit": "per new customer first job (repair visit typical; replacement is the high)",
+        "sources": [
+          {
+            "title": "HomeGuide: HVAC repair cost",
+            "url": "https://homeguide.com/costs/hvac-repair-cost",
+            "year": 2025,
+            "note": "National average $293, range $144 to $451 (consumer cost estimate)"
+          },
+          {
+            "title": "HomeAdvisor: What Does HVAC Repair Cost?",
+            "url": "https://www.homeadvisor.com/cost/heating-and-cooling/repair-an-hvac-system/",
+            "year": 2025,
+            "note": "Most homeowners pay about $350 (2025 data, page updated June 2026)"
+          },
+          {
+            "title": "HomeAdvisor: HVAC installation or replacement cost",
+            "url": "https://www.homeadvisor.com/cost/heating-and-cooling/",
+            "year": 2025,
+            "note": "System replacement about $7,500, most $5,000 to $12,500"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.34,
+        "sources": [
+          {
+            "title": "IRS SOI Returns of Active Corporations, Table 1, Tax Year 2022",
+            "url": "https://www.irs.gov/pub/irs-soi/22co01ccr.xlsx",
+            "year": 2022,
+            "note": "Plumbing, heating and air-conditioning contractors implied gross margin 33.9% (all corporations)"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 51,
+        "high": 80,
+        "platform": "Google LSA",
+        "sources": [
+          {
+            "title": "SearchLight: LSA Cost Per Lead by Trade",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "HVAC $51 per lead, 409 accounts, February 2026"
+          },
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "HVAC $65.21 average, 10th to 90th percentile $45.96 to $105.29, 5 sites"
+          },
+          {
+            "title": "The Media Captain: LSA Stats and Cost Per Lead",
+            "url": "https://www.themediacaptain.com/google-local-service-ad-statistics/",
+            "year": 2025,
+            "note": "HVAC $80 (data period not stated)"
+          }
+        ]
+      },
+      "notes": "Editor replaced the researcher blended typical ($1,000, based on an assumed 1 in 10 replacement mix) with $320, the mean of the two sourced repair averages, because the mix is not sourced. At 0.34, one $7,500 replacement grosses about $2,550, so about 1.2 replacements cover a $3,000 site; the pitch can say so as an if. Margin 0.34 is the measured SOI figure; ServiceTitan 50% to 55% is a target, never an industry average."
+    },
+    "plumbing": {
+      "ticket": {
+        "low": 125,
+        "typical": 310,
+        "high": 5500,
+        "unit": "per new customer first job (service call typical)",
+        "sources": [
+          {
+            "title": "HomeGuide: Average plumbing estimates",
+            "url": "https://homeguide.com/costs/average-plumbing-estimates",
+            "year": 2025,
+            "note": "National average $280; small repairs $125 to $350"
+          },
+          {
+            "title": "HomeAdvisor: How Much Does a Plumber Cost?",
+            "url": "https://www.homeadvisor.com/cost/plumbing/hire-a-plumber/",
+            "year": 2025,
+            "note": "Average $341, most $182 to $501"
+          },
+          {
+            "title": "HomeGuide: Install or replace plumbing",
+            "url": "https://homeguide.com/costs/install-new-house-plumbing-pipes-cost",
+            "year": 2025,
+            "note": "Repipe of a 2,000 sq ft home $3,100 to $5,500"
+          },
+          {
+            "title": "HomeGuide: Water heater installation cost",
+            "url": "https://homeguide.com/costs/water-heater-installation-cost",
+            "year": 2026,
+            "note": "Tank water heater replacement $600 to $3,100"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.34,
+        "sources": [
+          {
+            "title": "IRS SOI Returns of Active Corporations, Table 1, Tax Year 2022",
+            "url": "https://www.irs.gov/pub/irs-soi/22co01ccr.xlsx",
+            "year": 2022,
+            "note": "Plumbing, heating and air-conditioning contractors implied gross margin 33.9%"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 57,
+        "high": 75,
+        "platform": "Google LSA",
+        "sources": [
+          {
+            "title": "SearchLight: LSA Cost Per Lead by Trade",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "Plumbing $57, 230 accounts, February 2026"
+          },
+          {
+            "title": "99 Calls: Google LSA Cost Per Lead by Industry 2025 vs 2026",
+            "url": "https://99calls.com/blog/lsa-cost-per-lead-by-industry",
+            "year": 2026,
+            "note": "Plumbing Q2 2026 average $66.17"
+          },
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "Plumbing $75.33 average, 6 sites"
+          }
+        ]
+      },
+      "notes": "Editor replaced the researcher blend ($600) with $310, the mean of the two sourced service call averages. Water heaters and repipes are the high end. Margin is the measured SOI 33.9%."
+    },
+    "electrical": {
+      "ticket": {
+        "low": 141,
+        "typical": 280,
+        "high": 4000,
+        "unit": "per new customer first job (small job typical)",
+        "sources": [
+          {
+            "title": "HomeGuide: Electrical Work Pricing Guide",
+            "url": "https://homeguide.com/costs/electrical-work-pricing-guide",
+            "year": 2026,
+            "note": "Fixtures, outlets, switches, fans: $141 to $419, average $280"
+          },
+          {
+            "title": "HomeGuide: Cost To Replace Electrical Panel",
+            "url": "https://homeguide.com/costs/cost-to-replace-electrical-panel",
+            "year": 2024,
+            "note": "Breaker box average $1,475; 200 amp upgrade up to $4,000"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.32,
+        "sources": [
+          {
+            "title": "IRS SOI Returns of Active Corporations, Table 1, Tax Year 2022",
+            "url": "https://www.irs.gov/pub/irs-soi/22co01ccr.xlsx",
+            "year": 2022,
+            "note": "Electrical contractors implied gross margin 31.9%"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 39,
+        "high": 55,
+        "platform": "Google LSA",
+        "sources": [
+          {
+            "title": "SearchLight: LSA Cost Per Lead by Trade",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "Electrical $39, 112 accounts, February 2026"
+          },
+          {
+            "title": "99 Calls: Google LSA Cost Per Lead by Industry 2025 vs 2026",
+            "url": "https://99calls.com/blog/lsa-cost-per-lead-by-industry",
+            "year": 2026,
+            "note": "Electrical Q2 2026 $43.15"
+          },
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "Electrical $55.20 average, 7 sites"
+          }
+        ]
+      },
+      "notes": "Typical is the only verified small job average ($280); the HomeAdvisor $351 figure was not fact checked and is not used. Margin is the measured SOI 31.9%, rounded up to 0.32."
+    },
+    "septic": {
+      "ticket": {
+        "low": 292,
+        "typical": 428,
+        "high": 8500,
+        "unit": "per new customer first job (pumping typical)",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Septic tank pumping cost",
+            "url": "https://www.homeadvisor.com/cost/plumbing/clean-septic-tank/",
+            "year": 2025,
+            "note": "Average $428, most $292 to $565"
+          },
+          {
+            "title": "HomeAdvisor: Septic tank repair cost",
+            "url": "https://www.homeadvisor.com/cost/plumbing/repair-a-septic-tank/",
+            "year": 2025,
+            "note": "Repair average $1,829, typically $627 to $3,043"
+          },
+          {
+            "title": "HomeGuide: Septic tank system cost",
+            "url": "https://homeguide.com/costs/septic-tank-system-cost",
+            "year": 2025,
+            "note": "New conventional system $3,500 to $8,500"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.35,
+        "sources": []
+      },
+      "rentedLead": {
+        "low": 59,
+        "high": 59,
+        "platform": "Google LSA (SearchLight drain and sewer, stand-in)",
+        "sources": [
+          {
+            "title": "SearchLight: LSA Cost Per Lead by Trade",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "Drain and sewer $59, 23 accounts, February 2026. Stand-in: no septic-specific benchmark; LSA category is Sewage system"
+          }
+        ]
+      },
+      "notes": "Estimate, not verified: no primary septic gross margin source; the only margin claim found (ServiceCore, net margin) was refuted as secondary. 0.35 is a conservative placeholder. Editor replaced the researcher blend ($700) with the sourced pumping average ($428). Repeat pumping every few years adds lifetime value not counted here."
+    },
+    "garage-door": {
+      "ticket": {
+        "low": 155,
+        "typical": 265,
+        "high": 3500,
+        "unit": "per new customer first job (repair typical)",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Garage door repair cost",
+            "url": "https://www.homeadvisor.com/cost/garages/repair-a-garage-door/",
+            "year": 2025,
+            "note": "Average $265, typical $155 to $379"
+          },
+          {
+            "title": "HomeAdvisor: Garage door replacement cost",
+            "url": "https://www.homeadvisor.com/cost/garages/install-a-garage-door/",
+            "year": 2025,
+            "note": "Replacement average $1,231"
+          },
+          {
+            "title": "HomeGuide: Garage door replacement cost",
+            "url": "https://homeguide.com/costs/garage-door-installation-cost",
+            "year": 2025,
+            "note": "Two-car door up to $3,500 installed"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.35,
+        "sources": [
+          {
+            "title": "IRS SOI Returns of Active Corporations, Table 1, Tax Year 2022",
+            "url": "https://www.irs.gov/pub/irs-soi/22co01ccr.xlsx",
+            "year": 2022,
+            "note": "Other specialty trade contractors implied gross margin 34.8% (broad proxy)"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 49,
+        "high": 49,
+        "platform": "Google LSA (SearchLight, January to April 2026)",
+        "sources": [
+          {
+            "title": "SearchLight: Garage Door LSA Cost Per Lead (2026)",
+            "url": "https://searchlightdigital.io/garage-door-google-lsa-cost-per-lead/",
+            "year": 2026,
+            "note": "$49 per lead across 12 contractors; cost per paying customer $198; average ticket $1,145"
+          }
+        ]
+      },
+      "notes": "Editor replaced the researcher blend ($500) with the sourced repair average and lowered margin from 0.45 to the SOI 34.8% proxy. ServiceTitan 55% to 65% is a target, not a measured average. SearchLight reports a $1,145 average ticket among its LSA clients, which suggests the $265 typical is very conservative."
+    },
+    "restoration": {
+      "ticket": {
+        "low": 1383,
+        "typical": 3500,
+        "high": 18000,
+        "unit": "per restoration job (water mitigation typical)",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Water damage restoration cost",
+            "url": "https://www.homeadvisor.com/cost/disaster-recovery/repair-water-damage/",
+            "year": 2025,
+            "note": "Average $3,868, most $1,383 to $6,369"
+          },
+          {
+            "title": "HomeGuide: Water damage restoration cost",
+            "url": "https://homeguide.com/costs/water-damage-restoration-cost",
+            "year": 2026,
+            "note": "$2,000 to $6,000 on average"
+          },
+          {
+            "title": "HomeGuide: Fire damage restoration cost",
+            "url": "https://homeguide.com/costs/fire-damage-restoration-cost",
+            "year": 2025,
+            "note": "$8,000 to $18,000 on average"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.35,
+        "sources": []
+      },
+      "rentedLead": {
+        "low": 132,
+        "high": 215,
+        "platform": "Google LSA (99 Calls water damage)",
+        "sources": [
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "Water damage restoration $131.80 average, 9 sites"
+          },
+          {
+            "title": "99 Calls: Google LSA Cost Per Lead by Industry 2025 vs 2026",
+            "url": "https://99calls.com/blog/lsa-cost-per-lead-by-industry",
+            "year": 2026,
+            "note": "Water damage Q2 2026 average $215.31"
+          }
+        ]
+      },
+      "notes": "Estimate, not verified: no public restoration gross margin study; the R&R net income claim was refuted as secondary. 0.35 is a conservative placeholder. Typical is the HomeAdvisor average rounded down. Many jobs are insurance paid. Rented lead high capped at $215 (fact checker): the $325 and $343 disaster and damage figures rest on 3 to 5 sites and on categories not on Google's LSA list. Restoration has the most expensive rented leads of any category."
+    },
+    "appliance-repair": {
+      "ticket": {
+        "low": 100,
+        "typical": 179,
+        "high": 500,
+        "unit": "per repair visit",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Appliance repair cost",
+            "url": "https://www.homeadvisor.com/cost/kitchens/repair-an-appliance/",
+            "year": 2025,
+            "note": "Average $179, range $108 to $251"
+          },
+          {
+            "title": "HomeGuide: Appliance repair costs",
+            "url": "https://homeguide.com/costs/appliance-repair-costs",
+            "year": 2025,
+            "note": "National average $200, range $100 to $400; refrigerator repair $125 to $500"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.45,
+        "sources": [
+          {
+            "title": "IRS SOI Returns of Active Corporations, Table 1, Tax Year 2022",
+            "url": "https://www.irs.gov/pub/irs-soi/22co01ccr.xlsx",
+            "year": 2022,
+            "note": "Other repair and maintenance implied gross margin 50.1%, shaded down because technician wages may sit outside COGS"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 34,
+        "high": 45,
+        "platform": "Google LSA (99 Calls)",
+        "sources": [
+          {
+            "title": "99 Calls: Google LSA Cost Per Lead by Industry 2025 vs 2026",
+            "url": "https://99calls.com/blog/lsa-cost-per-lead-by-industry",
+            "year": 2026,
+            "note": "Appliance repair Q2 2026 $34.35"
+          },
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "Appliance repair $45.49 average, 3 sites"
+          }
+        ]
+      },
+      "notes": "Small ticket, so break-even needs many jobs; the pitch should lean on repeat and referral customers."
+    },
+    "pest-control": {
+      "ticket": {
+        "low": 108,
+        "typical": 172,
+        "high": 2500,
+        "unit": "per first treatment (plans are the upside)",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Pest control cost",
+            "url": "https://www.homeadvisor.com/cost/environmental-safety/hire-an-insect-control-service/",
+            "year": 2025,
+            "note": "Average $172 per treatment, most $108 to $261"
+          },
+          {
+            "title": "HomeGuide: Pest control prices",
+            "url": "https://homeguide.com/costs/pest-control-prices",
+            "year": 2026,
+            "note": "Plans $300 to $900 a year"
+          },
+          {
+            "title": "HomeGuide: Termite treatment cost",
+            "url": "https://homeguide.com/costs/termite-treatment-cost",
+            "year": 2025,
+            "note": "Termite treatment $225 to $2,500"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.45,
+        "sources": [
+          {
+            "title": "Rollins, Inc. Q4 and Full Year 2025 results",
+            "url": "https://www.rollins.com/investors/press-releases/detail/426/rollins-inc-reports-fourth-quarter-and-full-year-2025-financial-results",
+            "year": 2025,
+            "note": "Gross margin 52.8%, excluding D&A, global scale leader; shaded down for an independent"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 64,
+        "high": 64,
+        "platform": "Google LSA (99 Calls, 2 sites)",
+        "sources": [
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "Pest control $64.48 average, 2 sites, low confidence"
+          }
+        ]
+      },
+      "notes": "Editor replaced the researcher blend ($400, assumed half on plans) with the sourced single treatment average; a first year plan of $300 to $900 is the upside. Margin shaded from Rollins 52.8% to 0.45 because Rollins excludes D&A and has scale."
+    },
+    "roofing": {
+      "ticket": {
+        "low": 395,
+        "typical": 1173,
+        "high": 16000,
+        "unit": "per new customer first job (repair typical; replacement is the upside)",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Roof repair cost",
+            "url": "https://www.homeadvisor.com/cost/roofing/repair-a-roof/",
+            "year": 2025,
+            "note": "Average $1,173, typical $395 to $1,967"
+          },
+          {
+            "title": "HomeAdvisor: Roof replacement cost",
+            "url": "https://www.homeadvisor.com/cost/roofing/install-a-roof/",
+            "year": 2025,
+            "note": "National average $9,609, most $5,902 to $13,376"
+          },
+          {
+            "title": "HomeGuide: Roof replacement cost",
+            "url": "https://homeguide.com/costs/roof-replacement-cost",
+            "year": 2025,
+            "note": "National average $10,800, range $5,700 to $16,000"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.3,
+        "sources": [
+          {
+            "title": "IRS SOI Returns of Active Corporations, Table 1, Tax Year 2022",
+            "url": "https://www.irs.gov/pub/irs-soi/22co01ccr.xlsx",
+            "year": 2022,
+            "note": "Other specialty trade contractors 34.8%; roofing is material heavy, so 0.30"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 79,
+        "high": 162,
+        "platform": "Google LSA",
+        "sources": [
+          {
+            "title": "SearchLight: Roofing LSA Cost Per Lead (2026)",
+            "url": "https://searchlightdigital.io/roofing-google-lsa-cost-per-lead/",
+            "year": 2026,
+            "note": "$79 per lead, 10 contractors, Q1 2026; about $731 per paying customer derived from its table"
+          },
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "Roofing $143.28 average, 12 sites"
+          },
+          {
+            "title": "The Media Captain: LSA Stats and Cost Per Lead",
+            "url": "https://www.themediacaptain.com/google-local-service-ad-statistics/",
+            "year": 2025,
+            "note": "Roofer $162"
+          }
+        ]
+      },
+      "notes": "Editor replaced the researcher blend ($3,200) with the sourced repair average. For a replacement-only roofer, override the ticket to about $9,600."
+    },
+    "concrete": {
+      "ticket": {
+        "low": 1600,
+        "typical": 3200,
+        "high": 14500,
+        "unit": "per project (patio typical, driveway upside)",
+        "sources": [
+          {
+            "title": "HomeGuide: Concrete patio cost",
+            "url": "https://homeguide.com/costs/concrete-patio-cost",
+            "year": 2025,
+            "note": "Basic 20x20 patio $1,600 to $4,800"
+          },
+          {
+            "title": "HomeAdvisor: Concrete driveway cost",
+            "url": "https://www.homeadvisor.com/cost/garages/install-a-concrete-driveway/",
+            "year": 2025,
+            "note": "Average $6,400, most $2,700 to $14,500"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.3,
+        "sources": [
+          {
+            "title": "IRS SOI Returns of Active Corporations, Table 1, Tax Year 2022",
+            "url": "https://www.irs.gov/pub/irs-soi/22co01ccr.xlsx",
+            "year": 2022,
+            "note": "Other specialty trade contractors 34.8%; 0.30 sits below it"
+          }
+        ]
+      },
+      "rentedLead": null,
+      "notes": "Typical $3,200 is the midpoint of the patio range, below the $6,400 driveway average (researcher blend was $4,500). Rented lead set to null: the only figures were 99 Calls paving and masonry stand-ins from 2 sites each, on categories not on Google's LSA list."
+    },
+    "fencing": {
+      "ticket": {
+        "low": 304,
+        "typical": 2600,
+        "high": 12000,
+        "unit": "per project (blended repair and new fence)",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Fence installation cost",
+            "url": "https://www.homeadvisor.com/cost/fencing/install-a-fence/",
+            "year": 2025,
+            "note": "National average $3,277, range $425 to $13,700"
+          },
+          {
+            "title": "HomeAdvisor: Fence repair cost",
+            "url": "https://www.homeadvisor.com/cost/fencing/repair-a-fence/",
+            "year": 2025,
+            "note": "Repair average $618, range $304 to $948"
+          },
+          {
+            "title": "HomeGuide: Fence installation cost",
+            "url": "https://homeguide.com/costs/fence-installation-cost",
+            "year": 2026,
+            "note": "New fence $4,000 to $12,000"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.3,
+        "sources": [
+          {
+            "title": "IRS SOI Returns of Active Corporations, Table 1, Tax Year 2022",
+            "url": "https://www.irs.gov/pub/irs-soi/22co01ccr.xlsx",
+            "year": 2022,
+            "note": "Other specialty trade contractors 34.8%; lumber heavy, so 0.30"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 71,
+        "high": 71,
+        "platform": "Google LSA (The Media Captain, low confidence)",
+        "sources": [
+          {
+            "title": "The Media Captain: LSA Stats and Cost Per Lead",
+            "url": "https://www.themediacaptain.com/google-local-service-ad-statistics/",
+            "year": 2025,
+            "note": "Fencing Pro $71; data period and sample not stated"
+          }
+        ]
+      },
+      "notes": "Typical $2,600 sits below the sourced $3,277 installation average, allowing for some first jobs being repairs; the fact checker judged it conservative."
+    },
+    "pools": {
+      "ticket": {
+        "low": 500,
+        "typical": 1500,
+        "high": 2400,
+        "unit": "per new customer, first year of service",
+        "sources": [
+          {
+            "title": "HomeGuide: Pool maintenance costs",
+            "url": "https://homeguide.com/costs/pool-maintenance-cost",
+            "year": 2025,
+            "note": "Monthly service $122, range $80 to $200; about $1,400 a year typical"
+          },
+          {
+            "title": "HomeGuide: Pool repair cost",
+            "url": "https://homeguide.com/costs/pool-repair-cost",
+            "year": 2025,
+            "note": "Leak repair $500 to $1,500"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.35,
+        "sources": []
+      },
+      "rentedLead": {
+        "low": 45,
+        "high": 45,
+        "platform": "Google Search Ads (LocaliQ Pools and Spas median, not LSA)",
+        "sources": [
+          {
+            "title": "LocaliQ, 2025 Search Ad Benchmarks for Home Services",
+            "url": "https://localiq.com/blog/home-services-search-advertising-benchmarks/",
+            "year": 2025,
+            "note": "Pools and Spas $45.15 per lead median, April 2024 to March 2025 data"
+          }
+        ]
+      },
+      "notes": "Estimate, not verified: no pool service margin source; SOI other specialty 34.8% covers pool construction, not route service. 0.35 is a placeholder. High lowered from $87,000 (a pool build) to $2,400 (12 months at $200) so the unit stays consistent. For a pool builder lead, override the ticket to about $62,500 to $65,909 (HomeGuide and HomeAdvisor inground averages). The Skimmer $216 a month figure was refuted and is not used."
+    },
+    "landscaping": {
+      "ticket": {
+        "low": 300,
+        "typical": 2000,
+        "high": 14750,
+        "unit": "per new customer, first year of maintenance or one project",
+        "sources": [
+          {
+            "title": "HomeGuide: Average cost of landscaping maintenance",
+            "url": "https://homeguide.com/costs/average-cost-of-landscaping-maintenance",
+            "year": 2026,
+            "note": "$150 a month average, $100 to $200"
+          },
+          {
+            "title": "HomeAdvisor: Landscaping cost",
+            "url": "https://www.homeadvisor.com/cost/landscape/install-landscaping/",
+            "year": 2025,
+            "note": "Project average $3,516, range $200 to $14,750"
+          },
+          {
+            "title": "HomeGuide: Landscaping costs",
+            "url": "https://homeguide.com/costs/landscaping-costs",
+            "year": 2026,
+            "note": "Small projects $300 to $800, large jobs $2,000 to $4,000"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.25,
+        "sources": [
+          {
+            "title": "BrightView FY2025 results",
+            "url": "https://investor.brightview.com/press-releases/press-release-details/2025/BrightView-Posts-Q4-and-FY-2025-Earnings-With-Record-Adjusted-EBITDA-Projects-Fiscal-Year-2026-Revenue-Adjusted-EBITDA-and-Margin-Growth-Increases-Existing-Share-Repurchase-Authorization/default.aspx",
+            "year": 2025,
+            "note": "Gross margin 23.3% (commercial, depreciation in cost of services)"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 37,
+        "high": 59,
+        "platform": "Google LSA",
+        "sources": [
+          {
+            "title": "99 Calls: Google LSA Cost Per Lead by Industry 2025 vs 2026",
+            "url": "https://99calls.com/blog/lsa-cost-per-lead-by-industry",
+            "year": 2026,
+            "note": "Landscaping Q2 2026 $37.29"
+          },
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "Landscaping $59.22 average, 3 sites"
+          }
+        ]
+      },
+      "notes": "Typical $2,000 is the bottom of HomeGuide large jobs and below the HomeAdvisor project average. Margin lowered from 0.30 to 0.25 so it is not above its only source; small residential firms may run higher."
+    },
+    "painting": {
+      "ticket": {
+        "low": 350,
+        "typical": 2000,
+        "high": 10000,
+        "unit": "per project",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Cost to paint interior of house",
+            "url": "https://www.homeadvisor.com/cost/painting/paint-a-home-interior/",
+            "year": 2025,
+            "note": "Interior national average $2,022, range $350 to $5,800"
+          },
+          {
+            "title": "HomeAdvisor: Cost to paint the exterior of a house",
+            "url": "https://www.homeadvisor.com/cost/painting/paint-a-home-exterior/",
+            "year": 2025,
+            "note": "Exterior average $3,178"
+          },
+          {
+            "title": "HomeGuide: Cost to hire a painter",
+            "url": "https://homeguide.com/costs/cost-to-hire-a-painter",
+            "year": 2025,
+            "note": "Full interior $2,900 to $8,800; exterior $2,600 to $5,700"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.35,
+        "sources": [
+          {
+            "title": "IRS SOI Returns of Active Corporations, Table 1, Tax Year 2022",
+            "url": "https://www.irs.gov/pub/irs-soi/22co01ccr.xlsx",
+            "year": 2022,
+            "note": "Other specialty trade contractors 34.8% measured; PCA 50% is a pricing target only"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 33,
+        "high": 46,
+        "platform": "Google LSA",
+        "sources": [
+          {
+            "title": "99 Calls: Google LSA Cost Per Lead by Industry 2025 vs 2026",
+            "url": "https://99calls.com/blog/lsa-cost-per-lead-by-industry",
+            "year": 2026,
+            "note": "Painting Q2 2026 $33.06"
+          },
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "Painting $45.60 average, 14 sites"
+          }
+        ]
+      },
+      "notes": "Typical is the lower sourced average (interior $2,022) rounded down; researcher blend was $2,500. Margin lowered from 0.40 to 0.35 to match measured SOI."
+    },
+    "foundation-repair": {
+      "ticket": {
+        "low": 250,
+        "typical": 5000,
+        "high": 20000,
+        "unit": "per repair project",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Foundation repair cost",
+            "url": "https://www.homeadvisor.com/cost/foundations/repair-a-foundation/",
+            "year": 2025,
+            "note": "Average $5,174, most $2,225 to $8,133"
+          },
+          {
+            "title": "HomeGuide: Foundation repair cost",
+            "url": "https://homeguide.com/costs/foundation-repair-cost",
+            "year": 2026,
+            "note": "Crack repair $250 to $800; settling repairs $4,500 to $20,000"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.35,
+        "sources": [
+          {
+            "title": "IRS SOI Returns of Active Corporations, Table 1, Tax Year 2022",
+            "url": "https://www.irs.gov/pub/irs-soi/22co01ccr.xlsx",
+            "year": 2022,
+            "note": "Other specialty trade contractors 34.8% (proxy)"
+          }
+        ]
+      },
+      "rentedLead": null,
+      "notes": "Typical is the HomeAdvisor average rounded down, which already mixes crack repairs with piering. Rented lead unknown: Foundations services is LSA eligible but no benchmark was found."
+    },
+    "remodeling": {
+      "ticket": {
+        "low": 3500,
+        "typical": 12000,
+        "high": 50000,
+        "unit": "per remodel project",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Bathroom remodel cost",
+            "url": "https://www.homeadvisor.com/cost/bathrooms/remodel-a-bathroom/",
+            "year": 2025,
+            "note": "Average $12,151, typically $6,651 to $17,657"
+          },
+          {
+            "title": "HomeAdvisor: Kitchen remodel cost",
+            "url": "https://www.homeadvisor.com/cost/kitchens/remodel-a-kitchen/",
+            "year": 2025,
+            "note": "Average $26,945"
+          },
+          {
+            "title": "HomeGuide: Kitchen remodel cost",
+            "url": "https://homeguide.com/costs/kitchen-remodel-cost",
+            "year": 2025,
+            "note": "Kitchen $15,000 to $50,000; bathroom $3,500 to $25,000+"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.3,
+        "sources": [
+          {
+            "title": "NAHB: Home Remodeling Profit Margin Jumps",
+            "url": "https://www.nahb.org/blog/2026/04/home-remodeling-profit-margin",
+            "year": 2024,
+            "note": "Average remodeler gross margin 29.9% in fiscal 2024 (2026 Cost of Doing Business Study)"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 71,
+        "high": 106,
+        "platform": "Google LSA (99 Calls)",
+        "sources": [
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "Home improvement $71.11 (4 sites); remodeling $106.45 (5 sites)"
+          }
+        ]
+      },
+      "notes": "Typical is the bathroom average rounded down (researcher blend was $15,000). Rented lead high capped at the remodeling figure; the $125.85 general contractor row rests on 3 sites with a $56 median."
+    },
+    "tree-service": {
+      "ticket": {
+        "low": 200,
+        "typical": 700,
+        "high": 3000,
+        "unit": "per job (removal or trimming)",
+        "sources": [
+          {
+            "title": "HomeAdvisor: Tree removal cost",
+            "url": "https://www.homeadvisor.com/cost/lawn-and-garden/tree-removal/",
+            "year": 2025,
+            "note": "Average $750, normal range $200 to $2,000"
+          },
+          {
+            "title": "HomeGuide: Tree removal cost",
+            "url": "https://homeguide.com/costs/tree-removal-cost",
+            "year": 2026,
+            "note": "National average $850, max $3,000"
+          },
+          {
+            "title": "HomeGuide: Tree trimming cost",
+            "url": "https://homeguide.com/costs/tree-trimming-cost",
+            "year": 2026,
+            "note": "Trimming average $650 per tree"
+          }
+        ]
+      },
+      "grossMargin": {
+        "typical": 0.3,
+        "sources": [
+          {
+            "title": "The Davey Tree Expert Company 2025 Annual Report",
+            "url": "https://www.davey.com/media/dhvn01qx/2025-annual-report.pdf",
+            "year": 2025,
+            "note": "About 33.2% before depreciation, 29.4% after; mostly utility line clearance; 2025 depressed by a one-time claims adjustment"
+          }
+        ]
+      },
+      "rentedLead": {
+        "low": 38,
+        "high": 48,
+        "platform": "Google LSA (99 Calls)",
+        "sources": [
+          {
+            "title": "99 Calls: Google LSA Cost Per Lead by Industry 2025 vs 2026",
+            "url": "https://99calls.com/blog/lsa-cost-per-lead-by-industry",
+            "year": 2026,
+            "note": "Tree services Q2 2026 $37.77"
+          },
+          {
+            "title": "99 Calls: LSA Lead Cost Estimator",
+            "url": "https://99calls.com/LSA-Cost-Estimator",
+            "year": 2026,
+            "note": "Tree services $48.30 average, 5 sites"
+          }
+        ]
+      },
+      "notes": "Typical is the mean of three sourced averages ($750, $850, $650) rounded down."
+    }
+  },
+  "websiteMarket": {
+    "freelancer": {
+      "low": 1000,
+      "high": 5000
+    },
+    "agency": {
+      "low": 2000,
+      "high": 10000
+    },
+    "subscription": {
+      "lowMonthly": 79,
+      "highMonthly": 500
+    },
+    "sources": [
+      {
+        "title": "Fiverr: How Much Does it Cost to Hire a Web Designer in 2025?",
+        "url": "https://www.fiverr.com/resources/guides/business/web-designer-costs",
+        "year": 2025,
+        "note": "Basic small business site from a freelancer $1,000 to $5,000; $30 to $200 an hour (editorial guide, low confidence)"
+      },
+      {
+        "title": "Clutch: Web Design Company Pricing Guide 2026",
+        "url": "https://clutch.co/web-designers/pricing",
+        "year": 2026,
+        "note": "Agencies $2,000 to $100,000; most Clutch projects under $10,000; US $100 to $149 an hour. The $38,105 average is a skewed mean, do not quote"
+      },
+      {
+        "title": "GoodFirms: Website Development Cost 2026 survey",
+        "url": "https://www.goodfirms.co/resources/website-construction-cost-survey",
+        "year": 2026,
+        "note": "59.9% charge $1,000 to $3,000 for a basic site; 63% of fixed price quotes $1,000 to $15,000 (global, 31 countries)"
+      },
+      {
+        "title": "SiteMonth: Pay Monthly Websites",
+        "url": "https://www.sitemonth.com/",
+        "year": 2026,
+        "note": "$79 a month plus $399 setup up to $199 plus $899, no contract"
+      },
+      {
+        "title": "Lifted Websites: Website as a Service",
+        "url": "https://liftedwebsites.com/waas-website-as-a-service/",
+        "year": 2026,
+        "note": "$200 to $500 a month, no build fee"
+      }
+    ]
+  }
+}

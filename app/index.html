@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0b0d">
+<title>Lead Command Center</title>
+<link rel="icon" href="/app/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=League+Gothic&display=swap">
+<link rel="stylesheet" href="/app/styles.css">
+<script type="module" src="/app/app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar" id="topbar">
+  <div class="topbar-row">
+    <a class="brand" href="#/week" aria-label="Lead Command Center, this week">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4v7.2L15.6 3H21l-7.4 7.8L21.4 21h-5.3l-5.4-7.3L9 15.5V21H5z" fill="currentColor"/></svg>
+      <span class="brand-name">Lead Command Center</span>
+    </a>
+    <p class="topbar-run" id="topbar-run" aria-live="polite"></p>
+    <div class="topbar-stages" id="topbar-stages" aria-label="Leads per outreach stage"></div>
+    <div class="topbar-actions">
+      <button type="button" class="btn btn-quiet btn-icon" id="reload" aria-label="Reload data (r)" title="Reload data (r)">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10a6 6 0 1 1-1.8-4.3M16 3.5V7h-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <a class="btn btn-quiet" href="/api/export.csv" download>Export CSV</a>
+      <button type="button" class="btn btn-quiet btn-icon" id="help-open" aria-label="Keyboard shortcuts (?)" title="Keyboard shortcuts (?)">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="5" width="16" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 8h1M8 8h1M11 8h1M14 8h1M6 12h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="nav" aria-label="Views">
+    <a href="#/week" data-nav="week">This week</a>
+    <a href="#/pipeline" data-nav="pipeline">Pipeline</a>
+    <a href="#/queue" data-nav="queue">Research queue</a>
+    <a href="#/runs" data-nav="runs">Runs</a>
+    <a href="#/coverage" data-nav="coverage">Coverage</a>
+    <a href="#/settings" data-nav="settings">Settings</a>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <div class="loading" aria-busy="true">
+    <div class="skel skel-title"></div>
+    <div class="skel skel-line"></div>
+    <div class="skel skel-block"></div>
+    <div class="skel skel-block"></div>
+    <noscript><p>The Lead Command Center needs JavaScript. It runs only on this machine.</p></noscript>
+  </div>
+</main>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+<dialog class="help" id="help" aria-labelledby="help-title">
+  <div class="help-head">
+    <h2 id="help-title">Keyboard shortcuts</h2>
+    <button type="button" class="btn btn-quiet" id="help-close">Close</button>
+  </div>
+  <div class="help-grid">
+    <section>
+      <h3>Anywhere</h3>
+      <dl class="keys">
+        <div><dt><kbd>g</kbd> <kbd>w</kbd></dt><dd>This week</dd></div>
+        <div><dt><kbd>g</kbd> <kbd>p</kbd></dt><dd>Pipeline</dd></div>
+        <div><dt><kbd>g</kbd> <kbd>q</kbd></dt><dd>Research queue</dd></div>
+        <div><dt><kbd>g</kbd> <kbd>r</kbd></dt><dd>Runs</dd></div>
+        <div><dt><kbd>g</kbd> <kbd>c</kbd></dt><dd>Coverage</dd></div>
+        <div><dt><kbd>g</kbd> <kbd>s</kbd></dt><dd>Settings</dd></div>
+        <div><dt><kbd>r</kbd></dt><dd>Reload data from disk</dd></div>
+        <div><dt><kbd>?</kbd></dt><dd>This list</dd></div>
+      </dl>
+    </section>
+    <section>
+      <h3>Lead lists and detail</h3>
+      <dl class="keys">
+        <div><dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>Next and previous lead</dd></div>
+        <div><dt><kbd>Enter</kbd> or <kbd>o</kbd></dt><dd>Open the selected lead</dd></div>
+        <div><dt><kbd>p</kbd></dt><dd>Present the selected lead</dd></div>
+        <div><dt><kbd>/</kbd></dt><dd>Search the pipeline</dd></div>
+        <div><dt><kbd>b</kbd></dt><dd>Pipeline: switch table and board</dd></div>
+      </dl>
+    </section>
+    <section>
+      <h3>Present</h3>
+      <dl class="keys">
+        <div><dt><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></dt><dd>Desktop, tablet, phone</dd></div>
+        <div><dt><kbd>t</kbd></dt><dd>Switch demo and pitch</dd></div>
+        <div><dt><kbd>f</kbd></dt><dd>Full screen</dd></div>
+        <div><dt><kbd>Esc</kbd></dt><dd>Leave the presentation</dd></div>
+      </dl>
+    </section>
+  </div>
+</dialog>
+</body>
+</html>

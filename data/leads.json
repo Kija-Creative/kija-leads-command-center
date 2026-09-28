@@ -1,0 +1,1727 @@
+[
+  {
+    "id": "24-7-diesel-repair-road-service-dallas-tx",
+    "business": "24/7 Diesel Repair & Road Service",
+    "category": "Diesel / Truck Repair",
+    "categoryKey": "diesel-truck-repair",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "817-902-6422",
+    "googleRating": 4.9,
+    "googleReviews": 147,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 2,
+    "websiteStatus": "Fresh Google-review source explicitly lists no website; no owned domain surfaced",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "Emergency truck failures are high-value, urgent leads, and the business currently lacks a strong owned landing experience.",
+    "pitchAngle": "24/7 service deserves a 24/7 conversion page that gets stranded drivers from Google to a call in one tap.",
+    "demoConcept": "Mobile-first roadside diesel site with Call Now, service radius, fleet maintenance, repair categories and review proof.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://radiatorrepairhub.com/business/247-diesel-repair-and-road-service-3f22f0b5-88cc-4b04-9cb1-b9869e737ab7",
+        "label": "radiatorrepairhub.com",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://stackkly.com/locations/texas/dallas/truck-repair/24-7-diesel-repair-road-service",
+        "label": "stackkly.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "Fresh Google-review source explicitly lists no website; no owned domain surfaced",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build mobile-first roadside demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "racing"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "a-b-muffler-shop-grand-prairie-tx",
+    "business": "A & B Muffler Shop",
+    "category": "Muffler / Exhaust / Brake Repair",
+    "categoryKey": "muffler-exhaust",
+    "city": "Grand Prairie",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "972-264-6325",
+    "googleRating": 4.8,
+    "googleReviews": 192,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 2,
+    "ticketValue": 2,
+    "visualFit": 3,
+    "websiteStatus": "No owned site found; current business directory says Facebook only",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "Decades in business plus 192 Google reviews and highly visual custom exhaust work give Kija strong story and portfolio material.",
+    "pitchAngle": "Show 50+ years of exhaust expertise and make custom work, inspections and repair requests easy to understand and book.",
+    "demoConcept": "Heritage shop site with custom exhaust/welding gallery, services, review proof and quote/appointment CTA.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://autorepairscore.com/tx/grand-prairie/a-b-muffler-shop-grand-prairie-texas",
+        "label": "autorepairscore.com",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://www.allbiz.com/business/a-b-muffler-shop_3s-972-264-6325",
+        "label": "allbiz.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "No owned site found; current business directory says Facebook only",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build heritage exhaust demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "midnight"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "adams-brothers-roof-repair-dallas-tx",
+    "business": "Adams Brothers Roof Repair",
+    "category": "Roofing",
+    "categoryKey": "roofing",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "469-940-4277",
+    "googleRating": 4.9,
+    "googleReviews": 35,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 3,
+    "websiteStatus": "Dallas listing is phone-only; exact-name domain found belongs to a different Marietta, GA business",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "Roofing is high-ticket enough that even a small lift in inspection requests can justify a strong local website.",
+    "pitchAngle": "Give storm and repair searches a Dallas-specific place to request inspections instead of relying on phone-only discovery.",
+    "demoConcept": "Storm/repair-first roofing site with emergency CTA, damage gallery, inspection form, service areas and review proof.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://txinspectors.net/business/tx/dallas/adams-brothers-roof-repair/",
+        "label": "txinspectors.net",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://adamsroofrepair.best/message-us/",
+        "label": "adamsroofrepair.best",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "Dallas listing is phone-only; exact-name domain found belongs to a different Marietta, GA business",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build Dallas roofing inspection demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "contractor",
+      "palette": "slate"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "all-auto-service-body-fort-worth-tx",
+    "business": "All Auto Service & Body",
+    "category": "Auto Repair / Body Shop",
+    "categoryKey": "auto-body-collision",
+    "city": "Fort Worth",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "682-224-2942",
+    "googleRating": 5,
+    "googleReviews": 248,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 2,
+    "ticketValue": 3,
+    "visualFit": 3,
+    "websiteStatus": "Only Google-hosted business.site/third-party presence found; no standalone owned domain",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "248 Google reviews plus highly visual body/paint work make this one of the strongest demo opportunities in the batch.",
+    "pitchAngle": "Replace the generic Google-hosted presence with a shop-owned site that shows the quality customers already rave about.",
+    "demoConcept": "Split repair/bodywork site with before-after gallery, estimate upload, services, trust proof and mobile conversion CTAs.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://reviews.birdeye.com/all-auto-service-body-156040764526394",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://www.autotechiq.com/auto-repair-shop/85508/all-auto-service-body",
+        "label": "autotechiq.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "Only Google-hosted business.site/third-party presence found; no standalone owned domain",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build collision/repair demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "midnight"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "als-auto-repair-shop-dallas-tx",
+    "business": "Al's Auto Repair Shop",
+    "category": "Auto Repair",
+    "categoryKey": "auto-repair",
+    "city": "Dallas",
+    "area": "Oak Cliff",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "214-946-4100",
+    "googleRating": 4.8,
+    "googleReviews": 308,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 2,
+    "websiteStatus": "No credible standalone website found",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "Long-established shop with unusually strong review volume and weak owned web presence.",
+    "pitchAngle": "You already built decades of trust; the site should turn that reputation into more calls.",
+    "demoConcept": "Heritage-forward local repair site with reviews, services, estimate CTA and map.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://txinspectors.net/business/tx/dallas/als-auto-repair-shop/",
+        "label": "txinspectors.net",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://www.bbb.org/us/tx/dallas/profile/auto-repair/als-auto-repair-shop-0875-90014396",
+        "label": "bbb.org",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "No credible standalone website found",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build private homepage demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "enamel"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "auto-shop-near-me-dallas-tx",
+    "business": "Auto Shop Near Me",
+    "category": "Auto Body / Repair",
+    "categoryKey": "auto-body-collision",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "214-605-6471",
+    "googleRating": 5,
+    "googleReviews": 50,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 2,
+    "websiteStatus": "Explicitly listed without website in researched source",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "Strong rating and a business name that can support local-search positioning.",
+    "pitchAngle": "Use the name itself as a search advantage and make estimates frictionless.",
+    "demoConcept": "Local-SEO-first body shop site with damage-photo upload and fast estimate CTA.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/auto-shop-near-me",
+        "label": "autorepairestimate.ai",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "Explicitly listed without website in researched source",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Verify Google profile details",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "graphite"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "bamian-tires-and-auto-repair-dallas-tx",
+    "business": "Bamian Tires and Auto Repair",
+    "category": "Tires / Auto Repair",
+    "categoryKey": "tire-shop",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "214-272-9897",
+    "googleRating": 4.8,
+    "googleReviews": 113,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 2,
+    "visualFit": 2,
+    "websiteStatus": "No clear owned domain found; profile-driven presence",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "Medium-High",
+    "whyKija": "Multiple revenue paths: tires, repairs, financing and appointments.",
+    "pitchAngle": "Turn Google traffic into tire quotes, financing inquiries and booked service.",
+    "demoConcept": "Conversion-focused tire/repair site with quote funnels and financing section.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://www.yellowpages.com/dallas-tx/bpp/bamian-tires-576941632",
+        "label": "yellowpages.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "No clear owned domain found; profile-driven presence",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Verify domain one more time",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "racing"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "bees-auto-body-dallas-tx",
+    "business": "Bee's Auto Body",
+    "category": "Auto Body / Collision",
+    "categoryKey": "auto-body-collision",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "214-388-3888",
+    "googleRating": 4.6,
+    "googleReviews": 100,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 3,
+    "websiteStatus": "Multiple researched sources indicated no website",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "Good review volume with simple, high-value visual service offering.",
+    "pitchAngle": "Show the honesty and repeat-business reputation while making estimates easy.",
+    "demoConcept": "Family-run collision site with reviews, before/after work and estimate form.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/bee-s-auto-body",
+        "label": "autorepairestimate.ai",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "Multiple researched sources indicated no website",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Verify current Maps listing",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "graphite"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "brownies-dallas-tx",
+    "business": "Brownie's",
+    "category": "Barber Shop",
+    "categoryKey": "barber",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "214-526-9207",
+    "googleRating": 4.7,
+    "googleReviews": 168,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 1,
+    "visualFit": 3,
+    "websiteStatus": "No credible owned standalone website found",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "Medium-High",
+    "whyKija": "Strong reputation and a very visual, personality-driven business.",
+    "pitchAngle": "The shop already has character; give people a place to meet the barbers and book.",
+    "demoConcept": "Editorial old-school barber site with history, barber profiles and booking CTA.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://www.barbershopdirectories.com/texas/dallas",
+        "label": "barbershopdirectories.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "No credible owned standalone website found",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Research ownership/contact",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "personal-care",
+      "palette": "noir"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "fenix-auto-body-shop-dallas-tx",
+    "business": "Fenix Auto Body Shop",
+    "category": "Auto Body / Collision",
+    "categoryKey": "auto-body-collision",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "469-897-1144",
+    "googleRating": 5,
+    "googleReviews": 48,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 2,
+    "ticketValue": 3,
+    "visualFit": 3,
+    "websiteStatus": "No standalone domain surfaced; needs final Maps check",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "Medium",
+    "whyKija": "Excellent rating and visually demonstrable service, but website status needs recheck.",
+    "pitchAngle": "Lead with visual transformation and instant estimate convenience.",
+    "demoConcept": "High-impact before/after collision landing site with photo estimate.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "No standalone domain surfaced; needs final Maps check",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "Research",
+      "nextAction": "Final website verification",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "graphite"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "gm-auto-care-dallas-tx",
+    "business": "GM AUTO CARE",
+    "category": "Auto Repair / Truck Repair",
+    "categoryKey": "auto-repair",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "972-681-4966",
+    "googleRating": 4.9,
+    "googleReviews": 501,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 2,
+    "websiteStatus": "No website surfaced; fresh Google-review directory explicitly lists no website",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "More than 500 Google reviews already prove trust, but there is no owned conversion path for repair or estimate traffic.",
+    "pitchAngle": "You already won the trust battle on Google; the missing piece is an owned site that turns that volume into calls and estimates.",
+    "demoConcept": "High-trust mechanic site with service grid, review proof, estimate CTA, hours/map and mobile call button.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://radiatorrepairhub.com/business/gm-auto-care-6580908f-1a7a-4960-bc90-7f3c4e53bbf0",
+        "label": "radiatorrepairhub.com",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://stackkly.com/locations/texas/dallas/truck-repair/gm-auto-care",
+        "label": "stackkly.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "No website surfaced; fresh Google-review directory explicitly lists no website",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build private homepage demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "graphite"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "j-n-auto-service-fort-worth-tx",
+    "business": "J & N Auto Service",
+    "category": "Auto Repair",
+    "categoryKey": "auto-repair",
+    "city": "Fort Worth",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "817-923-9211",
+    "googleRating": 4.8,
+    "googleReviews": 127,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 2,
+    "ticketValue": 3,
+    "visualFit": 2,
+    "websiteStatus": "Facebook is the listed website; no owned domain surfaced for the Fort Worth shop",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "Established neighborhood shop with a strong review base but no owned web presence beyond Facebook.",
+    "pitchAngle": "Preserve the mom-and-pop trust while giving common repairs, appointments and shop information a credible home.",
+    "demoConcept": "Owner-led neighborhood mechanic site with services, review proof, appointment request, hours/map and trust story.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://findaloco.com/en/directory/j-n-auto-service/",
+        "label": "findaloco.com",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://reviews.birdeye.com/j-n-auto-service-156043222689243",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "Facebook is the listed website; no owned domain surfaced for the Fort Worth shop",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build owner-led service demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "racing"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "l-r-paint-body-shop-dallas-tx",
+    "business": "L & R Paint & Body Shop",
+    "category": "Auto Body / Collision",
+    "categoryKey": "auto-body-collision",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "972-484-3595",
+    "googleRating": 4.7,
+    "googleReviews": 52,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 3,
+    "websiteStatus": "No owned website listed in researched sources",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "Established collision shop with visual proof, insurance work and high-ticket jobs.",
+    "pitchAngle": "Put decades of collision experience and insurance capability in one credible home.",
+    "demoConcept": "Before/after collision site with hail/frame/insurance service paths.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/l-r-paint-body-shop",
+        "label": "autorepairestimate.ai",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://reviews.birdeye.com/l-r-paint-body-shop-156052062419420",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "No owned website listed in researched sources",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build demo after final domain check",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "graphite"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "most-famous-cutz-dallas-tx",
+    "business": "Most Famous Cutz",
+    "category": "Barber Shop",
+    "categoryKey": "barber",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "214-980-4863",
+    "googleRating": 4.9,
+    "googleReviews": 165,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 2,
+    "ticketValue": 1,
+    "visualFit": 3,
+    "websiteStatus": "Facebook/Fresha third-party presence; no standalone owned site surfaced",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "The business already has visual personality and 165 Google reviews, but its brand lives on third-party platforms.",
+    "pitchAngle": "Create an owned brand hub that showcases the team and cuts while routing clients cleanly into booking.",
+    "demoConcept": "Bold editorial barber site with gallery, barber cards, review wall, Book Now and walk-in hours.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://reviews.birdeye.com/most-famous-cutz-170218599248625",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://maps.apple.com/place?place-id=I4AD2741B435E7D9E",
+        "label": "maps.apple.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "Facebook/Fresha third-party presence; no standalone owned site surfaced",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build visual booking demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "personal-care",
+      "palette": "mint"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "mustang-service-center-dallas-tx",
+    "business": "Mustang Service Center",
+    "category": "Auto Repair",
+    "categoryKey": "auto-repair",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "214-824-6716",
+    "googleRating": 4.9,
+    "googleReviews": 151,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 2,
+    "websiteStatus": "Fresh shop listing shows website blank; exact search found no credible owned domain",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "Medium-High",
+    "whyKija": "A 4.9 Google reputation and long-running independent-shop story are stronger than its current owned web presence.",
+    "pitchAngle": "Center the shop's honesty and reputation, then make service intake easier for East Dallas and Uptown drivers.",
+    "demoConcept": "Clean neighborhood-auto site with owner story, specialties, reviews and estimate/appointment request.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://www.autotechiq.com/auto-repair-shop/66306/mustang-service-center",
+        "label": "autotechiq.com",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://www.chamberofcommerce.com/business-directory/texas/dallas/auto-repair-shop/46659303-mustang-service-center",
+        "label": "chamberofcommerce.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "Fresh shop listing shows website blank; exact search found no credible owned domain",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Final review-count check, then build demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "midnight"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "no-limits-auto-collision-center-dallas-tx",
+    "business": "NO LIMITS AUTO COLLISION CENTER",
+    "category": "Auto Body / Collision",
+    "categoryKey": "auto-body-collision",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "214-334-2010",
+    "googleRating": 4.8,
+    "googleReviews": 24,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 3,
+    "websiteStatus": "Explicitly listed without website in researched source",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "Medium-High",
+    "whyKija": "Smaller review base but very clean fit for conversion-focused collision design.",
+    "pitchAngle": "Give Google traffic a direct path from trust to photo estimate.",
+    "demoConcept": "Bold collision site with gallery, insurance support and mobile estimate CTA.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/no-limits-auto-collision-center",
+        "label": "autorepairestimate.ai",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "Explicitly listed without website in researched source",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Verify current profile",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "midnight"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "papas-and-ninos-bodyshop-dallas-tx",
+    "business": "Papas and Ninos Bodyshop",
+    "category": "Auto Body / Collision",
+    "categoryKey": "auto-body-collision",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "469-231-8776",
+    "googleRating": 5,
+    "googleReviews": 60,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 3,
+    "websiteStatus": "No standalone site found in researched sources",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "Strong reviews plus visual before/after potential and bilingual opportunity.",
+    "pitchAngle": "Make estimates easier and present the family reputation customers already mention.",
+    "demoConcept": "Bilingual collision site with before/after gallery, insurance help and photo-estimate form.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://reviews.birdeye.com/papas-and-ninos-bodyshop-166619692947680",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "No standalone site found in researched sources",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build bilingual demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "graphite"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "prime-time-septic-pumping-inc-terrell-tx",
+    "business": "Prime Time Septic Pumping, Inc.",
+    "category": "Septic System Service",
+    "categoryKey": "septic",
+    "city": "Terrell",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "469-552-8185",
+    "googleRating": 5,
+    "googleReviews": 275,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 2,
+    "websiteStatus": "Phone-only presence; exact-name search surfaced no owned website",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "A perfect Google reputation and high-ticket service make a direct booking/quote funnel unusually valuable.",
+    "pitchAngle": "Turn 275 five-star reviews into booked pumping and inspection calls instead of sending prospects through directories.",
+    "demoConcept": "Emergency-first septic site with service area, pumping/inspection/repair paths, reviews and quote/call CTAs.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://www.septictankhub.com/texas/terrell/prime-time-septic-pumping-inc/",
+        "label": "septictankhub.com",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://txinspectors.net/business/tx/dallas/prime-time-septic-pumping-inc/",
+        "label": "txinspectors.net",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "Phone-only presence; exact-name search surfaced no owned website",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build emergency-service demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "home-services",
+      "palette": "ember"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "rios-used-tires-irving-tx",
+    "business": "Rios Used Tires",
+    "category": "Used Tires / Tire Shop",
+    "categoryKey": "tire-shop",
+    "city": "Irving",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "972-871-7635",
+    "googleRating": 4.8,
+    "googleReviews": 155,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 2,
+    "ticketValue": 2,
+    "visualFit": 2,
+    "websiteStatus": "No owned website listed; Facebook-only presence",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "Strong review volume and repeat local demand create a clear opportunity for tire-size, availability and quote requests.",
+    "pitchAngle": "People already trust the pricing and speed; make tire-size and quote requests easier before they call.",
+    "demoConcept": "Bilingual-friendly tire site with size request form, tire availability CTA, value proof, reviews and map/hours.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://reviews.birdeye.com/rios-used-tires-156071240369512",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://www.allbiz.com/business/rios-used-tires-972-871-7635",
+        "label": "allbiz.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "No owned website listed; Facebook-only presence",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build bilingual tire quote demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "midnight"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  },
+  {
+    "id": "top-tier-auto-repair-dallas-tx",
+    "business": "Top Tier Auto Repair",
+    "category": "European Auto Repair",
+    "categoryKey": "auto-repair",
+    "city": "Dallas",
+    "area": "",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "address": "",
+    "phone": "469-608-5410",
+    "googleRating": 5,
+    "googleReviews": 57,
+    "ratingSource": "",
+    "googleMapsUrl": "",
+    "placeId": "",
+    "placesFetchedAt": "",
+    "websiteGap": 3,
+    "ticketValue": 3,
+    "visualFit": 3,
+    "websiteStatus": "No website listed in researched sources",
+    "presence": {
+      "facebook": "",
+      "instagram": "",
+      "yelp": "",
+      "booking": "",
+      "other": []
+    },
+    "confidence": "High",
+    "whyKija": "High-value European vehicles create a strong ROI case for premium presentation.",
+    "pitchAngle": "Their customers drive premium cars; their digital presence should feel equally premium.",
+    "demoConcept": "Dark premium BMW/Mercedes/Audi/Porsche service site with estimate and booking CTA.",
+    "services": [],
+    "reviewThemes": [],
+    "languages": [],
+    "established": null,
+    "hours": "",
+    "demoCopy": {},
+    "sources": [
+      {
+        "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/top-tier-auto-repair",
+        "label": "autorepairestimate.ai",
+        "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://www.cityof.com/tx/dallas/top-tier-auto-repair-5850001",
+        "label": "cityof.com",
+        "checkedAt": "2026-09-26"
+      }
+    ],
+    "verification": {
+      "status": "needs-recheck",
+      "checkedAt": "2026-09-26",
+      "checks": [
+        {
+          "check": "sheet import",
+          "result": "No website listed in researched sources",
+          "url": ""
+        }
+      ],
+      "notes": ""
+    },
+    "outreach": {
+      "status": "New",
+      "nextAction": "Build premium demo",
+      "nextDate": "",
+      "owner": "",
+      "notes": "",
+      "history": [
+        {
+          "at": "2026-09-28T17:38:43.171Z",
+          "by": "sheet-import",
+          "type": "created",
+          "text": "Imported from the Google Sheet Lead Pipeline tab."
+        }
+      ]
+    },
+    "demo": {
+      "shareApproved": false,
+      "builtAt": "2026-09-28T17:39:13.221Z",
+      "template": "auto",
+      "palette": "racing"
+    },
+    "roiOverrides": {},
+    "addedAt": "2026-09-26",
+    "origin": "sheet-import",
+    "runId": ""
+  }
+]

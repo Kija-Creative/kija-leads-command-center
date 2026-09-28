@@ -1,0 +1,23 @@
+{
+  "name": "kija-lead-command-center",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Kija Creative weekly lead research, scoring, private demos and ROI pitch pages. Local only.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node --test \"test/**/*.test.js\"",
+    "check": "node src/cli/check.js",
+    "seed": "node src/cli/import-seed.js",
+    "plan": "node src/cli/plan.js",
+    "ingest": "node src/cli/ingest.js",
+    "demos": "node src/cli/build-demos.js",
+    "pitches": "node src/cli/build-pitches.js",
+    "probe": "node src/cli/probe.js",
+    "discover": "node src/cli/discover-places.js",
+    "export": "node src/cli/export-csv.js"
+  }
+}

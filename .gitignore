@@ -1,0 +1,9 @@
+node_modules/
+.env
+data/backups/
+exports/
+test-output/
+*.tmp
+# Generated pages: rebuild with npm run demos and npm run pitches. They stay private and local.
+demos/
+pitches/

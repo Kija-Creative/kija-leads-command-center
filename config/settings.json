@@ -1,0 +1,50 @@
+{
+  "weeklyQuota": 10,
+  "thresholds": {
+    "minRating": 4.5,
+    "preferredRating": 4.7,
+    "minReviews": 20,
+    "preferredReviews": 30,
+    "strongReviews": 75,
+    "minWebsiteGap": 2
+  },
+  "geography": {
+    "mode": "nationwide-rotation",
+    "metrosPerWeek": 4,
+    "homeMetro": "dallas-fort-worth",
+    "homeEveryWeek": true,
+    "homeMaxLeads": 3,
+    "rotationStart": "2026-09-28"
+  },
+  "categoriesPerWeek": 6,
+  "offer": {
+    "name": "Owned Website",
+    "price": 2500,
+    "priceConfirmed": false,
+    "timelineDays": 14,
+    "includes": [
+      "Custom designed homepage and service pages",
+      "Mobile first build",
+      "Call, estimate and booking paths",
+      "Google Business Profile connection",
+      "You own the domain, the site and the content"
+    ],
+    "ownershipLine": "You own it outright. No monthly rent to keep your own website.",
+    "optionalCare": {
+      "name": "Care plan",
+      "monthly": 0,
+      "description": ""
+    }
+  },
+  "contact": {
+    "name": "Jamey",
+    "title": "Design Director, Kija Creative",
+    "email": "james@kijacreative.com",
+    "phone": "",
+    "site": "https://kijacreative.com",
+    "address": ""
+  },
+  "demoDefaults": {
+    "conceptRibbon": true
+  }
+}
