@@ -2,13 +2,17 @@
 //
 // Renders private homepage demos to demos/<id>/index.html. Every page must
 // pass checkDemoHtml before it is written; a failure is reported and that file
-// is left untouched. Successful builds record lead.demo.builtAt, template and
-// palette through the store. This reads the clock once and passes it down.
+// is left untouched. The design direction, palette and variants come from
+// assignDirections over every lead (not just the selected ones), so a single
+// rebuild still keeps the batch varied. Successful builds record
+// lead.demo.builtAt, template, direction, palette and variants through the store. This reads the clock once and passes it down.
 // Nothing here publishes or sends anything.
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { assignDirections } from "../demo/assign.js";
+import { CATEGORY_VERTICALS, DIRECTIONS } from "../demo/directions/index.js";
 import { checkDemoHtml } from "../demo/guardrails.js";
 import { renderDemo } from "../demo/render.js";
 
@@ -81,10 +85,13 @@ export async function buildDemos({ store, rootDir, selection, now }) {
     return report;
   }
 
+  const categories = state.categories || {};
+  const assignments = assignDirections(leads, { directions: DIRECTIONS, categories, verticalMap: CATEGORY_VERTICALS });
+
   for (const lead of chosen) {
     let result;
     try {
-      result = renderDemo(lead, { categories: state.categories || {}, settings: state.settings || {}, now: nowIso });
+      result = renderDemo(lead, { categories, settings: state.settings || {}, now: nowIso, assignment: assignments.get(lead.id) });
     } catch (err) {
       report.failed.push({ id: lead.id, business: lead.business, errors: [`Render failed: ${err.message}`] });
       continue;
@@ -97,8 +104,16 @@ export async function buildDemos({ store, rootDir, selection, now }) {
     const file = demoPath(rootDir, lead.id);
     writeAtomic(file, result.html);
     // Keeps shareApproved and anything else the app stored on lead.demo.
-    lead.demo = { shareApproved: false, ...(lead.demo || {}), builtAt: nowIso, template: result.template, palette: result.palette };
-    report.built.push({ id: lead.id, business: lead.business, template: result.template, palette: result.palette, file: path.relative(rootDir, file).split(path.sep).join("/") });
+    lead.demo = {
+      shareApproved: false,
+      ...(lead.demo || {}),
+      builtAt: nowIso,
+      template: result.template,
+      direction: result.direction,
+      palette: result.palette,
+      variants: { ...result.variants },
+    };
+    report.built.push({ id: lead.id, business: lead.business, template: result.template, direction: result.direction, palette: result.palette, variants: result.variants, file: path.relative(rootDir, file).split(path.sep).join("/") });
   }
 
   if (report.built.length) await store.saveLeads(leads);
@@ -114,7 +129,7 @@ export function formatReport(report, selection) {
     lines.push(selection.mode === "missing" ? "Every lead already has a demo. Use --all to rebuild them." : `No leads matched ${label}.`);
     return lines.join("\n");
   }
-  for (const b of report.built) lines.push(`  built   ${b.id}  ${b.template}/${b.palette}  ${b.file}`);
+  for (const b of report.built) lines.push(`  built   ${b.id}  ${b.direction || b.template}/${b.palette}/${(b.variants && b.variants.hero) || ""}  ${b.file}`);
   for (const f of report.failed) {
     lines.push(`  failed  ${f.id}`);
     for (const e of f.errors) lines.push(`          ${e}`);

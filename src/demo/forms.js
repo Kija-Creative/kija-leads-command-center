@@ -62,7 +62,47 @@ export const FORM_COPY = {
   },
 };
 
-const WEEKDAYS_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+// Booking changes shape by trade: a barber picks a chair, a tattoo studio takes
+// an inquiry before any appointment, a groomer needs to know the pet. The kind
+// stays "booking" (the pitch module describes kinds); the flavor sets the fields.
+export function bookingFlavor(categoryKey) {
+  if (categoryKey === "barber") return "barber";
+  if (categoryKey === "hair-salon") return "salon";
+  if (categoryKey === "nail-salon") return "nails";
+  if (categoryKey === "tattoo") return "tattoo";
+  if (categoryKey === "pet-grooming") return "pet";
+  return "default";
+}
+
+export const FLAVOR_COPY = {
+  barber: {
+    title: ["Book your chair", "Reserve su silla"],
+    intro: ["Pick a service, a barber if you have one, and a time. The shop confirms before it is final.", "Elija un servicio, un barbero si tiene uno, y un horario. La barbería confirma antes de que quede fijo."],
+    cta: ["Request this time", "Pedir este horario"],
+  },
+  salon: {
+    title: ["Book your chair", "Reserve su silla"],
+    intro: ["Color and extensions start with a short consultation. Pick a service and a time and the salon confirms.", "El color y las extensiones empiezan con una consulta corta. Elija un servicio y un horario y el salón confirma."],
+    cta: ["Request this time", "Pedir este horario"],
+  },
+  nails: {
+    title: ["Book your set", "Reserve su cita"],
+    intro: ["Pick a service and a time. Bring inspiration photos if you have them.", "Elija un servicio y un horario. Traiga fotos de inspiración si tiene."],
+    cta: ["Request this time", "Pedir este horario"],
+  },
+  tattoo: {
+    title: ["Start a custom piece", "Empiece una pieza personalizada"],
+    intro: ["Tell the studio about the idea. Reference images and the final design are settled at the consultation.", "Cuéntele al estudio su idea. Las imágenes de referencia y el diseño final se ven en la consulta."],
+    cta: ["Send my idea", "Enviar mi idea"],
+  },
+  pet: {
+    title: ["Book a groom", "Reserve un baño"],
+    intro: ["Tell the groomer about your pet and pick a day. First visits take a little longer.", "Cuéntele al groomer sobre su mascota y elija un día. La primera visita toma un poco más."],
+    cta: ["Request this groom", "Pedir esta cita"],
+  },
+};
+
+const WEEKDAYS_EN =["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const WEEKDAYS_ES = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
 
 // The next seven days after `now`, in UTC so a render is identical on any machine.
@@ -204,14 +244,58 @@ function kindFields(kind, ctx) {
       const days = ctx.days
         .map((d) => `<label class="f-chip day"><input type="radio" name="day" value="${d.value}"><span><small>${i18n.t(d.en, d.es)}</small><b>${d.date}</b></span></label>`)
         .join("");
+      const dayField = `<fieldset class="f-field"><legend>${t("Day", "Día")}</legend><div class="f-chips">${days}</div></fieldset>`;
+      const timeField = chips(i18n, "time", t("Time of day", "Hora del día"), [
+        { value: "morning", en: "Morning", es: "Mañana" },
+        { value: "afternoon", en: "Afternoon", es: "Tarde" },
+        { value: "evening", en: "Evening", es: "Noche" },
+      ]);
+      const flavor = bookingFlavor(ctx.categoryKey);
+      const who = { barber: ["Any barber", "Cualquier barbero", "Barber", "Barbero"], salon: ["Any stylist", "Cualquier estilista", "Stylist", "Estilista"], nails: ["Any technician", "Cualquier técnica", "Nail tech", "Técnica"], tattoo: ["Any artist", "Cualquier artista", "Artist", "Artista"] }[flavor];
+      // Chair numbers stand in for names the owner has not given us yet.
+      const person = who ? field("rq-person", t(`Preferred ${who[2].toLowerCase()}`, `${who[3]} de preferencia`), `<select class="f-input" id="rq-person" name="person"><option value="any"${i18n.ti(who[0], who[1])}>${esc(who[0])}</option>${[1, 2, 3, 4].map((n) => `<option value="chair-${n}"${i18n.ti(`Chair 0${n}`, `Silla 0${n}`)}>Chair 0${n}</option>`).join("")}</select>`, t("Names go here once the owner shares them.", "Aquí van los nombres cuando el dueño los comparta.")) : "";
+      if (flavor === "tattoo") {
+        return [
+          `<div class="f-row">${field("rq-placement", t("Placement", "Lugar del cuerpo"), `<input class="f-input" id="rq-placement" name="placement" type="text"${i18n.placeholder("Forearm, calf, shoulder", "Antebrazo, pantorrilla, hombro")}>`)}${person}</div>`,
+          chips(i18n, "size", t("Rough size", "Tamaño aproximado"), [
+            { value: "small", en: "Palm size or smaller", es: "Del tamaño de la palma o menos" },
+            { value: "medium", en: "Hand to forearm", es: "De mano a antebrazo" },
+            { value: "large", en: "Large or a sleeve", es: "Grande o manga" },
+            { value: "unsure", en: "Not sure", es: "No sé" },
+          ]),
+          chips(i18n, "ink", t("Color or black and gray?", "¿Color o negro y gris?"), [
+            { value: "black-gray", en: "Black and gray", es: "Negro y gris" },
+            { value: "color", en: "Color", es: "Color" },
+            { value: "open", en: "Open to either", es: "Cualquiera" },
+          ]),
+          notesField(i18n, t("The idea", "La idea"), ["Style, meaning, anything the artist should know", "Estilo, significado, lo que el artista deba saber"]),
+          contactRow(i18n),
+        ];
+      }
+      if (flavor === "pet") {
+        return [
+          ctx.services.length ? serviceSelect(i18n, ctx.services, t("Service", "Servicio")) : "",
+          `<div class="f-row">${field("rq-pet", t("Pet's name", "Nombre de la mascota"), `<input class="f-input" id="rq-pet" name="pet" type="text">`)}${field("rq-breed", t("Breed", "Raza"), `<input class="f-input" id="rq-breed" name="breed" type="text"${i18n.placeholder("Or best guess", "O su mejor idea")}>`)}</div>`,
+          chips(i18n, "size", t("Size", "Tamaño"), [
+            { value: "small", en: "Small", es: "Chico" },
+            { value: "medium", en: "Medium", es: "Mediano" },
+            { value: "large", en: "Large", es: "Grande" },
+            { value: "xl", en: "Extra large", es: "Extra grande" },
+          ]),
+          chips(i18n, "first", t("First visit here?", "¿Primera visita?"), [
+            { value: "yes", en: "Yes", es: "Sí" },
+            { value: "no", en: "No", es: "No" },
+          ]),
+          notesField(i18n, t("Coat and temperament notes", "Notas del pelo y carácter"), ["Matting, nervous with dryers, anything that helps", "Nudos, nervios con la secadora, lo que ayude"]),
+          dayField,
+          contactRow(i18n),
+        ];
+      }
       return [
         ctx.services.length ? serviceSelect(i18n, ctx.services, t("Service", "Servicio")) : "",
-        `<fieldset class="f-field"><legend>${t("Day", "Día")}</legend><div class="f-chips">${days}</div></fieldset>`,
-        chips(i18n, "time", t("Time of day", "Hora del día"), [
-          { value: "morning", en: "Morning", es: "Mañana" },
-          { value: "afternoon", en: "Afternoon", es: "Tarde" },
-          { value: "evening", en: "Evening", es: "Noche" },
-        ]),
+        person,
+        dayField,
+        timeField,
         contactRow(i18n),
       ];
     }
@@ -229,11 +313,17 @@ function kindFields(kind, ctx) {
   }
 }
 
+// Heading, intro and call to action for the form a lead gets.
+export function formCopyFor(kind, categoryKey) {
+  if (kind === "booking" && FLAVOR_COPY[bookingFlavor(categoryKey)]) return FLAVOR_COPY[bookingFlavor(categoryKey)];
+  return FORM_COPY[kind] || FORM_COPY.request;
+}
+
 export function requestForm(kind, ctx) {
   const i18n = ctx.i18n;
-  const copy = FORM_COPY[kind] || FORM_COPY.request;
+  const copy = formCopyFor(kind, ctx.categoryKey);
   const cta = i18n.t(copy.cta[0], copy.cta[1]);
-  return `<form class="req-form" data-demo-form data-form-kind="${esc(kind)}" novalidate${i18n.aria("Request form", "Formulario de solicitud")}>
+  return `<form class="req-form" data-demo-form data-form-kind="${esc(kind)}"${kind === "booking" ? ` data-form-flavor="${esc(bookingFlavor(ctx.categoryKey))}"` : ""} novalidate${i18n.aria("Request form", "Formulario de solicitud")}>
 ${kindFields(kind, ctx).filter(Boolean).join("\n")}
 <button class="f-submit" type="submit">${cta}${icon("arrow")}</button>
 <p class="f-status" data-demo-status tabindex="-1" role="status" hidden>${i18n.t(DEMO_SENT_MESSAGE, DEMO_SENT_MESSAGE_ES)}</p>

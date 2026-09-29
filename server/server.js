@@ -42,6 +42,9 @@ const ROUTES = [
   ["POST", ["api", "leads", ":id", "export"], "exportShare"],
   ["POST", ["api", "queue", ":id", "decision"], "queueDecision"],
   ["PUT", ["api", "settings"], "putSettings"],
+  ["POST", ["api", "notes"], "addNote"],
+  ["PATCH", ["api", "notes", ":id"], "patchNote"],
+  ["DELETE", ["api", "notes", ":id"], "deleteNote"],
 ];
 
 function matchRoute(segs) {
@@ -113,6 +116,13 @@ export function createServer({
         return sendJson(res, 200, await api.queueDecision(id, await readJsonBody(req)));
       case "putSettings":
         return sendJson(res, 200, await api.putSettings(await readJsonBody(req)));
+      case "addNote":
+        return sendJson(res, 200, await api.addNote(await readJsonBody(req)));
+      case "patchNote":
+        return sendJson(res, 200, await api.patchNote(id, await readJsonBody(req)));
+      case "deleteNote":
+        await readJsonBody(req);
+        return sendJson(res, 200, await api.deleteNote(id));
       default:
         throw new HttpError(404, "Unknown route.");
     }

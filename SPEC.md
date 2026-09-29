@@ -565,31 +565,69 @@ for ok, 422 for rule violations, 404 for unknown ids.
 
 ## Demo generator (src/demo)
 
-`renderDemo(lead, { categories, settings, now }) -> { html, template, palette }` in `src/demo/render.js`.
-`build-demos.js` writes `demos/<id>/index.html` and sets `lead.demo.builtAt/template/palette` through the store.
+`renderDemo(lead, { categories, settings, now, assignment?, leads? }) -> { html, template, direction, palette, variants, photos }`
+in `src/demo/render.js`. `template` equals `direction` (kept for callers that read the old name);
+`photos` lists the stock photo ids shown. `build-demos.js` computes the assignment over all leads,
+writes `demos/<id>/index.html` and sets `lead.demo.builtAt`, `template`, `direction`, `palette` and
+`variants` through the store.
 
-Every demo is one self-contained HTML file (inline CSS and JS, Google Fonts link allowed, no
-other external requests, no images required). It must look like a premium, real small business
-site made by a top studio for that specific business, not a template. Five templates by
-vertical, each with its own design language and at least three palettes, chosen by
-`lead.demo.palette` or deterministically by hashing the id. Sections: sticky header with click
-to call, hero with the business name and a specific promise, a rating proof block (real rating
-and review count with "Google reviews" wording), services, why customers choose them (from
-`reviewThemes`, or omitted), how it works or visit/booking steps, a request form that fits the
-vertical (photo estimate for body shops, emergency request for home services, booking for
-personal care, estimate for contractors), service area and hours (only sourced facts), FAQ that
-makes no factual claims about the business, footer. Mobile sticky call bar. EN/ES toggle for
-template chrome when `languages` includes Spanish.
+Every demo is one HTML file (inline CSS and JS; Google Fonts and the stock photos below are its only
+external requests). It must look like a premium, real small business site made by a top studio for that
+specific business, modelled on the conventions of the strongest sites in its field (research/design-*.md),
+never a clone of one site and never one template with a palette swap.
+
+Directions. A direction is a complete visual language: layout skeleton, type pairing, palettes (at least
+three), section treatments and photo treatment. Each is one file `src/demo/directions/<key>.js` exporting
+`direction` (contract in `src/demo/directions/README.md`), registered in `src/demo/directions/index.js`,
+which lists every key from the design briefs. A direction declares the category keys it `suits`, concept
+`keywords`, `palettes` (keys unique across all directions), `variants` for the hero, services and proof
+slots, `imagery` rules and `status` ("stub" renders the shared default layout, "implemented" its own).
+Directions compose shared building blocks (`src/demo/blocks.js`: header, click to call, rating proof,
+services, review themes, chair placeholders, photos and gallery, visit and hours, FAQ, footer with photo
+credits) and the vertical request forms (`src/demo/forms.js`), so facts rules live in one place.
+`TEMPLATE_INFO[vertical].palettes` lists every palette a lead of that vertical can be given; choosing one
+in the app moves the lead to that palette's direction.
+
+Assignment. `assignDirections(leads, { directions, categories, reassign }) -> Map<id, { direction, palette, variants, signature }>`
+in `src/demo/assign.js`, pure and deterministic. A choice stored in `lead.demo` (direction, palette,
+variants) is kept unless `reassign`; a stored palette names its direction; keys that no longer exist are
+ignored. Otherwise a lead gets a direction that suits its category (else one of its vertical); among leads
+of the same vertical the least used suitable direction wins, so none repeat until every suitable one is
+used; ties go to `demoConcept` keywords (premium, European, heritage, bilingual, emergency, 24/7,
+editorial, bold, family, old-school and each direction's own), then the category's home field, then a
+stable hash. No two leads share a signature (direction, palette and hero variant) while unused
+combinations remain. `variants.photo` holds the hero photo, spread so leads rarely share one.
+
+Stock photos. A demo may show only photos listed in `src/demo/stock-library.json` (licensed, hand checked,
+research/stock-photos.md), hotlinked from `images.unsplash.com` or `images.pexels.com`, chosen per lead from
+the groups that fit its category and never showing another trade. Every `<img>` has alt text ending
+", stock photo", width and height, `referrerpolicy="no-referrer"`, object-fit cropping and
+`loading="lazy"` except the one hero. No photo of a person appears in a team section. The footer credits
+every photographer shown, and the ribbon says so (below). Every direction also renders without photos.
+
+Sections: sticky header with click to call, hero with the business name and a specific promise, a rating
+proof block (real rating and review count with "Google reviews" wording) within one scroll of the hero,
+services (no prices, "to confirm with the owner"), why customers choose them (from `reviewThemes`, or
+omitted), how it works or visit/booking steps, a request form that fits the vertical (photo estimate for
+body shops, emergency request for home services, estimate for contractors, booking for personal care with
+a chair choice for barbers, an inquiry for tattoo studios and pet details for groomers), service area and
+hours (only sourced facts, otherwise a clear "to confirm" line), FAQ that makes no factual claims about the
+business, footer. Mobile sticky call bar (Call and Book side by side for booked trades). EN/ES toggle for
+chrome when `languages` includes Spanish.
 
 Guardrails the tests and `check` enforce on every generated demo:
 - `<meta name="robots" content="noindex, nofollow">`
 - a visible concept ribbon: "Private concept by Kija Creative for {business}. Not the official website. Details to confirm with the owner."
+  When the demo shows stock photos it reads exactly: "Private concept by Kija Creative for {business}. Not the official website. Photos are stock placeholders. Details to confirm with the owner."
 - every `<form>` has `data-demo-form` and no real action; submit shows "This is a concept. Nothing was sent."
 - no dash characters U+2014 or U+2013
 - no forbidden claim phrases unless backed by the lead record: licensed, insured, bonded, certified,
   award, #1, number one, best in, since, family owned, guarantee, warranty, financing (case insensitive)
 - the rating and review count shown match the lead record exactly
-- no `<img src="http...">` pointing at another business's assets; no tracking scripts
+- an `<img>` may only show a stock library photo (every `src` and `srcset` entry), with the alt, size,
+  lazy loading and referrer rules above, and a `data-stock-credits` line naming each photographer shown;
+  no `<picture>`, `<video>`, `<iframe>`, `<object>`, SVG `<image>`, remote CSS `url()` or data URL images;
+  no external scripts or stylesheets other than Google Fonts; no tracking scripts or network calls
 
 ## Pitch pages and outreach drafts (src/pitch)
 

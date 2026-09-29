@@ -3087,3 +3087,222 @@ dialog.help::backdrop {
     transition-duration: 1ms !important;
   }
 }
+
+/* Team notes: beside the run summary on #/week, in the main column on a lead page */
+
+.week-top {
+  display: grid;
+  gap: 24px;
+  align-items: start;
+}
+
+.week-summary {
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .week-top {
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
+    gap: 32px;
+  }
+
+  .week-top .note-list-wrap {
+    max-height: 440px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+}
+
+.notes {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  min-width: 0;
+}
+
+.notes-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.notes-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.75rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.notes-title .count {
+  margin-left: 8px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-3);
+  vertical-align: 0.2em;
+}
+
+.note-form textarea {
+  min-height: 76px;
+}
+
+.note-form-row {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+  margin-top: 10px;
+}
+
+.note-hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+
+.note-form .feedback {
+  margin-top: 8px;
+}
+
+.note-counter {
+  margin-left: auto;
+  color: var(--ink-2);
+}
+
+.note-counter.is-over {
+  color: var(--danger);
+}
+
+.note-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.note:last-child {
+  padding-bottom: 0;
+}
+
+.note-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
+.note-author {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.note-author.is-anon {
+  font-weight: 500;
+  color: var(--ink-3);
+}
+
+.note-meta time {
+  color: var(--ink-3);
+  cursor: default;
+}
+
+a.note-lead {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-color: var(--magenta-tint);
+  color: var(--link);
+  text-decoration: none;
+}
+
+a.note-lead:hover {
+  border-color: var(--magenta);
+  color: var(--ink);
+}
+
+.note-actions {
+  display: inline-flex;
+  gap: 2px;
+  margin-right: -6px;
+}
+
+.note-actions .btn {
+  min-height: 26px;
+  padding: 2px 8px;
+  color: var(--ink-3);
+}
+
+.note-actions .btn:hover {
+  color: var(--ink);
+}
+
+.note-actions .note-delete:hover {
+  background: var(--danger-tint);
+  color: var(--ink);
+}
+
+.note-text {
+  margin-top: 4px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+.note-edit {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.note-edit .note-hint {
+  margin-top: 0;
+}
+
+.note-empty {
+  padding: 14px 0 2px;
+  border-top: 1px dashed var(--line-strong);
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+
+.note-empty p + p {
+  margin-top: 6px;
+  max-width: 60ch;
+}
+
+.note-quote {
+  padding-left: 10px;
+  border-left: 2px solid var(--line-strong);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+@media (max-width: 560px) {
+  .notes {
+    padding: 14px;
+  }
+
+  .note-form-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .note-form-row .btn {
+    grid-column: 1 / -1;
+  }
+}

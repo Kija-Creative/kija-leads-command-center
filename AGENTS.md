@@ -1,3 +1,85 @@
+# Lead Command Center Agent Instructions
+
+## Website generation
+
+This application contains a Design Intelligence Engine for generating
+multi-industry prospect websites.
+
+Before modifying website-generation behavior, read:
+
+- docs/site-generation/SITE-DNA.md
+- docs/site-generation/INDUSTRY-RULES.md
+- docs/site-generation/DESIGN-PRINCIPLES.md
+- docs/site-generation/REFERENCE-LIBRARIES.md
+
+The Design Intelligence Engine is the source of truth for visual direction.
+
+Never generate a prospect website before producing Site DNA.
+
+## Core principle
+
+We reuse engineering, not designs.
+
+Generated websites must not look like the same template with changed
+colors, copy and photography.
+
+Industry determines constraints and conversion requirements.
+
+Archetype determines a valid design direction within that industry.
+
+Site DNA determines the actual visual system.
+
+## References
+
+When available locally, inspect:
+
+.design-references/skynet-site-system
+.design-references/design-playbooks-skill
+
+Use them as research/reference systems.
+
+Do not blindly copy their implementation or force their stylistic
+choices onto the current project.
+
+## Components
+
+Third-party UI libraries are ingredient sources.
+
+Never let default shadcn, Preline, Origin UI, Magic UI, Cult UI,
+HyperUI or KokonutUI styling determine an entire website's appearance.
+
+Restyle components according to Site DNA.
+
+## Variation
+
+New sites must be checked against recent Site DNA history.
+
+Visual differentiation must involve composition, typography,
+geometry, imagery and/or interaction architecture rather than merely
+palette changes.
+
+## Truth
+
+Never invent testimonials, ratings, reviews, awards, certifications,
+statistics, customer counts, licenses, years in business or results.
+
+## Existing code
+
+Inspect before editing.
+
+Preserve existing Lead Command Center functionality and architectural
+conventions unless there is a concrete reason to change them.
+
+## Validation
+
+After substantive changes:
+
+- run typechecking
+- run tests
+- run lint
+- verify generated Site DNA
+- verify variation checks
+
 # Rules for agent sessions in this repo
 
 Read this before changing anything. `SPEC.md` is the contract for data shapes, function
@@ -34,8 +116,9 @@ that you call out.
    Browser code is vanilla ES modules.
 10. **No secrets in source, logs or the UI.** `GOOGLE_PLACES_API_KEY` lives in `.env`, which is
     gitignored. Only say whether it is present.
-11. **Respect Google's terms.** Place IDs may be stored. Other Places content must be refreshed
-    or cleared within 30 days (see `research/places-api.md`). Do not scrape Google Maps in bulk.
+11. **Respect Google's terms.** From the Places API only place IDs may be stored, and no demo or
+    pitch content may be built from Places data (see `research/places-api.md`). Every lead fact is
+    re-sourced from an independent public page and dated. Do not scrape Google Maps in bulk.
 
 ## House style
 

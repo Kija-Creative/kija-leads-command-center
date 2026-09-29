@@ -846,3 +846,60 @@ export function validateBenchmarks(benchmarks, ctx = {}) {
   errors.push(...dashErrors(benchmarks, "Benchmarks"));
   return result(errors, warnings);
 }
+
+// Team notes (data/notes.json). Text is normalized before this runs (notes.js), so a dash
+// here means the caller skipped cleanNoteText.
+export const NOTE_AUTHORS = OWNERS;
+export const NOTE_MAX_LENGTH = 4000;
+export const NOTE_FIELDS = ["id", "text", "author", "leadId", "runId", "createdAt", "updatedAt"];
+
+// ctx.leads, when given, is the pipeline a leadId must point into.
+export function validateNote(note, ctx = {}) {
+  const errors = [];
+  if (!isPlainObject(note)) return result(["A note must be an object with text, author and leadId."], []);
+  if (typeof note.text !== "string") errors.push("The note text must be text.");
+  else {
+    const text = note.text.trim();
+    if (!text) errors.push("Write something before saving the note.");
+    else if (text.length > NOTE_MAX_LENGTH) {
+      errors.push(`Keep a note to ${NOTE_MAX_LENGTH.toLocaleString("en-US")} characters; this one has ${text.length.toLocaleString("en-US")}.`);
+    }
+  }
+  if (!NOTE_AUTHORS.includes(note.author)) {
+    errors.push(`Author ${JSON.stringify(note.author)} must be empty or one of ${NOTE_AUTHORS.filter(Boolean).join(", ")}.`);
+  }
+  if (typeof note.leadId !== "string") errors.push("The lead a note is about must be a lead id, or empty.");
+  else if (note.leadId && Array.isArray(ctx.leads) && !ctx.leads.some((l) => l?.id === note.leadId)) {
+    errors.push(`No lead has the id "${note.leadId}", so the note cannot be about it.`);
+  }
+  if (note.runId !== undefined && typeof note.runId !== "string") errors.push("The run id on a note must be text.");
+  if (note.id !== undefined && (typeof note.id !== "string" || !note.id.trim())) errors.push("A note id must be non-empty text.");
+  for (const f of ["createdAt", "updatedAt"]) {
+    if (note[f] !== undefined && !isIsoTimestamp(note[f])) errors.push(`The note ${f} must be an ISO timestamp.`);
+  }
+  const extra = Object.keys(note).filter((k) => !NOTE_FIELDS.includes(k));
+  if (extra.length) errors.push(`A note has ${NOTE_FIELDS.join(", ")} only; ${extra.join(", ")} is not a note field.`);
+  errors.push(...dashErrors(note, "Note"));
+  return result(errors, []);
+}
+
+// Every stored note, plus unique ids. Notes about a lead that was later removed only warn.
+export function validateNotes(list, ctx = {}) {
+  if (!Array.isArray(list)) return result(["data/notes.json must be a list of notes."], []);
+  const errors = [];
+  const warnings = [];
+  const ids = new Set();
+  list.forEach((note, i) => {
+    const v = validateNote(note, {});
+    errors.push(...v.errors.map((e) => `Note ${i + 1}: ${e}`));
+    if (isPlainObject(note)) {
+      if (!note.id) errors.push(`Note ${i + 1} has no id.`);
+      else if (ids.has(note.id)) errors.push(`The note id ${note.id} is used more than once.`);
+      else ids.add(note.id);
+      if (note.leadId && Array.isArray(ctx.leads) && !ctx.leads.some((l) => l?.id === note.leadId)) {
+        warnings.push(`Note ${note.id || i + 1} is about "${note.leadId}", which is no longer in the pipeline.`);
+      }
+    }
+  });
+  return result(errors, warnings);
+}

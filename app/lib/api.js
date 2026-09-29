@@ -39,4 +39,7 @@ export const api = {
   exportShare: (id) => call("POST", `/api/leads/${enc(id)}/export`),
   queueDecision: (id, body) => call("POST", `/api/queue/${enc(id)}/decision`, body),
   putSettings: (body) => call("PUT", "/api/settings", body),
+  addNote: (body) => call("POST", "/api/notes", body),
+  editNote: (id, body) => call("PATCH", `/api/notes/${enc(id)}`, body),
+  deleteNote: (id) => call("DELETE", `/api/notes/${enc(id)}`),
 };

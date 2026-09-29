@@ -174,7 +174,7 @@ test("PATCH rejects an unknown status, history edits and unknown fields with 422
   assert.ok(hist.json.errors.some((e) => /append only/.test(e)));
   const extra = await s.call("PATCH", `/api/leads/${GM}`, { googleRating: 5 });
   assert.equal(extra.status, 422);
-  const dash = await s.call("PATCH", `/api/leads/${GM}`, { outreach: { notes: `call back ${String.fromCharCode(0x2014)} later` } });
+  const dash = await s.call("PATCH", `/api/leads/${GM}`, { outreach: { nextAction: `call back ${String.fromCharCode(0x2014)} later` } });
   assert.equal(dash.status, 422);
   assert.equal(fs.readFileSync(path.join(s.root, "data/leads.json"), "utf8"), before, "nothing was written");
   const unknown = await s.call("PATCH", "/api/leads/no-such-lead", { outreach: { status: "New" } });

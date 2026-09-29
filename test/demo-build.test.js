@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { buildDemos, demoPath, formatReport, parseArgs, selectLeads } from "../src/cli/build-demos.js";
+import { DIRECTIONS } from "../src/demo/directions/index.js";
 import { checkDemoHtml } from "../src/demo/guardrails.js";
 
 const CATEGORIES = {
@@ -60,7 +61,7 @@ test("parseArgs reads each selector and rejects bad input", () => {
   assert.equal(parseArgs(["--root", "somewhere"]).root, path.resolve("somewhere"));
 });
 
-test("builds demos, records template and palette, keeps shareApproved and outreach", async () => {
+test("builds demos, records direction, palette and variants, keeps shareApproved and outreach", async () => {
   const root = tempRoot();
   const store = fakeStore([
     lead("alpha-auto", { demo: { builtAt: "", template: "", palette: "", shareApproved: true } }),
@@ -72,10 +73,13 @@ test("builds demos, records template and palette, keeps shareApproved and outrea
   assert.equal(store.saves.length, 1);
   const [a, b] = store.saves[0];
   assert.equal(a.demo.builtAt, NOW.toISOString());
-  assert.equal(a.demo.template, "auto");
+  assert.ok(DIRECTIONS[a.demo.direction].suits.includes("auto-repair"), a.demo.direction);
+  assert.equal(a.demo.template, a.demo.direction);
+  assert.ok(DIRECTIONS[a.demo.direction].palettes.some((p) => p.key === a.demo.palette));
+  for (const slot of ["hero", "services", "proof"]) assert.ok(DIRECTIONS[a.demo.direction].variants[slot].includes(a.demo.variants[slot]), slot);
   assert.equal(a.demo.shareApproved, true);
   assert.ok(a.demo.palette);
-  assert.equal(b.demo.template, "personal-care");
+  assert.ok(DIRECTIONS[b.demo.direction].suits.includes("barber"), b.demo.direction);
   assert.deepEqual(a.outreach, { status: "New", history: [] }, "outreach untouched");
   for (const l of [a, b]) {
     const html = fs.readFileSync(demoPath(root, l.id), "utf8");
@@ -103,11 +107,26 @@ test("--missing skips built demos whose file exists, --run and --id filter", asy
   assert.match(formatReport(none, { mode: "missing" }), /Every lead already has a demo/);
 });
 
-test("the stored palette is reused on rebuild", async () => {
+test("the stored choice is reused on rebuild, and a lone rebuild keeps the batch varied", async () => {
   const root = tempRoot();
-  const store = fakeStore([lead("alpha-auto", { demo: { palette: "enamel" } })]);
+  const store = fakeStore([lead("alpha-auto", { demo: { palette: "bay-apron", shareApproved: false } })]);
   const report = await buildDemos({ store, rootDir: root, selection: { mode: "all" }, now: NOW });
-  assert.equal(report.built[0].palette, "enamel");
+  assert.equal(report.built[0].palette, "bay-apron");
+  assert.equal(report.built[0].direction, "auto-neighborhood-bay", "the palette names its direction");
+  const first = store.saves[0][0].demo;
+  const again = await buildDemos({ store, rootDir: root, selection: { mode: "id", value: "alpha-auto" }, now: NOW });
+  assert.deepEqual(again.built[0].variants, first.variants, "the stored variants are kept");
+
+  // Building one lead of a batch picks the same direction as building them all.
+  const batch = () => ["one-auto", "two-auto", "three-auto", "four-auto"].map((id) => lead(id));
+  const all = fakeStore(batch());
+  await buildDemos({ store: all, rootDir: tempRoot(), selection: { mode: "all" }, now: NOW });
+  const solo = fakeStore(batch());
+  await buildDemos({ store: solo, rootDir: tempRoot(), selection: { mode: "id", value: "three-auto" }, now: NOW });
+  const pick = (st) => st.saves[0].find((l) => l.id === "three-auto").demo;
+  assert.equal(pick(solo).direction, pick(all).direction);
+  assert.equal(pick(solo).palette, pick(all).palette);
+  assert.equal(new Set(all.saves[0].map((l) => l.demo.direction)).size, 4, "four auto repair leads, four directions");
 });
 
 test("an unknown id is a readable error, not a throw", async () => {

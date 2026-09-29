@@ -168,3 +168,33 @@ test("visibleText drops styles and tags but keeps script text", () => {
   assert.match(text, /hola/);
   assert.doesNotMatch(text, /\.a\{/);
 });
+
+test("images may only be library photos, disclosed, sized, lazy and credited", () => {
+  // A barber render: a hero photo plus a gallery.
+  const barber = { ...LEAD, id: "test-cuts-dallas-tx", business: "Test Cuts", category: "Barber shop", categoryKey: "barber", demo: { direction: "barber-after-hours" } };
+  const cats = { barber: { label: "Barber shop", vertical: "personal-care", serviceDefaults: ["Haircuts", "Fades"] } };
+  const html = renderDemo(barber, { categories: cats, settings: {}, now: "2026-09-28T12:00:00.000Z" }).html;
+  const errorsFor = (h) => checkDemoHtml(h, barber).errors;
+  assert.deepEqual(errorsFor(html), []);
+  const tags = html.replace(/<script\b[\s\S]*?<\/script>/g, "").match(/<img\b[^>]*>/g) || [];
+  assert.ok(tags.length >= 2, "the barber render shows stock photos");
+  assert.ok(html.includes("Photos are stock placeholders."), "the ribbon says so");
+  const lazy = tags.find((t) => /loading="lazy"/.test(t));
+  const swap = (from, to) => html.replace(from, to);
+
+  const other = swap(lazy, lazy.replace(/\ssrc="[^"]+"/, " src=\"https://images.unsplash.com/photo-123-not-in-library?w=800\""));
+  assert.ok(errorsFor(other).some((e) => e.includes("stock library")), "a photo outside the library is refused, even on a library host");
+  const mixed = swap(lazy, lazy.replace(/\ssrcset="([^"]+)"/, " srcset=\"https://other-shop.com/a.jpg 800w\""));
+  assert.ok(errorsFor(mixed).some((e) => e.includes("srcset")));
+  assert.ok(errorsFor(swap(lazy, lazy.replace(/, stock photo"/, "\""))).some((e) => e.includes("stock photo")));
+  assert.ok(errorsFor(swap(lazy, lazy.replace(/\swidth="\d+"/, ""))).some((e) => e.includes("width")));
+  assert.ok(errorsFor(swap(lazy, lazy.replace(/\sloading="lazy"/, ""))).some((e) => e.includes("lazily")));
+  assert.ok(errorsFor(swap(lazy, lazy.replace(/\sreferrerpolicy="no-referrer"/, ""))).some((e) => e.includes("referrerpolicy")));
+  assert.ok(errorsFor(html.replace(/<p class="stock-credits"[\s\S]*?<\/p>/, "")).some((e) => e.includes("credit line")));
+  assert.ok(errorsFor(html.replace("Photos are stock placeholders. ", "")).some((e) => e.includes("ribbon")), "the photo ribbon is required with photos");
+
+  // Without any photo the plain ribbon is the one required.
+  const bare = html.replace(/<img\b[^>]*>/g, "").replace(/<p class="stock-credits"[\s\S]*?<\/p>/, "");
+  assert.ok(errorsFor(bare).some((e) => e.includes("ribbon")), "the photo ribbon without photos is wrong");
+  assert.deepEqual(errorsFor(bare.split("Photos are stock placeholders. ").join("")), []);
+});

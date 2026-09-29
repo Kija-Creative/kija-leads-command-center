@@ -4,6 +4,8 @@
 
 export const RIBBON_PREFIX = "Private concept by Kija Creative for ";
 export const RIBBON_SUFFIX = ". Not the official website. Details to confirm with the owner.";
+// When a demo shows library photos the ribbon says so, in this exact wording.
+export const RIBBON_SUFFIX_PHOTOS = ". Not the official website. Photos are stock placeholders. Details to confirm with the owner.";
 export const DEMO_SENT_MESSAGE = "This is a concept. Nothing was sent.";
 export const DEMO_SENT_MESSAGE_ES = "Esto es un concepto. No se envió nada.";
 
@@ -14,8 +16,8 @@ export function esc(value) {
   return String(value).replace(/[&<>"']/g, (ch) => HTML_ESCAPES[ch]);
 }
 
-export function ribbonText(business) {
-  return `${RIBBON_PREFIX}${business}${RIBBON_SUFFIX}`;
+export function ribbonText(business, { photos = false } = {}) {
+  return `${RIBBON_PREFIX}${business}${photos ? RIBBON_SUFFIX_PHOTOS : RIBBON_SUFFIX}`;
 }
 
 // FNV-1a, 32 bit. Stable across Node versions, which Math.random never is.
@@ -214,15 +216,20 @@ export function langToggle(i18n) {
   return `<div class="lang" role="group"${i18n.aria("Language", "Idioma")}><button type="button" data-lang="en" aria-pressed="true" lang="en">EN</button><button type="button" data-lang="es" aria-pressed="false" lang="es">ES</button></div>`;
 }
 
-export function ribbonHtml(lead, i18n) {
+export function ribbonHtml(lead, i18n, { photos = false } = {}) {
   const es = i18n.enabled
-    ? `<p class="kr-es" lang="es">Concepto privado de Kija Creative para ${esc(lead.business)}. No es el sitio oficial. Detalles por confirmar con el dueño.</p>`
+    ? `<p class="kr-es" lang="es">Concepto privado de Kija Creative para ${esc(lead.business)}. No es el sitio oficial.${photos ? " Las fotos son de archivo, solo de muestra." : ""} Detalles por confirmar con el dueño.</p>`
     : "";
-  return `<aside class="kija-ribbon" data-kija-ribbon aria-label="Concept notice"><div class="kr-inner"><p class="kr-text">${esc(ribbonText(lead.business))}</p>${es}<button type="button" class="kr-hide" data-ribbon-hide>${icon("close", "kr-ico")}<span>Hide for presentation</span></button></div></aside>`;
+  return `<aside class="kija-ribbon" data-kija-ribbon aria-label="Concept notice"><div class="kr-inner"><p class="kr-text">${esc(ribbonText(lead.business, { photos }))}</p>${es}<button type="button" class="kr-hide" data-ribbon-hide>${icon("close", "kr-ico")}<span>Hide for presentation</span></button></div></aside>`;
 }
 
-export function callBar(ctx) {
+// The phone call bar. "split" puts Call and Book side by side, app style, for
+// businesses people book (barbers, salons); "call" is the single call pill.
+export function callBar(ctx, { mode = "call", bookHref = "#request", bookLabel = ["Book", "Reservar"] } = {}) {
   if (!ctx.tel) return "";
+  if (mode === "split") {
+    return `<div class="callbar callbar--split"><a class="cb-call" href="${esc(ctx.tel)}">${icon("phone")}<span>${ctx.t("Call", "Llamar")}</span></a><a class="cb-book" href="${esc(bookHref)}">${icon("calendar")}<span>${ctx.t(bookLabel[0], bookLabel[1])}</span></a></div>`;
+  }
   return `<a class="callbar" href="${esc(ctx.tel)}">${icon("phone")}<span>${ctx.t("Call", "Llamar")} ${esc(ctx.phone)}</span></a>`;
 }
 
@@ -269,6 +276,26 @@ html[lang="es"] .kr-es{display:block}
 .callbar{display:none;position:fixed;z-index:20;left:var(--callbar-gap);right:var(--callbar-gap);bottom:calc(var(--callbar-gap) + env(safe-area-inset-bottom,0px));height:var(--callbar-h);align-items:center;justify-content:center;gap:.6rem;padding:0 1.25rem;border-radius:var(--callbar-radius,999px);background:var(--primary);color:var(--on-primary);font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;text-decoration:none;box-shadow:0 10px 30px -8px rgb(0 0 0 / .45);transform:translateY(0);transition:transform .4s cubic-bezier(.22,1,.36,1)}
 .callbar .ico{width:1.25rem;height:1.25rem}
 .callbar[data-tucked]{transform:translateY(calc(100% + 2 * var(--callbar-gap) + env(safe-area-inset-bottom,0px)))}
+.callbar--split{padding:0;gap:0;background:var(--callbar-bg,var(--ink));color:var(--callbar-ink,var(--bg))}
+.callbar--split a{flex:1 1 50%;display:flex;align-items:center;justify-content:center;gap:.5rem;height:100%;color:inherit;text-decoration:none}
+.callbar--split .cb-book{background:var(--primary);color:var(--on-primary)}
+/* On small phones the call bar already carries Book, so the header keeps only the wordmark. */
+@media (max-width:479.98px){body.has-callbar .b-hd__cta{display:none}}
+.b-hd__cta{white-space:nowrap}
+/* Desktop floating Book pill; phones get the call bar instead. */
+.b-float{display:none}
+@media (min-width:760px){.b-float{position:fixed;z-index:19;right:1.5rem;bottom:1.5rem;display:inline-flex;align-items:center;gap:.55rem;padding:.95rem 1.4rem;border-radius:var(--btn-radius,999px);background:var(--primary);color:var(--on-primary);font-weight:700;line-height:1;text-decoration:none;box-shadow:0 12px 32px -10px rgb(0 0 0 / .5);transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .3s}.b-float[data-tucked]{transform:translateY(calc(100% + 2rem));opacity:0}}
+/* Stock photo frames. The frame keeps its color if a photo fails to load. */
+.b-photo{position:relative;margin:0;overflow:hidden;background:var(--photo-bg,var(--surface))}
+.b-photo img{display:block;width:100%;height:100%}
+.b-photo[data-failed] img{visibility:hidden}
+.stock-tag{position:absolute;left:.6rem;bottom:.6rem;z-index:1;padding:.25rem .5rem;border-radius:4px;background:rgb(0 0 0 / .62);color:#fff;font:600 .6875rem/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.02em;pointer-events:none}
+.stock-credits{font-size:.8125rem;color:var(--muted)}
+.stock-credits a{color:inherit}
+.b-marquee{overflow:hidden;white-space:nowrap}
+.b-marquee__track{display:inline-flex;width:max-content;animation:kj-marquee var(--marquee-s,48s) linear infinite}
+.b-marquee__track>*{flex:none}
+@keyframes kj-marquee{to{transform:translateX(-50%)}}
 @media (max-width:759.98px){
   .callbar{display:flex}
   body.has-callbar{padding-bottom:calc(var(--callbar-h) + 2 * var(--callbar-gap) + env(safe-area-inset-bottom,0px))}
@@ -289,10 +316,11 @@ select.f-input{appearance:none;background-image:linear-gradient(45deg,transparen
 .f-chips{display:flex;flex-wrap:wrap;gap:.5rem}
 .f-chip{position:relative;display:inline-flex}
 .f-chip input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
-.f-chip span{display:inline-flex;align-items:center;gap:.35rem;padding:.6rem 1rem;border:1.5px solid var(--field-line,var(--line));border-radius:var(--chip-radius,999px);font-size:.95rem;line-height:1.2;transition:background-color .2s,color .2s,border-color .2s}
+/* Only the chip face: the Spanish toggle wraps inner text in spans too. */
+.f-chip>span{display:inline-flex;align-items:center;gap:.35rem;padding:.6rem 1rem;border:1.5px solid var(--field-line,var(--line));border-radius:var(--chip-radius,999px);font-size:.95rem;line-height:1.2;transition:background-color .2s,color .2s,border-color .2s}
 .f-chip input:checked+span{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .f-chip input:focus-visible+span{outline:3px solid var(--focus,var(--primary));outline-offset:2px}
-.f-chip.day span{flex-direction:column;align-items:flex-start;gap:0;min-width:4.4rem;border-radius:var(--radius,6px)}
+.f-chip.day>span{flex-direction:column;align-items:flex-start;gap:0;min-width:4.4rem;border-radius:var(--radius,6px)}
 .f-chip.day b{font-size:1.25rem;line-height:1.1}
 .f-drop{position:relative;display:grid;place-items:center;gap:.4rem;text-align:center;padding:1.75rem 1rem;border:2px dashed var(--field-line,var(--line));border-radius:var(--radius,6px);background:var(--field,transparent);transition:border-color .2s,background-color .2s}
 .f-drop:hover,.f-drop:focus-within{border-color:var(--primary)}
@@ -340,7 +368,7 @@ html.js .rv[data-rv-wait]{opacity:0;transform:translateY(1.25rem)}
   *,*::before,*::after{animation:none !important;transition:none !important}
   .rv,html.js .rv[data-rv-wait]{opacity:1 !important;transform:none !important}
   .kija-ribbon,.kija-ribbon[data-hidden]{display:block;background:#fff;color:#000;border-bottom:1px solid #000}
-  .kr-hide,.callbar{display:none !important}
+  .kr-hide,.callbar,.b-float{display:none !important}
   body.has-callbar{padding-bottom:0}
 }
 `;
@@ -379,6 +407,17 @@ if(bar&&hasIO){
   var tuckIO=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){seen.add(en.target)}else{seen.delete(en.target)}});if(seen.size){bar.setAttribute("data-tucked","")}else{bar.removeAttribute("data-tucked")}});
   document.querySelectorAll("footer,.f-submit,[data-demo-status]").forEach(function(el){tuckIO.observe(el)});
 }
+// The floating Book pill steps aside while the booking form is on screen.
+var fl=document.querySelector(".b-float");
+if(fl&&hasIO){
+  var flIO=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){fl.setAttribute("data-tucked","")}else{fl.removeAttribute("data-tucked")}})});
+  var target=document.querySelector("[data-demo-form]");if(target){flIO.observe(target)}
+}
+// A stock photo that fails to load leaves its colored frame, not a broken icon.
+document.querySelectorAll("img[data-stock]").forEach(function(img){
+  function fail(){var f=img.closest?img.closest(".b-photo"):null;if(f){f.setAttribute("data-failed","")}}
+  if(img.complete&&img.naturalWidth===0){fail()}else{img.addEventListener("error",fail)}
+});
 // The ribbon hides only for the current view on a click. It is never stored,
 // so a reload, a print or an exported share file always shows it.
 var ribbon=document.querySelector("[data-kija-ribbon]");

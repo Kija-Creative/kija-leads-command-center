@@ -9,3 +9,6 @@ demos/
 pitches/
 # Discovery candidates hold Places content and must never be committed; npm run purge-places deletes them.
 data/inbox/*.candidates.json
+
+# Third-party design reference repos, cloned locally, never committed
+.design-references/

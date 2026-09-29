@@ -7,6 +7,7 @@ import { confidenceChip, demoChip, pitchChip, statusChip, verificationChip } fro
 import { confirmWithReason } from "../components/confirm.js";
 import { deviceFrame, deviceSwitch } from "../components/device.js";
 import { feedbackSlot, showFeedback, toast, withBusy } from "../components/feedback.js";
+import { notesPanel } from "../components/notes.js";
 import { ratingText } from "../components/leadcard.js";
 import { roiCalculator } from "../components/roi.js";
 import { scoreBlock, scoreParts } from "../components/score.js";
@@ -703,6 +704,8 @@ export function render({ params, navigate }) {
         h("div", null, h("h3", null, "Demo concept"), h("p", null, lead.demoConcept)),
       ),
     ),
+    // Team notes about this lead, with the add form prefilled to it.
+    notesPanel({ leadId: id }),
     section("Facts", facts),
     section(
       "Score",

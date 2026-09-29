@@ -1,22 +1,18 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 import { checkDemoHtml } from "../src/demo/guardrails.js";
-import { renderDemo, TEMPLATES } from "../src/demo/render.js";
+import { DIRECTION_LIST, renderDemo } from "../src/demo/render.js";
 import { formatRating } from "../src/demo/shared.js";
 
 const NOW = "2026-09-28T12:00:00.000Z";
 
-const CATEGORIES = {
-  "auto-repair": { label: "Auto repair", vertical: "auto", serviceDefaults: ["Brakes", "Diagnostics"] },
-  "auto-body-collision": { label: "Auto body", vertical: "auto", serviceDefaults: ["Collision repair"] },
-  "tire-shop": { label: "Tire shop", vertical: "auto", serviceDefaults: ["Flat repair"] },
-  towing: { label: "Towing", vertical: "auto", serviceDefaults: ["Towing"] },
-  plumbing: { label: "Plumbing", vertical: "home-services", serviceDefaults: ["Drain cleaning"] },
-  roofing: { label: "Roofing", vertical: "contractor", serviceDefaults: ["Roof repair"] },
-  barber: { label: "Barber shop", vertical: "personal-care", serviceDefaults: ["Haircut"] },
-  general: { label: "Local service", vertical: "general", serviceDefaults: ["Repairs"] },
-};
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+// The real category registry, read only.
+const CATEGORIES = JSON.parse(fs.readFileSync(path.join(ROOT, "config", "categories.json"), "utf8"));
 
 function lead(categoryKey, extra = {}) {
   return {
@@ -37,10 +33,14 @@ function lead(categoryKey, extra = {}) {
   };
 }
 
-const ONE_PER_TEMPLATE = ["auto-repair", "plumbing", "roofing", "barber", "general"];
+// One render per direction, each for a category the direction suits.
+function forced(d, palette) {
+  return { direction: d.key, palette: palette || d.palettes[0].key, variants: { hero: d.variants.hero[0], services: d.variants.services[0], proof: d.variants.proof[0], photo: "" } };
+}
+const ONE_PER_DIRECTION = DIRECTION_LIST.map((d) => ({ name: d.key, key: d.suits[0], assignment: forced(d) }));
 
-function render(l) {
-  return renderDemo(l, { categories: CATEGORIES, settings: {}, now: NOW });
+function render(l, assignment) {
+  return renderDemo(l, { categories: CATEGORIES, settings: {}, now: NOW, assignment });
 }
 
 function pageScriptOf(html) {
@@ -140,8 +140,8 @@ function runPage(html, { viewport = 800, rvTops = [100, 400, 1200, 2400, 3600], 
 }
 
 test("reveal content is visible by default: no CSS hides it without the script", () => {
-  for (const key of ONE_PER_TEMPLATE) {
-    const { html } = render(lead(key));
+  for (const { name: key, key: cat, assignment } of ONE_PER_DIRECTION) {
+    const { html } = render(lead(cat), assignment);
     const styles = css(html);
     assert.doesNotMatch(styles, /animation-timeline/, `${key}: no scroll timeline that leaves content at opacity 0`);
     for (const m of styles.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
@@ -190,23 +190,21 @@ test("beforeprint reveals everything", () => {
   assert.deepEqual(page.waiting(), []);
 });
 
-test("the rating gauge renders its final state without the script and in print", () => {
-  for (const rating of [4.5, 4.9, 5]) {
-    const { html } = render(lead("auto-repair", { googleRating: rating }));
-    const angle = ((rating / 5) * 180 - 90).toFixed(1);
-    assert.ok(html.includes(`class="g-needle" style="--a:${angle}deg"`), `needle rests at ${angle}deg for ${rating}`);
-    assert.ok(html.includes(`stroke-dasharray="${((rating / 5) * 100).toFixed(1)} 100"`), `lit arc stops at the rating for ${rating}`);
-    const styles = css(html);
-    assert.match(styles, /\.g-needle\{[^}]*transform:rotate\(var\(--a\)\)/, "the resting transform is the final angle");
-    assert.match(styles, /@media print\{\s*\*,\*::before,\*::after\{animation:none !important;transition:none !important\}/);
-    assert.match(html, /<head>[\s\S]*<script>document\.documentElement\.classList\.add\("js"\)<\/script>[\s\S]*<\/head>/, "the js class is set before first paint");
-    assert.ok(html.includes(`data-rating-num>${formatRating(rating)}<`), "the numeral is static text");
+test("the rating numeral is static text, the js class is set before paint and print stops motion", () => {
+  for (const { name, key, assignment } of ONE_PER_DIRECTION) {
+    for (const rating of [4.5, 4.9, 5]) {
+      const { html } = render(lead(key, { googleRating: rating }), assignment);
+      assert.ok(html.includes(`data-rating-num>${formatRating(rating)}<`), `${name}: the numeral is static text for ${rating}`);
+    }
+    const { html } = render(lead(key), assignment);
+    assert.match(css(html), /@media print\{\s*\*,\*::before,\*::after\{animation:none !important;transition:none !important\}/, name);
+    assert.match(html, /<head>[\s\S]*<script>document\.documentElement\.classList\.add\("js"\)<\/script>[\s\S]*<\/head>/, `${name}: the js class is set before first paint`);
   }
 });
 
 test("the mobile call bar shows only under 760px and reserves its own height", () => {
-  for (const key of ONE_PER_TEMPLATE) {
-    const { html } = render(lead(key));
+  for (const { name: key, key: cat, assignment } of ONE_PER_DIRECTION) {
+    const { html } = render(lead(cat), assignment);
     const styles = css(html);
     assert.match(html, /<body class="has-callbar">/, key);
     assert.match(styles, /\.callbar\{display:none;position:fixed;[^}]*height:var\(--callbar-h\)/, `${key}: hidden by default with a fixed height`);
@@ -318,17 +316,22 @@ test("demoCopy cannot vouch for its own claims", () => {
   assert.ok(errors.some((e) => e.includes("insured")));
 });
 
-test("no template states a forbidden claim for a bare record, in any palette or form", () => {
-  const keys = Object.keys(CATEGORIES);
-  for (const key of keys) {
-    const vertical = CATEGORIES[key].vertical;
-    for (const p of TEMPLATES[vertical].palettes) {
-      for (const languages of [[], ["English", "Spanish"]]) {
-        const l = lead(key, { reviewThemes: [], services: [], languages, demo: { palette: p.key } });
-        const { errors } = checkDemoHtml(render(l).html, l);
-        assert.deepEqual(errors, [], `${key}/${p.key}/${languages.join("+") || "en"}`);
+test("no direction states a forbidden claim for a bare record, in any palette, category or language", () => {
+  for (const d of DIRECTION_LIST) {
+    for (const key of d.suits) {
+      for (const p of d.palettes) {
+        for (const languages of [[], ["English", "Spanish"]]) {
+          const l = lead(key, { reviewThemes: [], services: [], languages });
+          const { errors } = checkDemoHtml(render(l, forced(d, p.key)).html, l);
+          assert.deepEqual(errors, [], `${d.key}/${key}/${p.key}/${languages.join("+") || "en"}`);
+        }
       }
     }
+  }
+  // Every category also passes with the direction assignment picks for it.
+  for (const key of Object.keys(CATEGORIES)) {
+    const l = lead(key, { reviewThemes: [], services: [] });
+    assert.deepEqual(checkDemoHtml(render(l).html, l).errors, [], key);
   }
 });
 
@@ -336,14 +339,15 @@ test("nothing is copied from another business", () => {
   for (const key of Object.keys(CATEGORIES)) {
     const { html } = render(lead(key));
     const markup = html.replace(/<script>[\s\S]*?<\/script>/g, "");
-    assert.doesNotMatch(markup, /<(?:img|picture|video|image|object|embed)\b/i, `${key}: no photos, logos or media`);
+    assert.doesNotMatch(markup, /<(?:picture|video|image|object|embed)\b/i, `${key}: no logos or media`);
+    for (const m of markup.matchAll(/<img\b[^>]*\ssrc="([^"]+)"/g)) assert.match(m[1], /^https:\/\/images\.(?:unsplash|pexels)\.com\//, `${key}: library photos only`);
     assert.doesNotMatch(html, /data:image\//i, `${key}: no embedded images`);
     assert.doesNotMatch(markup, /<(?:blockquote|q|cite)\b/i, `${key}: no review quotes`);
   }
   const l = lead("general");
   const { html } = render(l);
   const inject = (text) => html.replace("<main>", `<main>${text}`);
-  assert.ok(checkDemoHtml(inject("<img src=\"logo.png\" alt=\"\">"), l).errors.some((e) => e.includes("image or media tag")), "even a local image is refused");
+  assert.ok(checkDemoHtml(inject("<img src=\"logo.png\" alt=\"\">"), l).errors.some((e) => e.includes("stock library")), "even a local image is refused");
   assert.ok(checkDemoHtml(inject("<svg><image href=\"x.png\"/></svg>"), l).errors.some((e) => e.includes("image or media tag")));
   assert.ok(checkDemoHtml(html.replace("</style>", ".x{background:url(data:image/png;base64,AAAA)}</style>"), l).errors.some((e) => e.includes("data URL")));
   assert.ok(checkDemoHtml(inject("<p><q>Best shop ever</q></p>"), l).errors.some((e) => e.includes("quotation")));
@@ -352,10 +356,10 @@ test("nothing is copied from another business", () => {
 });
 
 test("the rating shown equals the lead record exactly, in text, labels and numerals", () => {
-  for (const key of ONE_PER_TEMPLATE) {
+  for (const { key, assignment } of ONE_PER_DIRECTION) {
     for (const rating of [4.5, 4.7, 4.9, 5]) {
       const l = lead(key, { googleRating: rating });
-      const { html } = render(l);
+      const { html } = render(l, assignment);
       assert.deepEqual(checkDemoHtml(html, l).errors, [], `${key} ${rating}`);
       const numerals = [...html.matchAll(/data-rating-num>([^<]*)</g)].map((m) => m[1]);
       assert.ok(numerals.length >= 1, `${key}: a rating numeral is marked`);

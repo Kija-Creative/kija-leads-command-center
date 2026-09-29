@@ -65,3 +65,22 @@ export function addDays(dateString, days) {
   const [y, m, d] = dateString.split("-").map(Number);
   return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10);
 }
+
+// "just now", "5 minutes ago", "yesterday", then a date. For notes; the exact time goes in a title.
+export function relativeTime(value, now = new Date()) {
+  const d = new Date(value);
+  if (!value || Number.isNaN(d.getTime())) return "";
+  const ref = now instanceof Date ? now : new Date(now);
+  const secs = Math.max(0, (ref.getTime() - d.getTime()) / 1000);
+  const mins = Math.round(secs / 60);
+  const hours = Math.round(secs / 3600);
+  const days = Math.round(secs / 86400);
+  if (secs < 45) return "just now";
+  if (secs < 90) return "a minute ago";
+  if (mins < 45) return `${mins} minutes ago`;
+  if (mins < 90) return "an hour ago";
+  if (hours < 22) return `${hours} hours ago`;
+  if (hours < 36) return "yesterday";
+  if (days < 7) return `${days} days ago`;
+  return formatDay(today(d), { year: d.getFullYear() !== ref.getFullYear() });
+}

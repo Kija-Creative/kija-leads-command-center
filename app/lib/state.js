@@ -88,6 +88,18 @@ export function setSettings(settings) {
   emit("settings");
 }
 
+// Team notes, newest first as the server sends them.
+export function notes() {
+  return Array.isArray(store.data?.notes) ? store.data.notes : [];
+}
+
+// Every notes route answers with the whole list, so the copy is replaced, not patched.
+export function setNotes(list) {
+  if (!store.data || !Array.isArray(list)) return;
+  store.data.notes = list;
+  emit("notes");
+}
+
 export function latestRun() {
   return store.data?.runs?.[0] ?? null;
 }

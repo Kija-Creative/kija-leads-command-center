@@ -10,6 +10,7 @@ import { scoreLead } from "../src/lib/score.js";
 import { leadsToCsv } from "../src/lib/csv.js";
 import { dedupeKey, sameBusiness, slugify } from "../src/lib/normalize.js";
 import { dateOf } from "../src/lib/week.js";
+import { createNote, editNote, latestRunId, normalizeFreeText, noteId, sortNotesNewestFirst } from "../src/lib/notes.js";
 import {
   callCheck,
   DEFAULT_COMPLIANCE,
@@ -21,6 +22,7 @@ import {
   QUEUE_DECISIONS,
   validateHistoryEntry,
   validateLead,
+  validateNote,
   validateOutreachPatch,
   validateRejection,
   validateRoiOverrides,
@@ -43,6 +45,8 @@ const CONTACT_STAGES = ["Contacted", "Replied", "Meeting"];
 // Built from char codes so this file itself never contains the characters it rejects.
 const DASH_RE = new RegExp(`[${String.fromCharCode(0x2013)}${String.fromCharCode(0x2014)}]`);
 const ACTOR = "Jamey";
+const NOTE_INPUT_FIELDS = ["text", "author", "leadId"];
+const NOTES_FILE = "data/notes.json";
 
 function isPlainObject(v) {
   return v !== null && typeof v === "object" && !Array.isArray(v);
@@ -77,6 +81,12 @@ function loadData(store) {
   if (!Array.isArray(state.suppression)) state.suppression = store.readJson(SUPPRESSION_FILE, []);
   if (!Array.isArray(state.suppression)) state.suppression = [];
   return state;
+}
+
+// Notes are read directly when the store predates them, like the suppression list.
+function loadNotes(store, state) {
+  const list = Array.isArray(state?.notes) ? state.notes : store.readJson(NOTES_FILE, []);
+  return Array.isArray(list) ? list : [];
 }
 
 function saveSuppression(store, list) {
@@ -185,6 +195,7 @@ export function createApi({ root, now, loaders, env }) {
       now: clock().toISOString(),
       templates: renderMod?.TEMPLATE_INFO ?? null,
     });
+    body.notes = sortNotesNewestFirst(loadNotes(store, state));
     body.modules = {
       drafts: Boolean(buildDrafts),
       pitch: typeof pitchBuildMod?.buildPitches === "function" || typeof pitchMod?.renderPitch === "function",
@@ -213,7 +224,10 @@ export function createApi({ root, now, loaders, env }) {
     if (unknown.length) errors.push(`Only outreach, roiOverrides, demo and phoneLineType can be changed here; ${unknown.join(", ")} cannot.`);
     if (Object.keys(body).length === 0) errors.push("The change is empty. Send outreach, roiOverrides, demo or phoneLineType.");
 
-    const outreach = body.outreach;
+    // Notes are typed freely: dashes are normalized on save instead of refused.
+    const outreach = isPlainObject(body.outreach) && typeof body.outreach.notes === "string"
+      ? { ...body.outreach, notes: normalizeFreeText(body.outreach.notes) }
+      : body.outreach;
     if (outreach !== undefined) {
       if (!isPlainObject(outreach)) errors.push("Outreach changes must be an object.");
       else {
@@ -311,7 +325,8 @@ export function createApi({ root, now, loaders, env }) {
     const current = findLeadOr404(state.leads, id);
     const entry = {
       type: body.type,
-      text: typeof body.text === "string" ? body.text.trim() : body.text,
+      // Typed by a person, so dashes are normalized rather than refused.
+      text: typeof body.text === "string" ? normalizeFreeText(body.text).trim() : body.text,
       by: typeof body.by === "string" && body.by.trim() ? body.by.trim() : ACTOR,
     };
     const errors = [...validateHistoryEntry(entry).errors];
@@ -687,10 +702,83 @@ export function createApi({ root, now, loaders, env }) {
     return { ok: true, errors: [], warnings, settings: merged };
   }
 
+  // Team notes. The text is normalized (dashes) and trimmed; an unknown lead is refused.
+  function noteFieldErrors(body, allowed) {
+    const extra = Object.keys(body).filter((k) => !allowed.includes(k));
+    return extra.length ? [`A note has ${allowed.join(", ")} only; ${extra.join(", ")} cannot be set here.`] : [];
+  }
+
+  function writeNotes(store, mutate) {
+    const next = typeof store.updateNotes === "function"
+      ? store.updateNotes(mutate)
+      : (() => {
+        const list = mutate(store.readJson(NOTES_FILE, []));
+        store.writeJson(NOTES_FILE, list);
+        return list;
+      })();
+    return sortNotesNewestFirst(next);
+  }
+
+  async function addNote(body) {
+    requireObject(body, "A note");
+    const store = openStore();
+    const state = loadData(store);
+    const existing = loadNotes(store, state);
+    const now = clock();
+    let id = noteId(now, crypto.randomBytes(4).toString("hex"));
+    while (existing.some((n) => n.id === id)) id = noteId(now, crypto.randomBytes(4).toString("hex"));
+    const note = createNote({
+      id,
+      text: body.text,
+      author: body.author ?? "",
+      leadId: body.leadId ?? "",
+      runId: latestRunId(store.listRuns()),
+      now,
+    });
+    const errors = [...noteFieldErrors(body, NOTE_INPUT_FIELDS), ...validateNote(note, { leads: state.leads }).errors];
+    if (errors.length) throw unprocessable(errors);
+    const notes = writeNotes(store, (list) => [...list, note]);
+    return { ok: true, errors: [], warnings: [], note, notes };
+  }
+
+  async function patchNote(id, body) {
+    requireObject(body, "A note change");
+    const store = openStore();
+    const state = loadData(store);
+    const current = loadNotes(store, state).find((n) => n.id === id);
+    if (!current) throw new HttpError(404, `No note has the id "${id}".`);
+    const errors = noteFieldErrors(body, ["text"]);
+    if (body.text === undefined) errors.push("Send the new text for the note.");
+    const next = editNote(current, { text: body.text }, clock());
+    // The lead may have left the pipeline since; that should not block fixing a typo.
+    if (!errors.length) errors.push(...validateNote(next, {}).errors);
+    if (errors.length) throw unprocessable(errors);
+    if (next.text === current.text) {
+      return { ok: true, errors: [], warnings: [], note: current, notes: sortNotesNewestFirst(loadNotes(store, state)) };
+    }
+    let saved = next;
+    const notes = writeNotes(store, (list) => {
+      const idx = list.findIndex((n) => n.id === id);
+      if (idx < 0) throw new HttpError(404, `No note has the id "${id}". It may have just been deleted.`);
+      saved = { ...list[idx], text: next.text, updatedAt: next.updatedAt };
+      list[idx] = saved;
+      return list;
+    });
+    return { ok: true, errors: [], warnings: [], note: saved, notes };
+  }
+
+  async function deleteNote(id) {
+    const store = openStore();
+    const state = loadData(store);
+    if (!loadNotes(store, state).some((n) => n.id === id)) throw new HttpError(404, `No note has the id "${id}".`);
+    const notes = writeNotes(store, (list) => list.filter((n) => n.id !== id));
+    return { ok: true, errors: [], warnings: [], removed: id, notes };
+  }
+
   function csv() {
     const state = loadData(openStore());
     return { text: leadsToCsv(state.leads, { thresholds: state.settings?.thresholds }), date: dateOf(clock()) };
   }
 
-  return { getState, patchLead, addHistory, suppressLead, regenerateDemo, regeneratePitch, exportShare, queueDecision, putSettings, csv };
+  return { getState, patchLead, addHistory, suppressLead, regenerateDemo, regeneratePitch, exportShare, queueDecision, putSettings, addNote, patchNote, deleteNote, csv };
 }

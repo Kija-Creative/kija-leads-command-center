@@ -17,6 +17,7 @@ export const FILES = {
   rejected: "data/rejected.json",
   benchmarks: "data/benchmarks.json",
   suppression: "data/suppression.json",
+  notes: "data/notes.json",
 };
 
 export const BACKUP_DIR = "data/backups";
@@ -37,6 +38,7 @@ const OPTIONAL = {
   rejected: () => [],
   benchmarks: emptyBenchmarks,
   suppression: () => [],
+  notes: () => [],
 };
 
 export { RETIRED_LEAD_FIELDS };
@@ -115,6 +117,11 @@ function byAddedThenId(a, b) {
 
 function byAddedThenKey(a, b) {
   return String(a?.addedAt ?? "").localeCompare(String(b?.addedAt ?? "")) || String(a?.key ?? "").localeCompare(String(b?.key ?? ""));
+}
+
+// Team notes are kept oldest first in the file; the API serves them newest first.
+function byCreatedThenId(a, b) {
+  return String(a?.createdAt ?? "").localeCompare(String(b?.createdAt ?? "")) || String(a?.id ?? "").localeCompare(String(b?.id ?? ""));
 }
 
 function byRejectedThenKey(a, b) {
@@ -256,6 +263,18 @@ export function createStore(rootDir, { now = () => new Date(), keepBackups = BAC
     fs.rmSync(abs(`${INBOX_DIR}/${name}`), { force: true });
   }
 
+  function saveNotes(list) {
+    return writeJson(FILES.notes, [...requireArray(list, "notes")].sort(byCreatedThenId));
+  }
+
+  // Read fresh, change, write, like updateLeads.
+  function updateNotes(mutate) {
+    const notes = readJson(FILES.notes, OPTIONAL.notes);
+    const next = mutate(notes) ?? notes;
+    saveNotes(next);
+    return next;
+  }
+
   function saveRejected(rejected) {
     return writeJson(FILES.rejected, [...requireArray(rejected, "rejected")].sort(byRejectedThenKey));
   }
@@ -322,6 +341,8 @@ export function createStore(rootDir, { now = () => new Date(), keepBackups = BAC
     saveSettings,
     saveBenchmarks,
     saveSuppression,
+    saveNotes,
+    updateNotes,
     listCandidateFiles,
     removeCandidateFile,
     saveRun,

@@ -1,7 +1,9 @@
-// #/week: the latest run. When it ran, what it covered, what it found, then its leads.
+// #/week: the latest run. When it ran, what it covered, what it found, the team's notes
+// beside that summary, then its leads.
 
 import { leadCard } from "../components/leadcard.js";
 import { listNav } from "../components/listnav.js";
+import { notesPanel } from "../components/notes.js";
 import { h } from "../lib/dom.js";
 import { formatDateTime, formatDay } from "../lib/format.js";
 import { byScore, categoryLabel, latestRun, leads, metroName } from "../lib/state.js";
@@ -59,6 +61,12 @@ function howToRun() {
   );
 }
 
+// The run summary and the team notes side by side on wide screens; stacked, notes second,
+// on narrow ones so they still sit above the lead cards.
+function weekTop(...summary) {
+  return h("div", { class: "week-top" }, h("div", { class: "week-summary" }, summary), notesPanel());
+}
+
 export function render({ navigate }) {
   const run = latestRun();
   const all = leads();
@@ -81,14 +89,16 @@ export function render({ navigate }) {
         ),
         h("a", { class: "btn", href: "#/runs" }, "Full run report"),
       ),
-      runCounts(run),
-      h(
-        "div",
-        { class: "plan" },
-        h("div", null, h("h3", null, "Metros searched"), metros.length ? h("ul", null, metros.map((m) => h("li", null, m))) : h("p", { class: "faint" }, "The batch did not record its metros.")),
-        h("div", null, h("h3", null, "Categories"), cats.length ? h("ul", null, cats.map((c) => h("li", null, c))) : h("p", { class: "faint" }, "The batch did not record its categories.")),
+      weekTop(
+        runCounts(run),
+        h(
+          "div",
+          { class: "plan" },
+          h("div", null, h("h3", null, "Metros searched"), metros.length ? h("ul", null, metros.map((m) => h("li", null, m))) : h("p", { class: "faint" }, "The batch did not record its metros.")),
+          h("div", null, h("h3", null, "Categories"), cats.length ? h("ul", null, cats.map((c) => h("li", null, c))) : h("p", { class: "faint" }, "The batch did not record its categories.")),
+        ),
+        run.notes ? h("p", { class: "prose muted", style: { marginTop: "16px" } }, run.notes) : null,
       ),
-      run.notes ? h("p", { class: "prose muted", style: { marginTop: "16px" } }, run.notes) : null,
     );
   } else {
     list = all.filter((l) => !l.runId).sort(byScore);
@@ -98,7 +108,7 @@ export function render({ navigate }) {
         { class: "page-head" },
         h("div", null, h("h1", { class: "page-title", tabindex: "-1" }, "This week"), h("p", { class: "page-sub" }, "Waiting on the first Monday run.")),
       ),
-      howToRun(),
+      weekTop(howToRun()),
     );
   }
 

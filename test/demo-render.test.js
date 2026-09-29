@@ -3,26 +3,18 @@ import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { assignDirections } from "../src/demo/assign.js";
+import { CATEGORY_VERTICALS, DIRECTION_LIST, DIRECTIONS, validateDirection } from "../src/demo/directions/index.js";
 import { checkDemoHtml, DASH_RE } from "../src/demo/guardrails.js";
-import { renderDemo, resolveVertical, TEMPLATE_INFO, TEMPLATES } from "../src/demo/render.js";
-import { formatRating, formatReviews, ribbonText, esc } from "../src/demo/shared.js";
+import { DIRECTION_INFO, renderDemo, resolveVertical, TEMPLATE_INFO } from "../src/demo/render.js";
+import { esc, formatRating, formatReviews, ribbonText } from "../src/demo/shared.js";
+import { isLibraryUrl, libraryPhoto } from "../src/demo/stock.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SEED = JSON.parse(fs.readFileSync(path.join(ROOT, "seed", "sheet-2026-09-28.json"), "utf8"));
+// The real category registry, read only.
+const CATEGORIES = JSON.parse(fs.readFileSync(path.join(ROOT, "config", "categories.json"), "utf8"));
 const NOW = "2026-09-28T12:00:00.000Z";
-
-// Just enough of config/categories.json to map categoryKey to a template.
-const CATEGORIES = {
-  "auto-repair": { label: "Auto repair", vertical: "auto", serviceDefaults: ["Diagnostics and check engine lights", "Brakes", "Oil and fluid service", "Suspension and steering", "AC repair", "Engine and transmission work"] },
-  "auto-body-collision": { label: "Auto body and collision", vertical: "auto", serviceDefaults: ["Collision repair", "Dent repair", "Paint and color matching", "Bumper repair", "Frame straightening"] },
-  "tire-shop": { label: "Tire shop", vertical: "auto", serviceDefaults: ["New and used tires", "Flat repair", "Mounting and balancing", "Wheel alignment"] },
-  "muffler-exhaust": { label: "Muffler and exhaust", vertical: "auto", serviceDefaults: ["Muffler repair", "Custom exhaust", "Catalytic converters", "Brakes"] },
-  "diesel-truck-repair": { label: "Diesel and truck repair", vertical: "auto", serviceDefaults: ["Roadside repair", "Diesel engine repair", "Fleet maintenance", "Tire service"] },
-  septic: { label: "Septic service", vertical: "home-services", serviceDefaults: ["Septic pumping", "Septic inspections", "Septic repair", "Aerobic system service"] },
-  roofing: { label: "Roofing", vertical: "contractor", serviceDefaults: ["Roof repair", "Storm damage inspections", "Roof replacement", "Leak repair", "Gutters"] },
-  barber: { label: "Barber shop", vertical: "personal-care", serviceDefaults: ["Haircut", "Fade", "Beard trim", "Hot towel shave", "Kids cut"] },
-  general: { label: "Local service", vertical: "general", serviceDefaults: ["Consultations", "Repairs", "Installations"] },
-};
 
 function slug(text) {
   return String(text).toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -45,212 +37,333 @@ function leadFrom(row, extra = {}) {
   };
 }
 
-const byName = (name) => leadFrom(SEED.leads.find((l) => l.business === name));
+const SEED_LEADS = SEED.leads.map((row) => leadFrom(row));
+const byName = (name) => SEED_LEADS.find((l) => l.business === name);
 
-const FIXTURES = {
-  auto: byName("GM AUTO CARE"),
-  "home-services": byName("Prime Time Septic Pumping, Inc."),
-  contractor: byName("Adams Brothers Roof Repair"),
-  "personal-care": byName("Brownie's"),
-  general: leadFrom(SEED.leads.find((l) => l.business === "Mustang Service Center"), { categoryKey: "general", category: "Local service" }),
-};
-
-function render(lead) {
-  return renderDemo(lead, { categories: CATEGORIES, settings: { demoDefaults: { conceptRibbon: true } }, now: NOW });
+function sample(categoryKey, extra = {}) {
+  return {
+    id: `sample-${categoryKey}-dallas-tx`,
+    business: "Sample Shop",
+    category: CATEGORIES[categoryKey] ? CATEGORIES[categoryKey].label : "Local service",
+    categoryKey,
+    city: "Dallas",
+    state: "TX",
+    phone: "214-555-0100",
+    googleRating: 4.9,
+    googleReviews: 312,
+    services: [],
+    reviewThemes: [],
+    languages: [],
+    demo: {},
+    addedAt: "2026-09-26",
+    ...extra,
+  };
 }
 
-test("each vertical renders with its own template and passes every guardrail", () => {
-  for (const [vertical, lead] of Object.entries(FIXTURES)) {
-    const out = render(lead);
-    assert.equal(out.template, vertical, `${lead.business} should use ${vertical}`);
-    assert.ok(TEMPLATES[vertical].palettes.some((p) => p.key === out.palette));
-    const check = checkDemoHtml(out.html, lead);
-    assert.deepEqual(check.errors, [], `${lead.business}: ${check.errors.join("; ")}`);
-    assert.equal(check.ok, true);
+function render(lead, options = {}) {
+  return renderDemo(lead, { categories: CATEGORIES, settings: { demoDefaults: { conceptRibbon: true } }, now: NOW, ...options });
+}
+
+function forced(directionKey, { palette, hero, services, proof } = {}) {
+  const d = DIRECTIONS[directionKey];
+  return {
+    direction: d.key,
+    palette: palette || d.palettes[0].key,
+    variants: { hero: hero || d.variants.hero[0], services: services || d.variants.services[0], proof: proof || d.variants.proof[0], photo: "" },
+  };
+}
+
+function errorsOf(html, lead) {
+  return checkDemoHtml(html, lead).errors;
+}
+
+test("the registry lists every direction from the briefs, each a valid direction", () => {
+  const keys = DIRECTION_LIST.map((d) => d.key);
+  assert.equal(keys.length, 25);
+  assert.equal(new Set(keys).size, keys.length, "keys are unique");
+  for (const d of DIRECTION_LIST) {
+    assert.ok(fs.existsSync(path.join(ROOT, "src", "demo", "directions", `${d.key}.js`)), `${d.key} has its own file`);
+    assert.deepEqual(validateDirection(d).errors, [], d.key);
+    assert.ok(d.palettes.length >= 3, `${d.key} has at least three palettes`);
+  }
+  const palettes = DIRECTION_LIST.flatMap((d) => d.palettes.map((p) => p.key));
+  assert.equal(new Set(palettes).size, palettes.length, "palette keys are unique across directions, so a palette names its direction");
+  for (const key of palettes) assert.match(key, /^[a-z0-9]+(-[a-z0-9]+)+$/);
+  for (const key of ["barber-after-hours", "barber-fade-lab", "barber-cover-story", "barber-gallery-mono"]) {
+    assert.equal(DIRECTIONS[key].status, "implemented", key);
+  }
+  for (const cat of Object.keys(CATEGORIES)) {
+    assert.ok(DIRECTION_LIST.some((d) => d.suits.includes(cat)), `some direction suits ${cat}`);
   }
 });
 
-test("every seed lead renders and passes guardrails", () => {
-  for (const row of SEED.leads) {
-    const lead = leadFrom(row);
-    const check = checkDemoHtml(render(lead).html, lead);
-    assert.deepEqual(check.errors, [], `${lead.business}: ${check.errors.join("; ")}`);
-  }
-});
-
-test("every template and palette combination passes guardrails", () => {
-  for (const [vertical, lead] of Object.entries(FIXTURES)) {
-    assert.ok(TEMPLATES[vertical].palettes.length >= 3, `${vertical} needs at least three palettes`);
-    for (const p of TEMPLATES[vertical].palettes) {
-      const out = render({ ...lead, demo: { ...lead.demo, palette: p.key } });
-      assert.equal(out.palette, p.key);
-      assert.equal(checkDemoHtml(out.html, lead).ok, true, `${vertical}/${p.key}`);
+test("every direction renders for a lead of every category it suits, in every palette and hero, and passes every guardrail", () => {
+  for (const d of DIRECTION_LIST) {
+    for (const cat of d.suits) {
+      for (const p of d.palettes) {
+        for (const hero of d.variants.hero) {
+          const lead = sample(cat);
+          const out = render(lead, { assignment: forced(d.key, { palette: p.key, hero }) });
+          assert.equal(out.direction, d.key);
+          assert.equal(out.palette, p.key);
+          assert.deepEqual(errorsOf(out.html, lead), [], `${d.key}/${p.key}/${hero} for ${cat}`);
+        }
+      }
     }
   }
-  assert.deepEqual(Object.keys(TEMPLATE_INFO).sort(), ["auto", "contractor", "general", "home-services", "personal-care"]);
+});
+
+test("every service and proof variant, rich records and Spanish pass too", () => {
+  for (const d of DIRECTION_LIST) {
+    const cat = d.suits[0];
+    const rich = sample(cat, {
+      services: ["Custom thing one", "Custom thing two", "Custom thing three"],
+      reviewThemes: ["Honest pricing", "Explains the work"],
+      hours: "Mon to Fri 8am to 6pm",
+      address: "123 Main St",
+      languages: ["English", "Spanish"],
+    });
+    for (const services of d.variants.services) {
+      for (const proof of d.variants.proof) {
+        for (const lead of [sample(cat), rich]) {
+          const out = render(lead, { assignment: forced(d.key, { services, proof }) });
+          assert.deepEqual(errorsOf(out.html, lead), [], `${d.key} services ${services} proof ${proof}${lead === rich ? " rich" : ""}`);
+        }
+      }
+    }
+  }
+});
+
+test("every seed lead renders with the batch assignment, passes guardrails and is written to test-output", () => {
+  const map = assignDirections(SEED_LEADS, { directions: DIRECTIONS, categories: CATEGORIES });
+  const out = path.join(ROOT, "test-output");
+  fs.mkdirSync(out, { recursive: true });
+  for (const lead of SEED_LEADS) {
+    const result = render(lead, { assignment: map.get(lead.id) });
+    assert.equal(result.direction, map.get(lead.id).direction);
+    assert.deepEqual(errorsOf(result.html, lead), [], lead.business);
+    assert.equal(DASH_RE.test(result.html), false, lead.business);
+    const file = path.join(out, `demo-${lead.id}.html`);
+    fs.writeFileSync(file, result.html, "utf8");
+    assert.ok(fs.statSync(file).size > 10000);
+  }
+  // A render given the whole batch reaches the same choice as the explicit assignment.
+  const cutz = byName("Most Famous Cutz");
+  assert.equal(render(cutz, { leads: SEED_LEADS }).direction, map.get(cutz.id).direction);
+});
+
+test("Most Famous Cutz gets a photo led barber direction with booking, chairs and a gallery", () => {
+  const lead = byName("Most Famous Cutz");
+  const map = assignDirections(SEED_LEADS, { directions: DIRECTIONS, categories: CATEGORIES });
+  const out = render(lead, { assignment: map.get(lead.id) });
+  assert.equal(out.direction, "barber-cover-story", "the editorial brief and concept point at the cover story");
+  assert.ok(out.photos.length >= 4, "hero and gallery photos");
+  assert.match(out.html, /<img[^>]+data-hero/);
+  assert.ok((out.html.match(/href="#request"/g) || []).length >= 4, "Book appears in many places");
+  assert.match(out.html, /class="b-float"/, "floating Book pill");
+  assert.match(out.html, /class="callbar callbar--split"/, "phone bar with Call and Book");
+  assert.ok(out.html.includes("Chair 01") && out.html.includes("Chair 04"), "chair placeholders");
+  assert.ok(out.html.includes("Placeholders. The shop&#39;s own barbers"), "placeholders say they are placeholders");
+  assert.ok(out.html.includes("Menu and prices to confirm with the shop."));
+  assert.ok(out.html.includes("Walk in policy to confirm with the shop."));
+  assert.doesNotMatch(out.html, /\$\d/, "no prices");
+  assert.match(out.html, /data-form-flavor="barber"/);
+  assert.ok(out.html.includes("Any barber"));
 });
 
 test("rating and review count appear exactly as recorded", () => {
-  for (const lead of Object.values(FIXTURES)) {
-    const { html } = render(lead);
-    assert.match(html, new RegExp(`data-rating="${lead.googleRating}"`));
-    assert.match(html, new RegExp(`data-reviews="${lead.googleReviews}"`));
-    assert.ok(html.includes(`${formatReviews(lead.googleReviews)} Google reviews`), `${lead.business} review count`);
-    assert.ok(html.includes(`>${formatRating(lead.googleRating)}<`), `${lead.business} rating numeral`);
+  for (const d of DIRECTION_LIST) {
+    const lead = sample(d.suits[0], { googleRating: 4.7, googleReviews: 1234 });
+    const { html } = render(lead, { assignment: forced(d.key) });
+    assert.match(html, /data-rating="4.7"/, d.key);
+    assert.match(html, /data-reviews="1234"/, d.key);
+    assert.ok(html.includes(`${formatReviews(1234)} Google reviews`), `${d.key} review count`);
+    assert.ok(html.includes(`>${formatRating(4.7)}<`), `${d.key} rating numeral`);
+    assert.ok(checkDemoHtml(html, { ...lead, googleRating: 4.2 }).errors.some((e) => /Rating shown as 4\.7/.test(e)));
   }
   assert.equal(formatRating(5), "5.0");
-  assert.equal(formatRating(4.9), "4.9");
   assert.equal(formatReviews(1234), "1,234");
 });
 
-test("a changed rating is caught by the guardrail", () => {
-  const lead = FIXTURES.auto;
-  const { html } = render(lead);
-  const check = checkDemoHtml(html, { ...lead, googleRating: 4.2 });
-  assert.equal(check.ok, false);
-  assert.ok(check.errors.some((e) => /Rating shown as 4\.9/.test(e)));
-});
-
-test("no em or en dash anywhere in any render", () => {
-  for (const row of SEED.leads) {
-    const { html } = render(leadFrom(row));
-    assert.equal(DASH_RE.test(html), false, row.business);
-  }
-});
-
 test("the concept ribbon, robots meta and demo only forms are present", () => {
-  for (const lead of Object.values(FIXTURES)) {
-    const { html } = render(lead);
-    assert.ok(html.includes('<meta name="robots" content="noindex, nofollow">'));
-    assert.ok(html.includes(esc(ribbonText(lead.business))));
-    assert.ok(html.includes("data-ribbon-hide"), "ribbon can be hidden for a presentation");
+  for (const d of DIRECTION_LIST) {
+    const lead = sample(d.suits[0]);
+    const { html, photos } = render(lead, { assignment: forced(d.key) });
+    assert.ok(html.includes("<meta name=\"robots\" content=\"noindex, nofollow\">"));
+    assert.ok(html.includes(esc(ribbonText(lead.business, { photos: photos.length > 0 }))), d.key);
+    assert.ok(html.includes("data-ribbon-hide"));
     const forms = html.match(/<form\b[^>]*>/g) || [];
-    assert.ok(forms.length >= 1);
+    assert.ok(forms.length >= 1, d.key);
     for (const f of forms) {
       assert.match(f, /data-demo-form/);
       assert.doesNotMatch(f, /\saction=/);
     }
     assert.ok(html.includes("This is a concept. Nothing was sent."));
     assert.doesNotMatch(html, /<script[^>]+src=/);
-    assert.doesNotMatch(html, /<img[^>]+src="http/);
   }
 });
 
-test("request forms fit the vertical", () => {
+test("request forms fit the vertical and the trade", () => {
   const kind = (lead) => render(lead).html.match(/data-form-kind="([^"]+)"/)[1];
-  assert.equal(kind(FIXTURES.auto), "repair-estimate");
+  const flavor = (lead) => (render(lead).html.match(/data-form-flavor="([^"]+)"/) || [])[1];
+  assert.equal(kind(byName("GM AUTO CARE")), "repair-estimate");
   assert.equal(kind(byName("Papas and Ninos Bodyshop")), "photo-estimate");
   assert.equal(kind(byName("Rios Used Tires")), "tire-quote");
   assert.equal(kind(byName("24/7 Diesel Repair & Road Service")), "roadside");
-  assert.equal(kind(FIXTURES["home-services"]), "emergency");
-  assert.equal(kind(FIXTURES.contractor), "estimate");
-  assert.equal(kind(FIXTURES["personal-care"]), "booking");
-  assert.equal(kind(FIXTURES.general), "request");
+  assert.equal(kind(byName("Prime Time Septic Pumping, Inc.")), "emergency");
+  assert.equal(kind(byName("Adams Brothers Roof Repair")), "estimate");
+  assert.equal(kind(byName("Brownie's")), "booking");
+  assert.equal(kind(sample("general")), "request");
+  assert.equal(flavor(sample("barber")), "barber");
+  assert.equal(flavor(sample("tattoo")), "tattoo");
+  assert.equal(flavor(sample("pet-grooming")), "pet");
 
-  const body = render(byName("Papas and Ninos Bodyshop")).html;
-  assert.match(body, /type="file"[^>]*accept="image\/\*"/);
-  const booking = render(FIXTURES["personal-care"]).html;
+  assert.match(render(byName("Papas and Ninos Bodyshop")).html, /type="file"[^>]*accept="image\/\*"/);
+  const booking = render(byName("Brownie's")).html;
   assert.equal((booking.match(/name="day"/g) || []).length, 7);
-  assert.ok(booking.includes('value="2026-09-29"'), "booking days start the day after now");
-  assert.match(render(FIXTURES["home-services"]).html, /data-urgent/);
+  assert.ok(booking.includes("value=\"2026-09-29\""), "booking days start the day after now");
+  assert.match(booking, /name="person"/, "barbers can pick a chair");
+  const tattoo = render(sample("tattoo")).html;
+  assert.match(tattoo, /name="placement"/);
+  assert.match(tattoo, /name="ink"/);
+  assert.ok(tattoo.includes("Start a custom piece"));
+  const pet = render(sample("pet-grooming")).html;
+  for (const f of ["pet", "breed", "size", "first"]) assert.match(pet, new RegExp(`name="${f}"`), f);
+  assert.match(render(byName("Prime Time Septic Pumping, Inc.")).html, /data-urgent/);
 });
 
-test("Spanish toggle appears only for leads that list Spanish", () => {
-  const spanish = [byName("Papas and Ninos Bodyshop"), byName("Rios Used Tires")];
-  for (const lead of spanish) {
-    const { html } = render(lead);
-    assert.ok(html.includes('data-lang="es"'), lead.business);
-    assert.ok(html.includes("data-i18n="));
-    assert.ok(html.includes("No es el sitio oficial"));
-    assert.ok(html.includes("Esto es un concepto. No se envió nada."));
-    assert.equal(checkDemoHtml(html, lead).ok, true);
+test("Spanish toggle appears only for leads that list Spanish, in every direction", () => {
+  for (const d of DIRECTION_LIST) {
+    const cat = d.suits[0];
+    const es = sample(cat, { languages: ["English", "Spanish"] });
+    const { html } = render(es, { assignment: forced(d.key) });
+    assert.ok(html.includes("data-lang=\"es\""), d.key);
+    assert.ok(html.includes("data-i18n="), d.key);
+    assert.ok(html.includes("No es el sitio oficial"), d.key);
+    assert.ok(html.includes("Esto es un concepto. No se envió nada."), d.key);
+    assert.equal(checkDemoHtml(html, es).ok, true, d.key);
+    const en = render(sample(cat), { assignment: forced(d.key) }).html;
+    assert.equal(en.includes("data-lang=\"es\""), false, d.key);
+    assert.equal(en.includes("data-i18n="), false, d.key);
   }
-  for (const lead of Object.values(FIXTURES)) {
-    const { html } = render(lead);
-    assert.equal(html.includes('data-lang="es"'), false, lead.business);
-    assert.equal(html.includes("data-i18n="), false, lead.business);
+  for (const name of ["Papas and Ninos Bodyshop", "Rios Used Tires"]) {
+    assert.ok(render(byName(name)).html.includes("data-lang=\"es\""), name);
   }
-  const es = render({ ...FIXTURES["home-services"], languages: ["English", "Spanish"] });
-  assert.ok(es.html.includes('data-lang="es"'));
-  assert.equal(checkDemoHtml(es.html, FIXTURES["home-services"]).ok, true);
 });
 
-test("missing optional fields do not render empty sections", () => {
-  for (const lead of Object.values(FIXTURES)) {
-    const { html } = render(lead);
-    assert.equal(html.includes("<dt>Hours</dt>"), false, `${lead.business} hours`);
-    assert.equal(html.includes("<dt>Address</dt>"), false, `${lead.business} address`);
-    assert.equal(html.includes('class="themes-list"'), false, `${lead.business} themes`);
-    assert.equal(html.includes("Open in Google Maps"), false, `${lead.business} map link`);
+test("missing optional facts do not render, and show a to confirm state instead", () => {
+  for (const d of DIRECTION_LIST) {
+    const lead = sample(d.suits[0]);
+    const { html } = render(lead, { assignment: forced(d.key) });
+    assert.equal(html.includes("<dt>Hours</dt>"), false, `${d.key} hours`);
+    assert.equal(html.includes("<dt>Address</dt>"), false, `${d.key} address`);
+    assert.equal(html.includes("class=\"b-themes"), false, `${d.key} themes`);
+    assert.equal(html.includes("Open in Google Maps"), false, `${d.key} map link`);
+    assert.ok(html.includes("Hours to confirm with the owner."), `${d.key} hours to confirm`);
   }
-  const bare = { ...FIXTURES.general, categoryKey: "unknown-key" };
-  const noServices = render(bare);
-  assert.equal(noServices.template, "general");
-  assert.equal(noServices.html.includes('id="services"'), false);
-  assert.equal(checkDemoHtml(noServices.html, bare).ok, true);
+  const bare = sample("unknown-key");
+  const out = render(bare);
+  assert.equal(resolveVertical(bare, CATEGORIES), "general");
+  assert.equal(out.html.includes("id=\"menu\"") || out.html.includes("id=\"services\""), false, "no services section without services");
+  assert.equal(checkDemoHtml(out.html, bare).ok, true);
 });
 
 test("optional facts render when the record has them", () => {
-  for (const lead of Object.values(FIXTURES)) {
-    const rich = {
-      ...lead,
+  for (const d of DIRECTION_LIST) {
+    const rich = sample(d.suits[0], {
       hours: "Mon to Fri 8am to 6pm",
       address: "123 Main St",
       reviewThemes: ["Honest pricing", "Explains the work"],
       services: ["Custom thing one", "Custom thing two"],
-    };
-    const { html } = render(rich);
-    assert.ok(html.includes("Mon to Fri 8am to 6pm"), `${lead.business} hours`);
-    assert.ok(html.includes("123 Main St"));
-    assert.ok(html.includes("Honest pricing"));
-    assert.ok(html.includes("Custom thing one"));
+    });
+    const { html } = render(rich, { assignment: forced(d.key) });
+    assert.ok(html.includes("Mon to Fri 8am to 6pm"), `${d.key} hours`);
+    assert.ok(html.includes("123 Main St"), `${d.key} address`);
+    assert.ok(html.includes("Honest pricing"), `${d.key} themes`);
+    assert.ok(html.includes("Custom thing one"), `${d.key} services`);
     assert.equal(html.includes("Typical services for this kind of business"), false, "own services are not labelled as defaults");
-    assert.ok(html.includes("https://www.google.com/maps/search/?api=1&amp;query=123%20Main%20St"));
-    assert.equal(checkDemoHtml(html, rich).ok, true, `${lead.business}: ${checkDemoHtml(html, rich).errors}`);
+    assert.ok(html.includes("https://www.google.com/maps/search/?api=1&amp;query=123%20Main%20St"), d.key);
+    assert.deepEqual(errorsOf(html, rich), [], d.key);
   }
-  const defaults = render(FIXTURES.auto).html;
-  assert.ok(defaults.includes("Typical services for this kind of business"), "category defaults are labelled neutrally");
+  assert.ok(render(byName("GM AUTO CARE")).html.includes("Typical services for this kind of business"), "category defaults are labelled neutrally");
 });
 
-test("demoCopy overrides replace template copy", () => {
-  const lead = { ...FIXTURES.auto, demoCopy: { headline: "Fixed right the first visit, or we talk it through", subhead: "Owner approved subhead", about: "Owner approved about text", ctaPrimary: "Ring the shop" } };
-  const { html } = render(lead);
-  assert.ok(html.includes("Fixed right the first visit, or we talk it through"));
-  assert.ok(html.includes("Owner approved subhead"));
-  assert.ok(html.includes("Owner approved about text"));
-  assert.ok(html.includes("Ring the shop"));
-  assert.equal(html.includes("Tell us what it is doing."), false);
-});
-
-test("lead text is escaped", () => {
-  const lead = { ...FIXTURES.general, business: "Joe's <script>alert(1)</script> & Sons", services: ["<b>Bold</b>"], reviewThemes: ["\"Quoted\" & fast"] };
-  const { html } = render(lead);
-  assert.equal(html.includes("<script>alert(1)"), false);
-  assert.ok(html.includes("Joe&#39;s &lt;script&gt;alert(1)&lt;/script&gt; &amp; Sons"));
-  assert.ok(html.includes("&lt;b&gt;Bold&lt;/b&gt;"));
-  assert.equal(checkDemoHtml(html, lead).ok, true);
-});
-
-test("renders are deterministic and the palette follows the lead", () => {
-  const a = render(FIXTURES.contractor);
-  const b = render(FIXTURES.contractor);
-  assert.equal(a.html, b.html);
-  const other = TEMPLATES.contractor.palettes.find((p) => p.key !== a.palette);
-  const c = render({ ...FIXTURES.contractor, demo: { palette: other.key } });
-  assert.equal(c.palette, other.key);
-  const unknown = render({ ...FIXTURES.contractor, demo: { palette: "not-a-palette" } });
-  assert.equal(unknown.palette, a.palette, "an unknown palette falls back to the hashed choice");
-  assert.equal(resolveVertical({ categoryKey: "roofing" }, CATEGORIES), "contractor");
-  assert.equal(resolveVertical({ categoryKey: "nope" }, CATEGORIES), "general");
-});
-
-test("writes sample renders for review", () => {
-  const out = path.join(ROOT, "test-output");
-  fs.mkdirSync(out, { recursive: true });
-  const samples = [byName("GM AUTO CARE"), byName("Papas and Ninos Bodyshop"), byName("Prime Time Septic Pumping, Inc."), byName("Adams Brothers Roof Repair"), byName("Brownie's"), FIXTURES.general];
-  for (const lead of samples) {
-    const file = path.join(out, `demo-${lead.id}.html`);
-    fs.writeFileSync(file, render(lead).html, "utf8");
-    assert.ok(fs.statSync(file).size > 10000);
+test("demoCopy overrides replace direction copy in every direction", () => {
+  for (const d of DIRECTION_LIST) {
+    const lead = sample(d.suits[0], { demoCopy: { headline: "Owner approved headline", about: "Owner approved about text", ctaPrimary: "Ring the shop" } });
+    const { html } = render(lead, { assignment: forced(d.key) });
+    for (const text of ["Owner approved headline", "Owner approved about text", "Ring the shop"]) assert.ok(html.includes(text), `${d.key}: ${text}`);
   }
+});
+
+test("lead text is escaped in every direction", () => {
+  for (const d of DIRECTION_LIST) {
+    const lead = sample(d.suits[0], { business: "Joe's <script>alert(1)</script> & Sons", services: ["<b>Bold</b>", "Two", "Three"], reviewThemes: ["\"Quoted\" & fast"] });
+    const { html } = render(lead, { assignment: forced(d.key) });
+    assert.equal(html.includes("<script>alert(1)"), false, d.key);
+    assert.ok(html.includes("Joe&#39;s &lt;script&gt;alert(1)&lt;/script&gt; &amp; Sons"), d.key);
+    assert.ok(html.includes("&lt;b&gt;Bold&lt;/b&gt;"), d.key);
+    assert.deepEqual(errorsOf(html, lead), [], d.key);
+  }
+});
+
+test("photos come only from the stock library, disclosed, sized and credited", () => {
+  let withPhotos = 0;
+  for (const lead of SEED_LEADS) {
+    const { html, photos } = render(lead);
+    const tags = html.replace(/<script\b[\s\S]*?<\/script>/g, "").match(/<img\b[^>]*>/g) || [];
+    assert.equal(tags.length, photos.length, `${lead.business}: one tag per photo`);
+    if (tags.length) withPhotos += 1;
+    const heroes = tags.filter((t) => /\sdata-hero\b/.test(t));
+    assert.ok(heroes.length <= 1);
+    for (const tag of tags) {
+      assert.ok(isLibraryUrl(tag.match(/\ssrc="([^"]+)"/)[1].replace(/&amp;/g, "&")), tag.slice(0, 80));
+      assert.match(tag, /alt="[^"]+, stock photo"/);
+      assert.match(tag, /\swidth="\d+" height="\d+"/);
+      assert.match(tag, /referrerpolicy="no-referrer"/);
+      if (!/data-hero/.test(tag)) assert.match(tag, /loading="lazy"/);
+      assert.match(tag, /object-fit:cover/);
+    }
+    for (const id of photos) assert.ok(html.includes(esc(libraryPhoto(id).photographer)), `${lead.business} credits ${id}`);
+    assert.equal(new Set(photos).size, photos.length, "no photo repeats on a page");
+    if (photos.length) assert.ok(html.includes(esc(ribbonText(lead.business, { photos: true }))));
+  }
+  assert.ok(withPhotos >= 18, "photo led demos across the seed");
+  // A lead with no photo group (general) shows none and keeps the plain ribbon.
+  const general = sample("general");
+  const out = render(general);
+  assert.deepEqual(out.photos, []);
+  assert.ok(out.html.includes(esc(ribbonText(general.business))));
+});
+
+test("no two seed leads share a hero photo while the group has enough", () => {
+  const map = assignDirections(SEED_LEADS, { directions: DIRECTIONS, categories: CATEGORIES });
+  const barberHeroes = SEED_LEADS.filter((l) => l.categoryKey === "barber").map((l) => map.get(l.id).variants.photo);
+  assert.equal(new Set(barberHeroes).size, barberHeroes.length);
+  const collision = SEED_LEADS.filter((l) => l.categoryKey === "auto-body-collision").map((l) => map.get(l.id).variants.photo);
+  assert.equal(new Set(collision).size, collision.length);
+});
+
+test("renders are deterministic and follow the stored choice", () => {
+  const lead = byName("Adams Brothers Roof Repair");
+  assert.equal(render(lead).html, render(lead).html);
+  const first = render(lead);
+  const other = DIRECTIONS[first.direction].palettes.find((p) => p.key !== first.palette);
+  const chosen = render({ ...lead, demo: { ...lead.demo, direction: first.direction, palette: other.key } });
+  assert.equal(chosen.palette, other.key);
+  const legacy = render({ ...lead, demo: { palette: "slate", template: "contractor" } });
+  assert.equal(legacy.direction, first.direction, "an old template palette is ignored");
+});
+
+test("the app gets palettes per vertical and a direction list", () => {
+  assert.deepEqual(Object.keys(TEMPLATE_INFO).sort(), ["auto", "contractor", "general", "home-services", "personal-care"]);
+  for (const [vertical, info] of Object.entries(TEMPLATE_INFO)) {
+    assert.ok(info.palettes.length >= 3, vertical);
+    for (const p of info.palettes) {
+      const d = DIRECTIONS[p.direction];
+      assert.ok(d.palettes.some((x) => x.key === p.key));
+      assert.ok(d.suits.some((k) => CATEGORY_VERTICALS[k] === vertical));
+    }
+  }
+  assert.equal(Object.keys(DIRECTION_INFO).length, DIRECTION_LIST.length);
 });
