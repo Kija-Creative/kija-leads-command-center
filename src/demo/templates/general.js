@@ -143,7 +143,7 @@ function render(ctx) {
 <p class="sub">${sub}</p>
 ${ctx.about ? `<p class="about">${ctx.about}</p>` : ""}
 <div class="ctas">${ctx.tel ? `<a class="btn btn-light" href="${esc(ctx.tel)}">${icon("phone")}${ctaPrimary} ${esc(ctx.phone)}</a>` : ""}<a class="btn btn-line" href="#request">${ctaSecondary}${icon("arrow")}</a></div>
-</div><div class="sticker" data-rating="${esc(ctx.rating)}" data-reviews="${esc(ctx.reviews)}"><small>${t("Google rating", "Calificación en Google")}</small><span class="sticker-num">${esc(ctx.ratingText)}</span>${starsSvg(ctx.rating, "sticker")}<b>${reviewsText(ctx)}</b></div></div></section>`;
+</div><div class="sticker" data-rating="${esc(ctx.rating)}" data-reviews="${esc(ctx.reviews)}"><small>${t("Google rating", "Calificación en Google")}</small><span class="sticker-num" data-rating-num>${esc(ctx.ratingText)}</span>${starsSvg(ctx.rating, "sticker")}<b>${reviewsText(ctx)}</b></div></div></section>`;
 
   const services = ctx.services.length
     ? `<section class="sec" id="services"><div class="wrap"><h2 class="h2">${t("How we can help", "Cómo podemos ayudar")}</h2><ol class="svc">${ctx.services.map((s, i) => `<li class="rv"><span class="n" aria-hidden="true">${i + 1}</span><span class="nm">${esc(s)}</span></li>`).join("")}</ol>${servicesNote(ctx)}</div></section>`

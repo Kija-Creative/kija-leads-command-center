@@ -7,7 +7,8 @@ import path from "node:path";
 import { CONTENT_TYPES, HttpError, sendText } from "./http.js";
 
 // Pure modules the browser may import. store.js, ingest.js and seed.js are deliberately absent.
-export const BROWSER_LIB_MODULES = new Set(["roi.js", "score.js", "week.js", "normalize.js"]);
+// compliance.js lets the lead page keep the prospect's local time and call window current.
+export const BROWSER_LIB_MODULES = new Set(["roi.js", "score.js", "week.js", "normalize.js", "compliance.js"]);
 
 const SAFE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SAFE_FILE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;

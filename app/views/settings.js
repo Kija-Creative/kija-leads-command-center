@@ -27,13 +27,15 @@ function toNumber(input) {
   return v === "" ? null : Number(v);
 }
 
-function sectionForm({ title, desc, fields, read, success = "Settings saved." }) {
+function sectionForm({ title, desc, fields, read, success = "Settings saved.", id, extra = null, onSaved = null }) {
   const slot = feedbackSlot();
   const save = h("button", { type: "submit", class: "btn btn-primary" }, "Save");
   return h(
     "form",
     {
       class: "panel",
+      id,
+      "aria-labelledby": id ? `${id}-title` : null,
       onsubmit: async (e) => {
         e.preventDefault();
         const res = await withBusy(save, () => api.putSettings(read()));
@@ -41,20 +43,48 @@ function sectionForm({ title, desc, fields, read, success = "Settings saved." })
         toast(res, { success });
         if (res.ok) {
           setSettings(res.settings);
+          onSaved?.(res.settings);
           // Scores, ROI and drafts depend on settings; pull fresh views from the server.
           await loadState({ quiet: true });
         }
       },
     },
-    h("h2", null, title),
-    h("p", { class: "desc" }, desc),
+    h("h2", { id: id ? `${id}-title` : null }, title),
+    (Array.isArray(desc) ? desc : [desc]).map((d) => h("p", { class: "desc" }, d)),
+    extra,
     h("div", { class: "form-grid" }, fields),
     h("div", { class: "form-actions" }, save),
     slot,
   );
 }
 
-export function render() {
+const TEXAS_OPTIONS = [
+  ["unknown", "Unknown, not confirmed"],
+  ["registered", "Registered with the Texas Secretary of State"],
+  ["exempt-confirmed", "Exempt, confirmed by an attorney"],
+];
+const WEEKDAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const COMPLIANCE_DEFAULTS = {
+  texasRegistration: "unknown",
+  callWindow: { startHour: 9, endHour: 20, days: [1, 2, 3, 4, 5, 6] },
+  maxCallsPerDay: 1,
+  maxCallsTotal: 3,
+  noColdTexts: true,
+  noTextStates: ["WA"],
+};
+
+function hourLabel(hour) {
+  if (hour === 0) return "Midnight";
+  if (hour === 24) return "Midnight, end of day";
+  if (hour === 12) return "Noon";
+  return `${hour % 12} ${hour < 12 ? "a.m." : "p.m."}`;
+}
+
+function hourSelect(value) {
+  return h("select", null, Array.from({ length: 25 }, (_, n) => h("option", { value: String(n), selected: n === value }, hourLabel(n))));
+}
+
+export function render({ query } = {}) {
   const data = store.data;
   const s = data.settings ?? {};
   const offer = s.offer ?? {};
@@ -109,17 +139,21 @@ export function render() {
   const kEmail = h("input", { type: "email", value: contact.email ?? "", autocomplete: "off" });
   const kPhone = h("input", { type: "tel", value: contact.phone ?? "", autocomplete: "off" });
   const kSite = h("input", { type: "url", value: contact.site ?? "", autocomplete: "off" });
-  const kAddress = text(contact.address, { placeholder: "Needed in commercial email" });
+  const kAddress = text(contact.address, { id: "st-address", placeholder: "Street or PO box, city, state, ZIP" });
   const contactForm = sectionForm({
     title: "Contact",
-    desc: "Who the pitch pages and drafts point to. Drafts leave a placeholder for anything empty here, so nothing goes out with a made up number or address.",
+    desc: [
+      "Who the pitch pages and drafts point to. Drafts leave a placeholder for anything empty here, so nothing goes out with a made up number or address.",
+      "CAN-SPAM requires a valid physical postal address in every commercial email: a street address, a USPS PO box or a registered private mailbox. Until one is here, the email copy buttons stay off.",
+    ],
+    id: "st-contact",
     fields: [
       field("Name", kName),
       field("Title", kTitle),
       field("Email", kEmail),
       field("Phone", kPhone),
       field("Website", kSite),
-      field("Mailing address", kAddress, { span: true }),
+      field("Mailing address", kAddress, { span: true, hint: contact.address ? "in every email footer" : "required before any email draft is ready to send" }),
     ],
     read: () => ({
       contact: { name: kName.value.trim(), title: kTitle.value.trim(), email: kEmail.value.trim(), phone: kPhone.value.trim(), site: kSite.value.trim(), address: kAddress.value.trim() },
@@ -200,6 +234,90 @@ export function render() {
     success: "Geography saved.",
   });
 
+  // Compliance
+  const comp = { ...COMPLIANCE_DEFAULTS, ...(s.compliance ?? {}), callWindow: { ...COMPLIANCE_DEFAULTS.callWindow, ...(s.compliance?.callWindow ?? {}) } };
+  const cTexas = h("select", { id: "st-texas" }, TEXAS_OPTIONS.map(([v, l]) => h("option", { value: v, selected: v === comp.texasRegistration }, l)));
+  const cStart = hourSelect(comp.callWindow.startHour);
+  const cEnd = hourSelect(comp.callWindow.endHour);
+  const cDays = WEEKDAY_NAMES.map((name, n) => h("input", { type: "checkbox", id: nextId("st"), checked: comp.callWindow.days.includes(n), value: String(n) }));
+  const cPerDay = num(comp.maxCallsPerDay, { min: "0", step: "1" });
+  const cTotal = num(comp.maxCallsTotal, { min: "0", step: "1" });
+  const cNoCold = h("input", { type: "checkbox", id: nextId("st"), checked: comp.noColdTexts !== false });
+  const cStates = text((comp.noTextStates ?? []).join(", "), { placeholder: "WA" });
+  const texasChip = (value) => (value === "unknown" || !value
+    ? h("span", { class: "chip chip-warn" }, "Unconfirmed")
+    : h("span", { class: "chip chip-good" }, value === "registered" ? "Registered" : "Exempt, confirmed"));
+  let texasStatus = texasChip(comp.texasRegistration);
+  const complianceForm = sectionForm({
+    title: "Outreach compliance",
+    id: "st-compliance",
+    desc: "The rules the lead page checks before a call, an email or a text. The defaults are the strictest of the federal and state rules in the research: calls 9 a.m. to 8 p.m. in the business's local time, Monday to Saturday, one a day and three in total without a reply, and no cold texts.",
+    extra: h(
+      "div",
+      { class: "legal-note" },
+      h("div", { class: "row" }, h("strong", null, "Texas chapter 302"), texasStatus),
+      h(
+        "p",
+        null,
+        "Texas probably requires a seller that makes sales calls from a Texas location to register with the Secretary of State, whatever state the prospect is in: $200 to file, a $10,000 security, renewed each year. Kija calls from Dallas, so it likely applies. The plausible exemption covers calls that only book a face to face presentation and never close a sale on the call. Whether a video or screen share walkthrough counts as face to face is an open question for an attorney.",
+      ),
+      h("p", null, "Leave this at Unknown until an attorney confirms registration or the exemption. While it is Unknown, every call check and call script carries a reminder, and a call only books the walkthrough."),
+      h("p", { class: "legal-flag" }, "Not legal advice. Summarized from research/compliance.md."),
+    ),
+    fields: [
+      field("Texas registration", cTexas, { span: true }),
+      field("Calls from", cStart, { hint: "their local time" }),
+      field("Calls until", cEnd),
+      field("Calls a day", cPerDay, { hint: "per business" }),
+      field("Calls in total", cTotal, { hint: "without a reply" }),
+      h(
+        "fieldset",
+        { class: "field span-all day-set" },
+        h("legend", null, "Call days"),
+        h("div", { class: "row" }, cDays.map((box, n) => h("label", { class: "check", for: box.id }, box, WEEKDAY_NAMES[n].slice(0, 3)))),
+      ),
+      h("div", { class: "field", style: { alignSelf: "end" } }, h("label", { class: "check", for: cNoCold.id }, cNoCold, "No cold texts")),
+      field("Never text without consent in", cStates, { hint: "state codes, comma separated" }),
+    ],
+    read: () => ({
+      compliance: {
+        texasRegistration: cTexas.value,
+        callWindow: {
+          startHour: Number(cStart.value),
+          endHour: Number(cEnd.value),
+          days: cDays.filter((b) => b.checked).map((b) => Number(b.value)),
+        },
+        maxCallsPerDay: toNumber(cPerDay),
+        maxCallsTotal: toNumber(cTotal),
+        noColdTexts: cNoCold.checked,
+        noTextStates: cStates.value.split(/[\s,]+/).map((x) => x.trim().toUpperCase()).filter(Boolean),
+      },
+    }),
+    success: "Compliance settings saved.",
+    onSaved: (next) => {
+      const chip = texasChip(next?.compliance?.texasRegistration);
+      texasStatus.replaceWith(chip);
+      texasStatus = chip;
+    },
+  });
+
+  // About and the Google Maps notice (research/RESEARCH.md decisions 2 to 4).
+  const about = h(
+    "section",
+    { class: "panel panel-pad", "aria-labelledby": "st-about" },
+    h("h2", { id: "st-about" }, "About"),
+    h("p", { class: "desc" }, "The Kija Lead Command Center runs only on this machine. Nothing in it contacts a business or publishes anything; drafts are copied and sent by a person."),
+    h("h3", { class: "about-head" }, "Google Maps data"),
+    h(
+      "ul",
+      { class: "about-list" },
+      h("li", null, "Discovery may use the Google Places API to find candidates."),
+      h("li", null, "Only place IDs are stored from it, and they are rechecked after 12 months. No other Places data is written to disk or used in demos or pitch pages; every stored fact about a business comes from an independent source listed on the lead."),
+      h("li", null, "Ratings and review counts are recorded from the public Google Maps listing, on the date shown with each lead."),
+      h("li", null, "Google Maps is a trademark of Google LLC. Kija Creative is not affiliated with or endorsed by Google."),
+    ),
+  );
+
   // Data sources, read only
   const b = data.benchmarks ?? {};
   const cats = Object.values(b.categories ?? {});
@@ -228,7 +346,17 @@ export function render() {
     "div",
     null,
     h("header", { class: "page-head" }, h("div", null, h("h1", { class: "page-title", tabindex: "-1" }, "Settings"), h("p", { class: "page-sub" }, "Saved to config/settings.json. The weekly run reads these each Monday."))),
-    h("div", { class: "settings" }, offerForm, contactForm, researchForm, geoForm, status),
+    h("div", { class: "settings" }, offerForm, contactForm, complianceForm, researchForm, geoForm, status, about),
   );
+  // Deep links from the lead page: #/settings?focus=address or ?focus=compliance. Runs after the
+  // router's own heading focus.
+  const focus = query?.get?.("focus");
+  if (focus === "address" || focus === "compliance") {
+    setTimeout(() => {
+      const target = focus === "address" ? kAddress : cTexas;
+      target.scrollIntoView({ block: "center" });
+      target.focus({ preventScroll: true });
+    }, 0);
+  }
   return { el, title: "Settings" };
 }

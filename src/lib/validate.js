@@ -3,14 +3,26 @@
 
 import { DEFAULT_THRESHOLDS } from "./score.js";
 import { isChain, normalizePhone } from "./normalize.js";
+import { INACTIVE_OUTREACH_STATUSES, isSuppressed, PHONE_LINE_TYPES, TEXAS_REGISTRATION_STATUSES } from "./compliance.js";
 
 export const OUTREACH_STATUSES = ["New", "Research", "Demo Built", "Contacted", "Replied", "Meeting", "Won", "Lost", "Not a fit"];
-export const HISTORY_TYPES = ["created", "status", "note", "call", "email", "meeting", "research", "demo"];
+// consent: the prospect agreed to texts or follow up by a channel, and the text says which.
+// suppressed: the business asked not to be contacted, or Kija decided never to contact it.
+export const HISTORY_TYPES = ["created", "status", "note", "call", "email", "meeting", "research", "demo", "consent", "suppressed"];
 export const CONFIDENCE_LEVELS = ["High", "Medium-High", "Medium", "Low"];
 export const VERIFICATION_STATUSES = ["verified", "needs-recheck", "unverified"];
 export const LEAD_ORIGINS = ["sheet-import", "weekly-run", "manual", "queue-promotion"];
 export const OWNERS = ["", "Jamey", "Kiel", "Daisy"];
-export const RATING_SOURCES = ["", "google-maps", "places-api", "secondary"];
+// Where the stored rating and review count were read. "places-api" is never valid on a stored
+// record: Google's terms let us keep only place IDs from Places (research/places-api.md).
+export const RATING_SOURCES = ["", "google-maps-observed", "secondary", "owner"];
+// Older records and playbooks wrote "google-maps"; it reads as google-maps-observed.
+export const LEGACY_RATING_SOURCES = { "google-maps": "google-maps-observed" };
+export const PLACES_RATING_SOURCE = "places-api";
+export { PHONE_LINE_TYPES };
+// Retired fields: accepted on read, dropped on write. placesFetchedAt belonged to the old
+// 30 day Places cache rule; only place IDs are kept now (research/places-api.md).
+export const RETIRED_LEAD_FIELDS = ["placesFetchedAt"];
 export const QUEUE_DECISIONS = ["Research", "Promote", "Drop"];
 export const BATCH_MODES = ["weekly", "reverify", "manual"];
 export const REVERIFY_DECISIONS = ["keep", "reject"];
@@ -33,7 +45,9 @@ export const REQUIRED_LEAD_FIELDS = [
 const DASH_RE = /[\u2013\u2014]/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const QUOTE_RE = /["\u201c\u201d\u00ab\u00bb]/;
-const PLACES_MAX_AGE_DAYS = 30;
+// Google recommends refreshing place IDs older than 12 months.
+export const PLACE_ID_MAX_AGE_DAYS = 365;
+const PLACES_RULE = "Only place IDs may be kept from the Places API; read the rating from the public Google Maps listing (google-maps-observed), a secondary mirror or the owner.";
 
 function result(errors, warnings, extra = {}) {
   return { ok: errors.length === 0, errors, warnings, ...extra };
@@ -206,17 +220,26 @@ export function validateHistoryEntry(entry) {
     errors.push(`History type ${JSON.stringify(entry.type)} is not one of: ${HISTORY_TYPES.join(", ")}.`);
   }
   if (typeof entry.text !== "string") errors.push("History text must be a string.");
+  else if (entry.type === "consent" && !entry.text.trim()) {
+    errors.push("A consent entry must say what the owner agreed to and by which channel, for example: Agreed to texts at this number.");
+  } else if (entry.type === "suppressed" && !entry.text.trim()) {
+    errors.push("A suppressed entry must say why the business is never contacted again.");
+  }
   if (isBlank(entry.by)) errors.push("A history entry needs a by value saying who wrote it.");
   errors.push(...dashErrors(entry, "History entry"));
   return result(errors, []);
 }
 
 // Validate an outreach patch (server PATCH /api/leads/:id). Only fields present are checked.
-export function validateOutreachPatch(patch) {
+// ctx.lead and ctx.suppression let it refuse to move a suppressed lead back into active outreach.
+export function validateOutreachPatch(patch, ctx = {}) {
   const errors = [];
   if (!isPlainObject(patch)) return result(["Outreach changes must be an object."], []);
   if (patch.status !== undefined && !OUTREACH_STATUSES.includes(patch.status)) {
     errors.push(`Status ${JSON.stringify(patch.status)} is not one of: ${OUTREACH_STATUSES.join(", ")}.`);
+  } else if (patch.status !== undefined && ctx.lead && !INACTIVE_OUTREACH_STATUSES.includes(patch.status)
+    && isSuppressed(ctx.lead, ctx.suppression)) {
+    errors.push(`${ctx.lead.business || "This business"} is suppressed, so it cannot move back to ${patch.status}. It can only be ${INACTIVE_OUTREACH_STATUSES.join(", ")}.`);
   }
   if (patch.nextDate !== undefined && !isBlank(patch.nextDate) && !isIsoDate(patch.nextDate)) {
     errors.push("Next date must be empty or a date like 2026-10-05.");
@@ -306,8 +329,17 @@ export function validateLead(lead, ctx = {}) {
   if (!isBlank(lead.googleMapsUrl) && !isHttpUrl(lead.googleMapsUrl)) {
     errors.push(`${name} googleMapsUrl must be a full http or https url.`);
   }
-  if (lead.ratingSource !== undefined && !RATING_SOURCES.includes(lead.ratingSource)) {
-    errors.push(`${name} ratingSource must be empty, google-maps, places-api or secondary.`);
+  if (lead.ratingSource === PLACES_RATING_SOURCE) {
+    errors.push(`${name} ratingSource is places-api, which a stored lead may not carry. ${PLACES_RULE}`);
+  } else if (lead.ratingSource !== undefined && !RATING_SOURCES.includes(lead.ratingSource)
+    && !Object.hasOwn(LEGACY_RATING_SOURCES, lead.ratingSource)) {
+    errors.push(`${name} ratingSource must be empty, google-maps-observed, secondary or owner.`);
+  }
+  if (lead.phoneLineType !== undefined && !PHONE_LINE_TYPES.includes(lead.phoneLineType)) {
+    errors.push(`${name} phoneLineType must be one of: ${PHONE_LINE_TYPES.join(", ")}.`);
+  }
+  if (lead.placeId !== undefined && lead.placeId !== null && typeof lead.placeId !== "string") {
+    errors.push(`${name} placeId must be text.`);
   }
   if (lead.established !== undefined && lead.established !== null) {
     const year = toDate(ctx.now)?.getUTCFullYear() ?? 2100;
@@ -387,15 +419,21 @@ export function validateLead(lead, ctx = {}) {
     }
   }
 
-  // Places data may only be cached for 30 days.
-  if (!isBlank(lead.placesFetchedAt)) {
-    const fetched = toDate(lead.placesFetchedAt);
+  // Places: only the place ID is kept, refreshed after 12 months. placesFetchedAt is retired:
+  // it is accepted on read and dropped on the next save.
+  if (!isBlank(lead.placeIdCheckedAt)) {
+    const checked = toDate(lead.placeIdCheckedAt);
     const now = toDate(ctx.now);
-    if (!fetched) {
-      errors.push(`${name} placesFetchedAt must be an ISO date.`);
-    } else if (now && (now.getTime() - fetched.getTime()) / 86400000 > PLACES_MAX_AGE_DAYS) {
-      errors.push(`${name} has Places data from ${lead.placesFetchedAt}, older than ${PLACES_MAX_AGE_DAYS} days. Refresh it or clear placesFetchedAt and the Places derived fields.`);
+    if (!checked || !isIsoDate(String(lead.placeIdCheckedAt).slice(0, 10))) {
+      errors.push(`${name} placeIdCheckedAt must be a date like 2026-09-28.`);
+    } else if (now && !isBlank(lead.placeId) && (now.getTime() - checked.getTime()) / 86400000 > PLACE_ID_MAX_AGE_DAYS) {
+      warnings.push(`${name} place ID was last checked ${lead.placeIdCheckedAt}, over 12 months ago. Refresh it with an IDs only Place Details call.`);
     }
+  } else if (!isBlank(lead.placeId) && mode === "stored") {
+    warnings.push(`${name} has a place ID with no placeIdCheckedAt; record when it was last confirmed.`);
+  }
+  if (!isBlank(lead.placesFetchedAt) && mode === "stored") {
+    warnings.push(`${name} still carries the retired placesFetchedAt; it is dropped on the next save.`);
   }
 
   // Chains and dashes.
@@ -472,6 +510,9 @@ export function validateQueueItem(item, ctx = {}) {
   checkSources(item.sources, name, errors);
   if (item.lead !== undefined && item.lead !== null && !isPlainObject(item.lead)) {
     errors.push(`${name} lead must be null or an object with the carried lead fields.`);
+  }
+  if (item.ratingSource === PLACES_RATING_SOURCE || item.lead?.ratingSource === PLACES_RATING_SOURCE) {
+    errors.push(`${name} carries a places-api rating, which may not be stored. ${PLACES_RULE}`);
   }
   if (!isBlank(item.candidate) && ctx.chains) {
     const c = isChain(item.candidate, ctx.chains);
@@ -590,10 +631,80 @@ export function validateSettings(settings) {
     if (o.priceConfirmed === false) warnings.push("The offer price is a placeholder until it is confirmed.");
   }
   const c = settings.contact;
-  if (!isPlainObject(c)) errors.push("Settings need a contact object.");
-  else if (!isBlank(c.site) && !isHttpUrl(c.site)) errors.push("The contact site must be a full http or https url.");
+  if (!isPlainObject(c)) {
+    errors.push("Settings need a contact object.");
+  } else {
+    if (!isBlank(c.site) && !isHttpUrl(c.site)) errors.push("The contact site must be a full http or https url.");
+    if (c.address !== undefined && typeof c.address !== "string") errors.push("The contact address must be text.");
+    if (!isBlank(c.email) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(c.email).trim())) errors.push("The contact email must be an email address.");
+    if (isBlank(c.address)) warnings.push("The contact mailing address is empty, so email drafts are not ready to send.");
+  }
+  errors.push(...validateCompliance(settings.compliance).errors);
+  if (settings.compliance === undefined) warnings.push("Settings have no compliance block, so the safe defaults apply.");
+  else if (settings.compliance?.texasRegistration === "unknown") {
+    warnings.push("Texas phone solicitation status is unconfirmed; calls show a chapter 302 reminder until it is resolved.");
+  }
   errors.push(...dashErrors(settings, "Settings"));
   return result(errors, warnings);
+}
+
+// settings.compliance. Absent is allowed (the defaults in compliance.js apply); present must be whole.
+export function validateCompliance(compliance) {
+  const errors = [];
+  if (compliance === undefined) return result(errors, []);
+  if (!isPlainObject(compliance)) return result(["Compliance settings must be an object."], []);
+  const c = compliance;
+  if (!TEXAS_REGISTRATION_STATUSES.includes(c.texasRegistration)) {
+    errors.push(`texasRegistration must be one of: ${TEXAS_REGISTRATION_STATUSES.join(", ")}.`);
+  }
+  const w = c.callWindow;
+  if (!isPlainObject(w)) {
+    errors.push("Compliance needs a callWindow object with startHour, endHour and days.");
+  } else {
+    const hour = (v) => Number.isInteger(v) && v >= 0 && v <= 24;
+    if (!hour(w.startHour) || !hour(w.endHour)) errors.push("The call window hours must be whole numbers from 0 to 24.");
+    else if (w.startHour >= w.endHour) errors.push("The call window must start before it ends.");
+    if (!Array.isArray(w.days) || w.days.length === 0 || w.days.some((d) => !Number.isInteger(d) || d < 0 || d > 6)
+      || new Set(w.days).size !== w.days.length) {
+      errors.push("The call window days must be a list of distinct weekdays from 0 (Sunday) to 6 (Saturday).");
+    }
+  }
+  for (const f of ["maxCallsPerDay", "maxCallsTotal"]) {
+    if (!Number.isInteger(c[f]) || c[f] < 0) errors.push(`${f} must be a whole number of 0 or more.`);
+  }
+  if (Number.isInteger(c.maxCallsPerDay) && Number.isInteger(c.maxCallsTotal) && c.maxCallsPerDay > c.maxCallsTotal) {
+    errors.push("maxCallsPerDay cannot be above maxCallsTotal.");
+  }
+  if (typeof c.noColdTexts !== "boolean") errors.push("noColdTexts must be true or false.");
+  if (!Array.isArray(c.noTextStates) || c.noTextStates.some((s) => !US_STATES.includes(s))) {
+    errors.push("noTextStates must be a list of USPS codes such as WA.");
+  }
+  return result(errors, []);
+}
+
+// data/suppression.json: businesses that are never contacted or ingested again.
+export function validateSuppression(list) {
+  const errors = [];
+  if (!Array.isArray(list)) return result(["The suppression list must be a list."], []);
+  const keys = new Set();
+  list.forEach((s, i) => {
+    const label = `Suppression entry ${i + 1}${s?.business ? ` (${s.business})` : ""}`;
+    if (!isPlainObject(s)) {
+      errors.push(`${label} must be an object.`);
+      return;
+    }
+    if (isBlank(s.key)) errors.push(`${label} needs its dedupe key.`);
+    else if (keys.has(s.key)) errors.push(`${label} repeats the key ${s.key}.`);
+    keys.add(s.key);
+    if (isBlank(s.business)) errors.push(`${label} needs the business name.`);
+    if (isBlank(s.reason)) errors.push(`${label} needs a reason.`);
+    if (isBlank(s.by)) errors.push(`${label} needs a by value saying who added it.`);
+    if (!isIsoDate(String(s.addedAt ?? "").slice(0, 10))) errors.push(`${label} addedAt must be a date or timestamp.`);
+    checkState(s.state, label, errors);
+    if (!isBlank(s.phone) && !normalizePhone(s.phone)) errors.push(`${label} phone is not a valid US number.`);
+  });
+  errors.push(...dashErrors(list, "Suppression"));
+  return result(errors, []);
 }
 
 export function validateCategories(categories) {
@@ -610,6 +721,13 @@ export function validateCategories(categories) {
     for (const f of ["ticketValueDefault", "visualFitDefault"]) checkScale(c[f], f, `Category ${key}`, errors);
     for (const f of ["searchTerms", "placesTypes", "serviceDefaults"]) {
       if (!Array.isArray(c[f])) errors.push(`Category ${key} ${f} must be a list.`);
+    }
+    // Places includedType takes exactly one Table A type; [] means text query only.
+    if (Array.isArray(c.placesTypes) && c.placesTypes.some((t) => typeof t !== "string" || !/^[a-z]+(_[a-z]+)*$/.test(t))) {
+      errors.push(`Category ${key} placesTypes must be Table A type names such as car_repair.`);
+    }
+    if (c.placesTypesReviewed !== undefined && typeof c.placesTypesReviewed !== "boolean") {
+      errors.push(`Category ${key} placesTypesReviewed must be true or false.`);
     }
     if (typeof c.focusNote !== "string") errors.push(`Category ${key} focusNote must be text.`);
   }
@@ -658,8 +776,21 @@ export function validateBenchmarks(benchmarks, ctx = {}) {
   if (!isPlainObject(benchmarks)) return result(["Benchmarks must be an object."], []);
   if (!isPlainObject(benchmarks.categories)) errors.push("Benchmarks need a categories object.");
   if (benchmarks.consumerStats !== undefined && !Array.isArray(benchmarks.consumerStats)) errors.push("consumerStats must be a list.");
-  (benchmarks.consumerStats ?? []).forEach((s, i) => {
-    if (s?.verified && !isHttpUrl(s.url)) errors.push(`Consumer stat ${i + 1} is marked verified but has no source url.`);
+  const priorities = new Map();
+  (Array.isArray(benchmarks.consumerStats) ? benchmarks.consumerStats : []).forEach((s, i) => {
+    const label = `Consumer stat ${i + 1}${s?.id ? ` (${s.id})` : ""}`;
+    if (s?.verified && !isHttpUrl(s.url)) errors.push(`${label} is marked verified but has no source url.`);
+    // Optional: 1 is the most persuasive stat and leads the pitch.
+    if (s?.pitchPriority !== undefined && s?.pitchPriority !== null) {
+      if (!Number.isInteger(s.pitchPriority) || s.pitchPriority < 1) {
+        errors.push(`${label} pitchPriority must be a whole number of 1 or more.`);
+      } else if (priorities.has(s.pitchPriority)) {
+        errors.push(`${label} pitchPriority ${s.pitchPriority} is also used by ${priorities.get(s.pitchPriority)}.`);
+      } else {
+        priorities.set(s.pitchPriority, s.id ?? `stat ${i + 1}`);
+        if (!(s.verified && s.useInPitch)) warnings.push(`${label} has a pitchPriority but is not verified for pitch use, so it is never shown.`);
+      }
+    }
   });
   let unsourced = 0;
   for (const [key, b] of Object.entries(benchmarks.categories ?? {})) {
@@ -673,6 +804,37 @@ export function validateBenchmarks(benchmarks, ctx = {}) {
     const margin = b?.grossMargin?.typical;
     if (margin !== undefined && margin !== null && (typeof margin !== "number" || margin <= 0 || margin > 1)) {
       errors.push(`Benchmark ${key} grossMargin.typical must be a fraction from 0 to 1.`);
+    }
+    const rented = b?.rentedLead;
+    if (rented !== undefined && rented !== null) {
+      if (!isPlainObject(rented)) errors.push(`Benchmark ${key} rentedLead must be null or an object with low, high and platform.`);
+      else {
+        const num = (v) => typeof v === "number" && Number.isFinite(v) && v >= 0;
+        if (!num(rented.low) || !num(rented.high)) errors.push(`Benchmark ${key} rentedLead low and high must be numbers of 0 or more.`);
+        else if (rented.low > rented.high) errors.push(`Benchmark ${key} rentedLead low is above high.`);
+        if (rented.sources !== undefined && !Array.isArray(rented.sources)) errors.push(`Benchmark ${key} rentedLead sources must be a list.`);
+      }
+    }
+    // Optional cost per paying customer, for the "customers rented through" comparison.
+    const customer = b?.rentedCustomer;
+    if (customer !== undefined && customer !== null) {
+      if (!isPlainObject(customer)) {
+        errors.push(`Benchmark ${key} rentedCustomer must be null or an object with typical, platform and sources.`);
+      } else {
+        if (typeof customer.typical !== "number" || !Number.isFinite(customer.typical) || customer.typical <= 0) {
+          errors.push(`Benchmark ${key} rentedCustomer.typical must be a positive number of dollars per paying customer.`);
+        }
+        if (isBlank(customer.platform) || typeof customer.platform !== "string") errors.push(`Benchmark ${key} rentedCustomer needs a platform.`);
+        if (!Array.isArray(customer.sources)) {
+          errors.push(`Benchmark ${key} rentedCustomer sources must be a list.`);
+        } else if (customer.sources.length === 0) {
+          warnings.push(`Benchmark ${key} rentedCustomer has no sources and will show as not researched.`);
+        } else {
+          customer.sources.forEach((s, i) => {
+            if (!isPlainObject(s) || !isHttpUrl(s.url)) errors.push(`Benchmark ${key} rentedCustomer source ${i + 1} needs a full http or https url.`);
+          });
+        }
+      }
     }
   }
   if (ctx.categories) {

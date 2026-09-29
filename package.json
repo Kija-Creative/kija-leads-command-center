@@ -18,6 +18,7 @@
     "pitches": "node src/cli/build-pitches.js",
     "probe": "node src/cli/probe.js",
     "discover": "node src/cli/discover-places.js",
+    "purge-places": "node src/cli/purge-places.js",
     "export": "node src/cli/export-csv.js"
   }
 }

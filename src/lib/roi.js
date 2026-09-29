@@ -5,9 +5,51 @@ export const ESTIMATE_DISCLAIMER = "These are estimates to adjust together, not 
 export const PLACEHOLDER_SOURCE = "Placeholder, not researched";
 export const DEFAULT_MARGIN = 0.4;
 export const DEFAULT_JOBS_PER_MONTH = 3;
+export const ESTIMATE_LABEL = "Estimate, not verified";
+
+// Rough, conservative [low, typical, high, unit] tickets per category, not researched. Used for the
+// placeholder benchmarks and as the fallback when a benchmark ticket is missing or 0.
+export const CATEGORY_TICKET_DEFAULTS = {
+  "auto-repair": [150, 400, 1200, "repair order"],
+  "auto-body-collision": [500, 1800, 6000, "repair"],
+  "tire-shop": [100, 300, 900, "visit"],
+  "muffler-exhaust": [150, 350, 1500, "job"],
+  "diesel-truck-repair": [300, 900, 4000, "repair"],
+  "mobile-mechanic": [100, 300, 800, "visit"],
+  "auto-detailing": [100, 250, 800, "service"],
+  towing: [75, 150, 400, "tow"],
+  hvac: [150, 450, 8000, "service call"],
+  plumbing: [150, 400, 3000, "job"],
+  electrical: [150, 400, 3000, "job"],
+  septic: [300, 500, 5000, "service"],
+  "garage-door": [150, 300, 1500, "job"],
+  restoration: [1000, 3000, 15000, "job"],
+  "appliance-repair": [100, 200, 500, "repair"],
+  "pest-control": [100, 200, 600, "treatment"],
+  roofing: [400, 3000, 15000, "job"],
+  concrete: [1000, 3000, 12000, "project"],
+  fencing: [1000, 3000, 8000, "project"],
+  pools: [500, 2000, 60000, "job"],
+  landscaping: [200, 1000, 10000, "project"],
+  painting: [500, 2500, 8000, "project"],
+  "foundation-repair": [1000, 4000, 12000, "repair"],
+  remodeling: [2000, 8000, 60000, "project"],
+  "tree-service": [200, 800, 3000, "job"],
+  barber: [20, 35, 60, "visit"],
+  "hair-salon": [40, 90, 250, "visit"],
+  "nail-salon": [25, 50, 100, "visit"],
+  tattoo: [80, 250, 1000, "session"],
+  "pet-grooming": [40, 75, 150, "groom"],
+  general: [100, 300, 1000, "job"],
+};
 
 function positive(v, { max = Infinity } = {}) {
   return typeof v === "number" && Number.isFinite(v) && v > 0 && v <= max ? v : undefined;
+}
+
+// Research units already read "per repair order"; older ones read "repair order".
+function perUnit(unit) {
+  return /^per\s/i.test(unit) ? unit : `per ${unit}`;
 }
 
 function round1(n) {
@@ -65,11 +107,14 @@ function sourceInfo(sources) {
 
 export function computeRoi({ lead, benchmark, offer, overrides } = {}) {
   const o = overrides ?? lead?.roiOverrides ?? {};
-  const unit = benchmark?.ticket?.unit || "job";
+  // A ticket or margin of 0 or missing is unknown, never a real value: fall back to an estimate.
+  const fallback = CATEGORY_TICKET_DEFAULTS[lead?.categoryKey] ?? CATEGORY_TICKET_DEFAULTS.general;
+  const unit = benchmark?.ticket?.unit || fallback[3] || "job";
 
   const ticketOverride = positive(o.ticket);
   const benchTicket = positive(benchmark?.ticket?.typical);
-  const ticket = ticketOverride ?? benchTicket ?? null;
+  const ticketEstimate = !ticketOverride && !benchTicket;
+  const ticket = ticketOverride ?? benchTicket ?? fallback[1];
 
   const marginOverride = positive(o.margin, { max: 1 });
   const benchMargin = positive(benchmark?.grossMargin?.typical, { max: 1 });
@@ -85,26 +130,30 @@ export function computeRoi({ lead, benchmark, offer, overrides } = {}) {
   const assumptions = [];
   const ticketSource = ticketOverride
     ? { source: "Set in the ROI calculator", url: "", sources: [], verified: false }
-    : sourceInfo(benchmark?.ticket?.sources);
+    : ticketEstimate
+      ? { source: `${ESTIMATE_LABEL}: category default ticket, ${PLACEHOLDER_SOURCE.toLowerCase()}`, url: "", sources: [], verified: false }
+      : sourceInfo(benchmark?.ticket?.sources);
   assumptions.push({
     key: "ticket",
     label: "Typical ticket",
     value: ticket,
-    display: ticket === null ? "Not set" : `${formatDollars(ticket)} per ${unit}`,
-    origin: ticketOverride ? "override" : benchTicket ? "benchmark" : "missing",
+    display: `${formatDollars(ticket)} ${perUnit(unit)}`,
+    origin: ticketOverride ? "override" : benchTicket ? "benchmark" : "default",
+    estimate: ticketEstimate,
     ...ticketSource,
   });
   const marginSource = marginOverride
     ? { source: "Set in the ROI calculator", url: "", sources: [], verified: false }
     : benchMargin
       ? sourceInfo(benchmark?.grossMargin?.sources)
-      : { source: `Default ${formatPercent(DEFAULT_MARGIN)} margin, ${PLACEHOLDER_SOURCE.toLowerCase()}`, url: "", sources: [], verified: false };
+      : { source: `${ESTIMATE_LABEL}: default ${formatPercent(DEFAULT_MARGIN)} margin, ${PLACEHOLDER_SOURCE.toLowerCase()}`, url: "", sources: [], verified: false };
   assumptions.push({
     key: "margin",
     label: "Gross margin",
     value: margin,
     display: formatPercent(margin),
     origin: marginOverride ? "override" : benchMargin ? "benchmark" : "default",
+    estimate: !marginOverride && !benchMargin,
     ...marginSource,
   });
   assumptions.push({
@@ -136,20 +185,20 @@ export function computeRoi({ lead, benchmark, offer, overrides } = {}) {
     ticket,
     margin,
     price,
-    grossPerJob: ticket === null ? null : Math.round(ticket * margin),
+    grossPerJob: Math.round(ticket * margin),
     jobsPerMonth: middle,
     unit,
     priceConfirmed,
   };
 
-  if (ticket === null || price === null) {
-    const missing = ticket === null ? "a typical ticket value" : "a website price";
-    const sentence = `Add ${missing} to see about how many extra jobs would pay for the site.`;
+  if (price === null) {
+    const sentence = "Add a website price to see about how many extra jobs would pay for the site.";
     return {
       inputs,
       breakEven: { jobs: null, sentence },
       scenarios: [],
       rentedLeadComparison: null,
+      rentedCustomerComparison: null,
       sentences: [sentence],
       assumptions,
       unverified: true,
@@ -189,28 +238,56 @@ export function computeRoi({ lead, benchmark, offer, overrides } = {}) {
 
   let rentedLeadComparison = null;
   const rented = benchmark?.rentedLead;
+  // A low or high of 0 means the figure is unknown, so the comparison is left out.
   if (rented && positive(rented.low) && positive(rented.high)) {
     const perLead = (rented.low + rented.high) / 2;
     const leads = Math.max(1, Math.round(price / perLead));
     const platform = rented.platform ? ` from ${rented.platform}` : "";
+    const range = rented.low === rented.high
+      ? formatDollars(rented.low)
+      : `${formatDollars(rented.low)} to ${formatDollars(rented.high)}`;
     rentedLeadComparison = {
       low: rented.low,
       high: rented.high,
       platform: rented.platform ?? "",
       leads,
-      sentence: `The site costs about the same as ${leads} rented leads${platform}, at about ${formatDollars(rented.low)} to ${formatDollars(rented.high)} each.`,
+      sentence: `The site costs about the same as ${leads} rented leads${platform}, at about ${range} each.`,
     };
     assumptions.push({
       key: "rentedLead",
       label: "Rented lead cost",
       value: perLead,
-      display: `${formatDollars(rented.low)} to ${formatDollars(rented.high)}`,
+      display: range,
       origin: "benchmark",
       ...sourceInfo(rented.sources),
     });
   }
 
+  // Cost per paying customer is the stronger comparison (research/benchmarks.md): a lead is
+  // not a customer, and on LSA fewer than half of leads book.
+  let rentedCustomerComparison = null;
+  const perCustomer = benchmark?.rentedCustomer;
+  if (perCustomer && positive(perCustomer.typical)) {
+    const customers = Math.max(1, Math.round(price / perCustomer.typical));
+    const platform = perCustomer.platform || "paid lead platforms";
+    rentedCustomerComparison = {
+      typical: perCustomer.typical,
+      platform: perCustomer.platform ?? "",
+      customers,
+      sentence: `The site costs about the same as ${customers} ${customers === 1 ? "customer" : "customers"} rented through ${platform}.`,
+    };
+    assumptions.push({
+      key: "rentedCustomer",
+      label: "Rented customer cost",
+      value: perCustomer.typical,
+      display: `about ${formatDollars(perCustomer.typical)} per paying customer`,
+      origin: "benchmark",
+      ...sourceInfo(perCustomer.sources),
+    });
+  }
+
   const sentences = [breakEven.sentence, ...scenarios.map((s) => s.sentence)];
+  if (rentedCustomerComparison) sentences.push(rentedCustomerComparison.sentence);
   if (rentedLeadComparison) sentences.push(rentedLeadComparison.sentence);
 
   return {
@@ -218,6 +295,7 @@ export function computeRoi({ lead, benchmark, offer, overrides } = {}) {
     breakEven,
     scenarios,
     rentedLeadComparison,
+    rentedCustomerComparison,
     sentences,
     assumptions,
     unverified: assumptions.some((a) => a.key !== "jobsPerMonth" && !a.verified),

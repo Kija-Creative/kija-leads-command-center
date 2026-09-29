@@ -33,6 +33,7 @@ export const api = {
   state: () => call("GET", "/api/state"),
   patchLead: (id, body) => call("PATCH", `/api/leads/${enc(id)}`, body),
   addHistory: (id, body) => call("POST", `/api/leads/${enc(id)}/history`, body),
+  suppress: (id, body) => call("POST", `/api/leads/${enc(id)}/suppress`, body),
   buildDemo: (id) => call("POST", `/api/leads/${enc(id)}/demo`),
   buildPitch: (id) => call("POST", `/api/leads/${enc(id)}/pitch`),
   exportShare: (id) => call("POST", `/api/leads/${enc(id)}/export`),

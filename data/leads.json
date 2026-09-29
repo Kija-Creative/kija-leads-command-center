@@ -15,7 +15,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 2,
@@ -78,7 +77,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "racing"
     },
@@ -103,7 +102,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 2,
     "ticketValue": 2,
     "visualFit": 3,
@@ -166,7 +164,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "midnight"
     },
@@ -191,7 +189,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
@@ -254,7 +251,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "contractor",
       "palette": "slate"
     },
@@ -279,7 +276,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 2,
     "ticketValue": 3,
     "visualFit": 3,
@@ -342,7 +338,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "midnight"
     },
@@ -367,7 +363,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 2,
@@ -430,7 +425,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "enamel"
     },
@@ -455,7 +450,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 2,
@@ -513,7 +507,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "graphite"
     },
@@ -538,7 +532,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 2,
     "visualFit": 2,
@@ -596,7 +589,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "racing"
     },
@@ -621,7 +614,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
@@ -679,7 +671,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "graphite"
     },
@@ -704,7 +696,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 1,
     "visualFit": 3,
@@ -762,7 +753,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "personal-care",
       "palette": "noir"
     },
@@ -787,7 +778,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 2,
     "ticketValue": 3,
     "visualFit": 3,
@@ -839,7 +829,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "graphite"
     },
@@ -864,7 +854,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 2,
@@ -927,7 +916,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "graphite"
     },
@@ -952,7 +941,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 2,
     "ticketValue": 3,
     "visualFit": 2,
@@ -1015,7 +1003,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "racing"
     },
@@ -1040,7 +1028,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
@@ -1103,7 +1090,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "graphite"
     },
@@ -1128,7 +1115,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 2,
     "ticketValue": 1,
     "visualFit": 3,
@@ -1191,7 +1177,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "personal-care",
       "palette": "mint"
     },
@@ -1216,7 +1202,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 2,
@@ -1279,7 +1264,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "midnight"
     },
@@ -1304,7 +1289,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
@@ -1362,7 +1346,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "midnight"
     },
@@ -1387,7 +1371,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
@@ -1448,7 +1431,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "graphite"
     },
@@ -1473,7 +1456,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 2,
@@ -1536,7 +1518,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "home-services",
       "palette": "ember"
     },
@@ -1561,7 +1543,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 2,
     "ticketValue": 2,
     "visualFit": 2,
@@ -1627,7 +1608,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "midnight"
     },
@@ -1652,7 +1633,6 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "placesFetchedAt": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
@@ -1715,7 +1695,7 @@
     },
     "demo": {
       "shareApproved": false,
-      "builtAt": "2026-09-28T17:39:13.221Z",
+      "builtAt": "2026-09-28T18:21:21.517Z",
       "template": "auto",
       "palette": "racing"
     },

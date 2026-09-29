@@ -4,11 +4,13 @@
 // checkPitchHtml before it is written; a failure is reported and that file is
 // left untouched. Leads are read, never written: whether a pitch exists is the
 // file itself. This reads the clock once and passes it down. Nothing here
-// publishes or sends anything.
+// publishes or sends anything. A business on the suppression list gets no pitch
+// page; an existing one is left for Jamey to delete, since deleting is his call.
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { suppressed } from "../pitch/compliance-link.js";
 import { checkPitchHtml, renderPitch } from "../pitch/render.js";
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -77,7 +79,8 @@ export async function buildPitches({ store, rootDir, selection, now }) {
   const state = await store.load();
   const leads = Array.isArray(state.leads) ? state.leads : [];
   const chosen = selectLeads(leads, selection, rootDir);
-  const report = { ok: true, built: [], failed: [], matched: chosen.length, errors: [], warnings: [] };
+  const suppression = Array.isArray(state.suppression) ? state.suppression : [];
+  const report = { ok: true, built: [], failed: [], skipped: [], matched: chosen.length, errors: [], warnings: [] };
 
   if (selection.mode === "id" && !chosen.length) {
     report.ok = false;
@@ -89,6 +92,15 @@ export async function buildPitches({ store, rootDir, selection, now }) {
   for (const lead of chosen) {
     if (!safeId(lead.id)) {
       report.failed.push({ id: String(lead.id), business: lead.business, errors: ["The lead id is not a safe folder name, so no pitch was written."] });
+      continue;
+    }
+    if (suppressed(lead, suppression)) {
+      const exists = fs.existsSync(pitchPath(rootDir, lead.id));
+      report.skipped.push({
+        id: lead.id,
+        business: lead.business,
+        reason: `On the suppression list, so no pitch page is built.${exists ? " An older pitch page is still in pitches/; delete it if they asked." : ""}`,
+      });
       continue;
     }
     let html;
@@ -125,8 +137,10 @@ export function formatReport(report, selection) {
     lines.push(`  failed  ${f.id}`);
     for (const e of f.errors) lines.push(`          ${e}`);
   }
+  for (const k of report.skipped ?? []) lines.push(`  skipped ${k.id}  ${k.reason}`);
   for (const w of report.warnings) lines.push(`  warning ${w}`);
-  lines.push(`Pitches (${label}): ${report.built.length} built, ${report.failed.length} failed, ${report.matched} matched.`);
+  const skipped = report.skipped?.length ? `, ${report.skipped.length} skipped` : "";
+  lines.push(`Pitches (${label}): ${report.built.length} built, ${report.failed.length} failed${skipped}, ${report.matched} matched.`);
   if (report.built.length) lines.push("Pitch pages are private files. Nothing was published or sent.");
   return lines.join("\n");
 }

@@ -2,6 +2,9 @@
 // HTML page for the business owner to read after seeing their demo. The page
 // argues from facts on the lead record and numbers from computeRoi; anything
 // not sourced is labelled an estimate. Pure: no clock, no disk.
+//
+// The rating and review count come only from the lead record, which carries its
+// own dated source. Nothing on the page is built from Places API responses.
 
 import { formatDollars, ESTIMATE_DISCLAIMER } from "../lib/roi.js";
 import {
@@ -14,19 +17,28 @@ import {
   esc,
   formatCount,
   formatDate,
+  fixDoubledPer,
   formatRating,
   hasSpanish,
+  normalizeUnitText,
+  perUnit,
   pitchStats,
   placeLine,
+  plainPlatform,
   requestKind,
   reviewsPhrase,
   roiFor,
   safeUrl,
   sentence,
+  statCite,
+  statHeadline,
+  statSentence,
   stripDashes,
   telHref,
+  titleYear,
   toDate,
   verticalFor,
+  withPlainPlatform,
 } from "./shared.js";
 
 export const PRICE_TO_CONFIRM = "Pricing to confirm on our call";
@@ -142,6 +154,20 @@ function trustSection(ctx) {
 </section>`;
 }
 
+// One stat: the headline number alone ("41%", never "41% always (29% in 2025)"),
+// one plain sentence, then the source and year.
+function statItem(s) {
+  const headline = statHeadline(s.value);
+  // A fragment claim ("of shoppers read reviews") reads straight on from the number
+  // above it, so it is not repeated; a full sentence stands on its own.
+  const fragment = headline && /^[a-z]/.test(clean(s.claim));
+  return `<li>
+          ${headline ? `<strong class="stat-val">${esc(headline)}</strong>` : ""}
+          <span class="stat-claim">${esc(fragment ? sentence(s.claim) : statSentence(s))}</span>
+          <cite>${linkOrText(statCite(s), safeUrl(s.url))}</cite>
+        </li>`;
+}
+
 function gapSection(ctx) {
   const { lead } = ctx;
   const gap = Number(lead.websiteGap) || 0;
@@ -163,15 +189,11 @@ function gapSection(ctx) {
   if (ctx.spanish) missing.push("Read about you in Spanish as easily as in English.");
   const missingTitle = gap >= 2 ? "What they cannot do yet" : "What your site could do better";
 
-  const stats = pitchStats(ctx.benchmarks);
+  const stats = pitchStats(ctx.benchmarks, { lead });
   const statBlock = stats.length
     ? `<div class="stats" aria-label="Research on how customers choose local businesses">
         <h3>How people choose a local business</h3>
-        <ul class="stat-list">${stats.map((s) => `<li>
-          ${clean(s.value) ? `<strong class="stat-val">${esc(clean(s.value))}</strong>` : ""}
-          <span class="stat-claim">${esc(sentence(s.claim))}</span>
-          <cite>${linkOrText(`${clean(s.source)}, ${clean(String(s.year))}`, safeUrl(s.url))}</cite>
-        </li>`).join("")}</ul>
+        <ul class="stat-list">${stats.map(statItem).join("")}</ul>
       </div>`
     : "";
 
@@ -263,7 +285,7 @@ function assumptionSource(a, ctx) {
   if (a.origin === "override") return esc("A number we adjusted for your business. Tell us if it is off.");
   const sources = Array.isArray(a.sources) ? a.sources.filter((s) => s.title || s.url) : [];
   if (sources.length) {
-    return sources.map((s) => linkOrText(`${clean(s.title || s.url)}${s.year ? `, ${s.year}` : ""}`, safeUrl(s.url))).join("; ");
+    return sources.map((s) => linkOrText(titleYear(s.title || s.url, s.year), safeUrl(s.url))).join("; ");
   }
   return esc("A working estimate, not yet backed by a published source. Your real number replaces it.");
 }
@@ -271,7 +293,44 @@ function assumptionSource(a, ctx) {
 function assumptionValue(a, ctx) {
   if (a.key === "price" && !ctx.priceConfirmed) return PRICE_TO_CONFIRM;
   if (a.key === "jobsPerMonth") return `${a.display} as the middle case`;
-  return a.display;
+  if (a.key === "ticket" && Number(a.value) > 0) return `${formatDollars(a.value)} ${perUnit(ctx.roi.inputs?.unit)}`;
+  return fixDoubledPer(clean(a.display));
+}
+
+function isVerified(roi, key, fallback) {
+  const a = Array.isArray(roi.assumptions) ? roi.assumptions.find((x) => x.key === key) : null;
+  return a ? Boolean(a.verified) : Boolean(fallback);
+}
+
+// The rented lead comparison as support for the customer line: same numbers, framed
+// as why the customer figure is the one that counts. Falls back to computeRoi's
+// own sentence when a field is missing.
+function supportingLeadLine(lead) {
+  const leads = Number(lead?.leads);
+  const low = Number(lead?.low);
+  const high = Number(lead?.high);
+  if (!(leads > 0) || !(low > 0) || !(high > 0)) return withPlainPlatform(lead?.sentence, lead?.platform);
+  const platform = plainPlatform(lead.platform);
+  const range = low === high ? formatDollars(low) : `${formatDollars(low)} to ${formatDollars(high)}`;
+  return `Counted per lead instead, the same money buys about ${leads} rented ${leads === 1 ? "lead" : "leads"}${platform ? ` from ${platform}` : ""} at about ${range} each, and not every lead becomes a paying customer.`;
+}
+
+// Cost per paying customer is the strongest comparison, so it leads when computeRoi
+// has one; the cost per rented lead follows as support, or stands alone without it.
+function rentedBlock(roi) {
+  const customer = roi.rentedCustomerComparison;
+  const lead = roi.rentedLeadComparison;
+  const customerText = withPlainPlatform(customer?.sentence, customer?.platform);
+  const leadText = clean(lead?.sentence);
+  const tidy = (text) => esc(normalizeUnitText(text, roi.inputs ?? {}));
+  const leadBadge = badge(isVerified(roi, "rentedLead", false));
+  if (customerText) {
+    const customerBadge = badge(isVerified(roi, "rentedCustomer", customer.verified ?? (Array.isArray(customer.sources) && customer.sources.length > 0)));
+    return `<p class="rented rented-customer">${tidy(customerText)}${customerBadge}</p>`
+      + (leadText ? `<p class="rented-lead">${tidy(supportingLeadLine(lead))}${leadBadge}</p>` : "");
+  }
+  if (leadText) return `<p class="rented rented-lead">${tidy(withPlainPlatform(leadText, lead.platform))}${leadBadge}</p>`;
+  return "";
 }
 
 function mathSection(ctx) {
@@ -304,9 +363,7 @@ function mathSection(ctx) {
       <td>${s.paybackMonths < 1 ? "Under a month" : `About ${esc(String(s.paybackMonths))} months`}</td>
       <td>${esc(String(s.returnMultiple))}x</td>
     </tr>`).join("");
-  const rented = roi.rentedLeadComparison
-    ? `<p class="rented">${esc(stripDashes(roi.rentedLeadComparison.sentence))}${badge(roi.assumptions.find((a) => a.key === "rentedLead")?.verified)}</p>`
-    : "";
+  const rented = rentedBlock(roi);
   const middle = roi.scenarios.find((s) => s.label === "middle");
 
   return `
@@ -316,7 +373,7 @@ function mathSection(ctx) {
     <div class="breakeven">
       <div class="be-num"><span class="n">${esc(String(roi.breakEven.jobs))}</span><span class="u">extra ${roi.breakEven.jobs === 1 ? "job" : "jobs"}</span></div>
       <div class="be-copy">
-        <p class="big">${esc(stripDashes(roi.breakEven.sentence))} ${beLabel}</p>
+        <p class="big">${esc(normalizeUnitText(clean(roi.breakEven.sentence), roi.inputs ?? {}))} ${beLabel}</p>
         <p>After that, every extra job the site brings in is yours to keep.${esc(priceNote)}</p>
       </div>
     </div>
@@ -328,7 +385,7 @@ function mathSection(ctx) {
         <tbody>${rows}</tbody>
       </table>
     </div>
-    ${middle ? `<p>${esc(stripDashes(middle.sentence))}</p>` : ""}
+    ${middle ? `<p>${esc(normalizeUnitText(clean(middle.sentence), roi.inputs ?? {}))}</p>` : ""}
     ${rented}
     <h3>Every number we used</h3>
     <ul class="assumptions">${assumptions}</ul>
@@ -342,7 +399,7 @@ function marketLine(benchmarks) {
   const sources = Array.isArray(m?.sources) ? m.sources.filter((s) => s && (s.title || s.url)) : [];
   const sub = m?.subscription;
   if (!sources.length || !(sub?.lowMonthly > 0) || !(sub?.highMonthly > 0)) return "";
-  const cite = sources.map((s) => linkOrText(`${clean(s.title || s.url)}${s.year ? `, ${s.year}` : ""}`, safeUrl(s.url))).join("; ");
+  const cite = sources.map((s) => linkOrText(titleYear(s.title || s.url, s.year), safeUrl(s.url))).join("; ");
   return `<p>For comparison, subscription website plans commonly run about ${esc(formatDollars(sub.lowMonthly))} to ${esc(formatDollars(sub.highMonthly))} a month, for as long as you want the site to stay up. <span class="fine">Source: ${cite}.</span></p>`;
 }
 
@@ -596,7 +653,7 @@ figcaption .fine { display: block; margin-bottom: 4px; }
 }
 `;
 
-export function renderPitch(lead, { settings = {}, benchmarks = {}, categories = {}, now } = {}) {
+export function renderPitch(lead, { settings = {}, benchmarks = {}, categories = {}, now, roi = null } = {}) {
   if (!lead || typeof lead !== "object" || !lead.id) throw new TypeError("renderPitch needs a lead with an id.");
   const vertical = verticalFor(lead, categories);
   const ctx = {
@@ -609,7 +666,7 @@ export function renderPitch(lead, { settings = {}, benchmarks = {}, categories =
     kind: requestKind(vertical, lead.categoryKey),
     vertical,
     spanish: hasSpanish(lead),
-    roi: roiFor(lead, { settings, benchmarks }),
+    roi: roi && typeof roi === "object" && roi.breakEven ? roi : roiFor(lead, { settings, benchmarks }),
     priceConfirmed: Boolean(settings?.offer?.priceConfirmed),
     contact: contactOf(settings),
   };
@@ -658,13 +715,24 @@ export function checkPitchHtml(html, lead, { settings } = {}) {
   if (!/<meta name="robots" content="noindex, nofollow">/.test(text)) errors.push("The pitch page is missing the noindex, nofollow robots meta tag.");
   if (DASH_RE.test(text)) errors.push("The pitch page contains an em or en dash.");
   if (/guarantee/i.test(text)) errors.push("The pitch page uses the word guarantee.");
+  if (/\bper\s+per\b/i.test(text)) errors.push("The pitch page repeats a unit (\"per per\").");
+  if (/google partner|partner(?:ed)? with google|certified by google|on behalf of google|endorsed by google/i.test(text)) {
+    errors.push("The pitch page implies a tie to Google. Kija is independent and says so.");
+  }
   if (lead) {
+    // Places API content may not be used to build pitch content (research/places-api.md).
+    if (lead.ratingSource === "places-api") {
+      errors.push("The lead's rating is recorded from the Places API, which may not be used for pitch content. Record it from the public listing (google-maps-observed) or a secondary source first.");
+    }
     if (!text.includes(esc(formatRating(lead.googleRating)))) errors.push("The pitch page does not show the lead's recorded rating.");
     if (!text.includes(esc(reviewsPhrase(lead)))) errors.push("The pitch page does not show the lead's recorded review count.");
   }
   const offer = settings?.offer;
-  if (offer && !offer.priceConfirmed && Number(offer.price) > 0 && text.includes(formatDollars(offer.price))) {
-    // A scenario figure can equal the price by coincidence, so this is a warning.
+  // Scenario cells are computed revenue (5 jobs at $500 is $2,500), not the price, so
+  // they are left out of the search. Anything else that matches is worth a look.
+  const outsideScenarios = text.replace(/<table class="scen">[\s\S]*?<\/table>/g, "");
+  if (offer && !offer.priceConfirmed && Number(offer.price) > 0 && outsideScenarios.includes(formatDollars(offer.price))) {
+    // A sentence figure can still equal the price by coincidence, so this is a warning.
     warnings.push("The pitch page shows a dollar figure equal to the unconfirmed price. Check that the price is not on the page.");
   }
   if (!text.includes(ESTIMATE_DISCLAIMER)) errors.push("The pitch page is missing the estimates disclaimer.");

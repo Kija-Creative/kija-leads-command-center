@@ -2,8 +2,32 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { ESTIMATE_DISCLAIMER } from "../src/lib/roi.js";
 import { checkPitchHtml, demoHref, plainConcept, PRICE_TO_CONFIRM, renderPitch } from "../src/pitch/render.js";
-import { formatRating, pitchStats, reviewsPhrase, stripDashes } from "../src/pitch/shared.js";
-import { CATEGORIES, DASHES, LEADS, NOW, PLACEHOLDER, fullBenchmarks, hasDash, leadById, settingsWith, visibleText } from "./pitch-fixtures.js";
+import fs from "node:fs";
+import path from "node:path";
+import {
+  formatRating,
+  normalizeUnitText,
+  perUnit,
+  pitchStats,
+  plainPlatform,
+  reviewsPhrase,
+  roiFor,
+  statCite,
+  statHeadline,
+  statSentence,
+  statTopic,
+  stripDashes,
+  titleYear,
+  unitParts,
+} from "../src/pitch/shared.js";
+import { CATEGORIES, DASHES, LEADS, NOW, PLACEHOLDER, ROOT, fullBenchmarks, hasDash, leadById, settingsWith, visibleText } from "./pitch-fixtures.js";
+
+// The real research numbers, read only.
+const RESEARCH = JSON.parse(fs.readFileSync(path.join(ROOT, "research", "benchmarks.json"), "utf8"));
+
+function stat(id, claim, value, extra = {}) {
+  return { id, claim, value, year: 2026, source: "Fixture Survey 2026", url: "https://example.org/s", verified: true, useInPitch: true, notes: "", ...extra };
+}
 
 function render(lead, { settings = settingsWith(), benchmarks = PLACEHOLDER } = {}) {
   return renderPitch(lead, { settings, benchmarks, categories: CATEGORIES, now: NOW });
@@ -35,7 +59,7 @@ test("sample leads render with a fuller sourced benchmark set", () => {
   const html = render(gm, { benchmarks });
   const text = visibleText(html);
   // Sourced auto repair numbers: $550 at 50% means 10 jobs for $2,500.
-  assert.match(text, /At a typical \$550 repair order and 50% gross margin, the site pays for itself after 10 extra jobs/);
+  assert.match(text, /At a typical \$550 per repair order and 50% gross margin, the site pays for itself after 10 extra jobs/);
   assert.ok(html.includes("https://example.org/shop-survey"), "ticket source link");
   assert.ok(html.includes("Fixture Margin Study, 2024"), "margin source with year");
   assert.match(text, /rented leads from a lead marketplace/);
@@ -84,6 +108,16 @@ test("price is hidden unless priceConfirmed, and shown when confirmed", () => {
   const shown = render(lead, { settings: settingsWith({ price: 2750, priceConfirmed: true }) });
   assert.ok(shown.includes("$2,750"), "confirmed price appears");
   assert.ok(!shown.includes(PRICE_TO_CONFIRM));
+});
+
+test("a scenario cell that happens to equal the unconfirmed price is not flagged, a leaked price is", () => {
+  const settings = settingsWith({ price: 2500, priceConfirmed: false });
+  const lead = { ...leadById("gm-auto-care"), roiOverrides: { ticket: 500 } };
+  const html = render(lead, { settings });
+  assert.ok(html.includes("<td>$2,500</td>"), "5 jobs at $500 is $2,500 of revenue in the table");
+  assert.deepEqual(checkPitchHtml(html, lead, { settings }).warnings, []);
+  const leaked = html.replace("</main>", "<p>Only $2,500.</p></main>");
+  assert.equal(checkPitchHtml(leaked, lead, { settings }).warnings.length, 1);
 });
 
 test("an unconfirmed price never leaks through the care plan either", () => {
@@ -199,15 +233,183 @@ test("print stylesheet targets letter paper on a light page", () => {
   assert.match(html, /prefers-reduced-motion: reduce/);
 });
 
-test("missing ticket falls back to a conversation, not invented math", () => {
+test("a missing ticket uses the labelled category estimate, and a missing price falls back to a conversation", () => {
   const benchmarks = structuredClone(PLACEHOLDER);
   delete benchmarks.categories["auto-repair"];
   delete benchmarks.categories.general;
   const lead = leadById("gm-auto-care");
   const html = render(lead, { benchmarks });
   assert.equal(checkPitchHtml(html, lead).ok, true);
-  assert.ok(visibleText(html).includes("We would rather run these numbers with your real average job"));
-  assert.ok(!html.includes("class=\"scen\""));
+  const ticketRow = html.match(/<li><span class="a-label">Typical ticket[\s\S]*?<\/li>/)[0];
+  assert.match(ticketRow, /class="badge">Estimate</, "the fallback ticket is labelled an estimate");
+
+  const noPrice = render(lead, { settings: settingsWith({ price: 0 }) });
+  assert.equal(checkPitchHtml(noPrice, lead).ok, true);
+  assert.ok(visibleText(noPrice).includes("We would rather run these numbers with your real average job"));
+  assert.ok(!noPrice.includes("class=\"scen\""));
+});
+
+test("ticket units read per unit once, in the sentence and the assumptions", () => {
+  assert.deepEqual(unitParts("per repair order"), { full: "repair order", short: "repair order" });
+  assert.deepEqual(unitParts("repair order"), { full: "repair order", short: "repair order" });
+  assert.deepEqual(unitParts("per new customer first job (repair visit typical; replacement is the high)"), { full: "new customer first job", short: "new customer first job" });
+  assert.deepEqual(unitParts("per new customer, first year of service"), { full: "new customer, first year of service", short: "new customer" });
+  assert.deepEqual(unitParts(""), { full: "job", short: "job" });
+  assert.equal(perUnit("per haircut"), "per haircut");
+  assert.equal(normalizeUnitText("At a typical $550 per repair order and 50% gross margin", { ticket: 550, unit: "per repair order" }), "At a typical $550 per repair order and 50% gross margin");
+  assert.equal(normalizeUnitText("At a typical $550 repair order and", { ticket: 550, unit: "repair order" }), "At a typical $550 per repair order and");
+  assert.equal(normalizeUnitText("$550 per per repair order", { ticket: 550, unit: "per repair order" }), "$550 per repair order");
+
+  const benchmarks = fullBenchmarks();
+  benchmarks.categories["auto-repair"].ticket.unit = "per repair order";
+  const lead = leadById("gm-auto-care");
+  const html = render(lead, { benchmarks });
+  const text = visibleText(html);
+  assert.ok(!/per per/i.test(html), "no doubled unit anywhere");
+  assert.match(text, /Typical ticket \$550 per repair order /);
+  assert.match(text, /At a typical \$550 per repair order and 50% gross margin/);
+
+  benchmarks.categories["auto-repair"].ticket.unit = "per new customer first job (repair visit typical; replacement is the high)";
+  const long = visibleText(render(lead, { benchmarks }));
+  assert.ok(!long.includes("replacement is the high"), "researcher notes stay off the owner's page");
+  assert.match(long, /At a typical \$550 per new customer first job and 50% gross margin/);
+});
+
+test("with the real research benchmarks no pitch doubles a unit and every page passes", () => {
+  for (const lead of LEADS) {
+    const html = render(lead, { benchmarks: RESEARCH });
+    const check = checkPitchHtml(html, lead);
+    assert.deepEqual(check.errors, [], `${lead.id}: ${check.errors.join(" ")}`);
+    assert.ok(!/per per/i.test(html), lead.id);
+    assert.ok(!/\(\d+% in 20\d\d\)/.test(visibleText(html)), `${lead.id}: stat comparisons stay out of the headline`);
+    assert.equal((html.match(/<strong class="stat-val">/g) || []).length, 3, `${lead.id}: three stats`);
+  }
+});
+
+test("stats pick by pitchPriority, lowest first, and prefer different topics", () => {
+  const b = { consumerStats: [
+    stat("a", "Nearly all consumers read online reviews for local businesses.", "97% read reviews"),
+    stat("b", "About two in five consumers always read reviews.", "41% always (29% in 2025)"),
+    stat("c", "Most positive reviews make people more likely to use a business.", "85% more likely"),
+    stat("d", "After reading positive reviews, the most common next step is checking the business website.", "54% check the website (32% in 2019)", { pitchPriority: 1 }),
+    stat("e", "Most local business searches start on a phone.", "73% mobile, 19% computer", { pitchPriority: 2 }),
+    stat("f", "Half of recent local searchers decided not to contact a business they looked at.", "52%", { pitchPriority: 3 }),
+  ] };
+  assert.deepEqual(pitchStats(b).map((s) => s.id), ["d", "e", "f"], "priority first");
+
+  const noPriority = { consumerStats: b.consumerStats.map(({ pitchPriority, ...rest }) => rest) };
+  assert.deepEqual(pitchStats(noPriority).map((s) => s.id), ["a", "d", "e"], "one review stat, then other topics, in file order");
+  assert.equal(statTopic(noPriority.consumerStats[3]), "website", "a website stat that mentions reviews is a website stat");
+
+  const mixed = { consumerStats: [stat("p", "Nearly all consumers read reviews.", "97%", { pitchPriority: 1 }), stat("q", "Two in five always read reviews.", "41%", { pitchPriority: 2 }), stat("r", "Most searches start on a phone.", "73%")] };
+  assert.deepEqual(pitchStats(mixed).map((s) => s.id), ["p", "r", "q"], "a second review stat waits behind a different topic");
+
+  const allReviews = { consumerStats: b.consumerStats.slice(0, 3) };
+  assert.equal(pitchStats(allReviews).length, 3, "fills from the same topic only when nothing else is left");
+  assert.equal(pitchStats(b, 2).length, 2, "a number is still the limit");
+  const topical = { consumerStats: [stat("x", "One.", "1%", { topic: "t" }), stat("y", "Two.", "2%", { topic: "t" }), stat("z", "Three.", "3%", { topic: "u" })] };
+  assert.deepEqual(pitchStats(topical, 2).map((s) => s.id), ["x", "z"], "a stat's own topic wins");
+});
+
+test("a star threshold stat shows only when the lead clears it", () => {
+  const b = { consumerStats: [stat("stars", "About a third of consumers will only use a business rated 4.5 stars or higher.", "31% only use 4.5+ stars (17% in 2025)")] };
+  assert.equal(pitchStats(b, { lead: { googleRating: 4.8 } }).length, 1);
+  assert.equal(pitchStats(b, { lead: { googleRating: 4.4 } }).length, 0);
+  assert.equal(pitchStats(b).length, 0, "without a lead it is left out");
+  const explicit = { consumerStats: [stat("m", "Something about ratings.", "10%", { minRating: 4.9 })] };
+  assert.equal(pitchStats(explicit, { lead: { googleRating: 4.8 } }).length, 0);
+});
+
+test("each stat renders as a clean number, one plain sentence, and its source and year", () => {
+  assert.equal(statHeadline("41% always (29% in 2025)"), "41%");
+  assert.equal(statHeadline("31% only use 4.5+ stars (17% in 2025); 68% require 4+ stars"), "31%");
+  assert.equal(statHeadline("150%+ near me now"), "150%+");
+  assert.equal(statHeadline("Over 2 billion a month (calls, directions)"), "Over 2 billion");
+  assert.equal(statHeadline("36,207,130"), "36,207,130");
+  assert.equal(statHeadline("Qualitative, 20 searches"), "");
+  assert.equal(statSentence({ claim: "of shoppers read reviews", value: "87%" }), "87% of shoppers read reviews.");
+  assert.equal(statSentence({ claim: "Most searches start on a phone", value: "73% mobile" }), "Most searches start on a phone.");
+  assert.equal(statCite({ source: "BrightLocal, Local Consumer Review Survey 2026", year: 2026 }), "BrightLocal, Local Consumer Review Survey 2026");
+  assert.equal(statCite({ source: "Fixture Study", year: 2024 }), "Fixture Study, 2024");
+
+  const b = fullBenchmarks();
+  b.consumerStats = [stat("b", "About two in five consumers always read reviews when browsing for businesses.", "41% always (29% in 2025)", { source: "BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)" })];
+  const html = render(leadById("gm-auto-care"), { benchmarks: b });
+  assert.match(html, /<strong class="stat-val">41%<\/strong>/);
+  assert.ok(!html.includes("29% in 2025"), "the comparison does not ride along");
+  const text = visibleText(html);
+  assert.ok(text.includes("About two in five consumers always read reviews when browsing for businesses."));
+  assert.ok(text.includes("BrightLocal, Local Consumer Review Survey 2026 (1,002 US adults)"));
+  assert.ok(!text.includes("(1,002 US adults), 2026"), "the year is not repeated");
+});
+
+test("the cost per paying customer leads the comparison, with the rented lead line after it", () => {
+  const benchmarks = fullBenchmarks();
+  benchmarks.categories["auto-repair"].rentedCustomer = { typical: 250, platform: "Google Local Services Ads", sources: [{ title: "Fixture Customer Cost", url: "https://example.org/customer", year: 2026 }] };
+  const lead = leadById("gm-auto-care");
+  const roi = roiFor(lead, { settings: settingsWith(), benchmarks });
+  assert.ok(roi.rentedCustomerComparison, "computeRoi returns the customer comparison");
+  const html = render(lead, { benchmarks });
+  const customerAt = html.indexOf("class=\"rented rented-customer\"");
+  const leadAt = html.indexOf("class=\"rented-lead\"");
+  assert.ok(customerAt > 0, "customer line renders");
+  assert.ok(leadAt > customerAt, "lead line follows it");
+  assert.ok(visibleText(html).includes(roi.rentedCustomerComparison.sentence));
+  const customerLine = html.slice(customerAt, html.indexOf("</p>", customerAt));
+  assert.ok(!/class="badge"/.test(customerLine), "a sourced customer cost carries no estimate badge");
+  assert.ok(visibleText(html).includes("Counted per lead instead, the same money buys about 42 rented leads from a lead marketplace at about $40 to $80 each, and not every lead becomes a paying customer."));
+
+  // Without the customer figure, the rented lead sentence stands alone.
+  const plain = render(lead, { benchmarks: fullBenchmarks() });
+  assert.ok(!plain.includes("rented-customer"));
+  assert.ok(plain.includes("class=\"rented rented-lead\""));
+});
+
+test("platform names and source titles read plainly", () => {
+  assert.equal(plainPlatform("Google LSA (SearchLight drain and sewer, stand-in)"), "Google Local Services Ads");
+  assert.equal(plainPlatform("Google Search Ads (LocaliQ automotive medians, not LSA)"), "Google Search Ads");
+  assert.equal(plainPlatform("Google LSA"), "Google Local Services Ads");
+  assert.equal(titleYear("Tekmetric Auto Repair Industry Index, September 2023", 2023), "Tekmetric Auto Repair Industry Index, September 2023");
+  assert.equal(titleYear("Fixture Shop Survey", 2025), "Fixture Shop Survey, 2025");
+  for (const prefix of ["gm-auto-care", "prime-time-septic", "adams-brothers-roof"]) {
+    const text = visibleText(render(leadById(prefix), { benchmarks: RESEARCH }));
+    const math = text.slice(text.indexOf("The math"), text.indexOf("Every number we used"));
+    assert.ok(!/stand-in|medians|not LSA/.test(math), `${prefix}: no researcher notes in the comparison`);
+    assert.ok(!/(\b20\d\d\b), \1\b/.test(text), `${prefix}: no year printed twice`);
+  }
+});
+
+test("a precomputed roi with a customer comparison is used as given", () => {
+  const lead = leadById("gm-auto-care");
+  const settings = settingsWith();
+  const roi = roiFor(lead, { settings, benchmarks: fullBenchmarks() });
+  roi.rentedCustomerComparison = { typical: 233, platform: "Google Local Services Ads", customers: 11, sentence: "The site costs about the same as 11 customers rented through Google Local Services Ads." };
+  const html = renderPitch(lead, { settings, benchmarks: fullBenchmarks(), categories: CATEGORIES, now: NOW, roi });
+  assert.ok(visibleText(html).includes("The site costs about the same as 11 customers rented through Google Local Services Ads."));
+  assert.match(html, /rented-customer">[^<]*<span class="badge">Estimate</, "no rentedCustomer assumption means it is labelled an estimate");
+});
+
+test("the pitch never uses Places data: a places-api rating fails the check, and the rating carries its dated line", () => {
+  const lead = leadById("gm-auto-care");
+  const html = render(lead);
+  assert.ok(visibleText(html).includes("As listed when we checked on September 26, 2026."));
+  assert.ok(!html.includes("place_id") && !html.includes("placeId"));
+  const places = { ...lead, ratingSource: "places-api" };
+  const check = checkPitchHtml(render(places), places);
+  assert.equal(check.ok, false);
+  assert.ok(check.errors.some((e) => /Places API/.test(e)));
+  for (const source of ["google-maps-observed", "secondary", "owner", ""]) {
+    const l = { ...lead, ratingSource: source };
+    assert.equal(checkPitchHtml(render(l), l).ok, true, source);
+  }
+});
+
+test("the pitch check refuses a doubled unit and any implied tie to Google", () => {
+  const lead = leadById("gm-auto-care");
+  const html = render(lead);
+  assert.ok(checkPitchHtml(html.replace("</main>", "<p>$550 per per repair order</p></main>"), lead).errors.some((e) => /per per/.test(e)));
+  assert.ok(checkPitchHtml(html.replace("</main>", "<p>A Google Partner studio</p></main>"), lead).errors.some((e) => /tie to Google/.test(e)));
+  assert.equal(checkPitchHtml(html, lead).ok, true);
 });
 
 test("render is deterministic for the same inputs", () => {

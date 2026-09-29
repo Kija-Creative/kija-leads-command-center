@@ -214,3 +214,81 @@ test("export writes the dated CSV", async () => {
   assert.equal(csv.split("\r\n").length, 22);
   assert.match(c.chunks.out, /with 20 leads/);
 });
+
+test("seed writes an empty suppression list once and never replaces it", async () => {
+  const root = tempProject();
+  await seedMain([], capture().deps({ root, now: "2026-09-28T12:00:00.000Z" }));
+  assert.deepEqual(readJson(root, "data/suppression.json"), []);
+  const entry = { key: "9726814966", business: "GM AUTO CARE", city: "Dallas", state: "TX", phone: "972-681-4966", reason: "Asked not to be contacted.", addedAt: "2026-09-29T15:00:00.000Z", by: "Jamey" };
+  fs.writeFileSync(path.join(root, "data", "suppression.json"), JSON.stringify([entry], null, 2));
+  assert.equal(await seedMain(["--force"], capture().deps({ root, now: "2026-09-30T12:00:00.000Z" })), 0);
+  assert.deepEqual(readJson(root, "data/suppression.json"), [entry], "an opt out survives a forced re-seed");
+});
+
+test("check validates the suppression list and flags a suppressed lead still in outreach", async () => {
+  const root = tempProject();
+  await seedMain([], capture().deps({ root, now: "2026-09-28T12:00:00.000Z" }));
+  const entry = { key: "9726814966", business: "GM AUTO CARE", city: "Dallas", state: "TX", phone: "972-681-4966", reason: "Asked not to be contacted.", addedAt: "2026-09-29T15:00:00.000Z", by: "Jamey" };
+  fs.writeFileSync(path.join(root, "data", "suppression.json"), JSON.stringify([entry], null, 2));
+  const warned = capture();
+  assert.equal(await checkMain([], warned.deps({ root, now: "2026-09-30T12:00:00.000Z" })), 0, warned.chunks.out);
+  assert.match(warned.chunks.out, /GM AUTO CARE \(gm-auto-care-dallas-tx\) is suppressed but still at New/);
+  fs.writeFileSync(path.join(root, "data", "suppression.json"), JSON.stringify([{ ...entry, reason: "" }], null, 2));
+  const bad = capture();
+  assert.equal(await checkMain([], bad.deps({ root, now: "2026-09-30T12:00:00.000Z" })), 1);
+  assert.match(bad.chunks.out, /data\/suppression\.json: Suppression entry 1 \(GM AUTO CARE\) needs a reason/);
+});
+
+test("check fails a stored places-api rating and drops placesFetchedAt on the next save", async () => {
+  const root = tempProject();
+  await seedMain([], capture().deps({ root, now: "2026-09-28T12:00:00.000Z" }));
+  const leads = readJson(root, "data/leads.json");
+  assert.ok(leads.every((l) => !Object.hasOwn(l, "placesFetchedAt")), "seeded leads never carry the retired field");
+  assert.ok(leads.every((l) => l.phoneLineType === "unknown" && l.placeIdCheckedAt === ""));
+  leads[0].ratingSource = "places-api";
+  fs.writeFileSync(path.join(root, "data", "leads.json"), JSON.stringify(leads, null, 2));
+  const c = capture();
+  assert.equal(await checkMain([], c.deps({ root, now: "2026-09-28T12:00:00.000Z" })), 1);
+  assert.match(c.chunks.out, /ratingSource is places-api, which a stored lead may not carry/);
+});
+
+test("check warns about stale candidates files and purge-places removes them", async () => {
+  const { main: purgeMain } = await import("../src/cli/purge-places.js");
+  const root = tempProject();
+  await seedMain([], capture().deps({ root, now: "2026-09-28T12:00:00.000Z" }));
+  const inbox = path.join(root, "data", "inbox");
+  fs.mkdirSync(inbox, { recursive: true });
+  const write = (name, fetchedAt) => fs.writeFileSync(path.join(inbox, name), JSON.stringify({ runId: "x", fetchedAt, candidates: [] }));
+  write("2026-09-21.candidates.json", "2026-09-21T10:00:00.000Z");
+  write("2026-09-28.candidates.json", "2026-09-28T10:00:00.000Z");
+  fs.writeFileSync(path.join(inbox, "2026-09-28.plan.json"), "{}");
+  fs.writeFileSync(path.join(inbox, "broken.candidates.json"), "{");
+  fs.utimesSync(path.join(inbox, "broken.candidates.json"), new Date("2026-09-20T00:00:00Z"), new Date("2026-09-20T00:00:00Z"));
+
+  const now = "2026-09-28T18:00:00.000Z";
+  const checked = capture();
+  assert.equal(await checkMain([], checked.deps({ root, now })), 0, checked.chunks.out);
+  assert.match(checked.chunks.out, /data\/inbox\/2026-09-21\.candidates\.json holds Places content older than 1 day\. Only place IDs may be kept; run npm run purge-places\./);
+  assert.match(checked.chunks.out, /broken\.candidates\.json holds Places content/, "an unreadable file is aged by its file time");
+  assert.doesNotMatch(checked.chunks.out, /2026-09-28\.candidates\.json holds/);
+
+  const dry = capture();
+  assert.equal(await purgeMain(["--older-than-days", "1", "--dry-run"], dry.deps({ root, now })), 0);
+  assert.match(dry.chunks.out, /Would remove data\/inbox\/2026-09-21\.candidates\.json \(7 days old\)\./);
+  assert.equal(fs.readdirSync(inbox).length, 4, "a dry run removes nothing");
+
+  const older = capture();
+  assert.equal(await purgeMain(["--older-than-days", "1"], older.deps({ root, now })), 0);
+  assert.match(older.chunks.out, /Removed 2 candidates files, kept 1 newer\./);
+  assert.deepEqual(fs.readdirSync(inbox).sort(), ["2026-09-28.candidates.json", "2026-09-28.plan.json"]);
+
+  const all = capture();
+  assert.equal(await purgeMain([], all.deps({ root, now })), 0);
+  assert.match(all.chunks.out, /Removed data\/inbox\/2026-09-28\.candidates\.json \(under a day old\)\./);
+  assert.deepEqual(fs.readdirSync(inbox), ["2026-09-28.plan.json"], "only candidates files are purged");
+
+  const none = capture();
+  assert.equal(await purgeMain([], none.deps({ root, now })), 0);
+  assert.match(none.chunks.out, /nothing to purge/);
+  assert.equal(await purgeMain(["--older-than-days", "soon"], capture().deps({ root })), 2);
+});

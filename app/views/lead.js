@@ -2,7 +2,9 @@
 // Sections rebuild from the server's response after each change; the ROI calculator keeps
 // its own state so a save elsewhere never wipes numbers being tried out.
 
+import { callCheck } from "/src/lib/compliance.js";
 import { confidenceChip, demoChip, pitchChip, statusChip, verificationChip } from "../components/chips.js";
+import { confirmWithReason } from "../components/confirm.js";
 import { deviceFrame, deviceSwitch } from "../components/device.js";
 import { feedbackSlot, showFeedback, toast, withBusy } from "../components/feedback.js";
 import { ratingText } from "../components/leadcard.js";
@@ -20,6 +22,7 @@ import {
   metroName,
   OUTREACH_STATUSES,
   OWNERS,
+  PHONE_LINE_TYPES,
   putLead,
   store,
 } from "../lib/state.js";
@@ -28,7 +31,44 @@ const GAP_WORDS = { 1: "weak own site", 2: "very weak or third party only", 3: "
 const TICKET_WORDS = { 1: "low", 2: "medium", 3: "high" };
 const VISUAL_WORDS = { 1: "limited", 2: "good", 3: "excellent" };
 const ORIGINS = { "sheet-import": "Sheet import", "weekly-run": "Weekly run", manual: "Added by hand", "queue-promotion": "Promoted from the queue" };
-const RATING_SOURCES = { "google-maps": "Google Maps", "places-api": "Places API", secondary: "a secondary mirror" };
+// ratingSource values. "places-api" is invalid for stored leads (research/places-api.md) and
+// "google-maps" is the older spelling of google-maps-observed.
+const RATING_SOURCES = {
+  "google-maps-observed": "Read from the public Google Maps listing",
+  "google-maps": "Read from the public Google Maps listing",
+  secondary: "From a secondary mirror, confirm on Google Maps",
+  owner: "Given by the owner",
+  "places-api": "From the Places API, which may not be stored. Recheck on the public listing",
+};
+const CLOCK_MS = 30000;
+const CLOSED_STATUSES = ["Won", "Lost", "Not a fit"];
+const TEXAS_RE = /Texas phone solicitation/;
+const ADDRESS_RE = /mailing address|postal address/i;
+const CONSENT_CHANNELS = [
+  ["texts", "Texts", "Agreed to follow up by text."],
+  ["email", "Email", "Agreed to follow up by email."],
+  ["call", "A call back", "Agreed to a follow up call."],
+];
+
+// The date the rating was read, from the Maps source when there is one.
+function ratingCheckedAt(lead) {
+  const sources = Array.isArray(lead.sources) ? lead.sources : [];
+  const maps = sources.find((s) => s.url && (s.url === lead.googleMapsUrl || /google\.[a-z.]+\/maps|maps\.google\.|maps\.app\.goo\.gl|goo\.gl\/maps/i.test(s.url)));
+  return maps?.checkedAt || lead.verification?.checkedAt || "";
+}
+
+function ratingNote(lead) {
+  const from = lead.ratingSource ? RATING_SOURCES[lead.ratingSource] ?? lead.ratingSource : "";
+  const when = ratingCheckedAt(lead);
+  if (!from) return when ? `Checked ${formatDay(when, { year: true })}` : null;
+  return when ? `${from}, ${formatDay(when, { year: true })}` : from;
+}
+
+// "10:42 AM Tuesday, Central" to its clock time and the rest.
+function splitLocal(label) {
+  const m = /^(\d{1,2}:\d{2} [AP]M) (.+)$/.exec(String(label ?? ""));
+  return m ? [m[1], m[2]] : [String(label ?? ""), ""];
+}
 
 async function copyText(text, what) {
   try {
@@ -86,6 +126,8 @@ export function render({ params, navigate }) {
 
   const mounts = {
     head: h("div"),
+    readiness: h("div"),
+    drafts: h("div"),
     outreach: h("div"),
     actions: h("div"),
     history: h("div"),
@@ -94,6 +136,54 @@ export function render({ params, navigate }) {
   };
   let frame = null;
   let device = "desktop";
+  // The call check reruns in the browser on a timer, so the prospect's local time and the
+  // call window stay current while the page is open.
+  let clockMount = null;
+  const clockTimer = setInterval(() => {
+    if (clockMount?.isConnected) fill(clockMount, callBlock(liveCall() ?? lead.compliance?.call ?? null));
+  }, CLOCK_MS);
+
+  function liveCall() {
+    try {
+      return callCheck({ lead, settings: store.data.settings ?? {}, now: new Date(), suppression: lead.suppressed ? [lead.suppressed] : [] });
+    } catch {
+      return null;
+    }
+  }
+
+  function callLimits() {
+    const c = store.data.settings?.compliance ?? {};
+    return { perDay: c.maxCallsPerDay ?? 1, total: c.maxCallsTotal ?? 3 };
+  }
+
+  function callBlock(call) {
+    if (!call) return h("p", { class: "muted small" }, "The call check is not available. It appears once src/lib/compliance.js is installed.");
+    const [time, zone] = splitLocal(call.localLabel);
+    const reasons = Array.isArray(call.reasons) ? call.reasons : [];
+    const texas = reasons.filter((r) => TEXAS_RE.test(r));
+    const other = reasons.filter((r) => !TEXAS_RE.test(r));
+    const limits = callLimits();
+    const suppressed = Boolean(lead.compliance?.suppressed || lead.suppressed);
+    const verdict = suppressed ? ["chip-bad", "Do not contact"] : call.ok ? ["chip-good", "OK to call now"] : ["chip-bad", "Do not call now"];
+    return [
+      h(
+        "div",
+        { class: "ready-clock" },
+        h("div", null, h("span", { class: "ready-kicker" }, "Their local time"), h("span", { class: "ready-time" }, time || "Unknown"), h("span", { class: "ready-zone" }, zone || "No time zone for this state")),
+        h("span", { class: `chip ${verdict[0]}` }, verdict[1]),
+      ),
+      other.length ? h("ul", { class: `ready-reasons${call.ok ? " is-advisory" : ""}` }, other.map((r) => h("li", null, r))) : null,
+      h(
+        "dl",
+        { class: "ready-counts" },
+        h("div", null, h("dt", null, "Calls today"), h("dd", null, `${call.callsToday ?? 0} of ${limits.perDay}`)),
+        h("div", null, h("dt", null, "Calls in total"), h("dd", null, `${call.callsTotal ?? 0} of ${limits.total}`)),
+      ),
+      texas.length
+        ? h("div", { class: "notice notice-warn" }, texas[0], " ", h("a", { href: "#/settings?focus=compliance" }, "Texas status in Settings"), h("span", { class: "faint" }, " Not legal advice."))
+        : null,
+    ];
+  }
 
   // Rebuild the named sections from the latest copy of the lead, keeping focus if it was inside.
   function refresh(names) {
@@ -137,6 +227,184 @@ export function render({ params, navigate }) {
           h("div", { class: "chips" }, statusChip(lead.outreach?.status), confidenceChip(lead.confidence), verificationChip(lead.verification), demoChip(lead), pitchChip(lead)),
         ),
         scoreBlock(lead.score),
+      );
+    },
+
+    readiness() {
+      const c = lead.compliance ?? {};
+      const slot = feedbackSlot();
+      const entry = lead.suppressed ?? null;
+      const suppressed = Boolean(c.suppressed || entry);
+      clockMount = h("div", { class: "ready-call" });
+      fill(clockMount, callBlock(liveCall() ?? c.call ?? null));
+
+      const email = c.email ?? null;
+      const emailReasons = email?.reasons ?? [];
+      const addressMissing = !String(store.data.settings?.contact?.address ?? "").trim() || emailReasons.some((r) => ADDRESS_RE.test(r));
+      const emailLine = h(
+        "div",
+        { class: "ready-line" },
+        h("div", { class: "ready-line-head" }, h("span", { class: "ready-label" }, "Email"), email ? h("span", { class: `chip ${email.ok ? "chip-good" : "chip-warn"}` }, email.ok ? "Ready to send" : "Not ready") : h("span", { class: "chip chip-muted" }, "Not checked")),
+        email && !email.ok && emailReasons.length ? h("ul", { class: "ready-reasons" }, emailReasons.map((r) => h("li", null, r))) : null,
+        email && !email.ok && addressMissing && !suppressed ? h("a", { class: "small", href: "#/settings?focus=address" }, "Add the mailing address in Settings") : null,
+      );
+
+      const text = c.text ?? null;
+      const textLine = h(
+        "div",
+        { class: "ready-line" },
+        h("div", { class: "ready-line-head" }, h("span", { class: "ready-label" }, "Texts"), h("span", { class: `chip ${text?.ok ? "chip-good" : "chip-muted"}` }, text?.ok ? "Follow up text allowed" : "No texts")),
+        text?.reason ? h("p", { class: "muted small" }, text.reason) : null,
+      );
+
+      const lineType = lead.phoneLineType || "unknown";
+      const line = h("select", { id: "lr-line", disabled: suppressed }, PHONE_LINE_TYPES.map(([v, label]) => h("option", { value: v, selected: v === lineType }, label)));
+      line.addEventListener("change", async () => {
+        const res = await withBusy(line, () => api.patchLead(id, { phoneLineType: line.value }));
+        if (!res.ok) line.value = lineType;
+        applyResult(res, "Phone line type saved.", ["readiness", "drafts"], { mount: "readiness", slot });
+      });
+      const lineHint = lineType === "landline" || lineType === "voip"
+        ? "A business line. Calls inside the window are fine."
+        : "May be the owner's personal cell, which the FCC can treat as residential. Email first.";
+
+      if (suppressed) {
+        return h(
+          "section",
+          { class: "panel readiness is-suppressed", "aria-labelledby": "lr-title" },
+          h("h2", { class: "rail-title", id: "lr-title" }, "Outreach readiness"),
+          h(
+            "div",
+            { class: "notice notice-bad", role: "note" },
+            h("strong", null, "Do not contact."),
+            ` ${lead.business} is on the do not contact list${entry?.addedAt ? ` since ${formatDay(entry.addedAt, { year: true })}` : ""}. No calls, emails or texts, and it is never ingested again.`,
+            entry?.reason ? h("p", { class: "small", style: { margin: "6px 0 0" } }, `Reason: ${entry.reason}`) : null,
+          ),
+          slot,
+        );
+      }
+
+      // Record consent: what the owner agreed to, in their words. A text consent opens the
+      // follow up text; the others are logged for the record.
+      const channel = h("select", { id: "lr-channel" }, CONSENT_CHANNELS.map(([v, label]) => h("option", { value: v }, label)));
+      const said = h("textarea", { id: "lr-said", rows: "2", placeholder: "For example: on the call, the owner said to text this number" });
+      const record = h("button", { type: "submit", class: "btn btn-small", id: "lr-record" }, "Record consent");
+      const consentForm = h(
+        "form",
+        {
+          class: "stack",
+          onsubmit: async (e) => {
+            e.preventDefault();
+            const what = said.value.trim();
+            if (!what) {
+              showFeedback(slot, { ok: false, errors: ["Write what the owner said, and where, before recording consent."], warnings: [] });
+              said.focus();
+              return;
+            }
+            const lead0 = CONSENT_CHANNELS.find(([v]) => v === channel.value)?.[2] ?? "";
+            const res = await withBusy(record, () => api.addHistory(id, { type: "consent", text: `${lead0} ${what}`, by: "Jamey" }));
+            applyResult(res, "Consent recorded in the history.", ["readiness", "history", "drafts"], { mount: "readiness", slot });
+          },
+        },
+        h("div", { class: "field" }, h("label", { for: "lr-channel" }, "They agreed to"), channel),
+        h("div", { class: "field" }, h("label", { for: "lr-said" }, "What they said, and where"), said),
+        h("div", { class: "form-actions" }, record, h("span", { class: "faint small" }, "Logged, never sent.")),
+      );
+
+      const dnc = h("button", { type: "button", class: "btn btn-small btn-danger", id: "lr-dnc" }, "Do not contact");
+      dnc.addEventListener("click", async () => {
+        const reason = await confirmWithReason({
+          title: `Do not contact ${lead.business}`,
+          body: [
+            "This adds the business to the do not contact list, sets the lead to Not a fit and logs it in the history. It covers every channel: no calls, emails or texts, and the weekly run never adds it again.",
+            "It cannot be moved back to an active status from the app.",
+          ],
+          label: "Why",
+          placeholder: "For example: owner asked not to be contacted, on the call",
+          confirmLabel: "Add to do not contact",
+          danger: true,
+        });
+        if (!reason) {
+          dnc.focus();
+          return;
+        }
+        const res = await withBusy(dnc, () => api.suppress(id, { reason }));
+        applyResult(res, "Added to the do not contact list. Nothing was sent.", ["head", "readiness", "outreach", "history", "drafts"], { mount: "readiness", slot });
+      });
+
+      return h(
+        "section",
+        { class: "panel readiness", "aria-labelledby": "lr-title" },
+        h("h2", { class: "rail-title", id: "lr-title" }, "Outreach readiness"),
+        clockMount,
+        emailLine,
+        textLine,
+        h("div", { class: "field ready-field" }, h("label", { for: "lr-line" }, "Phone line type"), line, h("p", { class: "faint small ready-hint" }, lineHint)),
+        h("details", { class: "disclose ready-consent" }, h("summary", null, "Record consent"), consentForm),
+        h("div", { class: "ready-dnc" }, dnc, h("span", { class: "faint small" }, "Any request to stop, in any words, belongs here the same day.")),
+        slot,
+      );
+    },
+
+    drafts() {
+      const drafts = lead.drafts;
+      if (!drafts) {
+        return h(
+          "div",
+          { class: "empty" },
+          h("p", null, store.data.modules?.drafts === false ? "Outreach drafts appear here once the pitch module (src/pitch/drafts.js) is installed." : "No drafts could be written for this lead."),
+        );
+      }
+      const c = lead.compliance ?? {};
+      const email = c.email ?? drafts.ready?.email ?? null;
+      const emailOk = email ? Boolean(email.ok) : true;
+      const emailWhy = email && !email.ok ? (email.reasons ?? []).join(" ") || "The email is not ready to send." : "";
+      const textOk = Boolean((c.text ?? drafts.ready?.text)?.ok);
+      const call = liveCall() ?? c.call ?? null;
+      const gated = (text, what, ok, why) => {
+        const b = h("button", { type: "button", class: "btn btn-small", disabled: !ok, title: ok ? null : why, "aria-describedby": ok ? null : "ld-email-why" }, what === "Subject" ? "Copy" : "Copy body");
+        if (ok) b.addEventListener("click", () => copyText(text, what === "Subject" ? "Subject" : "Email body"));
+        return b;
+      };
+      const emailPanel = drafts.email && (drafts.email.subject || drafts.email.body)
+        ? h(
+          "div",
+          { class: "panel draft" },
+          h("div", { class: "draft-head" }, h("h3", null, "Email"), h("div", { class: "row" }, gated(drafts.email.subject ?? "", "Subject", emailOk, emailWhy), gated(drafts.email.body ?? "", "Email body", emailOk, emailWhy))),
+          emailOk
+            ? null
+            : h(
+              "p",
+              { class: "draft-block", id: "ld-email-why" },
+              h("span", { class: "chip chip-warn" }, "Not ready to send"),
+              ` ${emailWhy}`,
+              ADDRESS_RE.test(emailWhy) ? [" ", h("a", { href: "#/settings?focus=address" }, "Add it in Settings")] : null,
+            ),
+          h("p", { class: "subject" }, drafts.email.subject),
+          h("pre", null, drafts.email.body),
+        )
+        : null;
+      const callChip = call ? h("span", { class: `chip ${call.ok ? "chip-good" : "chip-bad"}` }, call.ok ? "OK to call now" : "Do not call now") : null;
+      const others = [
+        ["Call script", drafts.callScript, callChip],
+        ["Voicemail", drafts.voicemail, null],
+        ["Follow up text", textOk ? drafts.followUpText : "", null],
+      ]
+        .filter(([, text]) => text)
+        .map(([label, text, chip]) => h("div", { class: "panel draft" }, h("div", { class: "draft-head" }, h("h3", null, label), h("div", { class: "row" }, chip, copyButton(text, label))), h("pre", null, text)));
+      const textHidden = !textOk && !c.suppressed && drafts.followUpText !== undefined
+        ? h("p", { class: "muted small" }, `The follow up text is hidden. ${(c.text?.reason ?? "No consent to texts is recorded.")} Record consent in Outreach readiness once the owner agrees.`)
+        : null;
+      return h(
+        "div",
+        { class: "drafts" },
+        h("p", { class: "notice" }, "Drafts to copy and send yourself. Nothing in this app sends anything."),
+        emailPanel,
+        others,
+        textHidden,
+        drafts.notes
+          ? h("div", { class: "notice" }, h("strong", null, "Before sending"), h("ul", null, String(drafts.notes).split(/\n+/).filter(Boolean).map((n) => h("li", null, n))))
+          : null,
       );
     },
 
@@ -193,7 +461,13 @@ export function render({ params, navigate }) {
     outreach() {
       const o = lead.outreach ?? {};
       const slot = feedbackSlot();
-      const statusSel = h("select", { id: "lo-status", name: "status" }, OUTREACH_STATUSES.map((s) => h("option", { value: s, selected: s === o.status }, s)));
+      // A business on the do not contact list can only sit at a closed status.
+      const closedOnly = Boolean(lead.compliance?.suppressed || lead.suppressed);
+      const statusSel = h(
+        "select",
+        { id: "lo-status", name: "status" },
+        OUTREACH_STATUSES.map((s) => h("option", { value: s, selected: s === o.status, disabled: closedOnly && !CLOSED_STATUSES.includes(s) && s !== o.status }, s)),
+      );
       const nextAction = h("input", { id: "lo-next", name: "nextAction", value: o.nextAction ?? "", autocomplete: "off" });
       const nextDate = h("input", { id: "lo-date", name: "nextDate", type: "date", value: o.nextDate ?? "" });
       const owner = h("select", { id: "lo-owner", name: "owner" }, OWNERS.map((w) => h("option", { value: w, selected: w === (o.owner ?? "") }, w || "Unassigned")));
@@ -214,7 +488,7 @@ export function render({ params, navigate }) {
           onsubmit: async (e) => {
             e.preventDefault();
             const res = await withBusy(save, () => api.patchLead(id, { outreach: read() }));
-            applyResult(res, "Outreach saved.", ["head", "outreach", "history"], { mount: "outreach", slot });
+            applyResult(res, "Outreach saved.", ["head", "readiness", "outreach", "history", "drafts"], { mount: "outreach", slot });
           },
         },
         h("h2", { class: "rail-title", id: "lo-title" }, "Outreach"),
@@ -333,7 +607,7 @@ export function render({ params, navigate }) {
           onsubmit: async (e) => {
             e.preventDefault();
             const res = await withBusy(add, () => api.addHistory(id, { type: type.value, text: text.value, by: "Jamey" }));
-            applyResult(res, "History entry added.", ["history"], { mount: "history", slot });
+            applyResult(res, "History entry added.", ["readiness", "history", "drafts"], { mount: "history", slot });
             if (res.ok) document.getElementById("lh-text")?.focus();
           },
         },
@@ -395,38 +669,10 @@ export function render({ params, navigate }) {
 
   for (const name of Object.keys(mounts)) fill(mounts[name], builders[name]());
 
-  const drafts = lead.drafts;
-  const draftsBody = !drafts
-    ? h(
-      "div",
-      { class: "empty" },
-      h("p", null, store.data.modules?.drafts === false ? "Outreach drafts appear here once the pitch module (src/pitch/drafts.js) is installed." : "No drafts could be written for this lead."),
-    )
-    : h(
-      "div",
-      { class: "drafts" },
-      h("p", { class: "notice" }, "Drafts to copy and send yourself. Nothing in this app sends anything."),
-      drafts.email
-        ? h(
-          "div",
-          { class: "panel draft" },
-          h("div", { class: "draft-head" }, h("h3", null, "Email"), h("div", { class: "row" }, copyButton(drafts.email.subject ?? "", "Subject"), h("button", { type: "button", class: "btn btn-small", onclick: () => copyText(drafts.email.body ?? "", "Email body") }, "Copy body"))),
-          h("p", { class: "subject" }, drafts.email.subject),
-          h("pre", null, drafts.email.body),
-        )
-        : null,
-      [["Call script", drafts.callScript], ["Voicemail", drafts.voicemail], ["Follow up text", drafts.followUpText]]
-        .filter(([, text]) => text)
-        .map(([label, text]) => h("div", { class: "panel draft" }, h("div", { class: "draft-head" }, h("h3", null, label), copyButton(text, label)), h("pre", null, text))),
-      drafts.notes
-        ? h("div", { class: "notice" }, h("strong", null, "Before sending"), h("ul", null, String(drafts.notes).split(/\n+/).filter(Boolean).map((n) => h("li", null, n))))
-        : null,
-    );
-
   const facts = h(
     "dl",
     { class: "facts" },
-    fact("Google rating", rating(lead.googleRating), { big: true, note: lead.ratingSource ? `From ${RATING_SOURCES[lead.ratingSource] ?? lead.ratingSource}` : null }),
+    fact("Google rating", rating(lead.googleRating), { big: true, note: ratingNote(lead) }),
     fact("Google reviews", number(lead.googleReviews), { big: true }),
     fact("Website gap", scale(lead.websiteGap, GAP_WORDS)),
     fact("Ticket value", scale(lead.ticketValue, TICKET_WORDS)),
@@ -466,7 +712,7 @@ export function render({ params, navigate }) {
     mounts.research,
     section("Return on investment", roiCalculator(lead), { aside: h("span", { class: "faint small" }, "Recalculates as you type") }),
     section("Demo preview", mounts.preview),
-    section("Outreach drafts", draftsBody),
+    section("Outreach drafts", mounts.drafts),
   );
 
   const el = h(
@@ -484,7 +730,7 @@ export function render({ params, navigate }) {
       h("span", { class: "shortcut-hint" }, h("kbd", null, "j"), " ", h("kbd", null, "k"), " move, ", h("kbd", null, "p"), " present"),
     ),
     mounts.head,
-    h("div", { class: "lead-layout" }, main, h("aside", { class: "lead-rail", "aria-label": "Outreach and actions" }, mounts.outreach, mounts.actions, mounts.history)),
+    h("div", { class: "lead-layout" }, main, h("aside", { class: "lead-rail", "aria-label": "Outreach and actions" }, mounts.readiness, mounts.outreach, mounts.actions, mounts.history)),
   );
 
   return {
@@ -506,6 +752,7 @@ export function render({ params, navigate }) {
       return false;
     },
     destroy() {
+      clearInterval(clockTimer);
       frame?.destroy();
     },
   };

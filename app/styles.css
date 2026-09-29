@@ -2394,6 +2394,332 @@ input[type="date"] {
   align-items: center;
 }
 
+/* Outreach readiness: the prospect's local time, the call check, email and text readiness */
+
+.readiness {
+  display: grid;
+  gap: 14px;
+}
+
+/* The rail is sticky on wide screens; let it scroll on its own so its lower panels stay reachable. */
+@media (min-width: 1181px) {
+  .lead-rail {
+    max-height: calc(100dvh - 120px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+}
+
+.readiness .rail-title {
+  margin-bottom: 0;
+}
+
+.ready-call {
+  display: grid;
+  gap: 10px;
+}
+
+.ready-clock {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ready-clock > div {
+  display: grid;
+}
+
+.ready-kicker {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.ready-time {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+
+.ready-zone {
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
+.ready-reasons {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 0.8125rem;
+  color: var(--ink);
+}
+
+.ready-reasons.is-advisory {
+  color: var(--ink-2);
+}
+
+.ready-counts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0;
+}
+
+.ready-counts div {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: var(--surface-2);
+}
+
+.ready-counts dt {
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+
+.ready-counts dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.ready-line {
+  display: grid;
+  gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.ready-line p {
+  margin: 0;
+}
+
+.ready-line-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.ready-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.ready-field {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.ready-hint {
+  margin: 2px 0 0;
+}
+
+.ready-consent > summary {
+  font-weight: 600;
+}
+
+.ready-consent[open] > summary {
+  margin-bottom: 10px;
+}
+
+.ready-dnc {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.notice-warn {
+  border-color: color-mix(in oklch, var(--warning) 40%, transparent);
+  background: var(--warning-tint);
+  color: var(--ink);
+}
+
+.notice-bad {
+  border-color: color-mix(in oklch, var(--danger) 50%, transparent);
+  background: var(--danger-tint);
+  color: var(--ink);
+}
+
+.notice a {
+  color: var(--link);
+}
+
+.timeline li.t-consent::before {
+  background: var(--positive);
+}
+
+.timeline li.t-suppressed::before {
+  background: var(--danger);
+}
+
+.draft-block {
+  margin: 0 0 10px;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
+/* Tooltip for a focusable chip: the text lives in data-tip and aria-label */
+
+.has-tip {
+  position: relative;
+  cursor: help;
+}
+
+.has-tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: var(--z-tooltip);
+  width: max-content;
+  max-width: min(320px, 80vw);
+  padding: 8px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--surface-3);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.4;
+  white-space: normal;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 140ms var(--ease), transform 140ms var(--ease), visibility 140ms;
+  box-shadow: 0 12px 32px -12px rgb(0 0 0 / 0.7);
+}
+
+.has-tip:hover::after,
+.has-tip:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Confirm dialog with a required reason */
+
+dialog.confirm {
+  width: min(520px, calc(100vw - 32px));
+  padding: 22px;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: var(--surface-1);
+  color: var(--ink);
+}
+
+dialog.confirm::backdrop {
+  background: rgb(5 3 5 / 0.7);
+}
+
+dialog.confirm h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+dialog.confirm form {
+  display: grid;
+  gap: 12px;
+}
+
+.dialog-body {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+
+.dialog-error {
+  margin: 0;
+  min-height: 1.2em;
+  font-size: 0.8125rem;
+  color: var(--danger);
+}
+
+.btn-danger-solid {
+  background: oklch(0.5 0.17 25);
+  border-color: oklch(0.5 0.17 25);
+  color: #fff;
+}
+
+.btn-danger-solid:hover {
+  background: oklch(0.44 0.16 25);
+  border-color: oklch(0.44 0.16 25);
+  color: #fff;
+}
+
+/* Settings: compliance and About */
+
+.legal-note {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: var(--surface-2);
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  max-width: 76ch;
+}
+
+.legal-note p {
+  margin: 0;
+}
+
+.legal-note strong {
+  color: var(--ink);
+}
+
+.legal-flag {
+  font-weight: 600;
+  color: var(--warning);
+}
+
+.day-set {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.day-set legend {
+  padding: 0;
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.day-set .row {
+  gap: 8px 16px;
+}
+
+.about-head {
+  margin: 4px 0 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.about-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  max-width: 76ch;
+}
+
 /* Toasts */
 
 .toasts {

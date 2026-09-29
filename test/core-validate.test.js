@@ -4,7 +4,7 @@ import fs from "node:fs";
 import {
   dashLocations, findDashes, OUTREACH_STATUSES, REQUIRED_LEAD_FIELDS, validateBatch, validateBenchmarks,
   validateCategories, validateChains, validateGeography, validateHistoryEntry, validateLead, validateOutreachPatch,
-  validateQueueItem, validateRejection, validateRoiOverrides, validateSettings,
+  validateQueueItem, validateRejection, validateRoiOverrides, validateSettings, validateSuppression, validateCompliance,
 } from "../src/lib/validate.js";
 import { seedToData } from "../src/lib/seed.js";
 
@@ -29,7 +29,7 @@ function weeklyLead(overrides = {}) {
     phone: "713-555-0142",
     googleRating: 4.9,
     googleReviews: 212,
-    ratingSource: "google-maps",
+    ratingSource: "google-maps-observed",
     websiteGap: 3,
     ticketValue: 3,
     visualFit: 2,
@@ -194,11 +194,86 @@ test("review themes are paraphrases, never quotes", () => {
   assert.ok(many.errors.some((e) => /keep it to 2 to 5/.test(e)));
 });
 
-test("Places derived data older than 30 days is an error", () => {
-  const fresh = validateLead(weeklyLead({ ratingSource: "places-api", placesFetchedAt: "2026-09-20" }), { ...ctx, mode: "weekly" });
-  assert.equal(fresh.ok, true, fresh.errors.join(" | "));
-  const stale = validateLead(weeklyLead({ ratingSource: "places-api", placesFetchedAt: "2026-08-01" }), { ...ctx, mode: "weekly" });
-  assert.ok(stale.errors.some((e) => /older than 30 days/.test(e)));
+test("a places-api rating is never valid on a lead; only place IDs are kept", () => {
+  for (const mode of ["weekly", "manual", "stored"]) {
+    const r = validateLead({ ...weeklyLead({ ratingSource: "places-api" }), ...(mode === "stored" ? storedFields() : {}) }, { ...ctx, mode });
+    assert.equal(r.ok, false, mode);
+    assert.ok(r.errors.some((e) => /ratingSource is places-api, which a stored lead may not carry/.test(e)), `${mode}: ${r.errors.join(" | ")}`);
+  }
+  for (const source of ["", "google-maps-observed", "secondary", "owner", "google-maps"]) {
+    assert.equal(validateLead(weeklyLead({ ratingSource: source }), { ...ctx, mode: "weekly" }).ok, true, source);
+  }
+  const queued = validateQueueItem({ candidate: "Places Shop", city: "Austin", state: "TX", sources: [], lead: { ratingSource: "places-api" } }, ctx);
+  assert.ok(queued.errors.some((e) => /places-api rating, which may not be stored/.test(e)));
+});
+
+test("placesFetchedAt is retired: accepted on read, warned about in stored mode", () => {
+  const weekly = validateLead(weeklyLead({ placesFetchedAt: "2026-01-01" }), { ...ctx, mode: "weekly" });
+  assert.equal(weekly.ok, true, weekly.errors.join(" | "));
+  const stored = validateLead({ ...weeklyLead({ placesFetchedAt: "2026-01-01" }), ...storedFields() }, { ...ctx, mode: "stored" });
+  assert.equal(stored.ok, true, stored.errors.join(" | "));
+  assert.ok(stored.warnings.some((w) => /retired placesFetchedAt/.test(w)));
+  const blank = validateLead({ ...weeklyLead({ placesFetchedAt: "" }), ...storedFields() }, { ...ctx, mode: "stored" });
+  assert.ok(!blank.warnings.some((w) => /placesFetchedAt/.test(w)));
+});
+
+test("place IDs are refreshed after 12 months, phoneLineType is checked", () => {
+  const fresh = validateLead(weeklyLead({ placeId: "ChIJx", placeIdCheckedAt: "2026-01-15" }), { ...ctx, mode: "weekly" });
+  assert.deepEqual(fresh.warnings, []);
+  const old = validateLead(weeklyLead({ placeId: "ChIJx", placeIdCheckedAt: "2025-09-01" }), { ...ctx, mode: "weekly" });
+  assert.ok(old.warnings.some((w) => /over 12 months ago/.test(w)));
+  const bad = validateLead(weeklyLead({ placeIdCheckedAt: "last spring" }), { ...ctx, mode: "weekly" });
+  assert.ok(bad.errors.some((e) => /placeIdCheckedAt must be a date/.test(e)));
+  const unchecked = validateLead({ ...weeklyLead({ placeId: "ChIJx" }), ...storedFields() }, { ...ctx, mode: "stored" });
+  assert.ok(unchecked.warnings.some((w) => /no placeIdCheckedAt/.test(w)));
+  for (const t of ["unknown", "landline", "mobile", "voip"]) assert.equal(validateLead(weeklyLead({ phoneLineType: t }), { ...ctx, mode: "weekly" }).ok, true, t);
+  assert.ok(validateLead(weeklyLead({ phoneLineType: "cell" }), { ...ctx, mode: "weekly" }).errors.some((e) => /phoneLineType must be one of/.test(e)));
+});
+
+test("consent and suppressed history entries need text, and suppressed leads stay inactive", () => {
+  assert.equal(validateHistoryEntry({ type: "consent", text: "Agreed to texts at this number.", by: "Jamey" }).ok, true);
+  assert.ok(validateHistoryEntry({ type: "consent", text: " ", by: "Jamey" }).errors.some((e) => /which channel/.test(e)));
+  assert.equal(validateHistoryEntry({ type: "suppressed", text: "Asked not to be contacted.", by: "Jamey" }).ok, true);
+  assert.equal(validateHistoryEntry({ type: "suppressed", text: "", by: "Jamey" }).ok, false);
+  const lead = { business: "Quiet Shop", state: "TX", phone: "214-555-0100" };
+  const suppression = [{ key: "2145550100", business: "Quiet Shop", state: "TX", phone: "214-555-0100", reason: "Opted out.", addedAt: "2026-09-28", by: "Jamey" }];
+  assert.ok(validateOutreachPatch({ status: "Contacted" }, { lead, suppression }).errors.some((e) => /suppressed, so it cannot move back to Contacted/.test(e)));
+  assert.equal(validateOutreachPatch({ status: "Not a fit" }, { lead, suppression }).ok, true);
+  assert.equal(validateOutreachPatch({ status: "Contacted" }, { lead, suppression: [] }).ok, true);
+  const byHistory = { ...lead, outreach: { history: [{ type: "suppressed", at: "2026-09-28T12:00:00.000Z", by: "Jamey", text: "Opted out." }] } };
+  assert.equal(validateOutreachPatch({ status: "New" }, { lead: byHistory }).ok, false);
+});
+
+test("suppression list and compliance settings validate", () => {
+  const good = [{ key: "2145550100", business: "Quiet Shop", city: "Dallas", state: "TX", phone: "214-555-0100", reason: "Opted out.", addedAt: "2026-09-28T12:00:00.000Z", by: "Jamey" }];
+  assert.equal(validateSuppression(good).ok, true);
+  assert.equal(validateSuppression([]).ok, true);
+  const bad = validateSuppression([{ ...good[0], reason: "" }, { ...good[0] }, { business: "X", state: "Texas", addedAt: "soon" }]);
+  const text = bad.errors.join(" | ");
+  assert.match(text, /needs a reason/);
+  assert.match(text, /repeats the key/);
+  assert.match(text, /needs its dedupe key/);
+  assert.match(text, /addedAt must be a date/);
+  assert.equal(validateSuppression({}).ok, false);
+
+  assert.deepEqual(validateCompliance(settings.compliance).errors, []);
+  assert.equal(validateCompliance(undefined).ok, true);
+  const cases = [
+    [{ texasRegistration: "maybe" }, /texasRegistration must be one of/],
+    [{ callWindow: { startHour: 20, endHour: 9, days: [1] } }, /must start before it ends/],
+    [{ callWindow: { startHour: 9, endHour: 20, days: [0, 7] } }, /distinct weekdays/],
+    [{ maxCallsPerDay: 4, maxCallsTotal: 3 }, /cannot be above maxCallsTotal/],
+    [{ noColdTexts: "yes" }, /noColdTexts must be true or false/],
+    [{ noTextStates: ["Washington"] }, /noTextStates must be a list of USPS codes/],
+  ];
+  for (const [patch, pattern] of cases) {
+    const r = validateCompliance({ ...settings.compliance, ...patch });
+    assert.ok(r.errors.some((e) => pattern.test(e)), `${JSON.stringify(patch)}: ${r.errors.join(" | ")}`);
+  }
+  const noAddress = validateSettings({ ...settings, contact: { ...settings.contact, address: "" } });
+  assert.ok(noAddress.warnings.some((w) => /email drafts are not ready to send/.test(w)));
+  assert.ok(validateSettings({ ...settings, contact: { ...settings.contact, email: "not an email" } }).errors.some((e) => /contact email/.test(e)));
+  assert.ok(validateSettings({ ...settings, compliance: { ...settings.compliance, maxCallsTotal: -1 } }).errors.some((e) => /maxCallsTotal/.test(e)));
 });
 
 test("stored mode requires the system fields", () => {
@@ -323,6 +398,60 @@ test("chains.json has at least 120 names including the ones the spec lists", () 
     "Aire Serv", "ARS Rescue Rooter", "Great Clips", "Supercuts", "Sport Clips", "Servpro", "ServiceMaster", "CertaPro Painters"]) {
     assert.ok(chains.names.includes(n), n);
   }
+});
+
+test("categories carry the reviewed Places Table A types from research", () => {
+  const expected = {
+    "auto-repair": ["car_repair"], "tire-shop": ["tire_shop"], barber: ["barber_shop"], "hair-salon": ["hair_salon"],
+    "nail-salon": ["nail_salon"], tattoo: ["body_art_service"], "pet-grooming": ["pet_care"], general: ["service"],
+    plumbing: ["plumber"], electrical: ["electrician"], roofing: ["roofing_contractor"], painting: ["painter"],
+  };
+  for (const [key, c] of Object.entries(categories)) {
+    assert.deepEqual(c.placesTypes, expected[key] ?? [], key);
+    assert.equal(c.placesTypesReviewed, true, key);
+  }
+  assert.equal(Object.values(categories).filter((c) => c.placesTypes.length === 0).length, 19, "19 keys are text query only");
+  const bad = validateCategories({ ...categories, general: { ...categories.general, placesTypes: ["General Contractor"], placesTypesReviewed: "yes" } });
+  assert.ok(bad.errors.some((e) => /Table A type names/.test(e)));
+  assert.ok(bad.errors.some((e) => /placesTypesReviewed must be true or false/.test(e)));
+});
+
+test("benchmarks: rentedCustomer and pitchPriority are validated, and the research values are in place", () => {
+  const benchmarks = read("data/benchmarks.json");
+  const r = validateBenchmarks(benchmarks, { categories });
+  assert.deepEqual(r.errors, []);
+  assert.equal(benchmarks.categories["garage-door"].rentedCustomer.typical, 198);
+  assert.equal(benchmarks.categories.roofing.rentedCustomer.typical, 731);
+  for (const [key, c] of Object.entries(categories)) {
+    const rc = benchmarks.categories[key].rentedCustomer;
+    if (c.vertical === "home-services" || c.vertical === "contractor") {
+      assert.ok(rc && rc.sources.length > 0, `${key} has a sourced cost per paying customer`);
+      if (rc.typical === 233) assert.match(rc.sources[0].note, /All category average/, key);
+    } else {
+      assert.equal(rc, undefined, `${key} has no per customer figure in research`);
+    }
+  }
+  const lead = benchmarks.consumerStats.filter((s) => s.pitchPriority).sort((a, b) => a.pitchPriority - b.pitchPriority).map((s) => s.id);
+  assert.deepEqual(lead, ["bl-lcrs26-website-after-reviews", "bl-csb26-walked-away", "bl-lcrs26-read-reviews", "bl-csb26-mobile", "bl-csb26-speed"]);
+  assert.deepEqual(read("research/benchmarks.json"), benchmarks, "research and data copies match");
+
+  const base = { ticket: { typical: 300, sources: [] }, grossMargin: { typical: 0.4, sources: [] } };
+  const cases = [
+    [{ general: { ...base, rentedCustomer: { typical: 0, platform: "LSA", sources: [] } } }, /rentedCustomer\.typical must be a positive number/],
+    [{ general: { ...base, rentedCustomer: { typical: 200, platform: "", sources: [] } } }, /rentedCustomer needs a platform/],
+    [{ general: { ...base, rentedCustomer: { typical: 200, platform: "LSA", sources: [{ url: "nope" }] } } }, /rentedCustomer source 1 needs a full http/],
+    [{ general: { ...base, rentedCustomer: "233" } }, /rentedCustomer must be null or an object/],
+    [{ general: { ...base, rentedLead: { low: 90, high: 40, platform: "Angi" } } }, /rentedLead low is above high/],
+  ];
+  for (const [cats, pattern] of cases) {
+    const v = validateBenchmarks({ categories: cats });
+    assert.ok(v.errors.some((e) => pattern.test(e)), `${JSON.stringify(cats)}: ${v.errors.join(" | ")}`);
+  }
+  const stat = { id: "a", url: "https://example.org", verified: true, useInPitch: true };
+  assert.ok(validateBenchmarks({ categories: {}, consumerStats: [{ ...stat, pitchPriority: 0 }] }).errors.some((e) => /pitchPriority must be a whole number/.test(e)));
+  assert.ok(validateBenchmarks({ categories: {}, consumerStats: [{ ...stat, pitchPriority: 1 }, { ...stat, id: "b", pitchPriority: 1 }] }).errors.some((e) => /also used by a/.test(e)));
+  assert.ok(validateBenchmarks({ categories: {}, consumerStats: [{ ...stat, useInPitch: false, pitchPriority: 1 }] }).warnings.some((w) => /never shown/.test(w)));
+  assert.equal(validateBenchmarks({ categories: {}, consumerStats: [stat] }).ok, true, "pitchPriority is optional");
 });
 
 test("benchmarks validator treats missing sources as a warning, bad numbers as errors", () => {

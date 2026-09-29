@@ -22,13 +22,15 @@ function sourceUrl(s) {
 
 export function leadRow(lead, { thresholds } = {}) {
   const sources = Array.isArray(lead.sources) ? lead.sources : [];
+  // A rating read from the Places API may not leave the app (research/places-api.md).
+  const placesRating = lead.ratingSource === "places-api";
   return [
     scoreLead(lead, { thresholds }).total,
     lead.business,
     lead.category,
     lead.area ? `${lead.city} / ${lead.area}` : lead.city,
-    lead.googleRating,
-    lead.googleReviews,
+    placesRating ? "" : lead.googleRating,
+    placesRating ? "" : lead.googleReviews,
     lead.websiteGap,
     lead.ticketValue,
     lead.visualFit,

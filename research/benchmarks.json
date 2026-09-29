@@ -10,6 +10,7 @@
       "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
       "verified": true,
       "useInPitch": true,
+      "pitchPriority": 3,
       "notes": "Quote: \"97% of consumers read reviews for local businesses\"."
     },
     {
@@ -43,6 +44,7 @@
       "url": "https://www.brightlocal.com/research/local-consumer-review-survey/",
       "verified": true,
       "useInPitch": true,
+      "pitchPriority": 1,
       "notes": "Core stat for a business with reviews but no site."
     },
     {
@@ -142,6 +144,7 @@
       "url": "https://www.brightlocal.com/research/consumer-search-behavior-channels/",
       "verified": true,
       "useInPitch": true,
+      "pitchPriority": 4,
       "notes": "Replaces old near me growth stats."
     },
     {
@@ -164,6 +167,7 @@
       "url": "https://www.brightlocal.com/research/consumer-search-behavior-speed/",
       "verified": true,
       "useInPitch": true,
+      "pitchPriority": 5,
       "notes": ""
     },
     {
@@ -175,6 +179,7 @@
       "url": "https://www.brightlocal.com/research/consumer-search-behavior-decisions/",
       "verified": true,
       "useInPitch": true,
+      "pitchPriority": 2,
       "notes": "Never claim this business lost 52% of its customers."
     },
     {
@@ -1097,6 +1102,18 @@
           }
         ]
       },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
+          }
+        ]
+      },
       "notes": "Editor replaced the researcher blended typical ($1,000, based on an assumed 1 in 10 replacement mix) with $320, the mean of the two sourced repair averages, because the mix is not sourced. At 0.34, one $7,500 replacement grosses about $2,550, so about 1.2 replacements cover a $3,000 site; the pitch can say so as an if. Margin 0.34 is the measured SOI figure; ServiceTitan 50% to 55% is a target, never an industry average."
     },
     "plumbing": {
@@ -1168,6 +1185,18 @@
           }
         ]
       },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
+          }
+        ]
+      },
       "notes": "Editor replaced the researcher blend ($600) with $310, the mean of the two sourced service call averages. Water heaters and repipes are the high end. Margin is the measured SOI 33.9%."
     },
     "electrical": {
@@ -1227,6 +1256,18 @@
           }
         ]
       },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
+          }
+        ]
+      },
       "notes": "Typical is the only verified small job average ($280); the HomeAdvisor $351 figure was not fact checked and is not used. Margin is the measured SOI 31.9%, rounded up to 0.32."
     },
     "septic": {
@@ -1270,6 +1311,18 @@
             "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
             "year": 2026,
             "note": "Drain and sewer $59, 23 accounts, February 2026. Stand-in: no septic-specific benchmark; LSA category is Sewage system"
+          }
+        ]
+      },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
           }
         ]
       },
@@ -1326,6 +1379,18 @@
           }
         ]
       },
+      "rentedCustomer": {
+        "typical": 198,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Garage Door LSA Cost Per Lead (2026)",
+            "url": "https://searchlightdigital.io/garage-door-google-lsa-cost-per-lead/",
+            "year": 2026,
+            "note": "Garage door: $198 per paying customer across 12 contractors, January to April 2026."
+          }
+        ]
+      },
       "notes": "Editor replaced the researcher blend ($500) with the sourced repair average and lowered margin from 0.45 to the SOI 34.8% proxy. ServiceTitan 55% to 65% is a target, not a measured average. SearchLight reports a $1,145 average ticket among its LSA clients, which suggests the $265 typical is very conservative."
     },
     "restoration": {
@@ -1375,6 +1440,18 @@
             "url": "https://99calls.com/blog/lsa-cost-per-lead-by-industry",
             "year": 2026,
             "note": "Water damage Q2 2026 average $215.31"
+          }
+        ]
+      },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
           }
         ]
       },
@@ -1431,6 +1508,18 @@
           }
         ]
       },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
+          }
+        ]
+      },
       "notes": "Small ticket, so break-even needs many jobs; the pitch should lean on repeat and referral customers."
     },
     "pest-control": {
@@ -1481,6 +1570,18 @@
             "url": "https://99calls.com/LSA-Cost-Estimator",
             "year": 2026,
             "note": "Pest control $64.48 average, 2 sites, low confidence"
+          }
+        ]
+      },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
           }
         ]
       },
@@ -1549,6 +1650,18 @@
           }
         ]
       },
+      "rentedCustomer": {
+        "typical": 731,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Roofing LSA Cost Per Lead (2026)",
+            "url": "https://searchlightdigital.io/roofing-google-lsa-cost-per-lead/",
+            "year": 2026,
+            "note": "Roofing: about $731 per paying customer, derived from its Q1 2026 table (10 contractors)."
+          }
+        ]
+      },
       "notes": "Editor replaced the researcher blend ($3,200) with the sourced repair average. For a replacement-only roofer, override the ticket to about $9,600."
     },
     "concrete": {
@@ -1584,6 +1697,18 @@
         ]
       },
       "rentedLead": null,
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
+          }
+        ]
+      },
       "notes": "Typical $3,200 is the midpoint of the patio range, below the $6,400 driveway average (researcher blend was $4,500). Rented lead set to null: the only figures were 99 Calls paving and masonry stand-ins from 2 sites each, on categories not on Google's LSA list."
     },
     "fencing": {
@@ -1637,6 +1762,18 @@
           }
         ]
       },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
+          }
+        ]
+      },
       "notes": "Typical $2,600 sits below the sourced $3,277 installation average, allowing for some first jobs being repairs; the fact checker judged it conservative."
     },
     "pools": {
@@ -1674,6 +1811,18 @@
             "url": "https://localiq.com/blog/home-services-search-advertising-benchmarks/",
             "year": 2025,
             "note": "Pools and Spas $45.15 per lead median, April 2024 to March 2025 data"
+          }
+        ]
+      },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
           }
         ]
       },
@@ -1736,6 +1885,18 @@
           }
         ]
       },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
+          }
+        ]
+      },
       "notes": "Typical $2,000 is the bottom of HomeGuide large jobs and below the HomeAdvisor project average. Margin lowered from 0.30 to 0.25 so it is not above its only source; small residential firms may run higher."
     },
     "painting": {
@@ -1795,6 +1956,18 @@
           }
         ]
       },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
+          }
+        ]
+      },
       "notes": "Typical is the lower sourced average (interior $2,022) rounded down; researcher blend was $2,500. Margin lowered from 0.40 to 0.35 to match measured SOI."
     },
     "foundation-repair": {
@@ -1830,6 +2003,18 @@
         ]
       },
       "rentedLead": null,
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
+          }
+        ]
+      },
       "notes": "Typical is the HomeAdvisor average rounded down, which already mixes crack repairs with piering. Rented lead unknown: Foundations services is LSA eligible but no benchmark was found."
     },
     "remodeling": {
@@ -1880,6 +2065,18 @@
             "url": "https://99calls.com/LSA-Cost-Estimator",
             "year": 2026,
             "note": "Home improvement $71.11 (4 sites); remodeling $106.45 (5 sites)"
+          }
+        ]
+      },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
           }
         ]
       },
@@ -1939,6 +2136,18 @@
             "url": "https://99calls.com/LSA-Cost-Estimator",
             "year": 2026,
             "note": "Tree services $48.30 average, 5 sites"
+          }
+        ]
+      },
+      "rentedCustomer": {
+        "typical": 233,
+        "platform": "Google Local Services Ads",
+        "sources": [
+          {
+            "title": "SearchLight: Google Local Service Ads Cost Per Lead by Trade (2026)",
+            "url": "https://searchlightdigital.io/google-local-service-ads-cost-per-lead/",
+            "year": 2026,
+            "note": "All category average, not specific to this trade: $233 per paying customer across 888 contractors, $6.72M LSA spend and 126,650 leads, February 2026, with a 43.9% book rate."
           }
         ]
       },

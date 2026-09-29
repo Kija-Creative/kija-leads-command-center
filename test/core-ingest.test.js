@@ -33,7 +33,7 @@ function lead(n, overrides = {}) {
     phone: `713-555-${String(1000 + n).slice(-4)}`,
     googleRating: 4.8,
     googleReviews: 40 + n * 10,
-    ratingSource: "google-maps",
+    ratingSource: "google-maps-observed",
     websiteGap: 3,
     ticketValue: 3,
     visualFit: 2,
@@ -271,7 +271,7 @@ test("reverify updates research fields, merges sources by url and records one re
   assert.deepEqual(again.state.leads, next.leads);
 });
 
-test("reverify can refresh or clear Places derived data", () => {
+test("reverify never stores a places-api rating and drops the retired placesFetchedAt", () => {
   const state = baseState();
   for (const id of ["als-auto-repair-shop-dallas-tx", "gm-auto-care-dallas-tx"]) {
     Object.assign(state.leads.find((l) => l.id === id), { ratingSource: "places-api", placesFetchedAt: "2026-09-01" });
@@ -279,18 +279,46 @@ test("reverify can refresh or clear Places derived data", () => {
   const b = batch({
     reverify: [
       { id: "als-auto-repair-shop-dallas-tx", googleRating: 4.8, ratingSource: "places-api", placesFetchedAt: RUN, decision: "keep", reason: "" },
-      { id: "gm-auto-care-dallas-tx", googleRating: 4.9, ratingSource: "google-maps", decision: "keep", reason: "" },
-      { id: "top-tier-auto-repair-dallas-tx", placesFetchedAt: "October 5", decision: "keep", reason: "" },
+      { id: "gm-auto-care-dallas-tx", googleRating: 4.9, ratingSource: "google-maps", placeId: "ChIJgm", placeIdCheckedAt: RUN, decision: "keep", reason: "" },
+      { id: "top-tier-auto-repair-dallas-tx", placesFetchedAt: "October 5", phoneLineType: "landline", decision: "keep", reason: "" },
     ],
   });
   const { state: next, report } = ingestBatch({ batch: b, state, now: NOW });
+  assert.ok(report.errors.some((e) => e.errors.some((t) => /ratingSource is places-api, which may not be stored/.test(t))));
   const als = next.leads.find((l) => l.id === "als-auto-repair-shop-dallas-tx");
-  assert.equal(als.placesFetchedAt, RUN);
+  assert.equal(als.ratingSource, "places-api", "the rejected entry changed nothing");
   const gm = next.leads.find((l) => l.id === "gm-auto-care-dallas-tx");
-  assert.equal(gm.ratingSource, "google-maps");
-  assert.equal(gm.placesFetchedAt, "", "a rating reread on Maps no longer rests on Places data");
-  assert.match(gm.outreach.history.at(-1).text, /Places fetch date "?2026-09-01"? cleared/);
-  assert.ok(report.errors.some((e) => e.errors.some((t) => /placesFetchedAt must be an ISO date/.test(t))));
+  assert.equal(gm.ratingSource, "google-maps-observed", "the legacy google-maps value is stored under its new name");
+  assert.equal(gm.placeId, "ChIJgm");
+  assert.equal(gm.placeIdCheckedAt, RUN);
+  assert.equal(Object.hasOwn(gm, "placesFetchedAt"), false, "the retired field is dropped when the lead changes");
+  assert.match(gm.outreach.history.at(-1).text, /rating source "places-api" to "google-maps-observed"/);
+  const tt = next.leads.find((l) => l.id === "top-tier-auto-repair-dallas-tx");
+  assert.equal(tt.phoneLineType, "landline");
+  assert.ok(!report.errors.some((e) => e.errors.some((t) => /placesFetchedAt/.test(t))), "a retired field is accepted, not an error");
+});
+
+test("suppressed businesses are never ingested again", () => {
+  const state = baseState({
+    suppression: [
+      { key: "7135551001", business: "Test Shop 1 Auto Repair", city: "Houston", state: "TX", phone: "713-555-1001", reason: "Asked not to be contacted.", addedAt: "2026-10-01T15:00:00.000Z", by: "Jamey" },
+      { key: "test shop 2 auto repair|TX", business: "Test Shop 2 Auto Repair", city: "Houston", state: "TX", phone: "", reason: "Owner said no.", addedAt: "2026-10-01T15:00:00.000Z", by: "Jamey" },
+    ],
+  });
+  const { state: next, report } = ingestBatch({
+    batch: batch({
+      leads: [lead(1), lead(2, { phone: "713-555-9902" }), lead(3)],
+      queue: [{ candidate: "Test Shop 1 Auto Repair", city: "Houston", state: "TX", phone: "(713) 555-1001", sources: [] }],
+      rejected: [{ business: "Test Shop 2 Auto Repair", state: "TX", reason: "Has a site." }],
+    }),
+    state,
+    now: NOW,
+  });
+  assert.deepEqual(report.accepted, ["test-shop-3-auto-repair-houston-tx"]);
+  assert.equal(report.duplicates.filter((d) => d.in === "suppressed").length, 4);
+  assert.ok(report.warnings.some((w) => w.warnings.some((t) => /on the suppression list/.test(t))));
+  assert.equal(next.queue.length, state.queue.length);
+  assert.equal(next.rejected.length, 0);
 });
 
 test("reverify reject moves New or Research to Not a fit and leaves later stages alone", () => {

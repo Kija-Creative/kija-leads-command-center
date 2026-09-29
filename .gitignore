@@ -7,3 +7,5 @@ test-output/
 # Generated pages: rebuild with npm run demos and npm run pitches. They stay private and local.
 demos/
 pitches/
+# Discovery candidates hold Places content and must never be committed; npm run purge-places deletes them.
+data/inbox/*.candidates.json

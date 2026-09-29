@@ -119,6 +119,14 @@ test("exclusions list every known business by phone and by name and state", () =
   assert.equal(plan.excludedBusinesses.length, leads.length + queue.length + 1);
 });
 
+test("suppressed businesses are excluded like rejected ones", () => {
+  const suppression = [{ key: "3035550199", business: "Quiet Plumbing", city: "Denver", state: "CO", phone: "303-555-0199", reason: "Opted out.", addedAt: "2026-09-20", by: "Jamey" }];
+  const plan = planWeek({ now: "2026-09-28", ...base, suppression });
+  assert.ok(plan.exclusions.includes("3035550199"));
+  assert.ok(plan.exclusions.includes("quiet plumbing|CO"));
+  assert.ok(plan.excludedBusinesses.includes("Quiet Plumbing, Denver, CO (suppressed)"));
+});
+
 test("planning before the rotation start still works", () => {
   const plan = planWeek({ now: "2026-09-14", ...base });
   assert.equal(plan.weekIndex, -2);

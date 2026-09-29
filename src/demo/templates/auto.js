@@ -54,7 +54,7 @@ const STEPS = {
   roadside: [
     { title: ["Call", "Llame"], body: ["Say where you are and what happened.", "Diga dónde está y qué pasó."] },
     { title: ["Stay safe", "Manténgase a salvo"], body: ["Pull off the road and turn your hazards on.", "Oríllese y prenda las intermitentes."] },
-    { title: ["Get the next step", "Siga el siguiente paso"], body: ["Talk through a repair on the spot or at the shop.", "Platique si se arregla ahí mismo o en el taller."] },
+    { title: ["Get the next step", "Siga el siguiente paso"], body: ["Ask what can be done where you are and what comes next.", "Pregunte qué se puede hacer donde está y qué sigue."] },
   ],
 };
 
@@ -296,7 +296,7 @@ ${ctx.about ? `<p class="about">${ctx.about}</p>` : ""}
 <aside class="ticket" data-rating="${esc(ctx.rating)}" data-reviews="${esc(ctx.reviews)}"${ctx.i18n.aria("Google rating", "Calificación en Google")}>
 <div class="ticket-top"><span>${t("Google rating", "Calificación en Google")}</span><span>${esc(ctx.cityState)}</span></div>
 ${gaugeSvg(ctx.rating)}
-<p class="ticket-score"><span class="big">${esc(ctx.ratingText)}</span><span class="of">${t("out of 5", "de 5")}</span></p>
+<p class="ticket-score"><span class="big" data-rating-num>${esc(ctx.ratingText)}</span><span class="of">${t("out of 5", "de 5")}</span></p>
 ${starsSvg(ctx.rating, "hero")}
 <p class="ticket-count">${reviewsText(ctx)}</p>
 </aside></div>

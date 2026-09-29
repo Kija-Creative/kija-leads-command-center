@@ -263,10 +263,17 @@ html[lang="es"] .kr-es{display:block}
 .lang button{border:0;background:transparent;border-radius:999px;padding:.3rem .55rem;cursor:pointer;line-height:1}
 .lang button[aria-pressed="true"]{background:var(--lang-fg,var(--ink));color:var(--lang-on,var(--bg))}
 
-.callbar{position:fixed;z-index:20;left:.75rem;right:.75rem;bottom:.75rem;display:flex;align-items:center;justify-content:center;gap:.6rem;padding:1rem 1.25rem;border-radius:var(--callbar-radius,999px);background:var(--primary);color:var(--on-primary);font-weight:700;text-decoration:none;box-shadow:0 10px 30px -8px rgb(0 0 0 / .45);transform:translateY(0);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+/* Phone only call bar. It has a fixed height so the page can reserve exactly
+   the space it covers: the footer and the form submit always clear it. */
+:root{--callbar-h:3.5rem;--callbar-gap:.75rem}
+.callbar{display:none;position:fixed;z-index:20;left:var(--callbar-gap);right:var(--callbar-gap);bottom:calc(var(--callbar-gap) + env(safe-area-inset-bottom,0px));height:var(--callbar-h);align-items:center;justify-content:center;gap:.6rem;padding:0 1.25rem;border-radius:var(--callbar-radius,999px);background:var(--primary);color:var(--on-primary);font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;text-decoration:none;box-shadow:0 10px 30px -8px rgb(0 0 0 / .45);transform:translateY(0);transition:transform .4s cubic-bezier(.22,1,.36,1)}
 .callbar .ico{width:1.25rem;height:1.25rem}
-@media (min-width:860px){.callbar{display:none}}
-@media (max-width:859px){body{padding-bottom:5.5rem}}
+.callbar[data-tucked]{transform:translateY(calc(100% + 2 * var(--callbar-gap) + env(safe-area-inset-bottom,0px)))}
+@media (max-width:759.98px){
+  .callbar{display:flex}
+  body.has-callbar{padding-bottom:calc(var(--callbar-h) + 2 * var(--callbar-gap) + env(safe-area-inset-bottom,0px))}
+  html:has(body.has-callbar){scroll-padding-bottom:calc(var(--callbar-h) + 2 * var(--callbar-gap))}
+}
 
 .req-form{display:grid;gap:1.25rem}
 .f-row{display:grid;gap:1.25rem}
@@ -317,15 +324,25 @@ select.f-input{appearance:none;background-image:linear-gradient(45deg,transparen
 @keyframes kj-rise{from{opacity:0;transform:translateY(.6em)}to{opacity:1;transform:none}}
 @keyframes kj-fade{from{opacity:0}to{opacity:1}}
 @keyframes kj-draw{from{stroke-dashoffset:var(--len,1200)}to{stroke-dashoffset:0}}
-@supports (animation-timeline:view()){
-  .rv{animation:kj-rise linear both;animation-timeline:view();animation-range:entry 0% cover 22%}
-}
+/* Motion is progressive enhancement. Without the page script every element,
+   the rating gauge included, renders in its final state. */
+html:not(.js) *,html:not(.js) *::before,html:not(.js) *::after{animation:none !important}
+/* Scroll reveal: visible by default. The script marks only elements that start
+   below the fold, and a failsafe clears every mark shortly after load. */
+.rv{transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+html.js .rv[data-rv-wait]{opacity:0;transform:translateY(1.25rem)}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;animation-delay:0s !important;transition-duration:.01ms !important}
-  .rv{animation:none !important}
+  html.js .rv[data-rv-wait]{opacity:1;transform:none}
 }
-@media print{.kija-ribbon{background:#fff;color:#000;border-bottom:1px solid #000}.kr-hide,.callbar{display:none}}
+@media print{
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .rv,html.js .rv[data-rv-wait]{opacity:1 !important;transform:none !important}
+  .kija-ribbon,.kija-ribbon[data-hidden]{display:block;background:#fff;color:#000;border-bottom:1px solid #000}
+  .kr-hide,.callbar{display:none !important}
+  body.has-callbar{padding-bottom:0}
+}
 `;
 
 // The one page script: ribbon, demo forms, local photo previews, language toggle.
@@ -341,6 +358,29 @@ export function pageScript(dict) {
     .replace(PARA_SEP, "\\u2029");
   return `(function(){
 var root=document.documentElement;root.classList.add("js");
+var hasIO="IntersectionObserver" in window;
+var reduce=false;try{reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+var rvs=Array.prototype.slice.call(document.querySelectorAll(".rv"));
+var rvIO=null;
+function revealAll(){rvs.forEach(function(el){el.removeAttribute("data-rv-wait")});if(rvIO){rvIO.disconnect();rvIO=null}}
+if(rvs.length&&hasIO&&!reduce){
+  var fold=window.innerHeight||root.clientHeight||0;
+  var later=fold>0?rvs.filter(function(el){return el.getBoundingClientRect().top>fold}):[];
+  if(later.length){
+    rvIO=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){en.target.removeAttribute("data-rv-wait");if(rvIO){rvIO.unobserve(en.target)}}})},{rootMargin:"0px 0px -6% 0px"});
+    later.forEach(function(el){el.setAttribute("data-rv-wait","");rvIO.observe(el)});
+    setTimeout(revealAll,1200);
+  }
+}
+window.addEventListener("beforeprint",revealAll);
+var bar=document.querySelector(".callbar");
+if(bar&&hasIO){
+  var seen=new Set();
+  var tuckIO=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){seen.add(en.target)}else{seen.delete(en.target)}});if(seen.size){bar.setAttribute("data-tucked","")}else{bar.removeAttribute("data-tucked")}});
+  document.querySelectorAll("footer,.f-submit,[data-demo-status]").forEach(function(el){tuckIO.observe(el)});
+}
+// The ribbon hides only for the current view on a click. It is never stored,
+// so a reload, a print or an exported share file always shows it.
 var ribbon=document.querySelector("[data-kija-ribbon]");
 document.querySelectorAll("[data-ribbon-hide]").forEach(function(b){b.addEventListener("click",function(){if(ribbon){ribbon.setAttribute("data-hidden","")}})});
 document.querySelectorAll("form[data-demo-form]").forEach(function(form){
@@ -375,7 +415,10 @@ if(saved==="es"){apply("es")}
 })();`;
 }
 
-export function documentShell({ lang = "en", title, description, fontsHref, css, body, script, comment }) {
+// Set before first paint so motion never flashes between states.
+const HEAD_SCRIPT = "document.documentElement.classList.add(\"js\")";
+
+export function documentShell({ lang = "en", title, description, fontsHref, css, body, script, comment, bodyClass = "" }) {
   return `<!doctype html>
 <html lang="${esc(lang)}">
 <head>
@@ -387,8 +430,9 @@ export function documentShell({ lang = "en", title, description, fontsHref, css,
 <meta name="description" content="${esc(description)}">
 ${comment ? `<!-- ${esc(comment)} -->\n` : ""}${fontsLink(fontsHref)}
 <style>${BASE_CSS}${css}</style>
+<script>${HEAD_SCRIPT}</script>
 </head>
-<body>
+<body${bodyClass ? ` class="${esc(bodyClass)}"` : ""}>
 ${body}
 <script>${script}</script>
 </body>

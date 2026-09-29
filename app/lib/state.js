@@ -8,7 +8,14 @@ export const OUTREACH_STATUSES = ["New", "Research", "Demo Built", "Contacted", 
 export const SHEET_STAGES = OUTREACH_STATUSES.slice(0, 7);
 export const OWNERS = ["", "Jamey", "Kiel", "Daisy"];
 export const CONFIDENCE_LEVELS = ["High", "Medium-High", "Medium", "Low"];
-export const MANUAL_HISTORY_TYPES = ["note", "call", "email", "meeting", "research", "demo"];
+export const MANUAL_HISTORY_TYPES = ["note", "call", "email", "meeting", "research", "demo", "consent"];
+// "mobile" may be a personal cell, which the FCC can treat as residential.
+export const PHONE_LINE_TYPES = [
+  ["unknown", "Not known yet"],
+  ["landline", "Business landline"],
+  ["mobile", "Mobile"],
+  ["voip", "VoIP"],
+];
 
 export const store = {
   data: null,

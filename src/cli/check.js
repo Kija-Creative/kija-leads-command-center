@@ -9,7 +9,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { sameBusiness } from "../lib/normalize.js";
-import { createStore, FILES, RUNS_DIR } from "../lib/store.js";
+import { INACTIVE_OUTREACH_STATUSES, isSuppressed } from "../lib/compliance.js";
+import { candidateFileAgeDays, createStore, FILES, RUNS_DIR } from "../lib/store.js";
 import {
   dashLocations,
   validateBenchmarks,
@@ -20,6 +21,7 @@ import {
   validateQueueItem,
   validateRejection,
   validateSettings,
+  validateSuppression,
 } from "../lib/validate.js";
 import { dateOf } from "../lib/week.js";
 
@@ -32,6 +34,8 @@ const USAGE = "Usage: npm run check [-- --root <dir>]";
 const SKIP_DIRS = new Set([".git", "node_modules", "data/backups", "exports", "test-output"]);
 const BINARY_EXT = new Set([".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".pdf", ".zip", ".gz", ".woff", ".woff2", ".ttf", ".otf", ".mp4", ".mov", ".webm", ".mp3"]);
 const MAX_DASH_REPORTS_PER_FILE = 5;
+// Discovery candidates hold Places content, which may not be kept; purge them within a day.
+export const CANDIDATES_MAX_AGE_DAYS = 1;
 
 function toPosix(p) {
   return p.split(path.sep).join("/");
@@ -109,7 +113,8 @@ function collect(target, label, r) {
   for (const w of r.warnings ?? []) target.warnings.push(`${label}: ${w}`);
 }
 
-export function checkData(root, { now } = {}) {
+// now is the calendar date for record checks; clock is the full time for file ages.
+export function checkData(root, { now, clock } = {}) {
   const found = { errors: [], warnings: [] };
   const store = createStore(root);
   let state;
@@ -119,7 +124,7 @@ export function checkData(root, { now } = {}) {
     found.errors.push(e.message);
     return { ...found, state: null };
   }
-  const { settings, categories, geography, chains, benchmarks, leads, queue, rejected } = state;
+  const { settings, categories, geography, chains, benchmarks, leads, queue, rejected, suppression } = state;
 
   collect(found, FILES.settings, validateSettings(settings));
   collect(found, FILES.categories, validateCategories(categories));
@@ -171,6 +176,19 @@ export function checkData(root, { now } = {}) {
     found.errors.push(`${FILES.rejected} must be a list of rejections.`);
   } else {
     for (const r of rejected) collect(found, FILES.rejected, validateRejection(r, ctx));
+  }
+  collect(found, FILES.suppression, validateSuppression(suppression));
+  if (Array.isArray(leads) && Array.isArray(suppression)) {
+    for (const lead of leads) {
+      const status = lead?.outreach?.status;
+      if (status && !INACTIVE_OUTREACH_STATUSES.includes(status) && isSuppressed(lead, suppression)) {
+        found.warnings.push(`${FILES.leads}: ${lead.business} (${lead.id}) is suppressed but still at ${status}. Move it to Not a fit; it is never contacted again.`);
+      }
+    }
+  }
+  const stale = store.listCandidateFiles().filter((f) => candidateFileAgeDays(f, clock ?? now ?? new Date()) > CANDIDATES_MAX_AGE_DAYS);
+  for (const f of stale) {
+    found.warnings.push(`${f.rel} holds Places content older than ${CANDIDATES_MAX_AGE_DAYS} day. Only place IDs may be kept; run npm run purge-places.`);
   }
 
   let runFiles = [];
@@ -310,8 +328,9 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
   }
 
   const root = path.resolve(values.root ?? deps.root ?? PROJECT_ROOT);
-  const now = dateOf(deps.now ? new Date(deps.now) : new Date());
-  const data = checkData(root, { now });
+  const clock = deps.now ? new Date(deps.now) : new Date();
+  const now = dateOf(clock);
+  const data = checkData(root, { now, clock });
   const files = filesToScan(root);
   const dashErrors = scanDashes(root, files);
   const demos = await checkDemos(root, data.state?.leads, deps);

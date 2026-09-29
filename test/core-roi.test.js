@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { benchmarkFor, computeRoi, ESTIMATE_DISCLAIMER, formatDollars, PLACEHOLDER_SOURCE } from "../src/lib/roi.js";
+import { benchmarkFor, CATEGORY_TICKET_DEFAULTS, computeRoi, ESTIMATE_DISCLAIMER, ESTIMATE_LABEL, formatDollars, PLACEHOLDER_SOURCE } from "../src/lib/roi.js";
 import { placeholderBenchmarks } from "../src/lib/seed.js";
 
 const categories = JSON.parse(fs.readFileSync(new URL("../config/categories.json", import.meta.url), "utf8"));
@@ -63,7 +63,8 @@ test("margin falls back to 40% and missing sources read as placeholders", () => 
   const ticket = r.assumptions.find((a) => a.key === "ticket");
   assert.equal(ticket.source, PLACEHOLDER_SOURCE);
   assert.equal(ticket.verified, false);
-  assert.match(r.assumptions.find((a) => a.key === "margin").source, /Default 40% margin, placeholder, not researched/);
+  assert.match(r.assumptions.find((a) => a.key === "margin").source, /^Estimate, not verified: default 40% margin, placeholder, not researched/);
+  assert.equal(r.assumptions.find((a) => a.key === "margin").estimate, true);
   assert.match(r.assumptions.find((a) => a.key === "price").source, /placeholder price until confirmed/);
   assert.equal(r.unverified, true);
 });
@@ -116,14 +117,68 @@ test("break even pace wording covers small, monthly and weekly paces", () => {
   assert.match(pace(35), /after 143 extra jobs, about 3 a week for a year\.$/);
 });
 
-test("missing ticket or price degrades to a readable sentence", () => {
-  const r = computeRoi({ lead: {}, benchmark: null, offer });
-  assert.equal(r.breakEven.jobs, null);
-  assert.deepEqual(r.scenarios, []);
-  assert.match(r.breakEven.sentence, /^Add a typical ticket value/);
+test("a missing or 0 ticket falls back to the category default, labelled as an estimate", () => {
+  for (const benchmark of [null, { ticket: { typical: 0, unit: "", sources: [] }, grossMargin: { typical: 0 } }]) {
+    const r = computeRoi({ lead: { categoryKey: "hvac" }, benchmark, offer });
+    assert.equal(r.inputs.ticket, CATEGORY_TICKET_DEFAULTS.hvac[1]);
+    assert.equal(r.inputs.margin, 0.4, "a margin of 0 is unknown, not zero");
+    assert.equal(r.inputs.unit, CATEGORY_TICKET_DEFAULTS.hvac[3]);
+    const ticket = r.assumptions.find((a) => a.key === "ticket");
+    assert.equal(ticket.origin, "default");
+    assert.equal(ticket.estimate, true);
+    assert.equal(ticket.verified, false);
+    assert.match(ticket.source, new RegExp(`^${ESTIMATE_LABEL}`));
+    assert.ok(r.breakEven.jobs > 0);
+    assert.equal(r.scenarios.length, 3);
+    assert.equal(r.unverified, true);
+  }
+  const unknownCategory = computeRoi({ lead: {}, benchmark: null, offer });
+  assert.equal(unknownCategory.inputs.ticket, CATEGORY_TICKET_DEFAULTS.general[1]);
+  const zeroOverride = computeRoi({ lead: {}, benchmark: sourced, offer, overrides: { ticket: 0, margin: 0 } });
+  assert.equal(zeroOverride.inputs.ticket, 550, "an override of 0 is ignored");
+  assert.equal(zeroOverride.inputs.margin, 0.5);
+  assert.equal(computeRoi({ lead: {}, benchmark: sourced, offer }).assumptions[0].estimate, false);
+});
+
+test("a unit that already starts with per is not doubled", () => {
+  const r = computeRoi({ lead: {}, benchmark: { ...sourced, ticket: { ...sourced.ticket, unit: "per repair order" } }, offer });
+  assert.equal(r.assumptions[0].display, "$550 per repair order");
+  assert.equal(computeRoi({ lead: {}, benchmark: sourced, offer }).assumptions[0].display, "$550 per repair order");
+  for (const s of r.sentences) assert.doesNotMatch(s, /\bper per\b/);
+});
+
+test("a missing price degrades to a readable sentence", () => {
   const noPrice = computeRoi({ lead: {}, benchmark: sourced, offer: {} });
+  assert.equal(noPrice.breakEven.jobs, null);
+  assert.deepEqual(noPrice.scenarios, []);
   assert.match(noPrice.breakEven.sentence, /^Add a website price/);
+  assert.equal(noPrice.rentedCustomerComparison, null);
   assert.doesNotThrow(() => computeRoi());
+});
+
+test("a rented lead with a low or high of 0 is treated as absent; equal ends read as one price", () => {
+  for (const rentedLead of [{ low: 0, high: 100, platform: "Angi" }, { low: 50, high: 0, platform: "Angi" }]) {
+    const r = computeRoi({ lead: {}, benchmark: { ...sourced, rentedLead }, offer });
+    assert.equal(r.rentedLeadComparison, null);
+    assert.ok(!r.assumptions.some((a) => a.key === "rentedLead"));
+  }
+  const same = computeRoi({ lead: {}, benchmark: { ...sourced, rentedLead: { low: 49, high: 49, platform: "Google LSA", sources: [] } }, offer });
+  assert.equal(same.rentedLeadComparison.sentence, "The site costs about the same as 51 rented leads from Google LSA, at about $49 each.");
+});
+
+test("cost per paying customer gives the rented customer comparison", () => {
+  const rentedCustomer = { typical: 233, platform: "Google Local Services Ads", sources: [{ title: "SearchLight", url: "https://example.org/lsa", year: 2026, note: "" }] };
+  const r = computeRoi({ lead: {}, benchmark: { ...sourced, rentedCustomer }, offer });
+  assert.equal(r.rentedCustomerComparison.customers, 11);
+  assert.equal(r.rentedCustomerComparison.sentence, "The site costs about the same as 11 customers rented through Google Local Services Ads.");
+  assert.ok(r.sentences.includes(r.rentedCustomerComparison.sentence));
+  const a = r.assumptions.find((x) => x.key === "rentedCustomer");
+  assert.equal(a.url, "https://example.org/lsa");
+  assert.equal(a.verified, true);
+  const one = computeRoi({ lead: {}, benchmark: { ...sourced, rentedCustomer: { typical: 3000, platform: "", sources: [] } }, offer });
+  assert.equal(one.rentedCustomerComparison.sentence, "The site costs about the same as 1 customer rented through paid lead platforms.");
+  assert.equal(computeRoi({ lead: {}, benchmark: { ...sourced, rentedCustomer: { typical: 0, platform: "x", sources: [] } }, offer }).rentedCustomerComparison, null);
+  assert.equal(computeRoi({ lead: {}, benchmark: sourced, offer }).rentedCustomerComparison, null);
 });
 
 test("benchmarkFor falls back to general and formatDollars groups thousands", () => {

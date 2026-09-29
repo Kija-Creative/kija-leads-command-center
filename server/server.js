@@ -36,6 +36,7 @@ const ROUTES = [
   ["GET", ["api", "export.csv"], "csv"],
   ["PATCH", ["api", "leads", ":id"], "patchLead"],
   ["POST", ["api", "leads", ":id", "history"], "addHistory"],
+  ["POST", ["api", "leads", ":id", "suppress"], "suppressLead"],
   ["POST", ["api", "leads", ":id", "demo"], "regenerateDemo"],
   ["POST", ["api", "leads", ":id", "pitch"], "regeneratePitch"],
   ["POST", ["api", "leads", ":id", "export"], "exportShare"],
@@ -97,6 +98,8 @@ export function createServer({
         return sendJson(res, 200, await api.patchLead(id, await readJsonBody(req)));
       case "addHistory":
         return sendJson(res, 200, await api.addHistory(id, await readJsonBody(req)));
+      case "suppressLead":
+        return sendJson(res, 200, await api.suppressLead(id, await readJsonBody(req)));
       case "regenerateDemo":
         await readJsonBody(req);
         return sendJson(res, 200, await api.regenerateDemo(id));

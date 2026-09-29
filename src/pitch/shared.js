@@ -1,7 +1,7 @@
 // Small pure helpers shared by the pitch page and the outreach drafts.
 // Nothing here reads the clock or the disk, so output is reproducible.
 
-import { benchmarkFor, computeRoi } from "../lib/roi.js";
+import { benchmarkFor, computeRoi, formatDollars } from "../lib/roi.js";
 
 const HTML_ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" };
 
@@ -166,17 +166,166 @@ export function roiFor(lead, { settings, benchmarks } = {}) {
   });
 }
 
-// Consumer statistics a pitch may cite: verified, approved for pitches, and
-// complete enough to attribute (claim, year, source). At most three.
-export function pitchStats(benchmarks, limit = 3) {
-  const list = Array.isArray(benchmarks?.consumerStats) ? benchmarks.consumerStats : [];
-  return list
-    .filter((s) => s && s.verified === true && s.useInPitch === true && clean(s.claim) && s.year && clean(s.source))
-    .slice(0, limit);
+// Ticket units arrive from research in several shapes: "repair order", "per repair
+// order", "per new customer first job (repair visit typical; ...)". Owner facing copy
+// always says "per <noun>" once, without the researcher's parenthetical notes.
+// full keeps a comma clause ("new customer, first year of service"); short drops it
+// for use inside a longer sentence.
+export function unitParts(unit) {
+  let text = clean(unit).replace(/\s*\([^)]*\)/g, "").split("(")[0];
+  text = text.replace(/\s+/g, " ").trim().replace(/^(?:per|a|an|each)\s+/i, "").replace(/[\s.,;:]+$/, "");
+  const full = text || "job";
+  const short = full.split(/\s*[,;]\s*/)[0] || "job";
+  return { full, short };
 }
 
-// Kija's physical mailing address for the CAN-SPAM block. Settings does not have
-// the field yet; until it does the draft carries a placeholder to fill in.
+export function perUnit(unit, { short = false } = {}) {
+  const parts = unitParts(unit);
+  return `per ${short ? parts.short : parts.full}`;
+}
+
+// A doubled unit ("per per repair order") can come from any sentence built on a raw unit.
+export function fixDoubledPer(text) {
+  return String(text ?? "").replace(/\bper\s+per\b/gi, "per");
+}
+
+// Rewrites the "$550 <raw unit>" phrase computeRoi puts in its sentences to the
+// normalized "$550 per repair order", whichever raw shape the unit had.
+export function normalizeUnitText(text, { ticket, unit } = {}) {
+  const t = String(text ?? "");
+  const raw = clean(unit);
+  if (!(Number(ticket) > 0) || !raw) return fixDoubledPer(t);
+  const dollars = formatDollars(ticket);
+  const { full } = unitParts(raw);
+  const target = `${dollars} ${perUnit(raw, { short: true })}`;
+  const variants = [`${dollars} per ${raw}`, `${dollars} ${raw}`, `${dollars} per ${full}`, `${dollars} ${full}`]
+    .sort((a, b) => b.length - a.length);
+  for (const v of variants) {
+    if (t.includes(v)) return fixDoubledPer(t.replace(v, target));
+  }
+  return fixDoubledPer(t);
+}
+
+// Platform names in the rented lead benchmarks carry researcher notes
+// ("Google LSA (SearchLight drain and sewer, stand-in)"). The owner reads the
+// platform; the notes stay with the sources.
+export function plainPlatform(platform) {
+  return clean(platform)
+    .replace(/\s*\([^)]*\)/g, "")
+    .split("(")[0]
+    .replace(/\bGoogle LSA\b/g, "Google Local Services Ads")
+    .replace(/\bLSA\b/g, "Local Services Ads")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// A sentence built on a raw platform name, with the plain name swapped in.
+export function withPlainPlatform(text, platform) {
+  const raw = clean(platform);
+  const t = clean(text);
+  return raw && t.includes(raw) ? t.replace(raw, plainPlatform(raw)) : t;
+}
+
+// "Title, 2025", unless the title already carries that year.
+export function titleYear(title, year) {
+  const t = clean(title);
+  const y = clean(String(year ?? ""));
+  return !y || t.includes(y) ? t : `${t}, ${y}`;
+}
+
+// Stats are grouped by what they say, so a pitch does not cite three versions of
+// "people read reviews". A stat may name its own topic; otherwise the claim decides.
+// Website comes first: "after reading reviews, people check the website" is a website stat.
+const STAT_TOPICS = [
+  ["website", /\bweb ?sites?\b|\bonline presence\b/i],
+  ["reviews", /\breview|\bstars?\b|\brated\b|\brating/i],
+  ["phone", /\bphones?\b|\bmobile\b|\bsmartphones?\b/i],
+  ["search", /\bsearch/i],
+  ["decision", /\bdecid|\bchoos|\bcontact|\bcompar|\bshortlist/i],
+];
+
+export function statTopic(stat) {
+  const given = clean(stat?.topic || stat?.group);
+  if (given) return given.toLowerCase();
+  const claim = clean(stat?.claim);
+  for (const [topic, re] of STAT_TOPICS) if (re.test(claim)) return topic;
+  return clean(stat?.id) || claim;
+}
+
+// A stat about star thresholds is shown only to a lead that clears it
+// (research/consumer-stats.md wording rule 6).
+export function statMinRating(stat) {
+  const given = stat?.minRating;
+  if (given !== null && given !== undefined && given !== "" && Number.isFinite(Number(given))) return Number(given);
+  const m = /(\d(?:\.\d)?)\+? stars? or (?:higher|more|above)/i.exec(`${stat?.claim ?? ""} ${stat?.value ?? ""}`);
+  return m ? Number(m[1]) : null;
+}
+
+function priorityOf(stat) {
+  const p = stat?.pitchPriority;
+  return p !== null && p !== undefined && p !== "" && Number.isFinite(Number(p)) ? Number(p) : Infinity;
+}
+
+// Consumer statistics a pitch may cite: verified, approved for pitches, and
+// complete enough to attribute (claim, year, source). Lowest pitchPriority first,
+// then file order; different topics before a second stat on the same topic. At most
+// three. Options: a number (the limit) or { limit, lead }.
+export function pitchStats(benchmarks, options = {}) {
+  const { limit = 3, lead = null } = typeof options === "number" ? { limit: options } : (options ?? {});
+  const list = Array.isArray(benchmarks?.consumerStats) ? benchmarks.consumerStats : [];
+  const eligible = list
+    .map((s, i) => ({ s, i }))
+    .filter(({ s }) => s && s.verified === true && s.useInPitch === true && clean(s.claim) && s.year && clean(s.source))
+    .filter(({ s }) => {
+      const min = statMinRating(s);
+      return min === null || (lead !== null && Number(lead?.googleRating) >= min);
+    })
+    .sort((a, b) => priorityOf(a.s) - priorityOf(b.s) || a.i - b.i)
+    .map(({ s }) => s);
+  const picked = [];
+  const topics = new Set();
+  for (const s of eligible) {
+    if (picked.length >= limit) break;
+    const topic = statTopic(s);
+    if (topics.has(topic)) continue;
+    topics.add(topic);
+    picked.push(s);
+  }
+  for (const s of eligible) {
+    if (picked.length >= limit) break;
+    if (!picked.includes(s)) picked.push(s);
+  }
+  return picked;
+}
+
+// The headline number of a stat value: "41% always (29% in 2025)" is "41%",
+// "Over 2 billion a month" is "Over 2 billion". "" when the value does not start
+// with a number, and then the stat renders as a sentence only.
+const HEADLINE_RE = /^((?:over|about|nearly|almost|more than|under)\s+)?(\$?\d[\d,]*(?:\.\d+)?(?:\s?%)?\+?(?:\s(?:thousand|million|billion)\b)?)/i;
+
+export function statHeadline(value) {
+  const m = HEADLINE_RE.exec(clean(value));
+  if (!m) return "";
+  const qualifier = m[1] ? `${m[1].charAt(0).toUpperCase()}${m[1].slice(1).toLowerCase()}` : "";
+  return `${qualifier}${m[2].replace(/\s+%/, "%")}`.trim();
+}
+
+// One plain sentence. A claim written as a fragment ("of shoppers read reviews")
+// reads after its number; a full sentence stands alone.
+export function statSentence(stat) {
+  const claim = clean(stat?.claim);
+  const headline = statHeadline(stat?.value);
+  if (headline && /^[a-z]/.test(claim)) return sentence(`${headline} ${claim}`);
+  return sentence(claim);
+}
+
+// Source and year, without repeating a year the source title already carries.
+export function statCite(stat) {
+  return titleYear(stat?.source, stat?.year);
+}
+
+// Kija's physical mailing address for the CAN-SPAM block (settings.contact.address).
+// While it is empty the draft carries a placeholder and the email is not ready to send.
 export const ADDRESS_PLACEHOLDER = "[Kija mailing address]";
 export const PHONE_PLACEHOLDER = "[Kija phone number]";
 

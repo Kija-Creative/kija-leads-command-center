@@ -34,8 +34,13 @@ export function statusChip(status) {
   return h("span", { class: "chip chip-status" }, status || "No status");
 }
 
+export const ESTIMATE_TIP = "Not verified. No source is recorded for this default, so treat it as a starting point to adjust with the owner, not a researched figure.";
+
+// A default with no sources. Focusable so the explanation is reachable without a mouse.
+export function estimateChip(tip = ESTIMATE_TIP) {
+  return h("span", { class: "chip chip-warn has-tip", tabindex: "0", "aria-label": `Estimate. ${tip}`, "data-tip": tip }, "Estimate");
+}
+
 export function sourceChip(verified) {
-  return verified
-    ? h("span", { class: "chip chip-good" }, "Sourced")
-    : h("span", { class: "chip chip-warn" }, "Placeholder, not researched");
+  return verified ? h("span", { class: "chip chip-good" }, "Sourced") : estimateChip();
 }

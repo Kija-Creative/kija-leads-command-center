@@ -200,7 +200,7 @@ function render(ctx) {
 ${ctx.about ? `<p class="about">${ctx.about}</p>` : ""}
 </div>${fork}</div></section>`;
 
-  const proof = `<section class="proof" data-rating="${esc(ctx.rating)}" data-reviews="${esc(ctx.reviews)}"${ctx.i18n.aria("Google rating", "Calificación en Google")}><div class="wrap proof-in"><p class="proof-num">${esc(ctx.ratingText)}</p><div class="proof-meta">${starsSvg(ctx.rating, "proof")}<b>${reviewsText(ctx)}</b></div><p class="proof-line">${t("Thank you to every customer who took the time to leave one.", "Gracias a cada cliente que se tomó el tiempo de dejar una.")}</p></div></section>`;
+  const proof = `<section class="proof" data-rating="${esc(ctx.rating)}" data-reviews="${esc(ctx.reviews)}"${ctx.i18n.aria("Google rating", "Calificación en Google")}><div class="wrap proof-in"><p class="proof-num" data-rating-num>${esc(ctx.ratingText)}</p><div class="proof-meta">${starsSvg(ctx.rating, "proof")}<b>${reviewsText(ctx)}</b></div><p class="proof-line">${t("Thank you to every customer who took the time to leave one.", "Gracias a cada cliente que se tomó el tiempo de dejar una.")}</p></div></section>`;
 
   const services = ctx.services.length
     ? `<section class="sec" id="services"><div class="wrap svc-grid"><div class="svc-art"><h2 class="h2">${t("Services", "Servicios")}</h2><p class="lede">${t("Call about any of these, or describe something else.", "Llame por cualquiera de estos o describa otra cosa.")}</p>${houseSvg(ctx.categoryKey)}</div><div><ul class="svc-list">${ctx.services.map((s) => `<li class="rv"><a href="#request"><span>${esc(s)}</span>${icon("arrow")}</a></li>`).join("")}</ul>${servicesNote(ctx)}</div></div></section>`

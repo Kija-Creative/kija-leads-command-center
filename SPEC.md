@@ -73,6 +73,7 @@ config/chains.json        chain and franchise names for exclusion             co
 data/leads.json           pipeline                                            core (seeded)
 data/queue.json           research queue                                      core (seeded)
 data/rejected.json        checked and rejected businesses                     core
+data/suppression.json     businesses never contacted or ingested again        core (written by the app)
 data/benchmarks.json      ROI benchmarks with sources (npm run seed installs research/benchmarks.json)  research
 data/runs/<runId>.json    run reports                                         written by ingest
 data/inbox/               batch files dropped by the weekly run
@@ -112,12 +113,16 @@ All JSON files are UTF-8, 2 space indented, arrays sorted stably (leads by `adde
   metro: "dallas-fort-worth",          // key in config/geography.json, "" if outside all metros
   address: "",                         // optional, only if sourced
   phone: "972-681-4966",               // display format NNN-NNN-NNNN
+  phoneLineType: "unknown",            // optional: "unknown" (default) | "landline" | "mobile" | "voip"; mobile may be residential under FCC rules
   googleRating: 4.9,                   // 0 to 5, one decimal
   googleReviews: 501,                  // integer
-  ratingSource: "",                    // optional: "google-maps" | "places-api" | "secondary" (a mirror such as Birdeye)
+  ratingSource: "",                    // optional: "" | "google-maps-observed" (read by a person or agent from the public listing, dated in sources)
+                                       //   | "secondary" (a mirror such as Birdeye) | "owner". "places-api" is an error on any stored lead.
+                                       //   The legacy value "google-maps" reads as google-maps-observed and ingest stores the new name.
   googleMapsUrl: "",                   // optional
-  placeId: "",                         // optional Google place id (storable indefinitely)
-  placesFetchedAt: "",                 // optional ISO date; Places derived fields must be refreshed or cleared within 30 days
+  placeId: "",                         // optional Google place id: the only Places field that may be stored
+  placeIdCheckedAt: "",                // optional date the place id was last confirmed; refresh after 12 months (free IDs only Place Details call), drop on NOT_FOUND
+  // placesFetchedAt is retired: accepted on read, dropped on every write (store.saveLeads, ingest).
   websiteGap: 3,                       // 1 weak own site, 2 very weak or third party only, 3 no credible owned site
   ticketValue: 3,                      // 1 low, 2 medium, 3 high
   visualFit: 2,                        // 1 limited, 2 good, 3 excellent
@@ -160,7 +165,22 @@ All JSON files are UTF-8, 2 space indented, arrays sorted stably (leads by `adde
 
 `OUTREACH_STATUSES = ["New", "Research", "Demo Built", "Contacted", "Replied", "Meeting", "Won", "Lost", "Not a fit"]`
 (the first seven are the sheet's stages). History `type` is one of `created`, `status`,
-`note`, `call`, `email`, `meeting`, `research`, `demo`.
+`note`, `call`, `email`, `meeting`, `research`, `demo`, `consent`, `suppressed`. `consent` records
+that the prospect agreed to texts or follow up by a channel, and its `text` says which (only a
+consent entry that mentions texts unlocks texting). `suppressed` records why the business is never
+contacted again. Both need non-empty `text`. `call` entries are what the call limits count.
+
+### Places rule (research/places-api.md, research/RESEARCH.md decisions 2 and 3)
+
+From the Places API only place IDs may be persisted: `placeId`, plus `placeIdCheckedAt`, refreshed
+after 12 months. No other Places response field (name, address, phone, website, rating, review
+count, coordinates) is written to `data/`, `demos/`, `pitches/` or `exports/`, and none is used to
+build demo or pitch content. Every stored lead fact comes from an independent source recorded in
+`sources`. `validateLead` and `validateQueueItem` reject `ratingSource: "places-api"` in every
+mode. Discovery candidate files (`data/inbox/*.candidates.json`) hold Places content and may
+exist only for the length of a run: `npm run check` warns about any older than 1 day, and
+`npm run purge-places` deletes them. `export` leaves the rating and review count blank for a
+places-api record.
 
 Seed import maps the sheet: `sources` strings become `{ url, label: hostname, checkedAt: "2026-09-26" }`,
 `verification.status` is `"needs-recheck"` with one check `{ check: "sheet import", result: <websiteStatus> }`,
@@ -184,7 +204,19 @@ Seed import maps the sheet: `sources` strings become `{ url, label: hostname, ch
 ### Rejection (`data/rejected.json` is `Rejection[]`)
 
 `{ key, business, city, state, phone, reason, evidenceUrl, rejectedAt, runId }`. `key` is
-`dedupeKey(...)`. The weekly run skips anything whose key is here, in leads or in queue.
+`dedupeKey(...)`. The weekly run skips anything whose key is here, in leads, in queue or in the
+suppression list.
+
+### Suppression (`data/suppression.json` is `Suppression[]`)
+
+`{ key, business, city, state, phone, reason, addedAt, by }`. `key` is `dedupeKey(...)`, `addedAt`
+an ISO date or timestamp, `by` who added it. Any request to stop, in any words and on any channel,
+adds an entry the same day (CAN-SPAM, FCC 24-24). A suppressed business is treated like a
+rejected one: ingest never adds it again (duplicates report `in: "suppressed"` with a warning),
+`planWeek` lists it in `exclusions`, and its lead cannot move back to an active outreach status
+(only `Won`, `Lost`, `Not a fit`). Matching is by key, phone digits or normalized name plus state.
+A lead with a `suppressed` history entry counts as suppressed even without a list entry.
+`npm run seed` writes `[]` when the file is missing and never replaces it, not even with `--force`.
 
 ### Batch file (written by the weekly run to `data/inbox/<runId>.json`)
 
@@ -197,9 +229,9 @@ Seed import maps the sheet: `sources` strings become `{ url, label: hostname, ch
   leads: [ /* Lead fields the researcher fills: everything except id, outreach, demo, addedAt, origin, runId */ ],
   queue: [ /* QueueItem fields except id, addedAt, updatedAt, runId */ ],
   rejected: [ /* Rejection fields except key, rejectedAt, runId */ ],
-  reverify: [ { id: "", googleRating: 0, googleReviews: 0, websiteGap: 0, websiteStatus: "", confidence: "", ratingSource: "", placesFetchedAt: "", verification: {}, sources: [], decision: "keep", reason: "" } ],
-  // 0 and "" mean "not re-measured". A ratingSource other than "places-api" with no new
-  // placesFetchedAt clears the lead's placesFetchedAt, since the rating no longer rests on Places data.
+  reverify: [ { id: "", googleRating: 0, googleReviews: 0, websiteGap: 0, websiteStatus: "", confidence: "", ratingSource: "", phoneLineType: "", placeId: "", placeIdCheckedAt: "", verification: {}, sources: [], decision: "keep", reason: "" } ],
+  // 0 and "" mean "not re-measured". ratingSource "places-api" is an error for that entry.
+  // A retired placesFetchedAt in an entry is accepted and ignored.
   notes: ""
 }
 ```
@@ -233,14 +265,34 @@ Seed import maps the sheet: `sources` strings become `{ url, label: hostname, ch
     ownershipLine: "You own it outright. No monthly rent to keep your own website.",
     optionalCare: { name: "Care plan", monthly: 0, description: "" }
   },
-  contact: { name: "Jamey", title: "Design Director, Kija Creative", email: "james@kijacreative.com", phone: "", site: "https://kijacreative.com", address: "" }, // address: mailing address for the email footer (CAN-SPAM)
+  contact: { name: "Jamey", title: "Design Director, Kija Creative", email: "james@kijacreative.com", phone: "", site: "https://kijacreative.com", address: "" },
+  // address: Kija's physical mailing address for the email footer (CAN-SPAM). Empty means email
+  // drafts are not ready to send (emailReady says so, validateSettings warns).
+  compliance: {
+    texasRegistration: "unknown",      // "unknown" | "registered" | "exempt-confirmed" (Tex. Bus. and Com. Code chapter 302)
+    callWindow: { startHour: 9, endHour: 20, days: [1, 2, 3, 4, 5, 6] }, // business local time, calls from startHour up to endHour; 0 Sunday to 6 Saturday
+    maxCallsPerDay: 1,
+    maxCallsTotal: 3,                  // without a reply
+    noColdTexts: true,
+    noTextStates: ["WA"]               // never texted without recorded consent, by state or area code
+  },
   demoDefaults: { conceptRibbon: true }
 }
 ```
 
+A settings file without `compliance` still validates (with a warning) and `complianceSettings`
+fills the defaults above. When present, every field is validated.
+
 ### config/categories.json
 
-`{ [categoryKey]: { label, vertical, ticketValueDefault, visualFitDefault, searchTerms: [], placesTypes: [], serviceDefaults: [], focusNote: "" } }`
+`{ [categoryKey]: { label, vertical, ticketValueDefault, visualFitDefault, searchTerms: [], placesTypes: [], placesTypesReviewed: true, serviceDefaults: [], focusNote: "" } }`
+
+`placesTypes` holds the exact Table A type for Places `includedType` (from the table in
+`research/places-api.md` section 5), or `[]` for the 19 keys that are text query only.
+`placesTypesReviewed` is true once those types were checked against the research. Typed keys:
+auto-repair `car_repair`, tire-shop `tire_shop`, barber `barber_shop`, hair-salon `hair_salon`,
+nail-salon `nail_salon`, tattoo `body_art_service`, pet-grooming `pet_care`, general `service`,
+plumbing `plumber`, electrical `electrician`, roofing `roofing_contractor`, painting `painter`.
 
 `vertical` selects the demo template: `auto`, `home-services`, `contractor`, `personal-care`,
 `general`. Required keys (add more only with a reason):
@@ -301,18 +353,28 @@ insensitive on the normalized name.
 ```js
 {
   updatedAt: "2026-09-28",
-  consumerStats: [ { id, claim, value, year, source, url, verified: true, useInPitch: true, notes } ],
+  consumerStats: [ { id, claim, value, year, source, url, verified: true, useInPitch: true, pitchPriority: 1, notes } ],
+  // pitchPriority is optional: a whole number, unique, 1 is the most persuasive and leads the pitch.
+  // Current order: bl-lcrs26-website-after-reviews, bl-csb26-walked-away, bl-lcrs26-read-reviews,
+  // bl-csb26-mobile, bl-csb26-speed; the rest carry none.
   categories: {
     [categoryKey]: {
       ticket: { low, typical, high, unit, sources: [ { title, url, year, note } ] },
       grossMargin: { typical, sources: [] },     // fraction 0 to 1
-      rentedLead: { low, high, platform, sources: [] } | null,   // what a rented lead costs
+      rentedLead: { low, high, platform, sources: [] } | null,   // what a rented lead costs; a low or high of 0 means unknown
+      rentedCustomer: { typical, platform, sources: [] },        // optional: cost per paying customer
       notes: ""
     }
   },
   websiteMarket: { freelancer: { low, high }, agency: { low, high }, subscription: { lowMonthly, highMonthly }, sources: [] }
 }
 ```
+
+`rentedCustomer` is set only where research has a sourced figure: every home-services and
+contractor key carries the SearchLight February 2026 LSA all category average of $233 per paying
+customer (its source note says it is an all category average), except garage-door ($198) and
+roofing (about $731), which have trade figures. `research/benchmarks.json` and
+`data/benchmarks.json` hold the same values.
 
 Until research lands, core writes a placeholder with every category present, `sources: []`, and
 `"notes": "Placeholder, not researched"`. Code must treat missing sources as unverified and the
@@ -344,50 +406,100 @@ All pure except `store.js`. Each file default-free, named exports only.
 
 `validate.js`
 - `REQUIRED_LEAD_FIELDS` = business, category, categoryKey, city, state, googleRating, googleReviews, phone, websiteStatus, websiteGap, ticketValue, visualFit, confidence, whyKija, pitchAngle, demoConcept, sources.
-- `validateLead(lead, { settings, categories, chains, mode }) -> { ok, errors, warnings }`
+- `HISTORY_TYPES`, `RATING_SOURCES` (`"", "google-maps-observed", "secondary", "owner"`),
+  `LEGACY_RATING_SOURCES`, `PHONE_LINE_TYPES`, `RETIRED_LEAD_FIELDS` (`["placesFetchedAt"]`).
+- `validateLead(lead, { settings, categories, chains, mode, now }) -> { ok, errors, warnings }`
   errors: missing required field, value out of range, unknown categoryKey, chain match, em or en
   dash in any string, websiteGap below `minWebsiteGap`, rating below `minRating`, reviews below
-  `minReviews`, no sources (mode "weekly" requires at least 1 source and at least 3 verification checks).
-  warnings: below preferred thresholds, confidence Medium or Low, ratingSource "secondary".
-- `validateQueueItem`, `validateBatch(batch) -> { ok, errors, warnings }`.
+  `minReviews`, no sources (mode "weekly" requires at least 1 source and at least 3 verification checks),
+  ratingSource "places-api" (any mode), unknown phoneLineType, malformed placeIdCheckedAt.
+  warnings: below preferred thresholds, confidence Medium or Low, ratingSource "secondary", a place
+  ID checked over 12 months ago; in stored mode also a place ID with no placeIdCheckedAt and a
+  leftover placesFetchedAt.
+- `validateQueueItem` (also rejects a places-api rating on the item or its carried lead), `validateBatch(batch) -> { ok, errors, warnings }`.
+- `validateHistoryEntry(entry)`: `consent` and `suppressed` entries need text.
+- `validateOutreachPatch(patch, { lead, suppression })`: a suppressed lead may only move to `Won`, `Lost` or `Not a fit`.
+- `validateSettings(settings)` also checks contact.address and contact.email, and `validateCompliance(settings.compliance)`;
+  warns while contact.address is empty and while texasRegistration is "unknown".
+- `validateSuppression(list)`: key, business, reason, by and addedAt on each entry, keys unique.
+- `validateCategories`: placesTypes are Table A names (`snake_case`), placesTypesReviewed is a boolean.
+- `validateBenchmarks`: rentedLead low and high numbers with low at most high; rentedCustomer typical above 0, a platform, http sources; pitchPriority whole, 1 or more, unique.
 - `findDashes(value) -> string[]` paths of strings containing U+2014 or U+2013 (deep walk).
 
+`compliance.js` (pure; nothing reads the clock; research/compliance.md; not legal advice)
+- `STATE_TIMEZONES`: USPS code to IANA zone for all 50 states, DC and PR. Split states use the zone
+  covering most of the population (TX, KS, NE, ND, SD, TN Central; FL, IN, KY, MI Eastern; ID
+  Mountain via America/Boise; OR Pacific). Arizona is America/Phoenix, no daylight saving.
+- `DEFAULT_COMPLIANCE`, `complianceSettings(settings)` (settings.compliance over the defaults),
+  `TEXAS_REGISTRATION_STATUSES`, `PHONE_LINE_TYPES`, `INACTIVE_OUTREACH_STATUSES`, `STATE_AREA_CODES` (WA).
+- `localTimeFor(state, now) -> { timeZone, hour, minute, weekday, date, label } | null`, weekday 0
+  Sunday to 6 Saturday, label like "10:42 AM Tuesday, Central". Null for an unknown state; throws on an invalid now.
+- `callCheck({ lead, settings, now, suppression }) -> { ok, reasons, callsToday, callsTotal, localLabel }`.
+  Not ok when: suppressed, no phone, unknown state, no now, outside the window days, local hour
+  before startHour or at or after endHour, `callsToday >= maxCallsPerDay` (calls counted by the
+  business's local date), `callsTotal >= maxCallsTotal`. Counts come from `outreach.history`
+  entries of type `call`. texasRegistration "unknown" adds the sentence "Texas phone solicitation
+  status is unconfirmed. Check chapter 302 with an attorney before phone outreach." without
+  blocking; a mobile or unknown line adds "may be treated as residential; email first".
+- `canText({ lead, settings, suppression }) -> { ok, reason }`: needs a `consent` history entry
+  whose text mentions texts; never for a noTextStates number (by state or area code) without it;
+  never when suppressed.
+- `emailReady({ settings, lead, suppression }) -> { ok, reasons }`: needs contact.address and a
+  valid contact.email; a suppressed lead is not ready.
+- `suppressionFor(lead, suppression) -> entry | null`, `isSuppressed(lead, suppression)` (list or a
+  `suppressed` history entry), `suppressionEntry(record, { reason, by, now })`.
+
 `roi.js`
-- `computeRoi({ lead, benchmark, offer, overrides }) -> { inputs, breakEven, scenarios, rentedLeadComparison, sentences, assumptions }`
-  - `ticket` = overrides.ticket ?? benchmark.ticket.typical; `margin` = overrides.margin ?? benchmark.grossMargin.typical ?? 0.4
+- `computeRoi({ lead, benchmark, offer, overrides }) -> { inputs, breakEven, scenarios, rentedLeadComparison, rentedCustomerComparison, sentences, assumptions }`
+  - `ticket` = overrides.ticket ?? benchmark.ticket.typical ?? the category default in
+    `CATEGORY_TICKET_DEFAULTS[lead.categoryKey]` (general when unknown); `margin` = overrides.margin ??
+    benchmark.grossMargin.typical ?? 0.4. A ticket or margin of 0 or missing is unknown, never a real
+    value. A fallback assumption has `origin: "default"`, `estimate: true` and a source starting
+    "Estimate, not verified".
   - `price` = overrides.price ?? offer.price
   - `grossPerJob = ticket * margin`; `breakEven.jobs = ceil(price / grossPerJob)`; `breakEven.sentence`
     e.g. "At a typical $550 repair order and 50% gross margin, the site pays for itself after 10 extra jobs, about one a month for a year."
   - scenarios for 1, 3 and 5 extra jobs a month (or overrides.jobsPerMonth as the middle): monthly revenue,
     annual revenue, annual gross profit, payback in months (one decimal), return multiple (annual gross / price)
-  - `rentedLeadComparison` when benchmark.rentedLead exists: "The site costs about the same as N rented leads."
+  - `rentedLeadComparison` when benchmark.rentedLead has a low and high above 0: "The site costs about the same as N rented leads."
+  - `rentedCustomerComparison` when benchmark.rentedCustomer.typical is above 0: `{ typical, platform, customers, sentence }`,
+    sentence "The site costs about the same as N customers rented through <platform>." It comes before the rented lead sentence.
+  - With no price, breakEven.jobs is null and the sentence asks for a website price.
   - `assumptions` lists every input with its source title and url, or "Placeholder, not researched".
   - Integers for dollars (round to whole dollars). Never claim a guarantee. Sentences say "if" and "about".
 
 `week.js`
 - `runIdFor(now) -> "YYYY-MM-DD"` of the Monday of that week (local date given as ISO string; use UTC date math on the date part).
 - `isoWeek(dateString) -> "2026-W40"`.
-- `planWeek({ now, settings, geography, categories, leads, queue, rejected }) -> { runId, week, metros: Metro[], categories: string[], quota, homeMetro, exclusions: string[] }`
+- `planWeek({ now, settings, geography, categories, leads, queue, rejected, suppression }) -> { runId, week, metros: Metro[], categories: string[], quota, homeMetro, exclusions: string[], excludedBusinesses: string[] }`
+  (exclusions cover leads, queue, rejected and suppressed businesses)
   rotation: week index = whole weeks since `settings.geography.rotationStart`; metros are a sliding
   window of `metrosPerWeek` over the non-home metros; home metro added when `homeEveryWeek`.
   categories rotate the same way over category keys excluding `general`, `categoriesPerWeek` at a time,
   but always include at least one of auto, home-services and contractor verticals.
 
 `store.js` (file IO; the only lib module allowed to touch disk)
-- `createStore(rootDir) -> store` with `load()` returning `{ leads, queue, rejected, settings, categories, geography, chains, benchmarks }`,
-  `saveLeads(leads)`, `saveQueue(queue)`, `saveRejected(rejected)`, `saveSettings(settings)`, `saveRun(report)`,
-  `listRuns()`. Writes are atomic (write `*.tmp` then rename) and copy the previous file to
-  `data/backups/<name>-<timestamp>.json`, keeping the newest 30 per file.
+- `createStore(rootDir) -> store` with `load()` returning `{ leads, queue, rejected, settings, categories, geography, chains, benchmarks, suppression }`,
+  `saveLeads(leads)`, `saveQueue(queue)`, `saveRejected(rejected)`, `saveSettings(settings)`, `saveSuppression(list)`, `saveRun(report)`,
+  `listRuns()`, `listCandidateFiles()` (`[{ name, rel, fetchedAt, mtimeMs }]` for `data/inbox/*.candidates.json`)
+  and `removeCandidateFile(name)`. Writes are atomic (write `*.tmp` then rename) and copy the previous file to
+  `data/backups/<name>-<timestamp>.json`, keeping the newest 30 per file. `saveLeads` and `saveQueue` drop the
+  retired `placesFetchedAt` (also inside a queue item's `lead`). `candidateFileAgeDays(file, now)` ages a
+  candidates file by its `fetchedAt`, else its file time.
 - `ingestBatch({ batch, state, now }) -> { state: nextState, report }` (pure, lives in `ingest.js`
   under src/lib so it is testable). Rules:
   1. Validate every lead in weekly mode. Invalid leads go to `report.errors`, not to the queue.
-  2. Dedupe against leads, queue and rejected by `dedupeKey`. Duplicates go to `report.duplicates`.
+  2. Dedupe against leads, queue, rejected and `state.suppression` by `dedupeKey`. Duplicates go to
+     `report.duplicates` (`in` names where the match is); a suppressed match also adds a warning.
+     Batch records lose the retired `placesFetchedAt`, and `ratingSource: "google-maps"` is stored as
+     `google-maps-observed`. New leads get `phoneLineType: "unknown"` and `placeIdCheckedAt: ""` unless set.
   3. Leads that fail only threshold floors become queue items with a `reason`.
   4. Rank the rest by score; the top `weeklyQuota` become leads with outreach status `New`, `origin: "weekly-run"`, `runId`,
      one history entry `{ type: "created", by: "weekly-run", text: "Added by weekly run <runId> with score N." }`.
      The overflow becomes queue items with `reason: "Qualified overflow"` and the partial lead in `lead`.
   5. `reverify` entries update research fields on the matching lead (rating, reviews, websiteGap,
-     websiteStatus, confidence, verification, sources merged by url) and append one `research`
+     websiteStatus, confidence, ratingSource, phoneLineType, placeId, placeIdCheckedAt, verification,
+     sources merged by url) and append one `research`
      history entry listing what changed. `decision: "reject"` sets outreach status to `Not a fit` only if the
      current status is `New` or `Research`, and appends a history entry with the reason; later stages are
      never changed automatically, a warning is reported instead.
@@ -400,14 +512,15 @@ All pure except `store.js`. Each file default-free, named exports only.
 |---|---|---|
 | start | `node server/server.js` | serve the app on 127.0.0.1:4242 (PORT env overrides) |
 | test | `node --test "test/**/*.test.js"` | all suites (Node 24 treats a bare `test/` as a file) |
-| check | `node src/cli/check.js` | validate all data files, dash scan, demo guardrail scan, pitch page checks |
-| seed | `node src/cli/import-seed.js` | build data/*.json from the seed, refuses if data/leads.json is non-empty unless `--force` |
+| check | `node src/cli/check.js` | validate all data files (suppression included), dash scan, demo guardrail scan, pitch page checks; warns about a suppressed lead still in active outreach and about any `data/inbox/*.candidates.json` older than 1 day |
+| seed | `node src/cli/import-seed.js` | build data/*.json from the seed, refuses if data/leads.json is non-empty unless `--force`; writes `data/suppression.json` only when missing |
 | plan | `node src/cli/plan.js [--date YYYY-MM-DD]` | print and write `data/inbox/<runId>.plan.json` |
 | ingest | `node src/cli/ingest.js <batch.json>` | ingest a batch, print the report, write the run report |
 | demos | `node src/cli/build-demos.js [--run <runId> \| --id <id> \| --all \| --missing]` | render demos |
 | pitches | `node src/cli/build-pitches.js [--run <runId> \| --id <id> \| --all \| --missing]` | render pitch pages |
 | probe | `node src/cli/probe.js --name "" --city "" --state "" [--phone ""]` | domain probe, prints JSON evidence |
-| discover | `node src/cli/discover-places.js --plan <plan.json>` | Google Places discovery, needs key |
+| discover | `node src/cli/discover-places.js --plan <plan.json> [--terms N] [--anchors N] [--pages N] [--max-requests N] [--max-monthly N] [--dry-run]` | Google Places discovery, needs key; writes `data/inbox/<runId>.candidates.json` (fixed path, there is no `--out`) and counts requests per month in `data/places-usage.json` (`{ "YYYY-MM": count }`); a run never goes past `--max-monthly` (default 900) and exits 1 when that guard is used up |
+| purge-places | `node src/cli/purge-places.js [--older-than-days N] [--dry-run]` | delete `data/inbox/*.candidates.json` (all by default, or only those older than N days) and print what was removed |
 | export | `node src/cli/export-csv.js` | `exports/lead-pipeline-<date>.csv` in sheet column order |
 
 Sheet column order for export: Score, Business, Category, City, Google Rating, Reviews, Website
@@ -421,18 +534,31 @@ Binds 127.0.0.1. Reads files fresh on every request (the weekly run writes them 
 process). JSON responses. Mutations return `{ ok, errors, warnings, ...payload }` with status 200
 for ok, 422 for rule violations, 404 for unknown ids.
 
-- `GET /api/state` -> `{ leads: LeadView[], queue, runs: RunSummary[], settings, categories, geography, benchmarks, env: { placesKey: boolean }, now }`
-  where `LeadView` = Lead plus `score` (scoreLead result), `roi` (computeRoi result),
-  `demoExists`, `pitchExists`, `drafts` (outreach drafts, see Pitch).
-- `PATCH /api/leads/:id` body `{ outreach?: { status, nextAction, nextDate, owner, notes }, roiOverrides?, demo?: { shareApproved, palette } }`.
+- `GET /api/state` -> `{ leads: LeadView[], queue, runs: RunSummary[], settings, categories, geography, benchmarks, suppressionCount, env: { placesKey: boolean }, now }`
+  where `LeadView` = Lead (without the retired `placesFetchedAt`) plus `score` (scoreLead result), `roi` (computeRoi result),
+  `demoExists`, `pitchExists`, `drafts` (buildDrafts with `suppression` and `now`, see Pitch),
+  `phoneLineType` (defaults to `"unknown"`), `suppressed` (the suppression entry or null) and
+  `compliance: { checkedAt, suppressed, call, text, email }` (callCheck, canText and emailReady at the request time).
+- `PATCH /api/leads/:id` body `{ outreach?: { status, nextAction, nextDate, owner, notes }, roiOverrides?, demo?: { shareApproved, palette }, phoneLineType? }`.
   A status change appends `{ type: "status", by: "Jamey", text: "New to Contacted" }`. Unknown status is 422.
-- `POST /api/leads/:id/history` body `{ type, text, by }` appends one entry.
+  Outreach is checked with `validateOutreachPatch(outreach, { lead, suppression })`, so a suppressed lead
+  can only move to `Won`, `Lost` or `Not a fit` (422 otherwise). `phoneLineType: "mobile"` returns a warning.
+  Every write drops `placesFetchedAt`.
+- `POST /api/leads/:id/history` body `{ type, text, by }` appends one entry. `consent` may be added by hand
+  (refused on a suppressed lead); `suppressed` may not, only the suppress route writes it. A call logged
+  outside the call window, or a contact entry on a suppressed lead, is saved with a warning.
+- `POST /api/leads/:id/suppress` body `{ reason }` (required, no dashes, at most 500 characters) adds the
+  business to `data/suppression.json` with `suppressionEntry`, sets status `Not a fit`, next action
+  "Do not contact", clears the next date and appends one `suppressed` history entry. A second call
+  changes nothing and returns a warning.
 - `POST /api/leads/:id/demo` regenerates that lead's demo; `POST /api/leads/:id/pitch` its pitch page.
 - `POST /api/leads/:id/export` writes `exports/<id>-concept.html`, refused (422) unless `demo.shareApproved`.
 - `POST /api/queue/:id/decision` body `{ decision: "Promote" | "Drop" | "Research", reason }`. Promote runs
   `validateLead` in manual mode on the carried partial lead plus queue fields; failure is 422 with the errors.
-  Drop moves it to rejected with the reason.
-- `PUT /api/settings` body is a partial settings object merged over the current one, validated.
+  Drop moves it to rejected with the reason. Promoting a suppressed business is refused (422).
+- `PUT /api/settings` body is a partial settings object merged over the current one, validated. A partial
+  `compliance` lands on the defaults; unknown compliance keys are 422; a value looser than the research
+  defaults returns a warning.
 - `GET /api/export.csv` streams the CSV.
 - Static: `/` and `/app/*` from `app/`, `/demos/<id>/` from `demos/<id>/index.html`, `/pitches/<id>/`, `/exports/*`.
   Path traversal is rejected. Unknown paths 404.
@@ -477,10 +603,14 @@ League Gothic display, Hanken Grotesk body, Google Fonts). Printable to PDF from
 4. The math: `computeRoi` output, break even in plain words, the scenario table, every assumption with its source, and the line "These are estimates to adjust together, not a promise."
 5. Own it: offer name, what is included, timeline, ownership line, price (shown only when `offer.priceConfirmed`, otherwise "Pricing to confirm").
 6. Next step: a 15 minute walkthrough with the contact in settings.
-Consumer statistics come only from `benchmarks.consumerStats` where `verified && useInPitch`.
+Consumer statistics come only from `benchmarks.consumerStats` where `verified && useInPitch`,
+led by those with a `pitchPriority` in ascending order.
 
-`buildDrafts(lead, { settings, roi }) -> { email: { subject, body }, callScript, voicemail, followUpText, notes }`
-in `src/pitch/drafts.js`. Trust first, specific to the business, short, no hype, no false
+`buildDrafts(lead, { settings, roi, categories, now, suppression, compliance }) -> { email: { subject, body }, callScript, voicemail, followUpText, notes, ready? }`
+in `src/pitch/drafts.js`. `ready: { email, call, text }` is `emailReady`, `callCheck` and `canText` for the
+lead at `now` whenever `src/lib/compliance.js` loads (`compliance` lets a test pass a stand in, or `null`).
+A suppressed business gets empty drafts and a do not contact note. The follow up text is labelled for
+use only after a reply or consent, and is empty for a no text state without recorded text consent. Trust first, specific to the business, short, no hype, no false
 urgency, never implies an existing relationship or affiliation, email includes a clear opt out
 line and Kija's contact block (CAN-SPAM), `notes` reminds that texting a mobile number needs prior
 consent and that nothing is sent automatically.
@@ -518,10 +648,15 @@ Views (hash router):
 
 ## Tests
 
-`npm test` must pass with no network access. Required coverage: every seed sheet score
-reproduced; normalize and dedupe cases; validate errors and warnings including dashes and chains;
-ingest idempotency, quota overflow to queue, never touching outreach, reverify rules; week
-rotation determinism; ROI arithmetic and sentences; store atomic write and backups (temp dir);
-server API happy paths and 422s (start on an ephemeral port against a temp copy of data); every
-template renders for a lead of each vertical and passes every guardrail; drafts contain opt out and
-no dashes.
+`npm test` (`node --test "test/**/*.test.js"`; one suite: `node --test test/core-compliance.test.js`)
+must pass with no network access. Required coverage: every seed sheet score
+reproduced; normalize and dedupe cases; validate errors and warnings including dashes and chains,
+the Places rule, suppression and compliance settings; ingest idempotency, quota overflow to queue,
+never touching outreach, reverify rules, suppressed businesses never ingested; week rotation
+determinism and suppression exclusions; ROI arithmetic and sentences, the 0 or missing fallback and
+the rented customer comparison; compliance call windows across DST boundaries, split state zones,
+call limit counting by local date, the Washington text rule and email readiness; store atomic
+write, backups, suppression and dropping retired fields (temp dir); check and purge-places over
+candidates files; server API happy paths and 422s (start on an ephemeral port against a temp copy
+of data); every template renders for a lead of each vertical and passes every guardrail; drafts
+contain opt out and no dashes.

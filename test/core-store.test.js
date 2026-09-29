@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { createStore, emptyBenchmarks, BACKUPS_KEPT } from "../src/lib/store.js";
+import { candidateFileAgeDays, createStore, emptyBenchmarks, BACKUPS_KEPT } from "../src/lib/store.js";
 
 const PROJECT = new URL("../", import.meta.url);
 
@@ -139,4 +139,62 @@ test("writeJson refuses paths outside the project and updateLeads reads fresh", 
   assert.equal(store.load().leads[0].outreach.status, "Research");
   store.saveBenchmarks({ updatedAt: "2026-09-28", categories: {} });
   assert.equal(store.load().benchmarks.updatedAt, "2026-09-28");
+});
+
+test("suppression loads as an empty list and saves sorted by addedAt then key", () => {
+  const root = tempRoot();
+  const store = createStore(root, { now: steppingClock() });
+  assert.deepEqual(store.load().suppression, []);
+  const list = [
+    { key: "b", business: "B", addedAt: "2026-09-29T10:00:00.000Z" },
+    { key: "a", business: "A", addedAt: "2026-09-29T10:00:00.000Z" },
+    { key: "z", business: "Z", addedAt: "2026-09-28T10:00:00.000Z" },
+  ];
+  store.saveSuppression(list);
+  assert.deepEqual(store.load().suppression.map((s) => s.key), ["z", "a", "b"]);
+  assert.throws(() => store.saveSuppression({}), /suppression must be an array/);
+});
+
+test("the retired placesFetchedAt is accepted on read and dropped on write", () => {
+  const root = tempRoot();
+  const store = createStore(root, { now: steppingClock() });
+  const leads = [{ id: "a", addedAt: "2026-09-28", placeId: "ChIJa", placesFetchedAt: "2026-09-01" }];
+  store.saveLeads(leads);
+  assert.deepEqual(store.load().leads, [{ id: "a", addedAt: "2026-09-28", placeId: "ChIJa" }]);
+  assert.equal(leads[0].placesFetchedAt, "2026-09-01", "the caller's objects are not changed");
+  store.saveQueue([{ id: "q", addedAt: "2026-09-28", lead: { business: "Q", placesFetchedAt: "2026-09-01" } }, { id: "r", addedAt: "2026-09-28", lead: null }]);
+  assert.deepEqual(store.load().queue, [{ id: "q", addedAt: "2026-09-28", lead: { business: "Q" } }, { id: "r", addedAt: "2026-09-28", lead: null }]);
+});
+
+test("candidates files are listed with their age and removed only by exact name", () => {
+  const root = tempRoot();
+  const store = createStore(root);
+  assert.deepEqual(store.listCandidateFiles(), []);
+  const inbox = path.join(root, "data", "inbox");
+  fs.mkdirSync(inbox, { recursive: true });
+  fs.writeFileSync(path.join(inbox, "2026-09-28.candidates.json"), JSON.stringify({ fetchedAt: "2026-09-28T06:00:00.000Z" }));
+  fs.writeFileSync(path.join(inbox, "2026-09-28.json"), "{}");
+  const files = store.listCandidateFiles();
+  assert.deepEqual(files.map((f) => [f.name, f.rel, f.fetchedAt]), [["2026-09-28.candidates.json", "data/inbox/2026-09-28.candidates.json", "2026-09-28T06:00:00.000Z"]]);
+  assert.equal(candidateFileAgeDays(files[0], "2026-09-29T18:00:00.000Z"), 1.5);
+  assert.equal(candidateFileAgeDays({ fetchedAt: "", mtimeMs: Date.parse("2026-09-27T18:00:00.000Z") }, "2026-09-29T18:00:00.000Z"), 2);
+  assert.equal(candidateFileAgeDays({}, "2026-09-29T18:00:00.000Z"), Infinity);
+  assert.throws(() => store.removeCandidateFile("2026-09-28.json"), /not a candidates file/);
+  assert.throws(() => store.removeCandidateFile("../leads.candidates.json"), /not a candidates file/);
+  store.removeCandidateFile("2026-09-28.candidates.json");
+  assert.deepEqual(fs.readdirSync(inbox), ["2026-09-28.json"]);
+});
+
+test("a candidates temp file left by an interrupted write is listed and removable", () => {
+  const root = tempRoot();
+  const store = createStore(root);
+  const inbox = path.join(root, "data", "inbox");
+  fs.mkdirSync(inbox, { recursive: true });
+  fs.writeFileSync(path.join(inbox, "2026-09-28.candidates.json.tmp"), "{\"fetchedAt\": \"2026-09");
+  fs.writeFileSync(path.join(inbox, "2026-09-28.plan.json.tmp"), "{}");
+  const files = store.listCandidateFiles();
+  assert.deepEqual(files.map((f) => [f.name, f.fetchedAt]), [["2026-09-28.candidates.json.tmp", ""]]);
+  assert.throws(() => store.removeCandidateFile("2026-09-28.plan.json.tmp"), /not a candidates file/);
+  store.removeCandidateFile("2026-09-28.candidates.json.tmp");
+  assert.deepEqual(fs.readdirSync(inbox), ["2026-09-28.plan.json.tmp"]);
 });

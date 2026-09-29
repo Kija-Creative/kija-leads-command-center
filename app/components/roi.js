@@ -6,6 +6,7 @@ import { api } from "../lib/api.js";
 import { external, fill, h, nextId } from "../lib/dom.js";
 import { dollars, one } from "../lib/format.js";
 import { putLead, store } from "../lib/state.js";
+import { ESTIMATE_TIP, estimateChip } from "./chips.js";
 import { feedbackSlot, showFeedback, toast, withBusy } from "./feedback.js";
 
 const FIELDS = [
@@ -37,6 +38,10 @@ export function roiCalculator(lead) {
   const benchmark = benchmarkFor(data.benchmarks, lead.categoryKey);
   const offer = data.settings?.offer ?? {};
   const defaults = computeRoi({ lead, benchmark, offer, overrides: {} }).inputs;
+  const note = typeof benchmark?.notes === "string" && !/^placeholder/i.test(benchmark.notes) ? benchmark.notes.replace(/^Estimate, not verified:\s*/i, "") : "";
+  const estimateTip = note ? `${ESTIMATE_TIP} Research note: ${note}` : ESTIMATE_TIP;
+  // Assumptions with no source and no override of the person's own are estimates.
+  const isEstimate = (a) => !a.verified && a.origin !== "override" && a.key !== "jobsPerMonth" && a.key !== "price";
   const defaultOf = { ticket: defaults.ticket, margin: defaults.margin, price: defaults.price, jobsPerMonth: defaults.jobsPerMonth };
   let saved = { ...(lead.roiOverrides ?? {}) };
   const inputs = {};
@@ -90,13 +95,12 @@ export function roiCalculator(lead) {
         fill(target, h("span", { class: "chip chip-good" }, "Sourced"), a.url ? external(a.url, a.source) : a.source);
         continue;
       }
-      // A bare placeholder needs only the chip; anything else keeps its source text.
-      const placeholder = /not researched/i.test(a.source);
-      fill(
-        target,
-        h("span", { class: "chip chip-warn" }, a.key === "price" ? "Price not confirmed" : "Placeholder, not researched"),
-        placeholder ? null : a.url ? external(a.url, a.source) : a.source,
-      );
+      if (a.key === "price") {
+        fill(target, h("span", { class: "chip chip-warn" }, "Price not confirmed"), a.source);
+        continue;
+      }
+      // No sources: an estimate. The chip carries the explanation and the research note.
+      fill(target, estimateChip(estimateTip));
     }
   }
 
@@ -155,6 +159,7 @@ export function roiCalculator(lead) {
             "li",
             null,
             h("span", { class: "k" }, `${a.label}: ${a.display}`),
+            isEstimate(a) ? estimateChip(estimateTip) : null,
             a.url ? external(a.url, a.source) : h("span", { class: "faint" }, a.source),
           ),
         ),

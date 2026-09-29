@@ -22,7 +22,7 @@ export function formKindFor(vertical, categoryKey) {
 export const FORM_COPY = {
   "photo-estimate": {
     title: ["Get a photo estimate", "Presupuesto con fotos"],
-    intro: ["Snap the damage, add a few details, and the shop gets back to you with a starting number.", "Tome fotos del daño, agregue unos detalles y el taller le responde con un número inicial."],
+    intro: ["Snap the damage and add a few details, so the shop can talk through a starting number.", "Tome fotos del daño y agregue unos detalles para que el taller pueda platicarle un número inicial."],
     cta: ["Send photos for an estimate", "Mandar fotos para presupuesto"],
   },
   "repair-estimate": {

@@ -1,9 +1,11 @@
-// Places discovery run: plan in, candidates file object out. Network access is
-// the injected fetch; the caller (src/cli/discover-places.js) does file IO.
+// Places discovery run: plan in, transient candidates file object out.
+// Network access is the injected fetch; the caller (src/cli/discover-places.js)
+// does file IO and keeps the monthly request count.
 //
-// Google Maps Platform terms: place IDs may be stored; other Places content in
-// the candidates file must be refreshed or deleted within 30 days, which is
-// why the file carries placesFetchedAt on every candidate and a delete-by date.
+// Google Maps Platform terms: only place IDs may be stored. Every Places
+// response stays in memory; the returned file holds place IDs plus the
+// minimum needed to research each business, and is deleted when the run ends
+// (npm run purge-places). See research/places-api.md section 6.
 
 import {
   buildKnownIndex,
@@ -11,18 +13,23 @@ import {
   buildSearchJobs,
   estimateRequests,
   filterPlaces,
-  placesDeleteBy,
+  reputationPoints,
   searchTextPage,
   toCandidate,
+  PLACES_FILE_NOTICE,
   PLACES_MAX_PAGES,
+  PLACES_PURGE_COMMAND,
 } from "./places.js";
 import { mapLimit } from "./text.js";
 
+// About 150 requests a week keeps a month under the 900 guard and Google's
+// 1,000 free (research/places-api.md section 4): 5 metros x 6 categories x
+// 2 areas is 60 searches, 60 to 180 requests.
 export const DISCOVER_DEFAULTS = Object.freeze({
   termsPerCategory: 1,
-  anchorsPerMetro: 3,
+  anchorsPerMetro: 2,
   maxPages: PLACES_MAX_PAGES,
-  maxRequests: 300,
+  maxRequests: 180,
   concurrency: 4,
 });
 
@@ -40,6 +47,8 @@ export function planDiscovery({ plan, categories, geography, options = {} }) {
 }
 
 // deps: { normalizeName(name), dedupeKey(record), isChain(name) -> { chain, match } }
+// budget: { remaining } from src/discovery/budget.js; the run never sends more.
+// onRequest(): called once per request sent, so the caller can count usage.
 export async function runDiscovery({
   plan,
   settings,
@@ -51,11 +60,18 @@ export async function runDiscovery({
   fetch: fetchImpl,
   now,
   options = {},
+  budget = null,
+  onRequest = () => {},
   log = () => {},
 }) {
   if (!apiKey) throw new Error("runDiscovery needs an API key; the CLI handles the no key case.");
   const fetchedAt = (now instanceof Date ? now : new Date(now)).toISOString();
   const { jobs, notes, opts, estimate } = planDiscovery({ plan, categories, geography, options });
+
+  const monthlyRoom = Number.isFinite(budget?.remaining) ? Math.max(0, budget.remaining) : Infinity;
+  const cap = Math.min(opts.maxRequests, monthlyRoom);
+  const capLabel = cap < opts.maxRequests ? `monthly guard (${monthlyRoom} left this month)` : "per run cap";
+  if (cap < opts.maxRequests) log(`The monthly guard allows ${monthlyRoom} more requests, below the per run cap of ${opts.maxRequests}.`);
 
   const progress = jobs.map(() => ({ pages: 0, places: 0, token: "", done: false, error: "" }));
   const hits = [];
@@ -71,14 +87,14 @@ export async function runDiscovery({
     progress.forEach((p, i) => {
       if (page === 1 || (!p.done && p.token)) todo.push(i);
     });
-    const room = Math.max(0, opts.maxRequests - requests);
+    const room = Math.max(0, cap - requests);
     const allowed = todo.slice(0, room);
     if (allowed.length < todo.length) {
       const skipped = todo.slice(allowed.length);
       // A capped search cannot resume later, so it is done and counted once.
       for (const i of skipped) progress[i].done = true;
       cappedSearches += skipped.length;
-      log(`Request cap of ${opts.maxRequests} reached: page ${page} and later skipped for ${skipped.length} searches.`);
+      log(`Request cap of ${cap} reached (${capLabel}): page ${page} and later skipped for ${skipped.length} searches.`);
     }
     await mapLimit(allowed, opts.concurrency, async (i) => {
       if (fatal) return;
@@ -88,6 +104,7 @@ export async function runDiscovery({
         pageToken: page > 1 ? progress[i].token : "",
       });
       requests++;
+      onRequest();
       const result = await searchTextPage({ fetch: fetchImpl, apiKey, body });
       if (result.error) {
         progress[i].error = result.error;
@@ -118,12 +135,17 @@ export async function runDiscovery({
     deps,
   });
 
+  // Strongest reputations first within a metro. The ordering uses Places
+  // rating and review count in memory; neither value is written.
   const metroOrder = new Map(jobs.map((j, i) => [j.metro, i]).reverse());
-  const candidates = kept
-    .map((k) => toCandidate(k, { runId: plan?.runId ?? "", fetchedAt, categories, deps }))
-    .sort((a, b) => (metroOrder.get(a.metro) ?? 0) - (metroOrder.get(b.metro) ?? 0)
-      || b.reputationPoints - a.reputationPoints
-      || a.business.localeCompare(b.business));
+  const ordered = kept
+    .map((k) => ({ k, points: reputationPoints(k.hit.place.rating ?? 0, k.hit.place.userRatingCount ?? 0) }))
+    .sort((a, b) => (metroOrder.get(a.k.hit.job.metro) ?? 0) - (metroOrder.get(b.k.hit.job.metro) ?? 0)
+      || b.points - a.points
+      || a.k.hit.jobIndex - b.k.hit.jobIndex
+      || a.k.hit.page - b.k.hit.page
+      || a.k.hit.position - b.k.hit.position);
+  const candidates = ordered.map(({ k }) => toCandidate(k, { fetchedAt, categories }));
 
   const searched = jobs.map((job, i) => ({
     query: job.textQuery,
@@ -134,11 +156,12 @@ export async function runDiscovery({
   }));
 
   return {
+    notice: PLACES_FILE_NOTICE,
+    deleteAfterRun: true,
+    purgeCommand: PLACES_PURGE_COMMAND,
     runId: plan?.runId ?? "",
     source: "google-places-text-search",
     fetchedAt,
-    placesContentDeleteBy: placesDeleteBy(fetchedAt),
-    terms: "Google Maps Platform terms: place IDs may be stored. Other Places content in this file must be refreshed or deleted within 30 days of fetchedAt.",
     plan: {
       metros: [...new Set(jobs.map((j) => j.metro))],
       categories: [...new Set(jobs.map((j) => j.categoryKey))],
@@ -152,9 +175,15 @@ export async function runDiscovery({
       placesReturned: hits.length,
       kept: candidates.length,
       thirdPartyFlagged: candidates.filter((c) => c.websiteFlag === "third-party").length,
+      serviceArea: candidates.filter((c) => c.serviceArea).length,
       dropped,
     },
-    notes: [...notes, ...dropNotes.chain.map((n) => `Chain: ${n}`), ...dropNotes.known.map((n) => `Already known: ${n}`)],
+    notes: [
+      ...notes,
+      ...dropNotes.suppressed.map((n) => `Suppressed: ${n}`),
+      ...dropNotes.chain.map((n) => `Chain, spot check before relying on it: ${n}`),
+      ...dropNotes.known.map((n) => `Already known: ${n}`),
+    ],
     fatal,
     errors,
     searched,

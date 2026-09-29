@@ -5,6 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import { RETIRED_LEAD_FIELDS } from "./validate.js";
 
 export const FILES = {
   settings: "config/settings.json",
@@ -15,6 +16,7 @@ export const FILES = {
   queue: "data/queue.json",
   rejected: "data/rejected.json",
   benchmarks: "data/benchmarks.json",
+  suppression: "data/suppression.json",
 };
 
 export const BACKUP_DIR = "data/backups";
@@ -34,7 +36,44 @@ const OPTIONAL = {
   queue: () => [],
   rejected: () => [],
   benchmarks: emptyBenchmarks,
+  suppression: () => [],
 };
+
+export { RETIRED_LEAD_FIELDS };
+
+export function stripRetired(record) {
+  if (!record || typeof record !== "object" || Array.isArray(record)) return record;
+  if (!RETIRED_LEAD_FIELDS.some((f) => Object.hasOwn(record, f))) return record;
+  const out = { ...record };
+  for (const f of RETIRED_LEAD_FIELDS) delete out[f];
+  return out;
+}
+
+function stripQueueItem(item) {
+  const next = stripRetired(item);
+  if (next?.lead && typeof next.lead === "object") {
+    const lead = stripRetired(next.lead);
+    return lead === next.lead ? next : { ...next, lead };
+  }
+  return next;
+}
+
+export const CANDIDATES_SUFFIX = ".candidates.json";
+// An interrupted discovery write leaves <name>.candidates.json.tmp, which holds Places content too.
+const CANDIDATES_TMP_SUFFIX = `${CANDIDATES_SUFFIX}.tmp`;
+
+function isCandidatesName(name) {
+  return name.endsWith(CANDIDATES_SUFFIX) || name.endsWith(CANDIDATES_TMP_SUFFIX);
+}
+
+// Age in days of a discovery candidates file: its own fetchedAt when readable, else the file time.
+export function candidateFileAgeDays(file, now) {
+  const at = Date.parse(file?.fetchedAt ?? "");
+  const from = Number.isNaN(at) ? file?.mtimeMs : at;
+  const t = (now instanceof Date ? now : new Date(now)).getTime();
+  if (typeof from !== "number" || Number.isNaN(from) || Number.isNaN(t)) return Infinity;
+  return (t - from) / 86400000;
+}
 
 const STAMP_RE = "(\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}-\\d{3}Z)(?:-(\\d+))?";
 
@@ -72,6 +111,10 @@ function backupName(rel) {
 
 function byAddedThenId(a, b) {
   return String(a?.addedAt ?? "").localeCompare(String(b?.addedAt ?? "")) || String(a?.id ?? "").localeCompare(String(b?.id ?? ""));
+}
+
+function byAddedThenKey(a, b) {
+  return String(a?.addedAt ?? "").localeCompare(String(b?.addedAt ?? "")) || String(a?.key ?? "").localeCompare(String(b?.key ?? ""));
 }
 
 function byRejectedThenKey(a, b) {
@@ -168,11 +211,49 @@ export function createStore(rootDir, { now = () => new Date(), keepBackups = BAC
   }
 
   function saveLeads(leads) {
-    return writeJson(FILES.leads, [...requireArray(leads, "leads")].sort(byAddedThenId));
+    return writeJson(FILES.leads, requireArray(leads, "leads").map(stripRetired).sort(byAddedThenId));
   }
 
   function saveQueue(queue) {
-    return writeJson(FILES.queue, [...requireArray(queue, "queue")].sort(byAddedThenId));
+    return writeJson(FILES.queue, requireArray(queue, "queue").map(stripQueueItem).sort(byAddedThenId));
+  }
+
+  function saveSuppression(list) {
+    return writeJson(FILES.suppression, [...requireArray(list, "suppression")].sort(byAddedThenKey));
+  }
+
+  // Discovery candidates in data/inbox (they hold Places content, which must not linger).
+  function listCandidateFiles() {
+    let names;
+    try {
+      names = fs.readdirSync(abs(INBOX_DIR)).filter(isCandidatesName).sort();
+    } catch {
+      return [];
+    }
+    return names.map((name) => {
+      const rel = `${INBOX_DIR}/${name}`;
+      let mtimeMs = NaN;
+      let fetchedAt = "";
+      try {
+        mtimeMs = fs.statSync(abs(rel)).mtimeMs;
+      } catch {
+        // removed since the listing
+      }
+      try {
+        const body = JSON.parse(fs.readFileSync(abs(rel), "utf8").replace(/^\ufeff/, ""));
+        if (typeof body?.fetchedAt === "string") fetchedAt = body.fetchedAt;
+      } catch {
+        // unreadable files are still listed so they can be purged
+      }
+      return { name, rel, fetchedAt, mtimeMs };
+    });
+  }
+
+  function removeCandidateFile(name) {
+    if (typeof name !== "string" || !isCandidatesName(name) || /[\\/]/.test(name)) {
+      throw new Error(`${JSON.stringify(name)} is not a candidates file in ${INBOX_DIR}.`);
+    }
+    fs.rmSync(abs(`${INBOX_DIR}/${name}`), { force: true });
   }
 
   function saveRejected(rejected) {
@@ -240,6 +321,9 @@ export function createStore(rootDir, { now = () => new Date(), keepBackups = BAC
     saveRejected,
     saveSettings,
     saveBenchmarks,
+    saveSuppression,
+    listCandidateFiles,
+    removeCandidateFile,
     saveRun,
     readRun,
     listRuns,

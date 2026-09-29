@@ -122,6 +122,7 @@ export function renderDemo(lead, options = {}) {
   const { css, body } = tpl.render(ctx);
   const ribbon = ribbonHtml(lead, i18n);
   const where = ctx.placeRaw || ctx.cityState;
+  const bar = callBar(ctx);
 
   const html = documentShell({
     lang: "en",
@@ -129,7 +130,9 @@ export function renderDemo(lead, options = {}) {
     description: `${categoryLabel} in ${where}. ${ctx.ratingText} stars from ${ctx.reviewsText} Google reviews.`,
     fontsHref: tpl.fontsHref,
     css: `${varsCss(palette.vars)}${css}`,
-    body: `${ribbon}\n${body}\n${callBar(ctx)}`,
+    body: `${ribbon}\n${body}\n${bar}`,
+    // The body reserves the call bar's space only when there is a call bar.
+    bodyClass: bar ? "has-callbar" : "",
     script: pageScript(i18n.dict),
     comment: `Private concept by Kija Creative. Template ${tpl.key}, palette ${palette.key}, rendered ${date.toISOString()}. Ribbon setting ${settings && settings.demoDefaults && settings.demoDefaults.conceptRibbon === false ? "off, shown anyway by guardrail" : "on"}.`,
   });

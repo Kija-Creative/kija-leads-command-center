@@ -86,6 +86,8 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
   store.saveQueue(queue);
   const rejectedPath = store.path(FILES.rejected);
   if (values.force || !fs.existsSync(rejectedPath)) store.saveRejected(rejected);
+  // The suppression list is never replaced, not even with --force: an opt out is permanent.
+  if (!fs.existsSync(store.path(FILES.suppression))) store.saveSuppression([]);
 
   let benchmarkNote = "kept the existing data/benchmarks.json (it has researched sources)";
   const benchmarksPath = store.path(FILES.benchmarks);

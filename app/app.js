@@ -166,7 +166,8 @@ let pendingTimer = 0;
 document.addEventListener("keydown", (e) => {
   if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
   const help = document.getElementById("help");
-  if (help.open) return;
+  // A modal owns the keyboard while it is open.
+  if (help.open || document.querySelector("dialog[open]")) return;
   if (isTyping(e.target)) {
     if (e.key === "Escape") e.target.blur();
     return;

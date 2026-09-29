@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { main, parseArgs, pitchPath, selectLeads } from "../src/cli/build-pitches.js";
+import { dedupeKey } from "../src/lib/normalize.js";
 import { BASE_SETTINGS, CATEGORIES, LEADS, PLACEHOLDER, hasDash } from "./pitch-fixtures.js";
 
 function tempRoot() {
@@ -87,6 +88,35 @@ test("an unknown id or bad arguments fail with a readable message", async (t) =>
   const bad = await run(["--all", "--id", "x"]);
   assert.equal(bad.code, 2);
   assert.match(bad.err, /Pick one of/);
+});
+
+test("a business on the suppression list gets no pitch page, and an older one is flagged, not deleted", async (t) => {
+  const { root, leads } = tempRoot();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const target = leads[2];
+  const first = await run(["--id", target.id, "--root", root]);
+  assert.equal(first.code, 0, first.err);
+  const file = pitchPath(root, target.id);
+  const before = fs.readFileSync(file, "utf8");
+
+  const suppression = [{ key: dedupeKey(target), business: target.business, city: target.city, state: target.state, phone: target.phone, reason: "Asked not to be contacted.", addedAt: "2026-09-28T12:00:00.000Z", by: "Jamey" }];
+  fs.writeFileSync(path.join(root, "data", "suppression.json"), JSON.stringify(suppression));
+  const all = await run(["--all", "--root", root]);
+  assert.equal(all.code, 0, all.err);
+  assert.match(all.out, new RegExp(`skipped ${target.id}  On the suppression list`));
+  assert.match(all.out, /An older pitch page is still in pitches\/; delete it if they asked\./);
+  assert.match(all.out, new RegExp(`${leads.length - 1} built, 0 failed, 1 skipped, ${leads.length} matched`));
+  assert.equal(fs.readFileSync(file, "utf8"), before, "the older page is left for Jamey, not rewritten or deleted");
+
+  const other = leads[3];
+  fs.rmSync(path.join(root, "pitches"), { recursive: true, force: true });
+  const history = structuredClone(leads);
+  history[3].outreach.history.push({ at: "2026-09-28T12:00:00.000Z", by: "Jamey", type: "suppressed", text: "Asked us to stop." });
+  fs.writeFileSync(path.join(root, "data", "leads.json"), JSON.stringify(history));
+  const byHistory = await run(["--id", other.id, "--root", root]);
+  assert.equal(byHistory.code, 0, byHistory.err);
+  assert.match(byHistory.out, /0 built, 0 failed, 1 skipped/);
+  assert.ok(!fs.existsSync(pitchPath(root, other.id)));
 });
 
 test("a lead id that is not a safe folder name is refused", async (t) => {

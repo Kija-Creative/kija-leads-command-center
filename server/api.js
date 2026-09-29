@@ -11,6 +11,12 @@ import { leadsToCsv } from "../src/lib/csv.js";
 import { dedupeKey, sameBusiness, slugify } from "../src/lib/normalize.js";
 import { dateOf } from "../src/lib/week.js";
 import {
+  callCheck,
+  DEFAULT_COMPLIANCE,
+  isSuppressed,
+  suppressionEntry,
+} from "../src/lib/compliance.js";
+import {
   HISTORY_TYPES,
   QUEUE_DECISIONS,
   validateHistoryEntry,
@@ -22,14 +28,16 @@ import {
 } from "../src/lib/validate.js";
 import { HttpError } from "./http.js";
 import { tryLoad } from "./modules.js";
-import { demoFile, leadView, pitchFile, stateView } from "./views.js";
+import { demoFile, leadView, PHONE_LINE_TYPES, pitchFile, stateView, suppressionFor } from "./views.js";
 
 const OUTREACH_FIELDS = ["status", "nextAction", "nextDate", "owner", "notes"];
 const DEMO_FIELDS = ["shareApproved", "palette"];
-const PATCH_FIELDS = ["outreach", "roiOverrides", "demo"];
+const PATCH_FIELDS = ["outreach", "roiOverrides", "demo", "phoneLineType"];
 // Entries the app writes itself; a person adds the rest by hand.
-const SYSTEM_HISTORY_TYPES = ["created", "status"];
+const SYSTEM_HISTORY_TYPES = ["created", "status", "suppressed"];
 const MANUAL_HISTORY_TYPES = HISTORY_TYPES.filter((t) => !SYSTEM_HISTORY_TYPES.includes(t));
+const SUPPRESSION_FILE = "data/suppression.json";
+const COMPLIANCE_FIELDS = ["texasRegistration", "callWindow", "maxCallsPerDay", "maxCallsTotal", "noColdTexts", "noTextStates"];
 const LEAD_SYSTEM_FIELDS = ["id", "outreach", "demo", "addedAt", "origin", "runId", "score", "roi", "drafts", "demoExists", "pitchExists"];
 const CONTACT_STAGES = ["Contacted", "Replied", "Meeting"];
 // Built from char codes so this file itself never contains the characters it rejects.
@@ -63,6 +71,59 @@ function fileExists(file) {
   }
 }
 
+// store.load() plus the do not contact list, read directly while the store predates it.
+function loadData(store) {
+  const state = store.load();
+  if (!Array.isArray(state.suppression)) state.suppression = store.readJson(SUPPRESSION_FILE, []);
+  if (!Array.isArray(state.suppression)) state.suppression = [];
+  return state;
+}
+
+function saveSuppression(store, list) {
+  if (typeof store.saveSuppression === "function") return store.saveSuppression(list);
+  return store.writeJson(SUPPRESSION_FILE, list);
+}
+
+// Shape errors for compliance come from validateSettings. This adds what only the server
+// knows to say: keys that do not exist, and warnings when a value is looser than the defaults
+// research/compliance.md recommends. Jamey decides; the app makes the trade visible.
+function checkCompliance(c) {
+  const errors = [];
+  const warnings = [];
+  if (!isPlainObject(c)) return { errors, warnings };
+  const extra = Object.keys(c).filter((k) => !COMPLIANCE_FIELDS.includes(k));
+  if (extra.length) errors.push(`Compliance has ${COMPLIANCE_FIELDS.join(", ")}; ${extra.join(", ")} is not a compliance setting.`);
+  const w = isPlainObject(c.callWindow) ? c.callWindow : {};
+  if (Number.isInteger(w.startHour) && w.startHour < 9) warnings.push("The call window starts before 9 a.m. local time, earlier than the research recommends.");
+  if (Number.isInteger(w.endHour) && w.endHour > 20) warnings.push("The call window runs past 8 p.m. local time, later than Florida, Oklahoma and Maryland allow.");
+  if (Array.isArray(w.days) && w.days.includes(0)) warnings.push("Sunday is in the call window. The research recommends never calling on Sunday.");
+  if (Number.isInteger(c.maxCallsPerDay) && c.maxCallsPerDay > 1) warnings.push("More than one call a day to the same business is above the research default of one.");
+  if (Number.isInteger(c.maxCallsTotal) && c.maxCallsTotal > 3) warnings.push("More than three calls without a reply is above the research default.");
+  if (c.noColdTexts === false) warnings.push("Cold texts are allowed. Several states treat a sales text sent without prior consent as a violation, even when typed by hand.");
+  if (Array.isArray(c.noTextStates) && !c.noTextStates.includes("WA")) {
+    warnings.push("Washington is not in the no text states. RCW 19.190 bars commercial texts to Washington cells without prior consent.");
+  }
+  return { errors, warnings };
+}
+
+// validateSettings checks the email and that the address is text; this checks the address
+// looks like somewhere mail can reach, since CAN-SPAM needs a valid postal address.
+function checkContact(contact) {
+  const errors = [];
+  if (!isPlainObject(contact)) return { errors, warnings: [] };
+  for (const f of ["name", "title", "email", "phone", "site"]) {
+    if (contact[f] !== undefined && typeof contact[f] !== "string") errors.push(`The contact ${f} must be text.`);
+  }
+  const address = typeof contact.address === "string" ? contact.address.trim() : "";
+  if (address) {
+    if (address.length < 10 || address.length > 240) errors.push("The mailing address must be between 10 and 240 characters.");
+    else if (!/\d/.test(address) || !/[A-Za-z]/.test(address)) {
+      errors.push("The mailing address needs a street or PO box number and a city, for example 123 Main St, Dallas, TX 75201.");
+    }
+  }
+  return { errors, warnings: [] };
+}
+
 export function createApi({ root, now, loaders, env }) {
   const clock = () => {
     const d = now();
@@ -76,7 +137,7 @@ export function createApi({ root, now, loaders, env }) {
   }
 
   async function view(lead, state) {
-    return leadView(lead, state, { root, buildDrafts: await draftsFn() });
+    return leadView(lead, state, { root, buildDrafts: await draftsFn(), now: clock().toISOString() });
   }
 
   function findLeadOr404(leads, id) {
@@ -93,6 +154,8 @@ export function createApi({ root, now, loaders, env }) {
       if (idx < 0) throw new HttpError(404, `No lead has the id "${id}".`);
       const next = structuredClone(leads[idx]);
       mutate(next);
+      // Retired field: read on old records, never written back (research/places-api.md).
+      delete next.placesFetchedAt;
       leads[idx] = next;
       changed = next;
       return leads;
@@ -108,7 +171,7 @@ export function createApi({ root, now, loaders, env }) {
 
   async function getState() {
     const store = openStore();
-    const state = store.load();
+    const state = loadData(store);
     const runs = store.listRuns();
     const buildDrafts = await draftsFn();
     const renderMod = (await tryLoad(loaders, "demoRender")).mod;
@@ -141,14 +204,14 @@ export function createApi({ root, now, loaders, env }) {
   async function patchLead(id, body) {
     requireObject(body, "The change");
     const store = openStore();
-    const state = store.load();
+    const state = loadData(store);
     const current = findLeadOr404(state.leads, id);
     const errors = [];
     const warnings = [];
 
     const unknown = Object.keys(body).filter((k) => !PATCH_FIELDS.includes(k));
-    if (unknown.length) errors.push(`Only outreach, roiOverrides and demo can be changed here; ${unknown.join(", ")} cannot.`);
-    if (Object.keys(body).length === 0) errors.push("The change is empty. Send outreach, roiOverrides or demo.");
+    if (unknown.length) errors.push(`Only outreach, roiOverrides, demo and phoneLineType can be changed here; ${unknown.join(", ")} cannot.`);
+    if (Object.keys(body).length === 0) errors.push("The change is empty. Send outreach, roiOverrides, demo or phoneLineType.");
 
     const outreach = body.outreach;
     if (outreach !== undefined) {
@@ -156,8 +219,12 @@ export function createApi({ root, now, loaders, env }) {
       else {
         const extra = Object.keys(outreach).filter((k) => !OUTREACH_FIELDS.includes(k) && k !== "history");
         if (extra.length) errors.push(`Outreach can change ${OUTREACH_FIELDS.join(", ")}; ${extra.join(", ")} cannot be set.`);
-        errors.push(...validateOutreachPatch(outreach).errors);
+        // A suppressed business may only sit at Won, Lost or Not a fit.
+        errors.push(...validateOutreachPatch(outreach, { lead: current, suppression: state.suppression }).errors);
       }
+    }
+    if (body.phoneLineType !== undefined && !PHONE_LINE_TYPES.includes(body.phoneLineType)) {
+      errors.push(`Phone line type must be one of: ${PHONE_LINE_TYPES.join(", ")}.`);
     }
     if (body.roiOverrides !== undefined) errors.push(...validateRoiOverrides(body.roiOverrides).errors);
 
@@ -227,6 +294,12 @@ export function createApi({ root, now, loaders, env }) {
           if (d.builtAt) warnings.push("Rebuild the demo to apply the new palette.");
         }
       }
+      if (body.phoneLineType !== undefined) {
+        lead.phoneLineType = body.phoneLineType;
+        if (body.phoneLineType === "mobile") {
+          warnings.push("A mobile number may be treated as residential under FCC rules. Email first, and never text it without recorded consent.");
+        }
+      }
     });
     return { ok: true, errors: [], warnings, lead: await view(updated, state) };
   }
@@ -234,30 +307,93 @@ export function createApi({ root, now, loaders, env }) {
   async function addHistory(id, body) {
     requireObject(body, "A history entry");
     const store = openStore();
-    const state = store.load();
-    findLeadOr404(state.leads, id);
+    const state = loadData(store);
+    const current = findLeadOr404(state.leads, id);
     const entry = {
       type: body.type,
       text: typeof body.text === "string" ? body.text.trim() : body.text,
       by: typeof body.by === "string" && body.by.trim() ? body.by.trim() : ACTOR,
     };
     const errors = [...validateHistoryEntry(entry).errors];
+    const warnings = [];
     if (SYSTEM_HISTORY_TYPES.includes(entry.type)) {
-      errors.push(`The app writes ${entry.type} entries itself. Add one of: ${MANUAL_HISTORY_TYPES.join(", ")}.`);
+      const how = entry.type === "suppressed" ? " Use Do not contact on the lead page." : "";
+      errors.push(`The app writes ${entry.type} entries itself.${how} Add one of: ${MANUAL_HISTORY_TYPES.join(", ")}.`);
     }
     if (typeof entry.text === "string" && !entry.text) errors.push("Write what happened before adding the entry.");
     const extra = Object.keys(body).filter((k) => !["type", "text", "by"].includes(k));
     if (extra.length) errors.push(`A history entry has type, text and by only; ${extra.join(", ")} cannot be set.`);
+    const suppressed = isSuppressed(current, state.suppression);
+    if (suppressed && entry.type === "consent") {
+      errors.push(`${current.business} is on the do not contact list, so consent cannot be recorded. A stop request covers every channel.`);
+    }
     if (errors.length) throw unprocessable(errors);
+    if (suppressed && ["call", "email", "meeting"].includes(entry.type)) {
+      warnings.push(`${current.business} is on the do not contact list. The entry was logged, but no further outreach should happen.`);
+    } else if (entry.type === "call") {
+      // Logging is never blocked, but a call outside the rules should be visible right away.
+      try {
+        const check = callCheck({ lead: current, settings: state.settings ?? {}, now: clock().toISOString(), suppression: state.suppression });
+        if (!check.ok) warnings.push(`Logged, but the call check did not pass at ${check.localLabel || "this time"}: ${check.reasons.join(" ")}`);
+      } catch {
+        // The lead page shows the check; a failure here should not block the log.
+      }
+    }
     const updated = changeLead(store, id, (lead) => {
       appendHistory(lead, { by: entry.by, type: entry.type, text: entry.text });
     });
-    return { ok: true, errors: [], warnings: [], lead: await view(updated, state) };
+    return { ok: true, errors: [], warnings, lead: await view(updated, state) };
+  }
+
+  // Do not contact. Adds the business to data/suppression.json, closes the lead as Not a fit
+  // and logs one suppressed entry. Calling it again changes nothing.
+  async function suppressLead(id, body) {
+    requireObject(body, "A do not contact request");
+    const store = openStore();
+    const state = loadData(store);
+    const current = findLeadOr404(state.leads, id);
+    const reason = typeof body.reason === "string" ? body.reason.trim() : "";
+    const errors = [];
+    if (body.reason !== undefined && typeof body.reason !== "string") errors.push("The reason must be text.");
+    else if (!reason) errors.push("Say why this business should not be contacted, for example \"Owner asked not to be contacted.\" The reason is kept with the entry.");
+    if (DASH_RE.test(reason)) errors.push("The reason contains an em or en dash. Use a comma, a period or a colon instead.");
+    if (reason.length > 500) errors.push("Keep the reason under 500 characters.");
+    const extra = Object.keys(body).filter((k) => k !== "reason");
+    if (extra.length) errors.push(`A do not contact request has a reason only; ${extra.join(", ")} cannot be set.`);
+    if (errors.length) throw unprocessable(errors);
+
+    const warnings = [];
+    const existing = suppressionFor(current, state.suppression);
+    let suppression = state.suppression;
+    let entry = existing;
+    if (!existing) {
+      entry = suppressionEntry(current, { reason, by: ACTOR, now: clock() });
+      suppression = [...state.suppression, entry];
+      saveSuppression(store, suppression);
+    } else {
+      warnings.push(`${current.business} was already on the do not contact list since ${existing.addedAt ? dateOf(existing.addedAt) : "an earlier date"}.`);
+    }
+
+    const history = current.outreach?.history ?? [];
+    const alreadyClosed = current.outreach?.status === "Not a fit" && history.some((h) => h.type === "suppressed");
+    let updated = current;
+    if (!alreadyClosed) {
+      updated = changeLead(store, id, (lead) => {
+        const o = lead.outreach ?? (lead.outreach = { status: "New", nextAction: "", nextDate: "", owner: "", notes: "", history: [] });
+        const before = o.status || "No status";
+        o.status = "Not a fit";
+        o.nextAction = "Do not contact";
+        o.nextDate = "";
+        const change = before === "Not a fit" ? "" : ` Status ${before} to Not a fit.`;
+        appendHistory(lead, { type: "suppressed", text: `Added to the do not contact list: ${entry.reason}${/[.!?]$/.test(entry.reason) ? "" : "."}${change}` });
+      });
+    }
+    return { ok: true, errors: [], warnings, suppression: entry, lead: await view(updated, { ...state, suppression }) };
   }
 
   async function regenerateDemo(id) {
     const store = openStore();
-    const state = store.load();
+    const state = loadData(store);
     findLeadOr404(state.leads, id);
     const { mod, error } = await tryLoad(loaders, "demoBuild");
     if (typeof mod?.buildDemos !== "function") {
@@ -274,14 +410,14 @@ export function createApi({ root, now, loaders, env }) {
       const detail = built ? ` with the ${built.template} template, ${built.palette} palette` : "";
       appendHistory(lead, { type: "demo", text: `Demo rebuilt${detail}. It is a private file; nothing was published.` });
     });
-    return { ok: true, errors: [], warnings: report.warnings ?? [], lead: await view(updated, store.load()), built: built ?? null };
+    return { ok: true, errors: [], warnings: report.warnings ?? [], lead: await view(updated, loadData(store)), built: built ?? null };
   }
 
   // Prefers the pitch module's own builder, which runs its guardrails; falls back to
   // renderPitch plus a dash check when only the renderer is present.
   async function regeneratePitch(id) {
     const store = openStore();
-    const state = store.load();
+    const state = loadData(store);
     const lead = findLeadOr404(state.leads, id);
     const built = await tryLoad(loaders, "pitchBuild");
     if (typeof built.mod?.buildPitches === "function") {
@@ -323,7 +459,7 @@ export function createApi({ root, now, loaders, env }) {
 
   async function exportShare(id) {
     const store = openStore();
-    const state = store.load();
+    const state = loadData(store);
     const lead = findLeadOr404(state.leads, id);
     if (!lead.demo?.shareApproved) {
       throw unprocessable(["Approve the demo for sharing first. Nothing was exported."]);
@@ -385,8 +521,10 @@ export function createApi({ root, now, loaders, env }) {
       googleReviews: research.googleReviews,
       ratingSource: research.ratingSource ?? "",
       googleMapsUrl: research.googleMapsUrl ?? "",
+      // Only the place id is kept from Places; placesFetchedAt is retired.
       placeId: research.placeId ?? "",
-      placesFetchedAt: research.placesFetchedAt ?? "",
+      placeIdCheckedAt: research.placeId ? research.placeIdCheckedAt || today : "",
+      phoneLineType: PHONE_LINE_TYPES.includes(research.phoneLineType) ? research.phoneLineType : "unknown",
       websiteGap: research.websiteGap,
       ticketValue: research.ticketValue,
       visualFit: research.visualFit,
@@ -429,7 +567,7 @@ export function createApi({ root, now, loaders, env }) {
   async function queueDecision(id, body) {
     requireObject(body, "A queue decision");
     const store = openStore();
-    const state = store.load();
+    const state = loadData(store);
     const item = state.queue.find((q) => q.id === id);
     if (!item) throw new HttpError(404, `No research queue item has the id "${id}".`);
     const decision = body.decision;
@@ -492,6 +630,8 @@ export function createApi({ root, now, loaders, env }) {
     const errors = [...v.errors];
     const dupe = state.leads.find((l) => sameBusiness(l, candidate));
     if (dupe) errors.push(`${candidate.business} matches the existing lead ${dupe.business} (${dupe.id}).`);
+    const blockedBy = suppressionFor(candidate, state.suppression);
+    if (blockedBy) errors.push(`${candidate.business} is on the do not contact list (${blockedBy.reason}), so it cannot become a lead again. Drop it instead.`);
     if (errors.length) throw unprocessable(errors, v.warnings);
 
     const total = scoreLead(candidate, { thresholds: state.settings?.thresholds }).total;
@@ -521,26 +661,36 @@ export function createApi({ root, now, loaders, env }) {
   async function putSettings(body) {
     requireObject(body, "Settings");
     const store = openStore();
-    const state = store.load();
+    const state = loadData(store);
     const current = state.settings;
-    const known = new Set([...Object.keys(current), "weeklyQuota", "thresholds", "geography", "categoriesPerWeek", "offer", "contact", "demoDefaults"]);
+    const known = new Set([...Object.keys(current), "weeklyQuota", "thresholds", "geography", "categoriesPerWeek", "offer", "contact", "demoDefaults", "compliance"]);
     const unknown = Object.keys(body).filter((k) => !known.has(k));
     if (unknown.length) throw unprocessable([`Unknown setting ${unknown.join(", ")}. Settings are ${[...known].join(", ")}.`]);
-    const merged = mergeSettings(current, body);
+    // A partial compliance change lands on the research defaults when settings predate them.
+    const base = body.compliance !== undefined && !isPlainObject(current.compliance) ? { ...current, compliance: structuredClone(DEFAULT_COMPLIANCE) } : current;
+    const merged = mergeSettings(base, body);
     const v = validateSettings(merged);
-    const errors = [...v.errors];
+    const compliance = body.compliance !== undefined || merged.compliance !== undefined ? checkCompliance(merged.compliance) : { errors: [], warnings: [] };
+    const contact = checkContact(body.contact === undefined ? undefined : merged.contact);
+    const errors = [...new Set([...v.errors, ...compliance.errors, ...contact.errors])];
+    // Warnings about a section are only worth showing when that section was just saved.
+    const warnings = [...new Set([
+      ...v.warnings,
+      ...(body.compliance !== undefined ? compliance.warnings : []),
+      ...(body.contact !== undefined ? contact.warnings : []),
+    ])];
     const home = merged.geography?.homeMetro;
     const metros = state.geography?.metros ?? [];
     if (home && metros.length && !metros.some((m) => m.key === home)) errors.push(`Home metro "${home}" is not in config/geography.json.`);
-    if (errors.length) throw unprocessable(errors, v.warnings);
+    if (errors.length) throw unprocessable(errors, warnings);
     store.saveSettings(merged);
-    return { ok: true, errors: [], warnings: v.warnings, settings: merged };
+    return { ok: true, errors: [], warnings, settings: merged };
   }
 
   function csv() {
-    const state = openStore().load();
+    const state = loadData(openStore());
     return { text: leadsToCsv(state.leads, { thresholds: state.settings?.thresholds }), date: dateOf(clock()) };
   }
 
-  return { getState, patchLead, addHistory, regenerateDemo, regeneratePitch, exportShare, queueDecision, putSettings, csv };
+  return { getState, patchLead, addHistory, suppressLead, regenerateDemo, regeneratePitch, exportShare, queueDecision, putSettings, csv };
 }

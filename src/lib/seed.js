@@ -3,7 +3,7 @@
 
 import { hostname, normalizePhone, slugify } from "./normalize.js";
 import { DEFAULT_THRESHOLDS } from "./score.js";
-import { PLACEHOLDER_SOURCE } from "./roi.js";
+import { CATEGORY_TICKET_DEFAULTS, PLACEHOLDER_SOURCE } from "./roi.js";
 
 // The sheet was created on this date; seeded records carry it as addedAt and checkedAt.
 export const SHEET_DATE = "2026-09-26";
@@ -40,8 +40,9 @@ export function seedLead(row, { id, nowIso }) {
     googleReviews: row.googleReviews,
     ratingSource: "",
     googleMapsUrl: "",
+    phoneLineType: "unknown",
     placeId: "",
-    placesFetchedAt: "",
+    placeIdCheckedAt: "",
     websiteGap: row.websiteGap,
     ticketValue: row.ticketValue,
     visualFit: row.visualFit,
@@ -135,46 +136,10 @@ export function seedToData(seed, { now, thresholds } = {}) {
   return { leads: leads.sort(byAddedThenId), queue: queue.sort(byAddedThenId), rejected: [] };
 }
 
-// Rough, conservative typical tickets so the UI has numbers before research lands.
-// None of these are researched; every entry says so and carries no sources.
-const PLACEHOLDER_TICKETS = {
-  "auto-repair": [150, 400, 1200, "repair order"],
-  "auto-body-collision": [500, 1800, 6000, "repair"],
-  "tire-shop": [100, 300, 900, "visit"],
-  "muffler-exhaust": [150, 350, 1500, "job"],
-  "diesel-truck-repair": [300, 900, 4000, "repair"],
-  "mobile-mechanic": [100, 300, 800, "visit"],
-  "auto-detailing": [100, 250, 800, "service"],
-  towing: [75, 150, 400, "tow"],
-  hvac: [150, 450, 8000, "service call"],
-  plumbing: [150, 400, 3000, "job"],
-  electrical: [150, 400, 3000, "job"],
-  septic: [300, 500, 5000, "service"],
-  "garage-door": [150, 300, 1500, "job"],
-  restoration: [1000, 3000, 15000, "job"],
-  "appliance-repair": [100, 200, 500, "repair"],
-  "pest-control": [100, 200, 600, "treatment"],
-  roofing: [400, 3000, 15000, "job"],
-  concrete: [1000, 3000, 12000, "project"],
-  fencing: [1000, 3000, 8000, "project"],
-  pools: [500, 2000, 60000, "job"],
-  landscaping: [200, 1000, 10000, "project"],
-  painting: [500, 2500, 8000, "project"],
-  "foundation-repair": [1000, 4000, 12000, "repair"],
-  remodeling: [2000, 8000, 60000, "project"],
-  "tree-service": [200, 800, 3000, "job"],
-  barber: [20, 35, 60, "visit"],
-  "hair-salon": [40, 90, 250, "visit"],
-  "nail-salon": [25, 50, 100, "visit"],
-  tattoo: [80, 250, 1000, "session"],
-  "pet-grooming": [40, 75, 150, "groom"],
-  general: [100, 300, 1000, "job"],
-};
-
 export function placeholderBenchmarks(categories, { updatedAt } = {}) {
   const out = {};
   for (const key of Object.keys(categories ?? {})) {
-    const [low, typical, high, unit] = PLACEHOLDER_TICKETS[key] ?? PLACEHOLDER_TICKETS.general;
+    const [low, typical, high, unit] = CATEGORY_TICKET_DEFAULTS[key] ?? CATEGORY_TICKET_DEFAULTS.general;
     out[key] = {
       ticket: { low, typical, high, unit, sources: [] },
       grossMargin: { typical: 0.4, sources: [] },

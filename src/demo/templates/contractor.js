@@ -38,7 +38,7 @@ const PROMISE_DEFAULT = ["Big projects start with a clear estimate.", "Los proye
 
 const STEPS = [
   { title: ["Request an estimate", "Pida un presupuesto"], body: ["Share the project, a rough size and your timing.", "Comparta el proyecto, un tamaño aproximado y sus tiempos."] },
-  { title: ["Site visit", "Visita al sitio"], body: ["A walk through to measure and talk through options.", "Una visita para medir y platicar opciones."] },
+  { title: ["Talk it through", "Platíquelo"], body: ["Go over options, and ask about a visit to measure.", "Revisen opciones y pregunte por una visita para medir."] },
   { title: ["Plan and price", "Plan y precio"], body: ["A scope and a price you can compare.", "Un alcance y un precio que puede comparar."] },
   { title: ["Build", "Obra"], body: ["The work gets scheduled and done.", "El trabajo se agenda y se hace."] },
 ];
@@ -218,7 +218,7 @@ function render(ctx) {
 <h1 class="name wide name--${ctx.nameScale}">${ctx.name}</h1>
 <div class="hero-mid"><div><p class="promise">${promise}</p><p class="sub">${sub}</p>${ctx.about ? `<p class="about">${ctx.about}</p>` : ""}</div>
 <div class="ctas"><a class="btn btn-solid" href="#request">${ctaPrimary}${icon("arrow")}</a>${ctx.tel ? `<a class="btn btn-line" href="${esc(ctx.tel)}">${icon("phone")}${ctaSecondary} ${esc(ctx.phone)}</a>` : ""}</div></div>
-<div class="hero-foot"><div class="callout" data-rating="${esc(ctx.rating)}" data-reviews="${esc(ctx.reviews)}"><span class="callout-num">${esc(ctx.ratingText)}</span>${starsSvg(ctx.rating, "callout")}<b>${reviewsText(ctx)}</b></div>${elevationSvg(ctx.categoryKey)}</div>
+<div class="hero-foot"><div class="callout" data-rating="${esc(ctx.rating)}" data-reviews="${esc(ctx.reviews)}"><span class="callout-num" data-rating-num>${esc(ctx.ratingText)}</span>${starsSvg(ctx.rating, "callout")}<b>${reviewsText(ctx)}</b></div>${elevationSvg(ctx.categoryKey)}</div>
 </div></section>`;
 
   const services = ctx.services.length

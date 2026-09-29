@@ -4,11 +4,25 @@
 
 import { hostname, nameStateKey, normalizePhone, phoneDigits, slugify, dedupeKey } from "./normalize.js";
 import { scoreLead } from "./score.js";
-import { findDashes, isIsoDate, validateBatch, validateLead, validateQueueItem, validateRejection, CONFIDENCE_LEVELS, RATING_SOURCES } from "./validate.js";
+import { PHONE_LINE_TYPES } from "./compliance.js";
+import {
+  findDashes, isIsoDate, validateBatch, validateLead, validateQueueItem, validateRejection, CONFIDENCE_LEVELS,
+  LEGACY_RATING_SOURCES, PLACES_RATING_SOURCE, RATING_SOURCES, RETIRED_LEAD_FIELDS,
+} from "./validate.js";
 
 const EMPTY_PRESENCE = { facebook: "", instagram: "", yelp: "", booking: "", other: [] };
 // Fields the weekly run may not set on a new lead; the system owns them.
 const SYSTEM_FIELDS = ["id", "outreach", "demo", "addedAt", "origin", "runId"];
+
+function currentRatingSource(value) {
+  return Object.hasOwn(LEGACY_RATING_SOURCES, value ?? "") ? LEGACY_RATING_SOURCES[value] : value;
+}
+
+// Retired fields (placesFetchedAt) are accepted in a batch and never written.
+function dropRetired(record) {
+  for (const f of RETIRED_LEAD_FIELDS) delete record[f];
+  return record;
+}
 const EARLY_STAGES = ["New", "Research"];
 
 function toIso(now) {
@@ -51,8 +65,9 @@ function prepareLead(raw, runId) {
   for (const f of SYSTEM_FIELDS) delete lead[f];
   if (lead.phone !== undefined) lead.phone = tidyPhone(lead.phone);
   if (lead.state !== undefined) lead.state = tidyState(lead.state);
+  if (lead.ratingSource !== undefined) lead.ratingSource = currentRatingSource(lead.ratingSource);
   lead.sources = coerceSources(lead.sources, runId);
-  return lead;
+  return dropRetired(lead);
 }
 
 function prepareQueueItem(raw, runId) {
@@ -65,7 +80,11 @@ function prepareQueueItem(raw, runId) {
   if (item.phone !== undefined) item.phone = tidyPhone(item.phone);
   if (item.state !== undefined) item.state = tidyState(item.state);
   item.sources = coerceSources(item.sources ?? [], runId);
-  return item;
+  if (item.lead && typeof item.lead === "object") {
+    dropRetired(item.lead);
+    if (item.lead.ratingSource !== undefined) item.lead.ratingSource = currentRatingSource(item.lead.ratingSource);
+  }
+  return dropRetired(item);
 }
 
 function prepareRejection(raw) {
@@ -133,8 +152,9 @@ function buildLead(prepared, { id, runId, today, nowIso, score }) {
     googleReviews: prepared.googleReviews,
     ratingSource: prepared.ratingSource ?? "",
     googleMapsUrl: prepared.googleMapsUrl ?? "",
+    phoneLineType: prepared.phoneLineType ?? "unknown",
     placeId: prepared.placeId ?? "",
-    placesFetchedAt: prepared.placesFetchedAt ?? "",
+    placeIdCheckedAt: prepared.placeIdCheckedAt ?? "",
     websiteGap: prepared.websiteGap,
     ticketValue: prepared.ticketValue,
     visualFit: prepared.visualFit,
@@ -248,17 +268,21 @@ function reverifyErrors(entry, lead) {
   if (entry.confidence && !CONFIDENCE_LEVELS.includes(entry.confidence)) {
     errors.push(`${name} reverify confidence must be one of: ${CONFIDENCE_LEVELS.join(", ")}.`);
   }
-  if (entry.ratingSource && !RATING_SOURCES.includes(entry.ratingSource)) {
-    errors.push(`${name} reverify ratingSource must be google-maps, places-api or secondary.`);
+  if (entry.ratingSource === PLACES_RATING_SOURCE) {
+    errors.push(`${name} reverify ratingSource is places-api, which may not be stored. Only place IDs may be kept from the Places API; reread the rating on the public Google Maps listing and send google-maps-observed.`);
+  } else if (entry.ratingSource && !RATING_SOURCES.includes(currentRatingSource(entry.ratingSource))) {
+    errors.push(`${name} reverify ratingSource must be google-maps-observed, secondary or owner.`);
   }
-  if (entry.placesFetchedAt && !isIsoDate(entry.placesFetchedAt)) {
-    errors.push(`${name} reverify placesFetchedAt must be an ISO date.`);
+  if (entry.placeIdCheckedAt && !isIsoDate(String(entry.placeIdCheckedAt).slice(0, 10))) {
+    errors.push(`${name} reverify placeIdCheckedAt must be a date like 2026-09-28.`);
+  }
+  if (entry.placeId !== undefined && entry.placeId !== null && typeof entry.placeId !== "string") {
+    errors.push(`${name} reverify placeId must be text.`);
+  }
+  if (entry.phoneLineType && !PHONE_LINE_TYPES.includes(entry.phoneLineType)) {
+    errors.push(`${name} reverify phoneLineType must be one of: ${PHONE_LINE_TYPES.join(", ")}.`);
   }
   return errors;
-}
-
-function isBlankString(v) {
-  return v === undefined || v === null || v === "";
 }
 
 // 0 and "" in a reverify entry mean "not re-measured", matching the batch template.
@@ -266,8 +290,10 @@ function provided(v) {
   return v !== undefined && v !== null && v !== "" && v !== 0;
 }
 
-function applyReverify(entry, lead, { runId, nowIso }) {
-  const next = clone(lead);
+function applyReverify(rawEntry, lead, { runId, nowIso }) {
+  // placesFetchedAt is retired: accepted in the entry, never applied.
+  const entry = dropRetired({ ...rawEntry, ratingSource: currentRatingSource(rawEntry.ratingSource) });
+  const next = dropRetired(clone(lead));
   const changes = [];
   const fields = [
     ["googleRating", "rating"],
@@ -275,9 +301,11 @@ function applyReverify(entry, lead, { runId, nowIso }) {
     ["websiteGap", "website gap"],
     ["websiteStatus", "website status"],
     ["confidence", "confidence"],
-    // Lets a reverify refresh Places derived data inside the 30 day limit.
     ["ratingSource", "rating source"],
-    ["placesFetchedAt", "Places fetch date"],
+    ["phoneLineType", "phone line type"],
+    // A refreshed place ID (free IDs only Place Details call) and the date it was confirmed.
+    ["placeId", "place ID"],
+    ["placeIdCheckedAt", "place ID check date"],
   ];
   for (const [field, label] of fields) {
     const value = entry[field];
@@ -287,12 +315,6 @@ function applyReverify(entry, lead, { runId, nowIso }) {
       changes.push(`${label} ${describeValue(next[field])} to ${describeValue(value)}`);
       next[field] = value;
     }
-  }
-  // A rating reread somewhere other than the Places API no longer rests on Places data,
-  // so the Places fetch date is cleared unless the entry sends a fresh one.
-  if (provided(entry.ratingSource) && entry.ratingSource !== "places-api" && !provided(entry.placesFetchedAt) && !isBlankString(next.placesFetchedAt)) {
-    changes.push(`Places fetch date ${describeValue(next.placesFetchedAt)} cleared`);
-    next.placesFetchedAt = "";
   }
   if (entry.verification && typeof entry.verification === "object" && Object.keys(entry.verification).length > 0) {
     const merged = { ...(next.verification ?? {}), ...clone(entry.verification) };
@@ -376,6 +398,8 @@ export function ingestBatch({ batch, state, now }) {
   for (const l of leads) index.add(l, "leads", l.id);
   for (const q of queue) index.add(q, "queue", q.id);
   for (const r of rejected) index.add(r, "rejected", r.key);
+  // Suppressed businesses are never ingested again, the same as rejected ones.
+  for (const s of Array.isArray(state?.suppression) ? state.suppression : []) index.add(s, "suppressed", s.key);
 
   const warn = (business, warnings) => {
     if (warnings.length) report.warnings.push({ business, warnings });
@@ -387,6 +411,7 @@ export function ingestBatch({ batch, state, now }) {
   const duplicate = (business, hit) => {
     report.duplicates.push({ business, matched: hit.id, in: hit.in });
     report.counts.duplicates += 1;
+    if (hit.in === "suppressed") warn(business, [`${business} is on the suppression list, so it is never ingested again.`]);
   };
   const addQueue = (item) => {
     queue.push(item);

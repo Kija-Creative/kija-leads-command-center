@@ -125,7 +125,7 @@ function pickCategories(categories, index, perWeek) {
   return chosen;
 }
 
-function knownBusinesses({ leads, queue, rejected }) {
+function knownBusinesses({ leads, queue, rejected, suppression }) {
   const keys = new Set();
   const names = [];
   const add = (record, business, where) => {
@@ -145,10 +145,12 @@ function knownBusinesses({ leads, queue, rejected }) {
   for (const l of leads ?? []) add(l, l.business, "lead");
   for (const q of queue ?? []) add(q, q.candidate ?? q.business, "queue");
   for (const r of rejected ?? []) add(r, r.business, "rejected");
+  // Suppressed businesses are skipped exactly like rejected ones.
+  for (const s of Array.isArray(suppression) ? suppression : []) add(s, s.business, "suppressed");
   return { keys: [...keys].sort(), names: names.sort((a, b) => a.localeCompare(b)) };
 }
 
-export function planWeek({ now, settings, geography, categories, leads, queue, rejected } = {}) {
+export function planWeek({ now, settings, geography, categories, leads, queue, rejected, suppression } = {}) {
   const runId = runIdFor(now);
   const geo = settings?.geography ?? {};
   const index = weekIndex(runId, geo.rotationStart ?? runId);
@@ -167,7 +169,7 @@ export function planWeek({ now, settings, geography, categories, leads, queue, r
   }
 
   const chosenCategories = pickCategories(categories ?? {}, index, settings?.categoriesPerWeek ?? 6);
-  const known = knownBusinesses({ leads, queue, rejected });
+  const known = knownBusinesses({ leads, queue, rejected, suppression });
 
   return {
     runId,

@@ -1,18 +1,24 @@
 // npm run discover -- --plan data/inbox/<runId>.plan.json
-//   [--terms 1] [--anchors 3] [--pages 3] [--max-requests 300] [--dry-run] [--out path]
+//   [--terms 1] [--anchors 2] [--pages 3] [--max-requests 180] [--max-monthly 900] [--dry-run]
 //
 // Google Places API (New) Text Search discovery for the weekly run. For each
-// metro anchor city times category search term it pages through results (up
-// to 3 pages of 20), keeps OPERATIONAL places with no website or only a third
+// metro area (anchor city, or a bounds rectangle when config/geography.json
+// has one) times category search term it pages through results (up to 3
+// pages of 20), keeps OPERATIONAL places with no website or only a third
 // party one (flagged), rating and reviews at or above the settings floors,
-// not a chain and not already in leads, queue or rejected. Writes
-// data/inbox/<runId>.candidates.json. Candidates are starting points to verify,
-// never finished leads.
+// inside the metro, not suppressed, not a chain and not already in leads,
+// queue or rejected. Writes data/inbox/<runId>.candidates.json.
 //
-// Google Maps Platform terms limit caching Places content: place IDs may be
-// stored, but other content (names, ratings, review counts, phones, addresses,
-// website fields) must be refreshed or deleted within 30 days. Every candidate
-// carries placesFetchedAt and the file carries placesContentDeleteBy.
+// That file is transient working data. Maps Platform terms allow storing
+// place IDs only (research/places-api.md section 6), so each candidate holds
+// its placeId plus the minimum needed to research the business, and the file
+// is deleted when the run ends (npm run purge-places, src/cli/purge-places.js).
+// No Places field is written anywhere else.
+//
+// Budget guard: every request bills at Text Search Enterprise, free for the
+// first 1,000 a month. Requests are counted per calendar month in
+// data/places-usage.json ({ "YYYY-MM": count }) and a run never goes past
+// --max-monthly (default 900).
 //
 // Without GOOGLE_PLACES_API_KEY (environment or .env) it exits 0 and says the
 // weekly run falls back to web research. The key is never printed or written.
@@ -23,17 +29,29 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { resolveSecret } from "../discovery/env.js";
 import { planDiscovery, runDiscovery, DISCOVER_DEFAULTS } from "../discovery/discover.js";
+import {
+  addUsage,
+  budgetFor,
+  budgetSentence,
+  overFreeCapWarning,
+  refusalSentence,
+  DEFAULT_MAX_MONTHLY,
+  PLACES_USAGE_FILE,
+} from "../discovery/budget.js";
+import { PLACES_PURGE_COMMAND } from "../discovery/places.js";
 
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const KEY_NAME = "GOOGLE_PLACES_API_KEY";
+const INBOX = path.join("data", "inbox");
 
 const USAGE = `Usage: npm run discover -- --plan data/inbox/<runId>.plan.json [options]
   --terms N         search terms per category (default ${DISCOVER_DEFAULTS.termsPerCategory})
-  --anchors N       anchor cities per metro (default ${DISCOVER_DEFAULTS.anchorsPerMetro})
+  --anchors N       anchor cities or bounds areas per metro (default ${DISCOVER_DEFAULTS.anchorsPerMetro})
   --pages N         pages per search, 1 to 3 (default ${DISCOVER_DEFAULTS.maxPages})
-  --max-requests N  hard cap on Places requests (default ${DISCOVER_DEFAULTS.maxRequests})
-  --dry-run         print the searches and the request estimate, call nothing
-  --out PATH        write somewhere other than data/inbox/<runId>.candidates.json`;
+  --max-requests N  hard cap on Places requests this run (default ${DISCOVER_DEFAULTS.maxRequests})
+  --max-monthly N   monthly guard across runs, counted in ${PLACES_USAGE_FILE} (default ${DEFAULT_MAX_MONTHLY})
+  --dry-run         print the searches, the estimate and the budget, call nothing
+The candidates file is transient: delete it when the run ends with ${PLACES_PURGE_COMMAND}.`;
 
 const NO_KEY_MESSAGE = `${KEY_NAME} is not set in the environment or in .env, so Places discovery was skipped.
 Nothing was called. The weekly run falls back to web research: follow WEEKLY_RUN.md, step 2B.`;
@@ -54,7 +72,7 @@ async function readJson(file, fallback, { required = false } = {}) {
     return fallback;
   }
   try {
-    return JSON.parse(text.replace(/^﻿/, ""));
+    return JSON.parse(text.replace(/^\uFEFF/, ""));
   } catch (e) {
     throw new Error(`Could not parse ${file}: ${e.message}`);
   }
@@ -95,6 +113,7 @@ function formatDropped(dropped) {
     lowRating: "below the rating floor",
     fewReviews: "below the review floor",
     outsideMetro: "outside the metro's states",
+    suppressed: "on the suppression list",
     chain: "chains or franchises",
     known: "already in leads, queue or rejected",
     duplicateInRun: "duplicates within this run",
@@ -122,8 +141,8 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
         anchors: { type: "string" },
         pages: { type: "string" },
         "max-requests": { type: "string" },
+        "max-monthly": { type: "string" },
         "dry-run": { type: "boolean", default: false },
-        out: { type: "string" },
         help: { type: "boolean", short: "h" },
       },
       strict: true,
@@ -142,6 +161,7 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
   }
 
   let options;
+  let maxMonthly;
   try {
     options = {
       termsPerCategory: intOption(values, "terms", DISCOVER_DEFAULTS.termsPerCategory, 1, 10),
@@ -149,6 +169,7 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
       maxPages: intOption(values, "pages", DISCOVER_DEFAULTS.maxPages, 1, 3),
       maxRequests: intOption(values, "max-requests", DISCOVER_DEFAULTS.maxRequests, 1, 5000),
     };
+    maxMonthly = intOption(values, "max-monthly", DEFAULT_MAX_MONTHLY, 1, 100000);
   } catch (e) {
     err.write(`${e.message}\n`);
     return 2;
@@ -165,7 +186,8 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
 
   const planPath = path.resolve(root, values.plan);
   const plan = unwrapPlan(await readJson(planPath, null, { required: true }));
-  const [settings, categories, geography, chains, leads, queue, rejected] = await Promise.all([
+  const usagePath = path.join(root, PLACES_USAGE_FILE);
+  const [settings, categories, geography, chains, leads, queue, rejected, suppression, usage] = await Promise.all([
     readJson(path.join(root, "config", "settings.json"), null, { required: true }),
     readJson(path.join(root, "config", "categories.json"), null, { required: true }),
     readJson(path.join(root, "config", "geography.json"), { metros: [] }),
@@ -173,25 +195,39 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
     readJson(path.join(root, "data", "leads.json"), []),
     readJson(path.join(root, "data", "queue.json"), []),
     readJson(path.join(root, "data", "rejected.json"), []),
+    readJson(path.join(root, "data", "suppression.json"), []),
+    readJson(usagePath, {}),
   ]);
 
+  const now = deps.now ?? new Date();
+  const budget = budgetFor({ usage, now, maxMonthly });
   const runId = plan.runId || path.basename(planPath).replace(/\.plan\.json$/, "");
   const { jobs, notes, estimate } = planDiscovery({ plan, categories, geography, options });
   const metroCount = new Set(jobs.map((j) => j.metro)).size;
   const catCount = new Set(jobs.map((j) => j.categoryKey)).size;
 
   say(`Places discovery for run ${runId}`);
-  say(`Plan: ${metroCount} metros, ${catCount} categories, up to ${options.anchorsPerMetro} anchor cities per metro and ${options.termsPerCategory} search term per category: ${jobs.length} searches.`);
+  say(`Plan: ${metroCount} metros, ${catCount} categories, up to ${options.anchorsPerMetro} areas per metro and ${options.termsPerCategory} search term per category: ${jobs.length} searches.`);
   say(`Estimated Places requests: ${estimate.minRequests} to ${estimate.maxRequests} (${options.maxPages} pages at most per search, cap ${options.maxRequests}), billed as ${estimate.sku}.`);
+  say(budgetSentence(budget));
+  const overWarning = overFreeCapWarning(maxMonthly);
+  if (overWarning) say(`Warning: ${overWarning}`);
   for (const note of notes) say(`Note: ${note}`);
 
   if (dryRun) {
-    for (const job of jobs) say(`  ${job.metro}: ${job.textQuery}`);
+    for (const job of jobs) {
+      const type = job.includedType ? ` [includedType ${job.includedType}]` : "";
+      say(`  ${job.metro}: ${job.textQuery}${type}`);
+    }
     say("Dry run: nothing was called.");
     return 0;
   }
   if (!jobs.length) {
     say("No searches to run. Check that the plan lists metros and categories that exist in config.");
+    return 1;
+  }
+  if (budget.remaining <= 0) {
+    err.write(`${refusalSentence(budget)}\n`);
     return 1;
   }
 
@@ -203,29 +239,42 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
     isChain: (name) => normalize.isChain(name, chains),
   };
 
-  const file = await runDiscovery({
-    plan: { ...plan, runId },
-    settings,
-    categories,
-    geography,
-    state: { leads, queue, rejected },
-    deps: discoveryDeps,
-    apiKey: secret.value,
-    fetch: deps.fetch ?? globalThis.fetch,
-    now: deps.now ?? new Date(),
-    options,
-    log: (line) => say(line),
-  });
+  let sent = 0;
+  let file;
+  try {
+    file = await runDiscovery({
+      plan: { ...plan, runId },
+      settings,
+      categories,
+      geography,
+      state: { leads, queue, rejected, suppression },
+      deps: discoveryDeps,
+      apiKey: secret.value,
+      fetch: deps.fetch ?? globalThis.fetch,
+      now,
+      options,
+      budget,
+      onRequest: () => {
+        sent++;
+      },
+      log: (line) => say(line),
+    });
+  } finally {
+    // Count every request sent, even when the run fails part way.
+    if (sent > 0) await writeJsonAtomic(usagePath, addUsage(usage, budget.month, sent));
+  }
 
-  const outPath = values.out ? path.resolve(root, values.out) : path.join(root, "data", "inbox", `${runId}.candidates.json`);
+  const outPath = path.join(root, INBOX, `${runId}.candidates.json`);
   await writeJsonAtomic(outPath, file);
 
+  const after = budgetFor({ usage: addUsage(usage, budget.month, sent), now, maxMonthly });
   const c = file.counts;
-  say(`Requests made: ${c.requests}. Places returned: ${c.placesReturned}. Kept: ${c.kept} (${c.thirdPartyFlagged} with only a third party website, flagged).`);
+  say(`Requests made: ${c.requests}. Places returned: ${c.placesReturned}. Kept: ${c.kept} (${c.thirdPartyFlagged} with only a third party website, flagged; ${c.serviceArea} service area businesses).`);
   say(`Dropped: ${formatDropped(c.dropped)}.`);
   if (file.errors.length) say(`Errors: ${file.errors.length} requests failed. See "errors" in the file.`);
-  say(`Wrote ${relative(root, outPath)}. Places content in it must be refreshed or deleted by ${file.placesContentDeleteBy}.`);
-  say("Next: every candidate still needs the five verification checks in WEEKLY_RUN.md before it can be a lead.");
+  say(budgetSentence(after));
+  say(`Wrote ${relative(root, outPath)}. It is transient working data: only placeId may be copied out of it, and it must be deleted when the run ends: ${PLACES_PURGE_COMMAND}.`);
+  say("Next: every candidate is a pointer. Re-establish its facts from independent sources and run the verification checks in WEEKLY_RUN.md before it can be a lead.");
   if (file.fatal) {
     err.write(`Places discovery stopped early: ${file.fatal}\n`);
     return 1;
