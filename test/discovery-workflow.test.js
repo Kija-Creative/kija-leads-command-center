@@ -38,7 +38,7 @@ test("workflow starts with export const meta and has name, description and phase
   const meta = readMeta();
   assert.equal(meta.name, "kija-weekly-research");
   assert.ok(meta.description.length > 10);
-  assert.deepEqual(meta.phases.map((p) => p.title), ["Plan", "Discover", "Verify", "Ingest", "Build"]);
+  assert.deepEqual(meta.phases.map((p) => p.title), ["Plan", "Discover", "Verify", "Ingest", "Concepts", "Build"]);
   for (const p of meta.phases) assert.ok(p.detail);
 });
 
@@ -186,6 +186,14 @@ function harness({ plan = basePlan(), discover = {}, verdicts = {}, fail = [], f
       batch = JSON.parse(between(prompt, "BATCH_JSON_START", "BATCH_JSON_END"));
       return { batchPath: "data/inbox/2026-09-28.json", attempts: 1, ok: true, counts: { candidates: 1, accepted: 1, queued: 3, rejected: 1, duplicates: 0, reverified: 1, errors: 0 }, accepted: ["alpha-auto-dallas-tx"], queued: [], fixes: [], unresolved: [], notes: "" };
     }
+    if (label === "concept-plan") {
+      assert.ok(prompt.includes("CONCEPT-BUILD.md"), "the concept planner follows the concept build standard");
+      return { leadIds: ["alpha-auto-dallas-tx"], skipped: [], proof: "all pairs differ on 9 or more of 13 dimensions" };
+    }
+    if (label.startsWith("concept:")) {
+      assert.ok(prompt.includes("CONCEPT-BUILD.md") && /Never run npm run demos/.test(prompt), "concept builders follow the standard and never use the old generator");
+      return { ok: true, report: "Built to the concept build standard." };
+    }
     if (label === "build") {
       return { demos: { ok: true, detail: "1 built." }, pitches: { ok: true, detail: "1 built." }, check: { ok: true, detail: "Clean." }, tests: { ok: true, detail: "All pass." }, purge: { ok: true, detail: "Purged 1 Places working file." }, topLeads: [], summary: "Week 2026-09-28 summary." };
     }
@@ -242,16 +250,17 @@ test("workflow run dedupes across metros, skips suppressed, caps verification, g
   const h = harness({ discover: DISCOVER_A, verdicts: VERDICTS_A });
   const result = await h.run({ root: "C:/kija-leads", runId: "2026-09-28", maxVerifyAgents: 1 });
 
-  assert.deepEqual(h.phases, ["Plan", "Discover", "Verify", "Ingest", "Build"]);
-  assert.deepEqual(h.calls.map((c) => c.label), ["plan", "discover:dallas-fort-worth", "discover:chicago", "verify:1", "recheck:1", "ingest", "build"]);
+  assert.deepEqual(h.phases, ["Plan", "Discover", "Verify", "Ingest", "Concepts", "Build"]);
+  assert.deepEqual(h.calls.map((c) => c.label), ["plan", "discover:dallas-fort-worth", "discover:chicago", "verify:1", "recheck:1", "ingest", "concept-plan", "concept:1", "build"]);
   assert.ok(h.calls.every((c) => c.hasSchema), "every agent returns structured output");
   assert.equal(h.calls.find((c) => c.label === "verify:1").effort, "high");
   assert.ok(h.calls.find((c) => c.label === "plan").prompt.includes("npm run plan -- --date 2026-09-28"));
   assert.ok(h.calls.find((c) => c.label === "plan").prompt.includes("data/suppression.json"));
   const build = h.calls.find((c) => c.label === "build").prompt;
-  assert.ok(build.includes("npm run demos -- --run 2026-09-28"));
+  assert.ok(!build.includes("npm run demos -- --run"), "the old template generator is retired for concepts");
+  assert.ok(build.includes("npm run pitches -- --run 2026-09-28"));
   assert.ok(build.indexOf("npm run purge-places") > build.indexOf("npm test"), "purge runs last");
-  assert.deepEqual(result.agents, { max: 14, started: 7 });
+  assert.deepEqual(result.agents, { max: 14, started: 7, concepts: { max: 10, started: 2 } });
   assert.equal(result.purged, true);
 
   // 9 found: Alpha's Chicago listing is a phone duplicate, GM and Al's are known, Stop Auto is suppressed.
@@ -375,15 +384,16 @@ test("workflow carries only placeId from Places and enforces rating source, revi
   assert.ok(!h.calls.find((c) => c.label === "recheck:1").prompt.includes("stop-auto-dallas-tx"), "a suppressed lead is never rechecked");
   assert.ok(h.logs.some((l) => l.includes("1 stale items are on the suppression list")));
   // 7 to verify: two verify agents, one recheck agent.
-  assert.deepEqual(h.calls.map((c) => c.label), ["plan", "discover:dallas-fort-worth", "discover:chicago", "verify:1", "verify:2", "recheck:1", "ingest", "build"]);
+  assert.deepEqual(h.calls.map((c) => c.label), ["plan", "discover:dallas-fort-worth", "discover:chicago", "verify:1", "verify:2", "recheck:1", "ingest", "concept-plan", "concept:1", "build"]);
 });
 
 test("workflow keeps every run within maxAgents and logs what the cap drops", async () => {
   const h = harness({ discover: DISCOVER_A, verdicts: VERDICTS_A });
   const result = await h.run({ root: "C:/kija-leads", runId: "2026-09-28", maxAgents: 5 });
-  assert.ok(h.calls.length <= 5, `started ${h.calls.length} agents`);
-  assert.deepEqual(h.calls.map((c) => c.label), ["plan", "discover:dallas-fort-worth", "verify:1", "ingest", "build"]);
-  assert.deepEqual(result.agents, { max: 5, started: 5 });
+  const research = h.calls.filter((c) => c.phase !== "Concepts");
+  assert.ok(research.length <= 5, `started ${research.length} research agents`);
+  assert.deepEqual(research.map((c) => c.label), ["plan", "discover:dallas-fort-worth", "verify:1", "ingest", "build"]);
+  assert.deepEqual(result.agents, { max: 5, started: 5, concepts: { max: 10, started: 2 } });
   assert.ok(h.logs.some((l) => /Agent cap: searched 1 of 2 metros \(max 5 agents\); chicago not searched/.test(l)));
   assert.ok(h.logs.some((l) => /Agent cap: 2 of 2 stale items not rechecked/.test(l)));
   assert.equal(h.batch.reverify.length, 0);
@@ -391,7 +401,7 @@ test("workflow keeps every run within maxAgents and logs what the cap drops", as
   // Values below the floor are raised to the minimum a run needs.
   const tiny = harness({ discover: DISCOVER_A, verdicts: VERDICTS_A });
   await tiny.run({ root: "C:/kija-leads", runId: "2026-09-28", maxAgents: 1 });
-  assert.equal(tiny.calls.length, 5);
+  assert.equal(tiny.calls.filter((c) => c.phase !== "Concepts").length, 5);
 });
 
 test("workflow handles null results from every kind of agent", async () => {
@@ -415,7 +425,7 @@ test("workflow handles null results from every kind of agent", async () => {
   const empty = harness({ plan: basePlan({ metros: [], recheck: [] }) });
   const none = await empty.run({ root: "C:/kija-leads", runId: "2026-09-28" });
   assert.equal(none.counts.discovered, 0);
-  assert.deepEqual(empty.calls.map((c) => c.label), ["plan", "ingest", "build"]);
+  assert.deepEqual(empty.calls.map((c) => c.label), ["plan", "ingest", "concept-plan", "concept:1", "build"]);
 });
 
 test("workflow stops early when the week already ran and requires a root", async () => {
@@ -431,4 +441,16 @@ test("workflow stops early when the week already ran and requires a root", async
   assert.ok(forced.calls.length > 1, "force reruns the week");
   await assert.rejects(() => harness().run({ runId: "2026-09-28" }), /args\.root is required/);
   await assert.rejects(() => harness().run({ root: "x", runId: "Sept 28" }), /YYYY-MM-DD/);
+});
+
+test("workflow builds every accepted lead's concept to the standard, never with the old generator, within its own cap", async () => {
+  const src = source;
+  assert.ok(!/npm run demos -- --run ${RUN_ID}/.test(src), "the build step no longer runs the old template generator");
+  const h = harness({ discover: DISCOVER_A, verdicts: VERDICTS_A });
+  const result = await h.run({ root: "C:/kija-leads", runId: "2026-09-28", maxConceptAgents: 0 });
+  assert.equal(h.calls.filter((c) => c.phase === "Concepts").length, 0, "maxConceptAgents 0 builds no concepts");
+  assert.equal(result.agents.concepts.started, 0);
+  const failing = harness({ discover: DISCOVER_A, verdicts: VERDICTS_A, fail: ["concept:1"] });
+  await failing.run({ root: "C:/kija-leads", runId: "2026-09-28" });
+  assert.ok(failing.logs.some((l) => l.includes("Concept build failed for alpha-auto-dallas-tx")), "a failed concept is logged, never replaced by the old generator");
 });

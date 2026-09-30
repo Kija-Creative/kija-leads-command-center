@@ -1,13 +1,14 @@
 export const meta = {
   name: "kija-weekly-research",
-  description: "Kija Lead Command Center weekly run: plan, discover per metro, skeptic verification from independent sources, ingest the batch, build demos and pitches, purge Places working data",
+  description: "Kija Lead Command Center weekly run: plan, discover per metro, skeptic verification from independent sources, ingest the batch, build each lead's concept to the concept build standard, pitches, purge Places working data",
   whenToUse: "Monday lead research for the Kija Lead Command Center, or when Jamey asks to run the week now. Pass args { root, runId }.",
   phases: [
     { title: "Plan", detail: "npm run plan, the suppression list, Places discovery under the monthly guard, stale research to recheck" },
     { title: "Discover", detail: "one agent per metro finds up to 8 candidates confirmed on independent public pages" },
     { title: "Verify", detail: "skeptic agents re-read every fact and try to refute the no website claim" },
     { title: "Ingest", detail: "write the batch file, npm run ingest, fix data until clean" },
-    { title: "Build", detail: "demos, pitches, npm run check and npm test, purge the Places working file, then the summary" },
+    { title: "Concepts", detail: "plan each accepted lead's Site DNA, then one builder per lead follows docs/site-generation/CONCEPT-BUILD.md" },
+    { title: "Build", detail: "pitches, npm run check and npm test, purge the Places working file, then the summary" },
   ],
 };
 
@@ -41,6 +42,9 @@ if (REQUESTED_RUN_ID && !/^\d{4}-\d{2}-\d{2}$/.test(REQUESTED_RUN_ID)) {
 const MAX_AGENTS = wholeNumber(A.maxAgents, 14, 5, 60);
 const MAX_VERIFY_AGENTS = wholeNumber(A.maxVerifyAgents, 8, 1, 16);
 const MAX_REVERIFY = wholeNumber(A.maxReverify, 8, 0, 24);
+// Concept builders, one per accepted lead (docs/site-generation/CONCEPT-BUILD.md). Separate from
+// maxAgents because concepts are built after the research agents are done.
+const MAX_CONCEPT_AGENTS = wholeNumber(A.maxConceptAgents, 10, 0, 40);
 const FORCE = A.force === true;
 const FIXED_AGENTS = 3; // plan, ingest, build
 const PER_VERIFY_AGENT = 4;
@@ -558,6 +562,14 @@ function run(prompt, opts) {
   return agent(prompt, opts);
 }
 
+// Concept agents are counted separately and capped by maxConceptAgents: they run after the
+// research is done, so they never take room from discovery or verification.
+let conceptAgentsStarted = 0;
+function runConcept(prompt, opts) {
+  conceptAgentsStarted++;
+  return agent(prompt, opts);
+}
+
 // Phase: Plan
 
 phase("Plan");
@@ -1036,6 +1048,66 @@ const ingestCounts = ingest && ingest.counts ? ingest.counts : null;
 if (!ingest) drop(`Ingest agent failed. The batch was not ingested; rerun npm run ingest -- data/inbox/${RUN_ID}.json by hand.`);
 else if (ingestCounts) log(`Ingest: ${ingestCounts.accepted} accepted, ${ingestCounts.queued} queued, ${ingestCounts.duplicates} duplicates, ${ingestCounts.errors} errors after ${ingest.attempts} attempts.`);
 
+// Phase: Concepts
+
+// Jamey rejected the old template generator (npm run demos) on 2026-09-30. Every accepted lead's
+// concept is planned and built by agents to docs/site-generation/CONCEPT-BUILD.md instead.
+const CONCEPT_PLAN_SCHEMA = {
+  type: "object",
+  properties: {
+    leadIds: { type: "array", items: { type: "string" }, description: "accepted lead ids of this run that now have a planned demos/<id>/SITE_DNA.json, best score first" },
+    skipped: { type: "array", items: { type: "object", properties: { id: { type: "string" }, reason: { type: "string" } }, required: ["id", "reason"] } },
+    proof: { type: "string", description: "the compareSiteDNA results you ran with node" },
+  },
+  required: ["leadIds", "skipped", "proof"],
+};
+const CONCEPT_BUILD_SCHEMA = {
+  type: "object",
+  properties: {
+    ok: { type: "boolean", description: "the concept is built and passes the guardrail check" },
+    report: { type: "string", description: "the DNA, sources ported with licenses, references, competitors, guardrail result and what makes it distinct" },
+  },
+  required: ["ok", "report"],
+};
+phase("Concepts");
+let conceptIds = [];
+let conceptReports = [];
+if (ingest && MAX_CONCEPT_AGENTS > 0) {
+  const conceptPlan = await runConcept(
+    [
+      `You are the concept planner of the Kija Lead Command Center weekly run ${RUN_ID}. Project root: ${ROOT}.`,
+      `Read ${ROOT}/docs/site-generation/CONCEPT-BUILD.md completely and follow its section 1 for every lead this run accepted (the accepted ids are in ${ROOT}/data/runs/${RUN_ID}.json, the records in data/leads.json).`,
+      "Plan each lead's Site DNA, prove the variation rules with compareSiteDNA from src/design-intelligence/variation.ts against every existing demos/*/SITE_DNA.json and against each other, apply the gates (Spanish only, search phrase names, leads on hold), and write demos/<id>/SITE_DNA.json with status planned for each lead you will build.",
+      "Return the lead ids to build, best score first, the skipped ones with reasons, and the proof table.",
+      "",
+      SAFETY,
+    ].join("\n"),
+    { label: "concept-plan", phase: "Concepts", schema: CONCEPT_PLAN_SCHEMA, effort: "high" },
+  );
+  if (!conceptPlan) {
+    drop("Concept planner failed: no concepts were built this week; plan and build them with docs/site-generation/CONCEPT-BUILD.md.");
+  } else {
+    for (const s of list(conceptPlan.skipped)) drop(`Concept skipped for ${s.id}: ${s.reason}`);
+    conceptIds = list(conceptPlan.leadIds);
+    if (conceptIds.length > MAX_CONCEPT_AGENTS) {
+      drop(`Concept cap: built ${MAX_CONCEPT_AGENTS} of ${conceptIds.length}; ${conceptIds.slice(MAX_CONCEPT_AGENTS).join(", ")} wait for a manual build to docs/site-generation/CONCEPT-BUILD.md.`);
+      conceptIds = conceptIds.slice(0, MAX_CONCEPT_AGENTS);
+    }
+    conceptReports = await parallel(conceptIds.map((id, i) => () => runConcept(
+      [
+        `You are a concept builder for the Kija Lead Command Center weekly run ${RUN_ID}. Project root: ${ROOT}.`,
+        `Build the concept for lead ${id}: read ${ROOT}/docs/site-generation/CONCEPT-BUILD.md completely and follow sections 2 to 4 exactly, executing the planned Site DNA in demos/${id}/SITE_DNA.json. Never run npm run demos; that old template generator is retired for concepts.`,
+        "Report the DNA, the code sources ported with licenses, references and competitors used, the guardrail result, and what makes it distinct.",
+        "",
+        SAFETY,
+      ].join("\n"),
+      { label: `concept:${i + 1}`, phase: "Concepts", schema: CONCEPT_BUILD_SCHEMA, effort: "high" },
+    )));
+    conceptReports.forEach((r, i) => { if (!r || r.ok === false) drop(`Concept build failed for ${conceptIds[i]}; it has no concept yet. Build it by hand with docs/site-generation/CONCEPT-BUILD.md.`); });
+    log(`Concepts: ${conceptReports.filter((r) => r && r.ok !== false).length} of ${conceptIds.length} built.`);
+  }
+}
+
 // Phase: Build
 
 phase("Build");
@@ -1044,7 +1116,7 @@ const build = await run(
     `You are the build and report step of the Kija Lead Command Center weekly run ${RUN_ID}. Project root: ${ROOT}.`,
     `Read ${ROOT}/WEEKLY_RUN.md, sections "Step 9", "Step 10", "Step 11" and "Final summary".`,
     "",
-    `Run from the project root, in order: npm run demos -- --run ${RUN_ID}; npm run pitches -- --run ${RUN_ID}; npm run check; npm test; and last, always, even if an earlier step failed: ${PURGE}. The purge deletes the transient Places candidates file; Google's terms allow keeping place IDs only.`,
+    `Concepts were already built by the Concepts phase to docs/site-generation/CONCEPT-BUILD.md; never run npm run demos (the old template generator is retired). Run from the project root, in order: npm run pitches -- --run ${RUN_ID}; npm run check; npm test; and last, always, even if an earlier step failed: ${PURGE}. The purge deletes the transient Places candidates file; Google's terms allow keeping place IDs only.`,
     "Report each with ok and a one or two sentence detail. If check or tests fail because of data from this run, fix the data in the batch file and reingest as WEEKLY_RUN.md describes; never change code to make a check pass, report code failures instead.",
     `Read data/runs/${RUN_ID}.json and data/leads.json and list this run's leads by score (the app's scoreLead total, as the demos and pitch pages show it) in topLeads.`,
     "Then write summary: the final summary exactly as the \"Final summary\" section describes, plain text, no dashes. Include these facts from the workflow:",
@@ -1068,7 +1140,7 @@ const build = await run(
   ].join("\n"),
   { label: "build", phase: "Build", schema: BUILD_SCHEMA, effort: "low" },
 );
-if (!build) drop(`Build agent failed: run npm run demos, npm run pitches, npm run check, npm test and ${PURGE} by hand.`);
+if (!build) drop(`Build agent failed: run npm run pitches, npm run check, npm test and ${PURGE} by hand.`);
 else if (!build.purge || !build.purge.ok) drop(`The Places working file was not purged: run ${PURGE} by hand.`);
 
 const fallback = [
@@ -1098,7 +1170,7 @@ return {
     rejected: rejected.length,
     rechecked: reverify.length + queueRecommendations.length,
   },
-  agents: { max: MAX_AGENTS, started: agentsStarted },
+  agents: { max: MAX_AGENTS, started: agentsStarted, concepts: { max: MAX_CONCEPT_AGENTS, started: conceptAgentsStarted } },
   purged: Boolean(build && build.purge && build.purge.ok),
   dropped,
   queueRecommendations,

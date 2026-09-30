@@ -505,16 +505,19 @@ the second, which is expected. Repeat until there are no errors. Read the warnin
 preferred thresholds, Medium confidence, secondary ratings, place IDs to refresh) and make sure
 each one is deliberate.
 
-## Step 9: demos and pitches
+## Step 9: concepts and pitches
 
-Run `npm run demos -- --run <runId>`, then `npm run pitches -- --run <runId>`. This builds a
-private demo in `demos/<id>/index.html` and a pitch page in `pitches/<id>/index.html` for each lead
-added this run. Demos carry a "Private concept by Kija Creative" ribbon and `noindex`, and their
-forms send nothing. You may look at them through the local app (`npm start`, then
-`http://127.0.0.1:4242/`), which only listens on this machine. Never upload or share them.
+Build every accepted lead's concept to `docs/site-generation/CONCEPT-BUILD.md`: plan its Site DNA
+and prove the variation rules first (section 1), then build it from the GitHub code sources with
+the skynet-site-system and design-playbooks flows (sections 2 to 4). One builder per lead. Never
+run `npm run demos` for a concept: Jamey rejected that old template generator on 2026-09-30.
+Then run `npm run pitches -- --run <runId>` for the pitch pages. Concepts carry a "Private
+concept by Kija Creative" ribbon and `noindex`, and their forms send nothing. You may look at them
+through the local app (`npm start`, then `http://127.0.0.1:4242/`), which only listens on this
+machine. Never upload or share them.
 
-If a reverified lead changed a lot (rating, review count, website status), rebuild its pages with
-`npm run demos -- --id <id>` and `npm run pitches -- --id <id>`.
+If a reverified lead changed a lot (rating, review count, website status), rebuild its concept to
+the same standard and run `npm run pitches -- --id <id>`.
 
 ## Step 10: check and test
 
