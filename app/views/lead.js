@@ -26,6 +26,7 @@ import {
   PHONE_LINE_TYPES,
   putLead,
   store,
+  teamName,
 } from "../lib/state.js";
 
 const GAP_WORDS = { 1: "weak own site", 2: "very weak or third party only", 3: "no credible owned site" };
@@ -131,7 +132,7 @@ export function render({ params, navigate }) {
     drafts: h("div"),
     outreach: h("div"),
     actions: h("div"),
-    history: h("div"),
+    history: h("div", { class: "rail-history" }),
     preview: h("div"),
     research: h("div"),
   };
@@ -471,7 +472,7 @@ export function render({ params, navigate }) {
       );
       const nextAction = h("input", { id: "lo-next", name: "nextAction", value: o.nextAction ?? "", autocomplete: "off" });
       const nextDate = h("input", { id: "lo-date", name: "nextDate", type: "date", value: o.nextDate ?? "" });
-      const owner = h("select", { id: "lo-owner", name: "owner" }, OWNERS.map((w) => h("option", { value: w, selected: w === (o.owner ?? "") }, w || "Unassigned")));
+      const owner = h("select", { id: "lo-owner", name: "owner" }, OWNERS.map((w) => h("option", { value: w, selected: w === (o.owner ?? "") }, teamName(w) || "Unassigned")));
       const notes = h("textarea", { id: "lo-notes", name: "notes", rows: "4" });
       notes.value = o.notes ?? "";
       const save = h("button", { type: "submit", class: "btn btn-primary", id: "lo-save" }, "Save outreach");
@@ -612,7 +613,7 @@ export function render({ params, navigate }) {
             if (res.ok) document.getElementById("lh-text")?.focus();
           },
         },
-        h("div", { class: "form-grid", style: { gridTemplateColumns: "8rem 1fr" } }, h("div", { class: "field" }, h("label", { for: "lh-type" }, "Type"), type), h("div", { class: "field" }, h("label", { for: "lh-text" }, "Entry"), text)),
+        h("div", { class: "form-grid", style: { gridTemplateColumns: "8rem 1fr", alignItems: "start" } }, h("div", { class: "field" }, h("label", { for: "lh-type" }, "Type"), type), h("div", { class: "field" }, h("label", { for: "lh-text" }, "Entry"), text)),
         h("div", { class: "form-actions", style: { marginTop: "10px" } }, add, h("span", { class: "faint small" }, "History is append only.")),
         slot,
       );
@@ -628,7 +629,8 @@ export function render({ params, navigate }) {
               h(
                 "li",
                 { class: `t-${e.type}` },
-                h("span"),
+                // The ::before dot fills the 14px column, so the entry itself must be the only
+                // child element; an extra child pushes the text into the dot column.
                 h("div", null, h("div", { class: "what" }, h("span", { class: "type" }, e.type), e.text), h("div", { class: "when" }, `${formatDateTime(e.at)}, ${e.by}`)),
               ),
             ),

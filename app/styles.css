@@ -2900,6 +2900,12 @@ dialog.help::backdrop {
   .lead-rail {
     position: static;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    align-items: start;
+  }
+
+  /* History is a reading list: give it the full rail width instead of one leftover column. */
+  .lead-rail > .rail-history {
+    grid-column: 1 / -1;
   }
 
   .coverage {

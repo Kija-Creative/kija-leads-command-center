@@ -1,0 +1,23 @@
+{
+  "id": "editorial-luxury",
+  "label": "Editorial luxury",
+  "summary": "The compound of the editorial and luxury dialects, exactly as specified in SPEC-site-dna.md: editorial structure with a luxury finish, every component restyled from the Site DNA.",
+  "extends": ["editorial", "luxury"],
+  "allowed": [
+    "shadcn Dialog behavior",
+    "shadcn Form behavior",
+    "custom typography",
+    "custom button treatment",
+    "custom card treatment",
+    "custom header",
+    "custom section compositions"
+  ],
+  "forbidden": [
+    "default shadcn card appearance",
+    "generic SaaS bento grids",
+    "gradient blobs",
+    "pill buttons everywhere"
+  ],
+  "forbiddenPatterns": ["default-shadcn-card", "generic-saas-bento", "gradient-blobs", "pill-buttons-everywhere"],
+  "behaviors": ["shadcn Dialog behavior", "shadcn Form behavior"]
+}

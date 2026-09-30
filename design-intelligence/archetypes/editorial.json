@@ -1,0 +1,46 @@
+{
+  "id": "editorial",
+  "label": "Editorial",
+  "summary": "The page reads like a well art directed feature: type carries the hierarchy, photographs are placed like spreads, and whitespace is a material, not leftover space.",
+  "character": ["composed", "confident", "unhurried", "literate", "crafted"],
+  "suitableBrandTraits": ["editorial", "premium", "craftsmanship", "high-end", "old-school", "heritage", "architectural", "calm", "specialist"],
+  "heroes": {
+    "preferred": ["editorial-split", "type-led", "asymmetric", "full-bleed"],
+    "notes": "A headline block set large in the display face, aligned to a column grid, with one photograph given real size. Never a centred stack over a stock background."
+  },
+  "navigation": {
+    "preferred": ["editorial", "minimal", "solid", "transparent-overlay"],
+    "notes": "Few links set small, often uppercase with open tracking; the wordmark behaves like a masthead."
+  },
+  "typography": {
+    "preferred": ["serif-sans", "editorial-serif", "grotesk"],
+    "notes": "A display face with real contrast or character at 56 to 96px on desktop, a restrained body at 17 to 19px with a 60 to 72 character measure, small caps or tracked labels for section eyebrows."
+  },
+  "layout": {
+    "preferred": ["editorial", "asymmetric", "narrative", "wide-cinematic"],
+    "notes": "Section widths vary on purpose (a narrow text column, then a full width image, then an offset pair). Numbered sections and hairline rules give structure instead of boxes."
+  },
+  "geometry": {
+    "preferred": ["architectural", "subtle-radius", "square"],
+    "notes": "Corners stay square or nearly square; 1px rules and alignment do the work cards would do elsewhere."
+  },
+  "imagery": {
+    "preferred": ["editorial", "full-bleed", "macro-detail", "project-gallery", "portfolio"],
+    "notes": "Fewer, larger photographs with captions set like figure notes. Consistent crops and colour grading; detail shots next to wide shots."
+  },
+  "motion": {
+    "ceiling": "moderate",
+    "notes": "Quiet: fades and short rises on first reveal, underline and colour changes on hover. Nothing bounces, nothing loops behind the text."
+  },
+  "defaultDialects": ["editorial", "editorial-luxury"],
+  "principles": [
+    "Let typography create the hierarchy: one display size per screen, generous leading, a real measure for reading text.",
+    "Give photographs editorial weight: few, large, captioned, cropped with intent, never a grid of small equal thumbnails as the main proof.",
+    "Structure with rules, numbers and alignment instead of boxes and shadows; a section is a spread, not a card.",
+    "Vary section width and rhythm deliberately so the page reads as a sequence, not a stack of identical bands.",
+    "Keep the conversion obvious but calm: one understated primary action per screen in the display or body face, never a loud badge.",
+    "Captions and labels carry facts plainly; flourish belongs to the type, never to claims."
+  ],
+  "forbiddenPatterns": ["three-feature-cards", "generic-icon-grid", "pill-buttons-everywhere", "glowing-blobs", "default-shadcn-look"],
+  "references": []
+}

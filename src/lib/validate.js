@@ -12,7 +12,14 @@ export const HISTORY_TYPES = ["created", "status", "note", "call", "email", "mee
 export const CONFIDENCE_LEVELS = ["High", "Medium-High", "Medium", "Low"];
 export const VERIFICATION_STATUSES = ["verified", "needs-recheck", "unverified"];
 export const LEAD_ORIGINS = ["sheet-import", "weekly-run", "manual", "queue-promotion"];
-export const OWNERS = ["", "Jamey", "Kiel", "Daisy"];
+export const OWNERS = ["", "Jamey", "Kiel", "Max"];
+
+// The Kija team. Keys are what records store; names are what people see.
+export const TEAM = [
+  { key: "Jamey", name: "Jamey White", role: "Partner" },
+  { key: "Kiel", name: "Kiel Jared", role: "Partner" },
+  { key: "Max", name: "Max Miller", role: "" },
+];
 // Where the stored rating and review count were read. "places-api" is never valid on a stored
 // record: Google's terms let us keep only place IDs from Places (research/places-api.md).
 export const RATING_SOURCES = ["", "google-maps-observed", "secondary", "owner"];
@@ -194,7 +201,7 @@ function checkOutreach(outreach, label, errors) {
     errors.push(`${label} next date must be empty or a date like 2026-10-05.`);
   }
   if (outreach.owner !== undefined && !OWNERS.includes(outreach.owner)) {
-    errors.push(`${label} owner ${JSON.stringify(outreach.owner)} must be empty or one of Jamey, Kiel, Daisy.`);
+    errors.push(`${label} owner ${JSON.stringify(outreach.owner)} must be empty or one of Jamey, Kiel, Max.`);
   }
   if (!Array.isArray(outreach.history)) {
     errors.push(`${label} outreach history must be a list.`);
@@ -245,7 +252,7 @@ export function validateOutreachPatch(patch, ctx = {}) {
     errors.push("Next date must be empty or a date like 2026-10-05.");
   }
   if (patch.owner !== undefined && !OWNERS.includes(patch.owner)) {
-    errors.push(`Owner ${JSON.stringify(patch.owner)} must be empty or one of Jamey, Kiel, Daisy.`);
+    errors.push(`Owner ${JSON.stringify(patch.owner)} must be empty or one of Jamey, Kiel, Max.`);
   }
   for (const f of ["nextAction", "notes"]) {
     if (patch[f] !== undefined && typeof patch[f] !== "string") errors.push(`${f} must be text.`);

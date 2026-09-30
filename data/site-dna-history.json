@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "cap": 500,
+  "note": "Append only. Written by the Design Intelligence Engine (npm run dna, npm run brief, the demo build). Never edit entries by hand; the oldest are dropped only past the cap.",
+  "entries": []
+}

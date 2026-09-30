@@ -146,7 +146,7 @@ test("POST /api/notes answers 422 with a sentence on bad input and writes nothin
     [{ text: 7 }, /must be text/],
     [{ text: "x".repeat(4001) }, /4,000 characters/],
     [{ text: "ok", leadId: "no-such-lead" }, /No lead has the id "no-such-lead"/],
-    [{ text: "ok", author: "Someone" }, /Jamey, Kiel, Daisy/],
+    [{ text: "ok", author: "Someone" }, /Jamey, Kiel, Max/],
     [{ text: "ok", runId: "1999-01-01" }, /runId cannot be set/],
   ];
   for (const [body, re] of cases) {
@@ -163,11 +163,11 @@ test("POST /api/notes answers 422 with a sentence on bad input and writes nothin
 test("PATCH /api/notes/:id edits only the text and keeps who, what and when", async (t) => {
   const s = await start();
   t.after(s.close);
-  const made = (await s.call("POST", "/api/notes", { text: "First draft", author: "Daisy", leadId: GM })).json.note;
+  const made = (await s.call("POST", "/api/notes", { text: "First draft", author: "Max", leadId: GM })).json.note;
   const r = await s.call("PATCH", `/api/notes/${made.id}`, { text: `Second draft ${EM} better` });
   assert.equal(r.status, 200, r.text);
   assert.equal(r.json.note.text, "Second draft, better");
-  assert.equal(r.json.note.author, "Daisy");
+  assert.equal(r.json.note.author, "Max");
   assert.equal(r.json.note.leadId, GM);
   assert.equal(r.json.note.createdAt, made.createdAt);
   assert.ok(r.json.note.updatedAt > made.createdAt);

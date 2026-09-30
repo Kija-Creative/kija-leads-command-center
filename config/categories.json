@@ -2,6 +2,8 @@
   "auto-repair": {
     "label": "Auto repair",
     "vertical": "auto",
+    "industry": "automotive",
+    "subIndustry": "auto-repair",
     "ticketValueDefault": 3,
     "visualFitDefault": 2,
     "searchTerms": ["auto repair", "auto repair shop", "mechanic", "car repair", "brake repair", "engine repair"],
@@ -13,6 +15,8 @@
   "auto-body-collision": {
     "label": "Auto body and collision",
     "vertical": "auto",
+    "industry": "automotive",
+    "subIndustry": "collision",
     "ticketValueDefault": 3,
     "visualFitDefault": 3,
     "searchTerms": ["auto body shop", "collision repair", "body shop", "dent repair", "paint and body", "paintless dent repair"],
@@ -24,6 +28,8 @@
   "tire-shop": {
     "label": "Tire shop",
     "vertical": "auto",
+    "industry": "automotive",
+    "subIndustry": "tires",
     "ticketValueDefault": 2,
     "visualFitDefault": 2,
     "searchTerms": ["tire shop", "used tires", "tire repair", "new tires", "wheel alignment"],
@@ -35,6 +41,8 @@
   "muffler-exhaust": {
     "label": "Muffler and exhaust",
     "vertical": "auto",
+    "industry": "automotive",
+    "subIndustry": "exhaust",
     "ticketValueDefault": 2,
     "visualFitDefault": 3,
     "searchTerms": ["muffler shop", "exhaust repair", "custom exhaust", "catalytic converter repair"],
@@ -46,6 +54,8 @@
   "diesel-truck-repair": {
     "label": "Diesel and truck repair",
     "vertical": "auto",
+    "industry": "automotive",
+    "subIndustry": "diesel-fleet",
     "ticketValueDefault": 3,
     "visualFitDefault": 2,
     "searchTerms": ["diesel repair", "truck repair", "semi truck repair", "diesel mechanic", "fleet repair", "mobile truck repair"],
@@ -57,6 +67,8 @@
   "mobile-mechanic": {
     "label": "Mobile mechanic",
     "vertical": "auto",
+    "industry": "automotive",
+    "subIndustry": "mobile-mechanic",
     "ticketValueDefault": 2,
     "visualFitDefault": 2,
     "searchTerms": ["mobile mechanic", "mobile auto repair", "mechanic that comes to you"],
@@ -68,6 +80,8 @@
   "auto-detailing": {
     "label": "Auto detailing and tint",
     "vertical": "auto",
+    "industry": "automotive",
+    "subIndustry": "detailing",
     "ticketValueDefault": 2,
     "visualFitDefault": 3,
     "searchTerms": ["auto detailing", "car detailing", "mobile detailing", "window tint", "ceramic coating", "paint correction"],
@@ -79,6 +93,8 @@
   "towing": {
     "label": "Towing and roadside",
     "vertical": "auto",
+    "industry": "automotive",
+    "subIndustry": "towing",
     "ticketValueDefault": 2,
     "visualFitDefault": 1,
     "searchTerms": ["towing", "tow truck", "roadside assistance", "wrecker service"],
@@ -90,6 +106,8 @@
   "hvac": {
     "label": "HVAC",
     "vertical": "home-services",
+    "industry": "hvac",
+    "subIndustry": "hvac",
     "ticketValueDefault": 3,
     "visualFitDefault": 2,
     "searchTerms": ["hvac", "ac repair", "air conditioning repair", "heating and air", "furnace repair", "hvac contractor"],
@@ -101,6 +119,8 @@
   "plumbing": {
     "label": "Plumbing",
     "vertical": "home-services",
+    "industry": "plumbing",
+    "subIndustry": "plumbing",
     "ticketValueDefault": 3,
     "visualFitDefault": 2,
     "searchTerms": ["plumber", "plumbing", "drain cleaning", "water heater repair", "emergency plumber", "leak repair"],
@@ -112,6 +132,8 @@
   "electrical": {
     "label": "Electrical",
     "vertical": "home-services",
+    "industry": "electrical",
+    "subIndustry": "electrical",
     "ticketValueDefault": 3,
     "visualFitDefault": 2,
     "searchTerms": ["electrician", "electrical contractor", "electrical repair", "panel upgrade", "residential electrician"],
@@ -123,6 +145,8 @@
   "septic": {
     "label": "Septic service",
     "vertical": "home-services",
+    "industry": "home-services",
+    "subIndustry": "septic",
     "ticketValueDefault": 3,
     "visualFitDefault": 2,
     "searchTerms": ["septic service", "septic pumping", "septic tank cleaning", "septic repair", "septic inspection"],
@@ -134,6 +158,8 @@
   "garage-door": {
     "label": "Garage door repair",
     "vertical": "home-services",
+    "industry": "home-services",
+    "subIndustry": "garage-door",
     "ticketValueDefault": 2,
     "visualFitDefault": 2,
     "searchTerms": ["garage door repair", "garage door spring repair", "garage door opener installation", "garage door company"],
@@ -145,6 +171,8 @@
   "restoration": {
     "label": "Water, fire and mold restoration",
     "vertical": "home-services",
+    "industry": "home-services",
+    "subIndustry": "restoration",
     "ticketValueDefault": 3,
     "visualFitDefault": 2,
     "searchTerms": ["water damage restoration", "fire damage restoration", "mold remediation", "flood cleanup", "restoration company"],
@@ -156,6 +184,8 @@
   "appliance-repair": {
     "label": "Appliance repair",
     "vertical": "home-services",
+    "industry": "home-services",
+    "subIndustry": "appliance-repair",
     "ticketValueDefault": 2,
     "visualFitDefault": 1,
     "searchTerms": ["appliance repair", "refrigerator repair", "washer repair", "dryer repair", "oven repair"],
@@ -167,6 +197,8 @@
   "pest-control": {
     "label": "Pest control",
     "vertical": "home-services",
+    "industry": "home-services",
+    "subIndustry": "pest-control",
     "ticketValueDefault": 2,
     "visualFitDefault": 1,
     "searchTerms": ["pest control", "exterminator", "termite control", "rodent control", "mosquito control"],
@@ -178,6 +210,8 @@
   "roofing": {
     "label": "Roofing",
     "vertical": "contractor",
+    "industry": "roofing",
+    "subIndustry": "roofing",
     "ticketValueDefault": 3,
     "visualFitDefault": 3,
     "searchTerms": ["roofing contractor", "roof repair", "roofer", "roof replacement", "storm damage roofing"],
@@ -189,6 +223,8 @@
   "concrete": {
     "label": "Concrete",
     "vertical": "contractor",
+    "industry": "construction",
+    "subIndustry": "concrete",
     "ticketValueDefault": 3,
     "visualFitDefault": 3,
     "searchTerms": ["concrete contractor", "concrete driveway", "stamped concrete", "concrete patio", "concrete repair"],
@@ -200,6 +236,8 @@
   "fencing": {
     "label": "Fencing",
     "vertical": "contractor",
+    "industry": "construction",
+    "subIndustry": "fencing",
     "ticketValueDefault": 3,
     "visualFitDefault": 3,
     "searchTerms": ["fence company", "fence contractor", "fence installation", "fence repair", "wrought iron fence"],
@@ -211,6 +249,8 @@
   "pools": {
     "label": "Pool building and service",
     "vertical": "contractor",
+    "industry": "construction",
+    "subIndustry": "pools",
     "ticketValueDefault": 3,
     "visualFitDefault": 3,
     "searchTerms": ["pool builder", "pool contractor", "pool service", "pool repair", "pool remodeling"],
@@ -222,6 +262,8 @@
   "landscaping": {
     "label": "Landscaping",
     "vertical": "contractor",
+    "industry": "landscaping",
+    "subIndustry": "landscaping",
     "ticketValueDefault": 2,
     "visualFitDefault": 3,
     "searchTerms": ["landscaping", "landscaper", "landscape design", "lawn care", "hardscaping", "irrigation repair"],
@@ -233,6 +275,8 @@
   "painting": {
     "label": "Painting",
     "vertical": "contractor",
+    "industry": "construction",
+    "subIndustry": "painting",
     "ticketValueDefault": 2,
     "visualFitDefault": 3,
     "searchTerms": ["house painter", "painting contractor", "interior painting", "exterior painting", "cabinet painting"],
@@ -244,6 +288,8 @@
   "foundation-repair": {
     "label": "Foundation repair",
     "vertical": "contractor",
+    "industry": "construction",
+    "subIndustry": "foundation-repair",
     "ticketValueDefault": 3,
     "visualFitDefault": 2,
     "searchTerms": ["foundation repair", "foundation contractor", "slab repair", "pier and beam repair"],
@@ -255,6 +301,8 @@
   "remodeling": {
     "label": "Remodeling",
     "vertical": "contractor",
+    "industry": "construction",
+    "subIndustry": "remodeling",
     "ticketValueDefault": 3,
     "visualFitDefault": 3,
     "searchTerms": ["remodeling contractor", "kitchen remodel", "bathroom remodel", "home renovation", "general contractor"],
@@ -266,6 +314,8 @@
   "tree-service": {
     "label": "Tree service",
     "vertical": "contractor",
+    "industry": "landscaping",
+    "subIndustry": "tree-service",
     "ticketValueDefault": 2,
     "visualFitDefault": 3,
     "searchTerms": ["tree service", "tree removal", "tree trimming", "stump grinding", "arborist"],
@@ -277,6 +327,8 @@
   "barber": {
     "label": "Barber shop",
     "vertical": "personal-care",
+    "industry": "barbershop",
+    "subIndustry": "barber",
     "ticketValueDefault": 1,
     "visualFitDefault": 3,
     "searchTerms": ["barber shop", "barber", "barbershop", "mens haircut", "fade haircut"],
@@ -288,6 +340,8 @@
   "hair-salon": {
     "label": "Hair salon",
     "vertical": "personal-care",
+    "industry": "beauty-spa",
+    "subIndustry": "hair-salon",
     "ticketValueDefault": 2,
     "visualFitDefault": 3,
     "searchTerms": ["hair salon", "hair stylist", "hair color salon", "blowout salon", "braiding salon"],
@@ -299,6 +353,8 @@
   "nail-salon": {
     "label": "Nail salon",
     "vertical": "personal-care",
+    "industry": "beauty-spa",
+    "subIndustry": "nail-salon",
     "ticketValueDefault": 1,
     "visualFitDefault": 3,
     "searchTerms": ["nail salon", "manicure", "pedicure", "nail spa", "gel nails"],
@@ -310,6 +366,8 @@
   "tattoo": {
     "label": "Tattoo studio",
     "vertical": "personal-care",
+    "industry": "tattoo",
+    "subIndustry": "tattoo",
     "ticketValueDefault": 2,
     "visualFitDefault": 3,
     "searchTerms": ["tattoo shop", "tattoo studio", "tattoo artist", "custom tattoo"],
@@ -321,6 +379,8 @@
   "pet-grooming": {
     "label": "Pet grooming",
     "vertical": "personal-care",
+    "industry": "pet-grooming",
+    "subIndustry": "pet-grooming",
     "ticketValueDefault": 1,
     "visualFitDefault": 3,
     "searchTerms": ["dog grooming", "pet grooming", "mobile dog grooming", "dog groomer", "cat grooming"],
@@ -332,6 +392,8 @@
   "general": {
     "label": "Local service",
     "vertical": "general",
+    "industry": "home-services",
+    "subIndustry": "general-local-service",
     "ticketValueDefault": 2,
     "visualFitDefault": 2,
     "searchTerms": [],

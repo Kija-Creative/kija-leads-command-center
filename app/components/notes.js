@@ -1,4 +1,4 @@
-// Team notes: a shared scratchpad for Jamey, Kiel and Daisy. The week view shows every note
+// Team notes: a shared scratchpad for Jamey White, Kiel Jared and Max Miller. The week view shows every note
 // with a This week / All notes toggle; a lead page shows the notes about that lead, with the
 // same form prefilled to it. Each route answers with the whole list, so the panel re-renders
 // from store.data.notes after every change.
@@ -7,7 +7,7 @@ import { feedbackSlot, showFeedback, toast, withBusy } from "./feedback.js";
 import { api } from "../lib/api.js";
 import { fill, h, nextId } from "../lib/dom.js";
 import { formatDateTime, number, relativeTime } from "../lib/format.js";
-import { byScore, latestRun, leadById, leads, notes as allNotes, OWNERS, setNotes } from "../lib/state.js";
+import { byScore, latestRun, leadById, leads, notes as allNotes, OWNERS, setNotes, teamName } from "../lib/state.js";
 
 export const NOTE_MAX_LENGTH = 4000;
 const COUNTER_FROM = 3500;
@@ -145,7 +145,7 @@ export function notesPanel({ leadId = "" } = {}) {
   const author = h(
     "select",
     { id: authorId },
-    OWNERS.map((o) => h("option", { value: o, selected: o === (OWNERS.includes(savedAuthor) ? savedAuthor : "") }, o || "No name")),
+    OWNERS.map((o) => h("option", { value: o, selected: o === (OWNERS.includes(savedAuthor) ? savedAuthor : "") }, teamName(o) || "No name")),
   );
   author.addEventListener("change", () => remember(AUTHOR_KEY, author.value));
   const about = h("select", { id: aboutId }, leadOptions(leadId, runId));
@@ -351,7 +351,7 @@ export function notesPanel({ leadId = "" } = {}) {
       h(
         "div",
         { class: "note-meta" },
-        h("span", { class: `note-author${note.author ? "" : " is-anon"}` }, note.author || "No name"),
+        h("span", { class: `note-author${note.author ? "" : " is-anon"}` }, teamName(note.author) || "No name"),
         timeEl(note.createdAt),
         edited ? h("span", { class: "faint", title: `Edited ${formatDateTime(note.updatedAt)}` }, "edited") : null,
         leadChip(note),

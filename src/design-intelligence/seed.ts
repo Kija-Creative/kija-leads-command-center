@@ -32,3 +32,34 @@ export function seededPick<T>(
 ): T {
   return items[seededIndex(seed, namespace, items.length)];
 }
+
+// Extension (engine architect): the deterministic seed for a lead. Stable inputs only: lead id,
+// business name, domain (or website, "" when the lead has none) and industry. The same lead in
+// the same industry always gets the same seed on any machine.
+export function buildSeed(input: {
+  leadId: string;
+  business: string;
+  domain?: string;
+  industry: string;
+}): string {
+  const text = [
+    input.leadId,
+    input.business.trim().toLowerCase(),
+    String(input.domain || "").trim().toLowerCase(),
+    input.industry,
+  ].join("|");
+
+  return `fnv1a-${hashString(text).toString(16).padStart(8, "0")}`;
+}
+
+// Extension: a fixed, seeded order of a list (a rotation, so every option keeps its neighbours).
+// seededPick(items, seed, namespace) is always the first element of this order.
+export function seededOrder<T>(
+  items: readonly T[],
+  seed: string,
+  namespace: string
+): T[] {
+  if (items.length === 0) return [];
+  const start = seededIndex(seed, namespace, items.length);
+  return [...items.slice(start), ...items.slice(0, start)];
+}

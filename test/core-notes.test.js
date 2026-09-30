@@ -108,7 +108,7 @@ test("validateNote accepts a good note and refuses empty, long, unknown lead and
 
   const who = validateNote(note({ author: "Someone" }), { leads: LEADS });
   assert.equal(who.ok, false);
-  assert.match(who.errors[0], /Jamey, Kiel, Daisy/);
+  assert.match(who.errors[0], /Jamey, Kiel, Max/);
 
   assert.match(validateNote({ ...note(), text: 12 }).errors[0], /must be text/);
   assert.match(validateNote({ ...note(), leadId: null }).errors[0], /lead id, or empty/);

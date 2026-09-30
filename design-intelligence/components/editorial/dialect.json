@@ -1,0 +1,27 @@
+{
+  "id": "editorial",
+  "label": "Editorial",
+  "summary": "Components behave like parts of a printed feature: text buttons with rules or underlines, headings with numbered eyebrows, figures with captions, forms set as clean labelled lines.",
+  "allowed": [
+    "shadcn Dialog behavior",
+    "shadcn Form behavior",
+    "custom typography",
+    "custom button treatment: square or near square, text led, a rule or underline that moves on hover",
+    "custom card treatment: no box, a top rule, a number or eyebrow, a heading and a short paragraph",
+    "custom header: masthead wordmark with small tracked links",
+    "custom section compositions: offset columns, full width figures, numbered sections",
+    "figure captions set small in the body face",
+    "hairline rules (1px, the line token) as structure"
+  ],
+  "forbidden": [
+    "default shadcn card appearance (bordered rounded box with shadow)",
+    "generic SaaS bento grids",
+    "gradient blobs or glow",
+    "pill buttons everywhere",
+    "icon grids of three or more identical feature cards",
+    "drop shadows as the main way of separating content"
+  ],
+  "forbiddenPatterns": ["default-shadcn-card", "generic-saas-bento", "gradient-blobs", "pill-buttons-everywhere", "three-feature-cards"],
+  "behaviors": ["shadcn Dialog behavior", "shadcn Form behavior"],
+  "primitives": "primitives.ts"
+}

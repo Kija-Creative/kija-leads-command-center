@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node server/server.js",
-    "test": "node --test \"test/**/*.test.js\"",
+    "test": "node --test \"test/**/*.test.js\" \"test/**/*.test.ts\"",
     "check": "node src/cli/check.js",
     "seed": "node src/cli/import-seed.js",
     "plan": "node src/cli/plan.js",
@@ -19,6 +19,11 @@
     "probe": "node src/cli/probe.js",
     "discover": "node src/cli/discover-places.js",
     "purge-places": "node src/cli/purge-places.js",
-    "export": "node src/cli/export-csv.js"
+    "export": "node src/cli/export-csv.js",
+    "typecheck": "node src/cli/typecheck.js",
+    "lint": "node src/cli/lint.js",
+    "dna": "node src/cli/dna.js",
+    "brief": "node src/cli/brief.js",
+    "audit": "node src/cli/audit.js"
   }
 }

@@ -151,7 +151,7 @@ All JSON files are UTF-8, 2 space indented, arrays sorted stably (leads by `adde
     status: "New",                     // see OUTREACH_STATUSES
     nextAction: "Build private homepage demo",
     nextDate: "",                      // "" or YYYY-MM-DD
-    owner: "",                         // "" | "Jamey" | "Kiel" | "Daisy"
+    owner: "",                         // "" | "Jamey" | "Kiel" | "Max" (Jamey White, Kiel Jared, Max Miller)
     notes: "",
     history: [ { at: "2026-09-28T12:00:00.000Z", by: "sheet-import", type: "created", text: "" } ]
   },

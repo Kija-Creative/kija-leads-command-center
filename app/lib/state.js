@@ -6,7 +6,11 @@ import { api } from "./api.js";
 export const OUTREACH_STATUSES = ["New", "Research", "Demo Built", "Contacted", "Replied", "Meeting", "Won", "Lost", "Not a fit"];
 // The sheet dashboard's seven stages; the last two are closed outcomes.
 export const SHEET_STAGES = OUTREACH_STATUSES.slice(0, 7);
-export const OWNERS = ["", "Jamey", "Kiel", "Daisy"];
+export const OWNERS = ["", "Jamey", "Kiel", "Max"];
+
+// Display names for the stored keys above.
+export const TEAM_NAMES = { Jamey: "Jamey White", Kiel: "Kiel Jared", Max: "Max Miller" };
+export const teamName = (key) => TEAM_NAMES[key] || key || "";
 export const CONFIDENCE_LEVELS = ["High", "Medium-High", "Medium", "Low"];
 export const MANUAL_HISTORY_TYPES = ["note", "call", "email", "meeting", "research", "demo", "consent"];
 // "mobile" may be a personal cell, which the FCC can treat as residential.
