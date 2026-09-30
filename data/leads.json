@@ -18,7 +18,7 @@
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 2,
-    "websiteStatus": "Fresh Google-review source explicitly lists no website; no owned domain surfaced",
+    "websiteStatus": "No working website. 247dieselrepair.com shows an expired Squarespace site and 24-7dieselrepair.com a parked Coming Soon page (checked 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -46,16 +46,21 @@
         "url": "https://stackkly.com/locations/texas/dallas/truck-repair/24-7-diesel-repair-road-service",
         "label": "stackkly.com",
         "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://www.247dieselrepair.com/",
+        "label": "247dieselrepair.com (expired)",
+        "checkedAt": "2026-09-30"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "Fresh Google-review source explicitly lists no website; no owned domain surfaced",
-          "url": ""
+          "check": "domain probe",
+          "result": "247dieselrepair.com returns 404, Squarespace Website Expired; 24-7dieselrepair.com is a parked Coming Soon page. Neither shows 9305 S Central Expy or 817-902-6422.",
+          "url": "https://www.247dieselrepair.com/"
         }
       ],
       "notes": ""
@@ -72,6 +77,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website status \"Fresh Google-review source explicitly lists no website; no owned domain surfaced\" to \"No working website. 247dieselrepair.com shows an expired Squarespace site and 24-7dieselrepair.com a parked Coming Soon page (checked 2026-09-30).\"; verification \"needs-recheck\" to \"verified\"; 1 source added."
         }
       ]
     },
@@ -105,7 +116,7 @@
     "websiteGap": 2,
     "ticketValue": 2,
     "visualFit": 3,
-    "websiteStatus": "No owned site found; current business directory says Facebook only",
+    "websiteStatus": "No owned site; Facebook only. abmuffler.com redirects to an unrelated Louisiana business (checked 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -133,15 +144,25 @@
         "url": "https://www.allbiz.com/business/a-b-muffler-shop_3s-972-264-6325",
         "label": "allbiz.com",
         "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://abmuffler.com/",
+        "label": "abmuffler.com (redirects to an unrelated business)",
+        "checkedAt": "2026-09-30"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "No owned site found; current business directory says Facebook only",
+          "check": "domain probe",
+          "result": "abmuffler.com redirects to golto.com, Bossier City Auto Repair and Louisiana Truck Outfitters, unrelated to this shop.",
+          "url": "https://abmuffler.com/"
+        },
+        {
+          "check": "review count",
+          "result": "Jamey's lead check reports the review count has grown (rescored 78 to 85); recount on the next run.",
           "url": ""
         }
       ],
@@ -159,6 +180,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website status \"No owned site found; current business directory says Facebook only\" to \"No owned site; Facebook only. abmuffler.com redirects to an unrelated Louisiana business (checked 2026-09-30).\"; verification \"needs-recheck\" to \"verified\"; 1 source added."
         }
       ]
     },
@@ -192,7 +219,7 @@
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
-    "websiteStatus": "Dallas listing is phone-only; exact-name domain found belongs to a different Marietta, GA business",
+    "websiteStatus": "Possibly a lead-generation listing, not a Dallas roofer: the same name appears in Trenton NJ, Marietta GA and Houston with different phones, on throwaway .best and .homes sites, and 469-940-4277 has no footprint online (checked 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -200,7 +227,7 @@
       "booking": "",
       "other": []
     },
-    "confidence": "High",
+    "confidence": "Low",
     "whyKija": "Roofing is high-ticket enough that even a small lift in inspection requests can justify a strong local website.",
     "pitchAngle": "Give storm and repair searches a Dallas-specific place to request inspections instead of relying on phone-only discovery.",
     "demoConcept": "Storm/repair-first roofing site with emergency CTA, damage gallery, inspection form, service areas and review proof.",
@@ -220,23 +247,38 @@
         "url": "https://adamsroofrepair.best/message-us/",
         "label": "adamsroofrepair.best",
         "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://adamsroofrepair.best/",
+        "label": "adamsroofrepair.best (Marietta GA)",
+        "checkedAt": "2026-09-30"
+      },
+      {
+        "url": "https://adamsbrothersroofrepair.com/",
+        "label": "adamsbrothersroofrepair.com (Trenton NJ)",
+        "checkedAt": "2026-09-30"
       }
     ],
     "verification": {
       "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "Dallas listing is phone-only; exact-name domain found belongs to a different Marietta, GA business",
+          "check": "exact-name search",
+          "result": "Adams Brothers Roof Repair results are Marietta GA (3636 Dallas Hwy, 470-684-4333), Trenton NJ (862-370-3440) and a Dallas directory entry at 1324 W Davis St; sites on adamsroofrepair.best and adamsroofing.homes.",
+          "url": "http://www.roofingquotes.com/united-states/dallas/roofing-contractor/adams-brothers-roof-repair/connect"
+        },
+        {
+          "check": "phone search",
+          "result": "469-940-4277 returns no business listing anywhere.",
           "url": ""
         }
       ],
-      "notes": ""
+      "notes": "Hold. Confirm it is a real, independent Dallas business (listing photos, street view of 1324 W Davis St, Texas SOS search) before any demo or outreach."
     },
     "outreach": {
-      "status": "New",
-      "nextAction": "Build Dallas roofing inspection demo",
+      "status": "Research",
+      "nextAction": "Confirm it is a real Dallas roofer (listing photos, street view of 1324 W Davis St, Texas SOS search) before any demo or outreach",
       "nextDate": "",
       "owner": "",
       "notes": "",
@@ -246,6 +288,18 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website status \"Dallas listing is phone-only; exact-name domain found belongs to a different Marietta, GA business\" to \"Possibly a lead-generation listing, not a Dallas roofer: the same name appears in Trenton NJ, Marietta GA and Houston with different phones, on throwaway .best and .homes sites, and 469-940-4277 has no footprint online (checked 2026-09-30).\"; confidence \"High\" to \"Low\"; verification checks refreshed; 2 sources added."
+        },
+        {
+          "at": "2026-09-30T19:19:06.613Z",
+          "by": "Jamey",
+          "type": "status",
+          "text": "New to Research"
         }
       ]
     },
@@ -276,10 +330,10 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "websiteGap": 2,
+    "websiteGap": 1,
     "ticketValue": 3,
     "visualFit": 3,
-    "websiteStatus": "Only Google-hosted business.site/third-party presence found; no standalone owned domain",
+    "websiteStatus": "Has its own live website, allautoserviceandbody.com, showing the shop's phone 682-224-2942 (checked 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -307,22 +361,27 @@
         "url": "https://www.autotechiq.com/auto-repair-shop/85508/all-auto-service-body",
         "label": "autotechiq.com",
         "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://allautoserviceandbody.com/",
+        "label": "allautoserviceandbody.com",
+        "checkedAt": "2026-09-30"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "Only Google-hosted business.site/third-party presence found; no standalone owned domain",
-          "url": ""
+          "check": "domain probe",
+          "result": "allautoserviceandbody.com is live (HTTP 200), titled All Auto Service and Body, Fort Worth Auto Repair and Collision, and shows the shop's phone and name.",
+          "url": "https://allautoserviceandbody.com/"
         }
       ],
-      "notes": ""
+      "notes": "Lead check 2026-09-30 reported the domain registered Sept 13, 2026."
     },
     "outreach": {
-      "status": "New",
+      "status": "Not a fit",
       "nextAction": "Build collision/repair demo",
       "nextDate": "",
       "owner": "",
@@ -333,6 +392,18 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website gap 2 to 1; website status \"Only Google-hosted business.site/third-party presence found; no standalone owned domain\" to \"Has its own live website, allautoserviceandbody.com, showing the shop's phone 682-224-2942 (checked 2026-09-30).\"; verification \"needs-recheck\" to \"verified\"; 1 source added."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "status",
+          "text": "New to Not a fit. Reverify 2026-09-30: It now has its own website (allautoserviceandbody.com, live with the shop's phone, checked 2026-09-30)."
         }
       ]
     },
@@ -492,7 +563,7 @@
     },
     "outreach": {
       "status": "New",
-      "nextAction": "Verify Google profile details",
+      "nextAction": "Find the shop real trade name first; Auto Shop Near Me is a search phrase and the listing may be renamed or suspended",
       "nextDate": "",
       "owner": "",
       "notes": "",
@@ -535,7 +606,7 @@
     "websiteGap": 3,
     "ticketValue": 2,
     "visualFit": 2,
-    "websiteStatus": "No clear owned domain found; profile-driven presence",
+    "websiteStatus": "No website. It owns bamiantires.com with no site on it (lead check 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -543,7 +614,7 @@
       "booking": "",
       "other": []
     },
-    "confidence": "Medium-High",
+    "confidence": "High",
     "whyKija": "Multiple revenue paths: tires, repairs, financing and appointments.",
     "pitchAngle": "Turn Google traffic into tire quotes, financing inquiries and booked service.",
     "demoConcept": "Conversion-focused tire/repair site with quote funnels and financing section.",
@@ -561,12 +632,12 @@
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "No clear owned domain found; profile-driven presence",
+          "check": "owned domain",
+          "result": "Jamey's lead check found bamiantires.com registered with no site on it. The pitch can offer to build on the domain they already own.",
           "url": ""
         }
       ],
@@ -584,6 +655,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website status \"No clear owned domain found; profile-driven presence\" to \"No website. It owns bamiantires.com with no site on it (lead check 2026-09-30).\"; confidence \"Medium-High\" to \"High\"; verification \"needs-recheck\" to \"verified\"."
         }
       ]
     },
@@ -748,6 +825,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:19:06.925Z",
+          "by": "Jamey",
+          "type": "note",
+          "text": "Lead check 2026-09-30: reachable only through its public phone, (214) 526-9207. No business email, contact form or shop-run social page turned up."
         }
       ]
     },
@@ -778,10 +861,10 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "websiteGap": 2,
+    "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
-    "websiteStatus": "No standalone domain surfaced; needs final Maps check",
+    "websiteStatus": "No site of its own found. fenixbodyshop.com is an unrelated Fenix Body Shop in Katy, TX (checked 2026-09-30); the website button on its Maps listing still needs a look.",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -799,18 +882,24 @@
     "established": null,
     "hours": "",
     "demoCopy": {},
-    "sources": [],
+    "sources": [
+      {
+        "url": "https://fenixbodyshop.com/",
+        "label": "fenixbodyshop.com (unrelated Katy business)",
+        "checkedAt": "2026-09-30"
+      }
+    ],
     "verification": {
       "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "No standalone domain surfaced; needs final Maps check",
-          "url": ""
+          "check": "domain probe",
+          "result": "fenixbodyshop.com is Fenix Body Shop at 18035 West Little York Rd, Katy, TX, phone (832) 427-5207, not this Dallas shop.",
+          "url": "https://fenixbodyshop.com/"
         }
       ],
-      "notes": ""
+      "notes": "Move from Research to New once the Maps listing's website button is checked and shows no other site."
     },
     "outreach": {
       "status": "Research",
@@ -824,6 +913,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website gap 2 to 3; website status \"No standalone domain surfaced; needs final Maps check\" to \"No site of its own found. fenixbodyshop.com is an unrelated Fenix Body Shop in Katy, TX (checked 2026-09-30); the website button on its Maps listing still needs a look.\"; verification checks refreshed; 1 source added."
         }
       ]
     },
@@ -850,14 +945,14 @@
     "address": "",
     "phone": "972-681-4966",
     "googleRating": 4.9,
-    "googleReviews": 501,
+    "googleReviews": 648,
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 2,
-    "websiteStatus": "No website surfaced; fresh Google-review directory explicitly lists no website",
+    "websiteStatus": "No website of its own. gmautocare.com belongs to Grand Master Auto Care, an unrelated shop with a 630 (Illinois) phone number (checked 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -885,19 +980,29 @@
         "url": "https://stackkly.com/locations/texas/dallas/truck-repair/gm-auto-care",
         "label": "stackkly.com",
         "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://www.gmautocare.com/",
+        "label": "gmautocare.com (unrelated business)",
+        "checkedAt": "2026-09-30"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "No website surfaced; fresh Google-review directory explicitly lists no website",
+          "check": "domain probe",
+          "result": "gmautocare.com is live but is Grand Master Auto Care, phone (630) 454-7983, with no Dallas address or 972-681-4966 on the page.",
+          "url": "https://www.gmautocare.com/"
+        },
+        {
+          "check": "review count",
+          "result": "648 Google reviews on Sept 30, 2026 per Jamey's lead check (was 501).",
           "url": ""
         }
       ],
-      "notes": ""
+      "notes": "The lead check also mentioned a possible sister shop in Mesquite; nothing on gmautocare.com connects to it."
     },
     "outreach": {
       "status": "New",
@@ -911,6 +1016,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: reviews 501 to 648; website status \"No website surfaced; fresh Google-review directory explicitly lists no website\" to \"No website of its own. gmautocare.com belongs to Grand Master Auto Care, an unrelated shop with a 630 (Illinois) phone number (checked 2026-09-30).\"; verification \"needs-recheck\" to \"verified\"; 1 source added."
         }
       ]
     },
@@ -1202,10 +1313,10 @@
     "ratingSource": "",
     "googleMapsUrl": "",
     "placeId": "",
-    "websiteGap": 3,
+    "websiteGap": 1,
     "ticketValue": 3,
     "visualFit": 2,
-    "websiteStatus": "Fresh shop listing shows website blank; exact search found no credible owned domain",
+    "websiteStatus": "Has its own live website, mustangservicecenter.com, showing the shop's phone 214-824-6716 (checked 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -1213,7 +1324,7 @@
       "booking": "",
       "other": []
     },
-    "confidence": "Medium-High",
+    "confidence": "High",
     "whyKija": "A 4.9 Google reputation and long-running independent-shop story are stronger than its current owned web presence.",
     "pitchAngle": "Center the shop's honesty and reputation, then make service intake easier for East Dallas and Uptown drivers.",
     "demoConcept": "Clean neighborhood-auto site with owner story, specialties, reviews and estimate/appointment request.",
@@ -1233,22 +1344,27 @@
         "url": "https://www.chamberofcommerce.com/business-directory/texas/dallas/auto-repair-shop/46659303-mustang-service-center",
         "label": "chamberofcommerce.com",
         "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://mustangservicecenter.com/",
+        "label": "mustangservicecenter.com",
+        "checkedAt": "2026-09-30"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "Fresh shop listing shows website blank; exact search found no credible owned domain",
-          "url": ""
+          "check": "domain probe",
+          "result": "mustangservicecenter.com is live (HTTP 200), titled Mustang Service Center, Independent Auto Repair in Dallas, and shows the shop's phone and name.",
+          "url": "https://mustangservicecenter.com/"
         }
       ],
-      "notes": ""
+      "notes": "Lead check 2026-09-30 reported the domain registered July 19, 2026."
     },
     "outreach": {
-      "status": "New",
+      "status": "Not a fit",
       "nextAction": "Final review-count check, then build demo",
       "nextDate": "",
       "owner": "",
@@ -1259,6 +1375,18 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website gap 3 to 1; website status \"Fresh shop listing shows website blank; exact search found no credible owned domain\" to \"Has its own live website, mustangservicecenter.com, showing the shop's phone 214-824-6716 (checked 2026-09-30).\"; confidence \"Medium-High\" to \"High\"; verification \"needs-recheck\" to \"verified\"; 1 source added."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "status",
+          "text": "New to Not a fit. Reverify 2026-09-30: It now has its own website (mustangservicecenter.com, live with the shop's phone, checked 2026-09-30)."
         }
       ]
     },
@@ -1292,7 +1420,7 @@
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
-    "websiteStatus": "Explicitly listed without website in researched source",
+    "websiteStatus": "No site of its own. nolimitsautobody.com is an unrelated business with Maryland (301) phone numbers (checked 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -1315,16 +1443,21 @@
         "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/no-limits-auto-collision-center",
         "label": "autorepairestimate.ai",
         "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://nolimitsautobody.com/",
+        "label": "nolimitsautobody.com (unrelated business)",
+        "checkedAt": "2026-09-30"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "Explicitly listed without website in researched source",
-          "url": ""
+          "check": "domain probe",
+          "result": "nolimitsautobody.com is live but lists (301) 257-2315 and (301) 213-1894 and nothing about Dallas or 214-334-2010.",
+          "url": "https://nolimitsautobody.com/"
         }
       ],
       "notes": ""
@@ -1341,6 +1474,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website status \"Explicitly listed without website in researched source\" to \"No site of its own. nolimitsautobody.com is an unrelated business with Maryland (301) phone numbers (checked 2026-09-30).\"; verification \"needs-recheck\" to \"verified\"; 1 source added."
         }
       ]
     },
@@ -1459,7 +1598,7 @@
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 2,
-    "websiteStatus": "Phone-only presence; exact-name search surfaced no owned website",
+    "websiteStatus": "Phone-only presence. It owns primetimesepticpumping.com, used for email only, with no website on it (lead check 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -1490,12 +1629,17 @@
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "Phone-only presence; exact-name search surfaced no owned website",
+          "check": "owned domain",
+          "result": "Jamey's lead check found primetimesepticpumping.com in use for email only. The pitch can offer to build on the domain they already own.",
+          "url": ""
+        },
+        {
+          "check": "review count",
+          "result": "Review count has grown per the lead check (rescored 95 to 96); recount on the next run.",
           "url": ""
         }
       ],
@@ -1513,6 +1657,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website status \"Phone-only presence; exact-name search surfaced no owned website\" to \"Phone-only presence. It owns primetimesepticpumping.com, used for email only, with no website on it (lead check 2026-09-30).\"; verification \"needs-recheck\" to \"verified\"."
         }
       ]
     },
@@ -1546,7 +1696,7 @@
     "websiteGap": 2,
     "ticketValue": 2,
     "visualFit": 2,
-    "websiteStatus": "No owned website listed; Facebook-only presence",
+    "websiteStatus": "No owned website; Facebook only. riostireshop.com is an unrelated Rios Tire Shop in New Braunfels, TX (checked 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -1577,16 +1727,21 @@
         "url": "https://www.allbiz.com/business/rios-used-tires-972-871-7635",
         "label": "allbiz.com",
         "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://riostireshop.com/",
+        "label": "riostireshop.com (unrelated New Braunfels business)",
+        "checkedAt": "2026-09-30"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "No owned website listed; Facebook-only presence",
-          "url": ""
+          "check": "domain probe",
+          "result": "riostireshop.com is Rios Tire Shop #1 in New Braunfels, with no Irving address or 972-871-7635. The agency registration the lead check noticed belongs to that shop.",
+          "url": "https://riostireshop.com/"
         }
       ],
       "notes": ""
@@ -1603,6 +1758,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website status \"No owned website listed; Facebook-only presence\" to \"No owned website; Facebook only. riostireshop.com is an unrelated Rios Tire Shop in New Braunfels, TX (checked 2026-09-30).\"; verification \"needs-recheck\" to \"verified\"; 1 source added."
         }
       ]
     },
@@ -1636,7 +1797,7 @@
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
-    "websiteStatus": "No website listed in researched sources",
+    "websiteStatus": "No working website. toptierautodallas.com has an expired certificate and now redirects to an unrelated gambling spam site (checked 2026-09-30).",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -1664,19 +1825,24 @@
         "url": "https://www.cityof.com/tx/dallas/top-tier-auto-repair-5850001",
         "label": "cityof.com",
         "checkedAt": "2026-09-26"
+      },
+      {
+        "url": "https://toptierautodallas.com/",
+        "label": "toptierautodallas.com (lapsed, redirects to spam)",
+        "checkedAt": "2026-09-30"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-09-30",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "No website listed in researched sources",
-          "url": ""
+          "check": "domain probe",
+          "result": "toptierautodallas.com fails with an expired certificate; read without certificate checks it redirects to beyoucenter.org, a gambling spam page, with no shop details.",
+          "url": "https://toptierautodallas.com/"
         }
       ],
-      "notes": ""
+      "notes": "Handle carefully in any pitch: state it as what a customer would see today, without blame."
     },
     "outreach": {
       "status": "New",
@@ -1690,6 +1856,18 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-09-30T19:18:50.358Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-09-30: website status \"No website listed in researched sources\" to \"No working website. toptierautodallas.com has an expired certificate and now redirects to an unrelated gambling spam site (checked 2026-09-30).\"; verification \"needs-recheck\" to \"verified\"; 1 source added."
+        },
+        {
+          "at": "2026-09-30T19:19:07.080Z",
+          "by": "Jamey",
+          "type": "note",
+          "text": "Its old domain toptierautodallas.com now redirects to a gambling spam site. If raised in a pitch, describe it as what a customer sees today, without blame."
         }
       ]
     },

@@ -33,23 +33,40 @@ export function seededPick<T>(
   return items[seededIndex(seed, namespace, items.length)];
 }
 
-// Extension (engine architect): the deterministic seed for a lead. Stable inputs only: lead id,
-// business name, domain (or website, "" when the lead has none) and industry. The same lead in
-// the same industry always gets the same seed on any machine.
+// Extension: the deterministic seed for a lead, exactly as IMPLEMENTATION-BRIEF-v2.md gives it:
+// `${leadId}:${businessName}:${domain}:${industry}` hashed with hashString (FNV-1a). Stable
+// inputs only; the domain is "" when the lead has none. Surrounding whitespace is trimmed so a
+// stray space in the record never moves the design. The same lead in the same industry always
+// gets the same seed on any machine.
+export function seedInput(input: {
+  leadId: string;
+  business: string;
+  domain?: string;
+  industry: string;
+}): string {
+  const leadId = input.leadId.trim();
+  const businessName = input.business.trim();
+  const domain = String(input.domain || "").trim();
+  const industry = input.industry.trim();
+  return `${leadId}:${businessName}:${domain}:${industry}`;
+}
+
 export function buildSeed(input: {
   leadId: string;
   business: string;
   domain?: string;
   industry: string;
 }): string {
-  const text = [
-    input.leadId,
-    input.business.trim().toLowerCase(),
-    String(input.domain || "").trim().toLowerCase(),
-    input.industry,
-  ].join("|");
+  return `fnv1a-${hashString(seedInput(input)).toString(16).padStart(8, "0")}`;
+}
 
-  return `fnv1a-${hashString(text).toString(16).padStart(8, "0")}`;
+// The domain part of the seed: the lead's domain, else the host of its website, lowercased and
+// without "www.", or "" when the lead has neither.
+export function domainOf(lead: { domain?: unknown; website?: unknown }): string {
+  const raw = String(lead.domain || lead.website || "").trim().toLowerCase();
+  if (!raw) return "";
+  const host = raw.replace(/^[a-z][a-z0-9+.-]*:\/\//, "").split(/[/?#]/)[0];
+  return host.replace(/^www\./, "");
 }
 
 // Extension: a fixed, seeded order of a list (a rotation, so every option keeps its neighbours).

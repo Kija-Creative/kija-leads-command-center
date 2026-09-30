@@ -1,6 +1,7 @@
 // Site DNA schema. The types below were supplied by Jamey on 2026-09-29 and are the contract
 // for the Design Intelligence Engine. Extend them by adding new types or optional fields; do not
-// rename or narrow the ones given.
+// rename or narrow the ones given. The one deliberate edit to his block: IMPLEMENTATION-BRIEF-v2.md
+// (which wins over v1) lists subIndustry among the required SiteDNA fields, so it is required.
 //
 // This file runs directly under Node 24 (type stripping) and is checked with `npm run typecheck`.
 
@@ -114,7 +115,7 @@ export interface SiteDNA {
   businessName: string;
 
   industry: string;
-  subIndustry?: string;
+  subIndustry: string; // v2: always populated (IMPLEMENTATION-BRIEF-v2.md lists it as required)
 
   archetype: string;
   brandTraits: string[];
@@ -307,6 +308,227 @@ export type VocabularyCoverage = [
 ];
 export const VOCABULARY_COVERAGE: VocabularyCoverage = [true, true, true, true, true, true, true];
 
+// v2 COMPONENT DIALECT vocabulary: the sixteen dialects of IMPLEMENTATION-BRIEF-v2.md. Jamey's
+// SiteDNA.componentDialect and IndustryArchetype.componentDialects stay `string` (never
+// narrowed); the loaders reject any value that is not a ComponentDialect or a compound of two
+// (DialectId), such as SPEC-site-dna.md's "editorial-luxury".
+export type ComponentDialect =
+  | "utility"
+  | "editorial"
+  | "clinical"
+  | "luxury"
+  | "industrial"
+  | "technical"
+  | "boutique"
+  | "kinetic"
+  | "commerce"
+  | "portfolio"
+  | "institutional"
+  | "minimal"
+  | "warm-local"
+  | "architectural"
+  | "documentary"
+  | "performance";
+
+export const COMPONENT_DIALECTS = [
+  "utility",
+  "editorial",
+  "clinical",
+  "luxury",
+  "industrial",
+  "technical",
+  "boutique",
+  "kinetic",
+  "commerce",
+  "portfolio",
+  "institutional",
+  "minimal",
+  "warm-local",
+  "architectural",
+  "documentary",
+  "performance",
+] as const satisfies readonly ComponentDialect[];
+
+export const COMPONENT_DIALECT_COVERAGE: Covers<ComponentDialect, typeof COMPONENT_DIALECTS> = true;
+
+// A dialect id: one dialect, or a compound of two that inherits both (parents in order).
+export type DialectId = ComponentDialect | `${ComponentDialect}-${ComponentDialect}`;
+
+// ---------------------------------------------------------------------------------------------
+// v2 optional DNA treatments. None of these is a compared dimension (compareSiteDNA reads the
+// thirteen above); variation.ts reports the six the brief names as optional comparisons. An
+// archetype (or its industry) lists the allowed values under `treatments`; the engine fills a
+// DNA field only when a list exists, except schemaType, trustSignals, conversionSecondary and
+// mobilePriority, which it always derives from the profile, the record and the conversion.
+// ---------------------------------------------------------------------------------------------
+
+export const HEADER_BEHAVIORS = ["static", "sticky", "sticky-condensing", "hide-on-scroll", "transparent-to-solid", "sticky-mobile-bar"] as const;
+export type HeaderBehavior = (typeof HEADER_BEHAVIORS)[number];
+
+export const FOOTER_STYLES = ["minimal", "directory", "contact-led", "editorial", "map-led", "utility", "oversized-type"] as const;
+export type FooterStyle = (typeof FOOTER_STYLES)[number];
+
+export const BACKGROUND_TREATMENTS = ["continuous-light", "continuous-dark", "tonal-shift", "border-separated", "dark-sections", "full-bleed-imagery", "material-texture", "oversized-type", "split-image", "gallery-sequence", "technical-grid", "minimal-whitespace"] as const;
+export type BackgroundTreatment = (typeof BACKGROUND_TREATMENTS)[number];
+
+export const BUTTON_TREATMENTS = ["solid-block", "solid-soft", "outline", "underline-link", "text-arrow", "pill", "oversized-block"] as const;
+export type ButtonTreatment = (typeof BUTTON_TREATMENTS)[number];
+
+export const CARD_TREATMENTS = ["none", "hairline-border", "flat-tonal", "image-led", "spec-sheet", "elevated", "numbered-list"] as const;
+export type CardTreatment = (typeof CARD_TREATMENTS)[number];
+
+export const IMAGE_SHAPES = ["full-bleed", "rectangle", "landscape", "portrait", "square", "arched", "rounded", "cutout", "mixed-crop"] as const;
+export type ImageShape = (typeof IMAGE_SHAPES)[number];
+
+export const ICON_STYLES = ["none", "line", "solid", "numerals", "technical-glyph", "hand-drawn"] as const;
+export type IconStyle = (typeof ICON_STYLES)[number];
+
+export const SPACING_DENSITIES = ["compact", "balanced", "airy"] as const;
+export type SpacingDensity = (typeof SPACING_DENSITIES)[number];
+
+export const CONTENT_DENSITIES = ["sparse", "balanced", "dense"] as const;
+export type ContentDensity = (typeof CONTENT_DENSITIES)[number];
+
+export const STORYTELLING_MODES = ["direct-response", "project-story", "craft-story", "founder-story", "documentary", "methodology", "editorial-essay", "product-led", "place-led", "menu-led", "mission-led"] as const;
+export type StorytellingMode = (typeof STORYTELLING_MODES)[number];
+
+export const MOBILE_PRIORITIES = ["call-first", "book-first", "form-first", "menu-first", "search-first", "donate-first", "content-first"] as const;
+export type MobilePriority = (typeof MOBILE_PRIORITIES)[number];
+
+export const LOCAL_BUSINESS_STRATEGIES = ["service-area", "single-location", "multi-location", "destination", "regional", "online-first"] as const;
+export type LocalBusinessStrategy = (typeof LOCAL_BUSINESS_STRATEGIES)[number];
+
+export const SEO_STRATEGIES = ["local-service-pages", "location-pages", "practice-area-pages", "condition-pages", "menu-and-hours", "listing-pages", "portfolio-pages", "product-pages", "content-hub"] as const;
+export type SeoStrategy = (typeof SEO_STRATEGIES)[number];
+
+// The allowed treatment values of an archetype (or, as defaults, of its industry). Every list
+// is optional; an archetype's list wins over its industry's.
+export interface ArchetypeTreatments {
+  headerBehaviors?: HeaderBehavior[];
+  footerStyles?: FooterStyle[];
+  backgroundTreatments?: BackgroundTreatment[];
+  buttonTreatments?: ButtonTreatment[];
+  cardTreatments?: CardTreatment[];
+  imageShapes?: ImageShape[];
+  iconStyles?: IconStyle[];
+  spacingDensities?: SpacingDensity[];
+  contentDensities?: ContentDensity[];
+  storytellingModes?: StorytellingMode[];
+  mobilePriorities?: MobilePriority[];
+  localBusinessStrategies?: LocalBusinessStrategy[];
+  seoStrategies?: SeoStrategy[];
+}
+
+// Each treatment list with the SiteDNA field it fills and its vocabulary.
+export const TREATMENT_AXES = [
+  { list: "headerBehaviors", field: "headerBehavior", vocab: HEADER_BEHAVIORS },
+  { list: "footerStyles", field: "footerStyle", vocab: FOOTER_STYLES },
+  { list: "backgroundTreatments", field: "backgroundTreatment", vocab: BACKGROUND_TREATMENTS },
+  { list: "buttonTreatments", field: "buttonTreatment", vocab: BUTTON_TREATMENTS },
+  { list: "cardTreatments", field: "cardTreatment", vocab: CARD_TREATMENTS },
+  { list: "imageShapes", field: "imageShape", vocab: IMAGE_SHAPES },
+  { list: "iconStyles", field: "iconStyle", vocab: ICON_STYLES },
+  { list: "spacingDensities", field: "spacingDensity", vocab: SPACING_DENSITIES },
+  { list: "contentDensities", field: "contentDensity", vocab: CONTENT_DENSITIES },
+  { list: "storytellingModes", field: "storytellingMode", vocab: STORYTELLING_MODES },
+  { list: "mobilePriorities", field: "mobilePriority", vocab: MOBILE_PRIORITIES },
+  { list: "localBusinessStrategies", field: "localBusinessStrategy", vocab: LOCAL_BUSINESS_STRATEGIES },
+  { list: "seoStrategies", field: "seoStrategy", vocab: SEO_STRATEGIES },
+] as const satisfies readonly { list: keyof ArchetypeTreatments; field: string; vocab: readonly string[] }[];
+
+export type TreatmentField = (typeof TREATMENT_AXES)[number]["field"];
+
+// The optional treatments v2 names for comparison ("optionally headerBehavior, buttonTreatment,
+// cardTreatment, backgroundTreatment, spacingDensity, contentDensity"). Reported, never counted
+// toward the six meaningful differences.
+export const OPTIONAL_DIMENSIONS = ["headerBehavior", "buttonTreatment", "cardTreatment", "backgroundTreatment", "spacingDensity", "contentDensity"] as const;
+export type OptionalDimension = (typeof OPTIONAL_DIMENSIONS)[number];
+
+// ---------------------------------------------------------------------------------------------
+// v2 trust signals. preferredTrustSignals on a profile names these keys; trust-signals.ts says
+// which lead fields may source each one. Anything unsourced renders as an owner-to-confirm slot
+// and is never stated.
+// ---------------------------------------------------------------------------------------------
+
+export const TRUST_SIGNAL_KEYS = [
+  // shared
+  "google-rating",
+  "review-themes",
+  "verified-reviews",
+  "service-area",
+  "locations",
+  "hours",
+  "phone",
+  "services",
+  "team",
+  "credentials",
+  "certifications",
+  "licenses",
+  "insurance-coverage",
+  "years-in-business",
+  "awards",
+  "press",
+  // home services
+  "real-projects",
+  "before-after",
+  "warranty",
+  "financing",
+  "crew",
+  "manufacturer-certifications",
+  // law
+  "attorneys",
+  "education",
+  "bar-admissions",
+  "practice-experience",
+  "case-experience",
+  "consultation-structure",
+  // medical and dental
+  "providers",
+  "insurance-accepted",
+  "hospital-affiliation",
+  "patient-process",
+  "technology",
+  // finance
+  "regulatory-disclosures",
+  "process",
+  "resources",
+  // restaurant and hospitality
+  "food",
+  "menu",
+  "chef",
+  "environment",
+  "amenities",
+  // wellness and fitness
+  "instructors",
+  "coaches",
+  "methodology",
+  "studio",
+  "schedule",
+  "community",
+  "class-descriptions",
+  // portfolio, nonprofit, industrial, commerce
+  "portfolio",
+  "client-list",
+  "impact",
+  "transparency",
+  "programs",
+  "equipment",
+  "capabilities",
+  "industries-served",
+  "product-reviews",
+  "return-policy",
+] as const;
+
+export type TrustSignalKey = (typeof TRUST_SIGNAL_KEYS)[number];
+
+export interface TrustSignalTruth {
+  signal: string;
+  label: string;
+  status: TruthStatus;           // "sourced" only when a lead field backs it
+  value: string;                 // the recorded value when sourced, otherwise ""
+  note: string;
+}
+
 // Brand traits. Inferred only from verified lead data (see traits.ts). "family-owned",
 // "established" and "heritage" are claims about the business, so traits.ts infers them only
 // from a sourced field (a review theme that says so, or a sourced established year).
@@ -459,6 +681,7 @@ export const MODULE_KEYS = [
   "schedule",
   "instructors",
   "memberships",
+  "community",
   // saas and technology
   "product-demo",
   "use-cases",
@@ -615,23 +838,54 @@ export interface ResolvedPalette extends PaletteDefinition {
 // ---------------------------------------------------------------------------------------------
 
 export interface SiteDNA {
+  variationScore: number;    // v2 required: mirrors record.variation.score (minimum difference ratio)
+  locked: boolean;           // v2 required: mirrors record.locked
   subIndustryLabel?: string;
-  variationScore?: number;   // v2 lists it on the DNA; mirrors record.variation.score
-  locked?: boolean;          // v2 lists it on the DNA; mirrors record.locked
   schemaType?: string;       // most specific schema.org type
   secondaryConversion?: string;
   fontPairing?: FontPairing;
   palette?: ResolvedPalette;
   fingerprint?: string;      // dnaFingerprint(dna), see variation.ts
+
+  // v2 optional fields, filled where the archetype (or its industry) defines them
+  headerBehavior?: HeaderBehavior;
+  footerStyle?: FooterStyle;
+  backgroundTreatment?: BackgroundTreatment;
+  buttonTreatment?: ButtonTreatment;
+  cardTreatment?: CardTreatment;
+  imageShape?: ImageShape;
+  iconStyle?: IconStyle;
+  spacingDensity?: SpacingDensity;
+  contentDensity?: ContentDensity;
+  storytellingMode?: StorytellingMode;
+  mobilePriority?: MobilePriority;
+  localBusinessStrategy?: LocalBusinessStrategy;
+  seoStrategy?: SeoStrategy;
+  trustSignals?: string[];         // the profile's preferredTrustSignals; truth per signal is in record.truth.trustSignals
+  conversionSecondary?: string;    // v2 name; same value as secondaryConversion
 }
+
+// What an archetype needs from the verified record to show at its best (select-archetype.ts).
+export const ATTRIBUTE_SIGNALS = ["phone", "address", "hours", "booking-link", "rating", "reviews", "sourced-services", "established-year", "bilingual"] as const;
+export type AttributeSignal = (typeof ATTRIBUTE_SIGNALS)[number];
+
+// How much real photography a direction needs to work (select-archetype.ts imagery fit).
+export type ImageryDemand = "low" | "medium" | "high";
 
 export interface IndustryArchetype {
   family?: string;                // base family id: design-intelligence/archetypes/<id>.json
-  description?: string;           // one or two sentences on what this direction is
+  description?: string;           // v2 Archetype field: one or two sentences on what this direction is
   excludedBrandTraits?: string[]; // a lead with any of these traits may not receive this archetype
   primaryConversions?: string[];  // conversions this archetype leads with, best first
   fontPairings?: string[];        // FontPairing ids this archetype prefers
   imageryNotes?: string;          // what the photography must show for this direction
+
+  // v2 scoring inputs (select-archetype.ts). All optional.
+  suitableSubIndustries?: string[];    // business types this direction fits best
+  prefersAttributes?: AttributeSignal[]; // verified characteristics that make it stronger
+  imageryDemand?: ImageryDemand;       // default derived from heroes and imagery
+  permitsHighMotion?: boolean;         // explicit permission for a kinetic direction in a trust sensitive industry
+  treatments?: ArchetypeTreatments;    // v2 optional DNA treatments
 }
 
 export interface SubIndustryInfo {
@@ -652,7 +906,8 @@ export interface IndustryProfile {
   styleNotes?: Record<string, string>;         // meaning of this industry's ctaStyle and proofStyle ids
   moduleJobs?: Record<string, string>;         // industry wording of a module's job
   references?: string[];                       // preferred reference ids
-  preferredTrustSignals?: string[];            // v2: the trust signals this industry leans on (sourced or placeholder)
+  preferredTrustSignals?: string[];            // v2 IndustryProfile field: TrustSignalKey values, strongest first
+  treatments?: ArchetypeTreatments;            // industry default treatments; an archetype's own lists win
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -763,6 +1018,13 @@ export interface ArchetypeScore {
   matchedTraits: string[];
   excludedBy: string[];
   appropriate: boolean;
+  // v2 scoring detail (select-archetype.ts); optional so older records still read
+  businessTypeFit?: number;
+  imageryFit?: number;
+  characteristicsFit?: number;
+  similarityPenalty?: number;     // bounded; never makes an inappropriate archetype win
+  notAppropriateBecause?: string[];
+  reasons?: string[];
 }
 
 export interface ComparisonSummary {
@@ -777,6 +1039,10 @@ export interface ComparisonSummary {
   differingDimensions: string[];
   cloneSignatureConflict: boolean;
   duplicate: boolean;
+  sameIndustry?: boolean;         // v2: inside the same industry window, held to the stricter bar
+  required?: number;              // differing dimensions this comparison needs (6, or 7 same industry)
+  optionalDiffering?: string[];   // OPTIONAL_DIMENSIONS that differ (reported, never counted)
+  optionalMatching?: string[];
 }
 
 export interface VariationSummary {
@@ -789,6 +1055,10 @@ export interface VariationSummary {
   comparisons: ComparisonSummary[];
   repairs: string[];             // repair steps applied, in the brief's order
   candidatesChecked: number;
+  industryScore?: number;        // v2: minimum difference ratio against the same industry window
+  industryComparedWith?: number;
+  industryMinDiffering?: number; // the stricter same industry bar
+  minDiffering?: number;         // the global bar (6)
 }
 
 export type TruthStatus = "structural" | "sourced" | "to-confirm" | "placeholder" | "stock-placeholder";
@@ -811,6 +1081,7 @@ export interface TruthPlan {
   modules: ModuleTruth[];
   placeholders: string[];        // modules that must carry data-placeholder="owner-to-confirm"
   neverClaim: string[];
+  trustSignals?: TrustSignalTruth[]; // v2: each preferred trust signal, sourced or owner-to-confirm
 }
 
 export interface BusinessFacts {
@@ -872,6 +1143,23 @@ export interface AuditResult {
   checks: { id: AuditCheckId; pass: boolean; errors: number; warnings: number }[];
   checkedAt: string;
   fingerprint: string;
+  visual?: VisualSimilaritySummary;  // v2: screenshot, embedding or image hash similarity, when a provider ran
+}
+
+export interface VisualSimilarityMatch {
+  leadId: string;
+  business: string;
+  similarity: number;            // 0 to 1, provider defined
+  note: string;
+}
+
+export interface VisualSimilaritySummary {
+  provider: string;
+  kind: "none" | "screenshot" | "embedding" | "image-hash";
+  ran: boolean;
+  threshold: number;
+  matches: VisualSimilarityMatch[];
+  note: string;
 }
 
 export interface DnaOverrideFields {

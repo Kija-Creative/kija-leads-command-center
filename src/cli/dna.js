@@ -1,33 +1,41 @@
-// npm run dna -- (--id <id> | --all) [--unlock] [--lock] [--by <name>] [--dry-run] [--root <dir>]
+// npm run dna -- (--id <id> | --all) [--unlock] [--lock] [--regenerate] [--explore]
+//                 [--set <field>=<value> ...] [--by <name>] [--dry-run] [--root <dir>]
 //
 // Produces Site DNA for leads before any frontend work: classify, infer brand traits from
 // verified fields, score archetypes, select DNA, compare with recent sites and repair when too
 // similar. Writes demos/<id>/SITE_DNA.json, lead.demo.dna (the snapshot) in data/leads.json and
 // appends to data/site-dna-history.json.
 //
-// Locked DNA is kept unless --unlock. --lock locks what was produced (a person's approval).
+// Locked DNA keeps its locked axes unless --unlock. --lock locks what was produced (a person's
+// approval). --regenerate picks another valid combination (facts, industry and conversion kept;
+// inside a lock only the free axes move). --explore picks a different appropriate archetype.
+// --set overrides one field inside the industry and archetype bounds (repeatable, one lead).
 // --all walks leads in pipeline order (addedAt, then id) so each lead is compared with the ones
-// before it. This reads the clock once and passes it down. Nothing is published or sent.
+// before it. History goes through a HistoryRepository: the JSON file, or memory on a dry run.
+// This reads the clock once and passes it down. Nothing is published or sent.
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
-  appendHistory,
   createEngine,
-  latestForLead,
+  jsonHistoryRepository,
   loadHistory,
   lockRecord,
-  saveHistory,
+  memoryHistoryRepository,
   snapshotOf,
 } from "../design-intelligence/index.ts";
+import { candidatePhotos } from "../demo/stock.js";
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-const USAGE = "Usage: npm run dna -- (--id <id> | --all) [--unlock] [--lock] [--by <name>] [--dry-run] [--root <dir>]";
+const USAGE = "Usage: npm run dna -- (--id <id> | --all) [--unlock] [--lock] [--regenerate] [--explore] [--set <field>=<value> ...] [--by <name>] [--dry-run] [--root <dir>]";
+
+// Fields --set may override. sectionOrder takes a comma separated list of module keys.
+export const SET_FIELDS = ["archetype", "paletteFamily", "typography", "hero", "layoutRhythm", "navigation", "geometry", "imagery", "motion", "ctaStyle", "proofStyle", "componentDialect", "primaryConversion", "fontPairing", "industry", "sectionOrder"];
 
 export function parseDnaArgs(argv) {
-  /** @type {{ mode: string, value: string, unlock: boolean, lock: boolean, by: string, dryRun: boolean, root: string, help: boolean, errors: string[] }} */
-  const out = { mode: "", value: "", unlock: false, lock: false, by: "Jamey", dryRun: false, root: DEFAULT_ROOT, help: false, errors: [] };
+  /** @type {{ mode: string, value: string, unlock: boolean, lock: boolean, regenerate: boolean, explore: boolean, set: Record<string, string | string[]>, by: string, dryRun: boolean, root: string, help: boolean, errors: string[] }} */
+  const out = { mode: "", value: "", unlock: false, lock: false, regenerate: false, explore: false, set: {}, by: "Jamey", dryRun: false, root: DEFAULT_ROOT, help: false, errors: [] };
   let selectors = 0;
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -50,7 +58,17 @@ export function parseDnaArgs(argv) {
       selectors += 1;
     } else if (arg === "--unlock") out.unlock = true;
     else if (arg === "--lock") out.lock = true;
-    else if (arg === "--dry-run") out.dryRun = true;
+    else if (arg === "--regenerate") out.regenerate = true;
+    else if (arg === "--explore") out.explore = true;
+    else if (arg === "--set") {
+      const v = next();
+      const eq = v.indexOf("=");
+      const key = eq > 0 ? v.slice(0, eq).trim() : "";
+      const val = eq > 0 ? v.slice(eq + 1).trim() : "";
+      if (v && (!key || !val)) out.errors.push(`--set needs <field>=<value>, got "${v}".`);
+      else if (key && !SET_FIELDS.includes(key)) out.errors.push(`--set cannot change "${key}"; it takes one of: ${SET_FIELDS.join(", ")}.`);
+      else if (key) out.set[key] = key === "sectionOrder" ? val.split(",").map((m) => m.trim()).filter(Boolean) : val;
+    } else if (arg === "--dry-run") out.dryRun = true;
     else if (arg === "--by") out.by = next() || out.by;
     else if (arg === "--root") {
       const v = next();
@@ -60,6 +78,9 @@ export function parseDnaArgs(argv) {
   if (!out.help && selectors === 0) out.errors.push("Pick --id <id> or --all.");
   if (selectors > 1) out.errors.push("Pick one of --id or --all.");
   if (out.lock && out.unlock) out.errors.push("--lock and --unlock cannot be combined; unlock first, then lock the new DNA.");
+  const intents = [out.regenerate, out.explore, Object.keys(out.set).length > 0].filter(Boolean).length;
+  if (intents > 1) out.errors.push("Pick one of --regenerate, --explore or --set.");
+  if (Object.keys(out.set).length && out.mode === "all") out.errors.push("--set overrides one lead; use --id <id>.");
   return out;
 }
 
@@ -98,8 +119,25 @@ export function pipelineOrder(leads) {
   return [...leads].sort((a, b) => String(a.addedAt || "").localeCompare(String(b.addedAt || "")) || String(a.id).localeCompare(String(b.id)));
 }
 
+// The photos that fit a lead, for archetype scoring: a photography led direction needs some.
+export function availableImagery(lead, categories) {
+  const cat = (categories && categories[lead.categoryKey]) || {};
+  return { stockPhotos: candidatePhotos({ categoryKey: lead.categoryKey, vertical: cat.vertical, people: ["none", "hands", "partial"] }).length, ownerPhotos: 0 };
+}
+
+// The history event a run records for one lead.
+function eventFor(selection, existing) {
+  if (selection.set && Object.keys(selection.set).length) return "override";
+  if (selection.explore) return "explore";
+  if (selection.regenerate) return "regenerate";
+  if (selection.unlock && existing && existing.locked) return "unlock";
+  return "select";
+}
+
 // Selects (or keeps) DNA for the chosen leads. `store` is shaped like createStore(root).
-export async function runDna({ root, store, selection, now, engine: given }) {
+// `history` may be a HistoryRepository to use instead of the JSON file (tests, dry runs).
+/** @param {{ root: string, store: any, selection: any, now: string | Date, engine?: any, history?: import("../design-intelligence/history.ts").HistoryRepository }} args */
+export async function runDna({ root, store, selection, now, engine: given, history: givenHistory }) {
   const nowIso = (now instanceof Date ? now : new Date(now)).toISOString();
   const engine = given || (await createEngine({ root }));
   const state = await store.load();
@@ -112,25 +150,38 @@ export async function runDna({ root, store, selection, now, engine: given }) {
     report.errors.push(`No lead has the id "${selection.value}".`);
     return report;
   }
-  let history = loadHistory(historyPath(root));
+  // The JSON repository writes the history on every append; a dry run works on a copy in memory.
+  const history = givenHistory || (selection.dryRun ? memoryHistoryRepository(loadHistory(historyPath(root))) : jsonHistoryRepository(historyPath(root)));
+  const set = selection.set || {};
+  const override = Object.keys(set).length ? { by: selection.by || "Jamey", at: nowIso, fields: { ...set } } : undefined;
   let changedLeads = false;
   for (const lead of chosen) {
     const warnings = [];
     const existing = readRecord(root, lead.id, warnings);
-    const result = engine.select(lead, { now: nowIso, history, existing, unlock: selection.unlock });
+    const result = engine.select(lead, {
+      now: nowIso,
+      history,
+      existing,
+      unlock: Boolean(selection.unlock),
+      regenerate: Boolean(selection.regenerate),
+      explore: Boolean(selection.explore),
+      override,
+      imagery: availableImagery(lead, engine.categories),
+    });
     warnings.push(...result.warnings);
     if (!result.ok || !result.record) {
       report.failed.push({ id: lead.id, business: lead.business, errors: result.errors, warnings });
       continue;
     }
     let record = result.record;
-    const before = latestForLead(history, lead.id);
+    const own = history.all().filter((e) => e.leadId === lead.id);
+    const before = own.length ? own[own.length - 1] : null;
     if (!result.reused || !before || before.fingerprint !== record.fingerprint) {
-      history = appendHistory(history, record, { event: record.overridden ? "override" : "select", now: nowIso });
+      history.append(record, { event: eventFor(selection, existing), now: nowIso });
     }
     if (selection.lock && !record.locked) {
       record = lockRecord(record, { by: selection.by, now: nowIso });
-      history = appendHistory(history, record, { event: "lock", now: nowIso });
+      history.append(record, { event: "lock", now: nowIso });
     }
     if (!selection.dryRun) {
       writeRecord(root, record);
@@ -139,10 +190,7 @@ export async function runDna({ root, store, selection, now, engine: given }) {
     }
     report.done.push({ id: lead.id, business: lead.business, industry: record.dna.industry, archetype: record.dna.archetype, score: record.variation.score, valid: record.variation.valid, fingerprint: record.fingerprint, locked: record.locked, reused: result.reused, warnings, record });
   }
-  if (!selection.dryRun) {
-    if (changedLeads) await store.saveLeads(leads);
-    saveHistory(historyPath(root), history);
-  }
+  if (!selection.dryRun && changedLeads) await store.saveLeads(leads);
   if (report.failed.length) report.ok = false;
   return report;
 }

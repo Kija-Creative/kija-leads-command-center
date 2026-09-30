@@ -2,26 +2,73 @@
 // check returns sentences; an error fails the page, a warning lowers the score. The page is read
 // through the markers in markers.ts (data-dna, data-module, data-section, data-cta,
 // data-placeholder) and its measurable CSS (radius and font tokens, durations, media queries).
-import type { AuditCheckId, AuditFlag, AuditResult, IndustryProfile, LeadRecord, SiteDnaRecord } from "./schema.ts";
+//
+// v2 returns { pass, warnings, failures, similarityIssues, requiredFixes } (plus score, flags and
+// checks), and is architected for screenshot based similarity: a VisualSimilarityProvider
+// (page screenshot, visual embedding or image hash) plugs in through auditSiteWithVisual. The
+// default provider does nothing and says so, because this project has no screenshot
+// infrastructure yet.
+import type { AuditCheckId, AuditFlag, AuditResult, IndustryProfile, LeadRecord, SiteDNA, SiteDnaRecord, VisualSimilarityMatch, VisualSimilaritySummary } from "./schema.ts";
 import { checkDemoHtml } from "../demo/guardrails.js";
 import { AA_NORMAL, contrastRatio, parseColor } from "./contrast.ts";
 import { GEOMETRY_TOKENS, MOTION_RULES } from "./design-tokens.ts";
-import type { HistoryEntry, HistoryFile } from "./history.ts";
-import { comparisonPool, comparisonSet } from "./history.ts";
+import type { HistorySource } from "./history.ts";
+import { comparisonPool, comparisonWindows, DEFAULT_INDUSTRY_LOOKBACK, DEFAULT_LOOKBACK, toHistoryFile } from "./history.ts";
 import type { CssRule, HtmlNode } from "./html.ts";
 import { classList, contains, cssRules, declarations, durationsMs, findAll, hasAncestor, lengthPx, parseHtml, rootTokens, skeleton, styleText } from "./html.ts";
 import { DNA_ATTRIBUTE_MAP, moduleFromMarker } from "./markers.ts";
 import { moduleSpec } from "./modules.ts";
-import { checkCandidate, dnaFingerprint } from "./variation.ts";
+import { checkRecent, dnaFingerprint, SAME_INDUSTRY_MIN_DIFFERING } from "./variation.ts";
 import { toIso, uniq } from "./util.ts";
 
 export interface AuditInput {
   html: string;
   record: SiteDnaRecord;
   profile: IndustryProfile;
-  history?: HistoryFile | readonly HistoryEntry[];
+  history?: HistorySource;
   lead?: LeadRecord;
   now?: string | Date;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Visual similarity (v2: "architect for later screenshot based visual similarity")
+// ---------------------------------------------------------------------------------------------
+
+export interface VisualSimilarityInput {
+  leadId: string;
+  business: string;
+  html: string;
+  dna: SiteDNA;
+  // The recent sites to compare with (the same comparison windows as the DNA check). A provider
+  // renders or loads their pages itself (for example demos/<id>/index.html).
+  previous: { leadId: string; business: string; industry: string; dna: SiteDNA }[];
+}
+
+export interface VisualSimilarityProvider {
+  id: string;
+  kind: VisualSimilaritySummary["kind"];
+  threshold: number;        // similarity at or above this fails the audit
+  available(): boolean;     // false when its screenshot tool or model is missing
+  compare(input: VisualSimilarityInput): VisualSimilarityMatch[] | Promise<VisualSimilarityMatch[]>;
+}
+
+export const noopVisualSimilarity: VisualSimilarityProvider = {
+  id: "none",
+  kind: "none",
+  threshold: 1,
+  available: () => false,
+  compare: () => [],
+};
+
+function visualSkipped(provider: VisualSimilarityProvider): VisualSimilaritySummary {
+  return {
+    provider: provider.id,
+    kind: provider.kind,
+    ran: false,
+    threshold: provider.threshold,
+    matches: [],
+    note: provider.id === "none" ? "No visual similarity provider is configured, so screenshot comparison did not run; the DNA comparison still applies." : `The ${provider.id} visual similarity provider is not available, so screenshot comparison did not run.`,
+  };
 }
 
 export const AUDIT_CHECKS: readonly AuditCheckId[] = [
@@ -67,27 +114,29 @@ function moduleTokens(n: HtmlNode): string[] {
   return String(n.attrs["data-module"] || "").split(/\s+/).filter(Boolean).map(moduleFromMarker);
 }
 
-function historyFile(h: AuditInput["history"]): HistoryFile | null {
-  if (!h) return null;
-  if (Array.isArray(h)) return { version: 1, cap: 500, note: "", entries: [...h] };
-  return h as HistoryFile;
-}
-
-// 1. Too similar to recent sites.
-function checkSimilarity(input: AuditInput, flag: Flag): void {
-  const file = historyFile(input.history);
-  if (!file) return;
+// The recent sites the page is compared with: the same global and same industry windows the
+// selection used.
+function recentWindows(input: AuditInput) {
+  if (!input.history) return null;
+  const file = toHistoryFile(input.history);
   const dna = input.record.dna;
   const pool = comparisonPool(file, input.record.leadId);
-  const set = comparisonSet(pool.predecessors, dna.industry, input.record.variation.lookback || 8, input.record.variation.industryLookback || 8);
-  if (!set.length) return;
-  const check = checkCandidate(dna, set.map((e) => e.dna), pool.others);
+  const w = comparisonWindows(pool.predecessors, dna.industry, input.record.variation.lookback || DEFAULT_LOOKBACK, input.record.variation.industryLookback || DEFAULT_INDUSTRY_LOOKBACK);
+  return { pool, ...w, sameSet: new Set(w.sameIndustry) };
+}
+
+// 1. Too similar to recent sites (the same industry window held to the stricter bar).
+function checkSimilarity(input: AuditInput, flag: Flag): void {
+  const w = recentWindows(input);
+  if (!w || !w.set.length) return;
+  const dna = input.record.dna;
+  const check = checkRecent(dna, w.set.map((e) => ({ dna: e.dna, sameIndustry: w.sameSet.has(e) })), w.pool.others, { industryMinDiffering: input.record.variation.industryMinDiffering ?? SAME_INDUSTRY_MIN_DIFFERING });
   if (check.duplicate) flag("similarity", "error", `The Site DNA is identical to ${check.duplicate.businessName || check.duplicate.leadId}'s; a DNA may never be issued twice.`);
-  check.comparisons.forEach(({ result }, i) => {
-    if (result.valid) return;
-    const who = set[i].business || set[i].leadId;
-    if (result.cloneSignatureConflict) flag("similarity", "error", `It shares hero, section order, typography and geometry with ${who}, the combination the brief forbids on consecutive sites.`);
-    else flag("similarity", "error", `It differs from ${who} on only ${result.differenceCount} of 13 dimensions (matching: ${result.matchingDimensions.join(", ")}); at least 6 must differ.`);
+  check.comparisons.forEach((c, i) => {
+    if (c.valid) return;
+    const who = w.set[i].business || w.set[i].leadId;
+    if (c.result.cloneSignatureConflict) flag("similarity", "error", `It shares hero, section order, typography and geometry with ${who}, the combination the brief forbids on consecutive sites.`);
+    else flag("similarity", "error", `It differs from ${who}${c.sameIndustry ? " (same industry)" : ""} on only ${c.result.differenceCount} of 13 dimensions (matching: ${c.result.matchingDimensions.join(", ")}); at least ${c.required} must differ.`);
   });
 }
 
@@ -378,7 +427,7 @@ function checkLibraryLook(page: Page, flag: Flag): void {
   else if (hits.length === 1) flag("component-library-look", "warning", `A default component library signature is present: ${hits[0].label}. Restyle it to the Site DNA.`);
 }
 
-export function auditSite(input: AuditInput): AuditResult {
+function collectFlags(input: AuditInput): { flags: AuditFlag[]; flag: Flag } {
   const flags: AuditFlag[] = [];
   const flag: Flag = (check, severity, message) => {
     if (!flags.some((f) => f.check === check && f.message === message)) flags.push({ check, severity, message });
@@ -396,6 +445,10 @@ export function auditSite(input: AuditInput): AuditResult {
   checkResponsive(page, flag);
   checkAccessibility(page, input, flag);
   checkLibraryLook(page, flag);
+  return { flags, flag };
+}
+
+function buildResult(input: AuditInput, flags: AuditFlag[], visual: VisualSimilaritySummary): AuditResult {
   const errors = flags.filter((f) => f.severity === "error").length;
   const warnings = flags.length - errors;
   const checks = AUDIT_CHECKS.map((id) => {
@@ -415,5 +468,25 @@ export function auditSite(input: AuditInput): AuditResult {
     checks,
     checkedAt: input.now !== undefined ? toIso(input.now) : input.record.updatedAt,
     fingerprint: dnaFingerprint(input.record.dna),
+    visual,
   };
+}
+
+export function auditSite(input: AuditInput): AuditResult {
+  return buildResult(input, collectFlags(input).flags, visualSkipped(noopVisualSimilarity));
+}
+
+// The audit plus a visual similarity provider. Matches at or above the provider's threshold are
+// similarity errors ("resembles the template of another recent business").
+export async function auditSiteWithVisual(input: AuditInput & { visual?: VisualSimilarityProvider }): Promise<AuditResult> {
+  const provider = input.visual || noopVisualSimilarity;
+  const { flags, flag } = collectFlags(input);
+  if (!provider.available()) return buildResult(input, flags, visualSkipped(provider));
+  const w = recentWindows(input);
+  const previous = w ? w.set.map((e) => ({ leadId: e.leadId, business: e.business, industry: e.industry, dna: e.dna })) : [];
+  const matches = await provider.compare({ leadId: input.record.leadId, business: input.record.business, html: String(input.html || ""), dna: input.record.dna, previous });
+  for (const m of matches) {
+    if (m.similarity >= provider.threshold) flag("similarity", "error", `The page looks visually very similar to ${m.business || m.leadId} (${provider.kind} similarity ${m.similarity}, threshold ${provider.threshold})${m.note ? `: ${m.note}` : ""}.`);
+  }
+  return buildResult(input, flags, { provider: provider.id, kind: provider.kind, ran: true, threshold: provider.threshold, matches, note: `Compared with ${previous.length} recent sites by ${provider.kind}.` });
 }

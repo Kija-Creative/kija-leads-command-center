@@ -1,14 +1,20 @@
 // selectSiteDna: the brief's pipeline, pure and deterministic.
 //
 //   lead -> classification (industry, sub-industry) -> business attributes -> brand traits
-//   (verified fields only) -> conversion objective -> appropriate archetypes scored by trait fit
-//   first -> Site DNA candidates in a seeded order -> variation check against history -> repair
-//   in the brief's order when too similar -> SiteDnaRecord with a reasoning summary.
+//   (verified fields only) -> conversion objective -> appropriate archetypes scored
+//   (select-archetype.ts) -> Site DNA candidates in a seeded order -> variation check against
+//   the global and same industry windows -> repair in v2's order when too similar ->
+//   SiteDnaRecord with a reasoning summary.
 //
 // Suitability always outranks the seed: every option list is sorted by brand trait affinity,
 // then the archetype family's preference, and the seed only orders options of equal fit.
-// Locked DNA comes back unchanged unless options.unlock. A human override is validated against
-// the industry and archetype bounds and stored with overridden true.
+//
+// Locking (v2): a locked DNA keeps its archetype, typography, palette family, layout rhythm,
+// geometry, hero, section architecture and component dialect (LOCKED_AXES) until unlocked; facts,
+// truth and copy are refreshed from the lead. Regenerate keeps facts, industry and conversion and
+// picks another valid combination deterministically; explore forces a different appropriate
+// archetype. A human override is validated against the industry and archetype bounds and stored
+// with overridden true.
 import type {
   ArchetypeScore,
   BusinessAttributes,
@@ -27,6 +33,7 @@ import type {
   LayoutRhythm,
   LeadDnaSnapshot,
   LeadRecord,
+  MobilePriority,
   MotionStyle,
   NavigationStyle,
   ReferenceUse,
@@ -38,21 +45,24 @@ import type {
   TypographyStyle,
   ValidationResult,
 } from "./schema.ts";
-import { MOTION_STYLES } from "./schema.ts";
+import { MOTION_STYLES, TREATMENT_AXES } from "./schema.ts";
 import type { BaseArchetype, FamilyRegistry } from "./archetypes.ts";
 import { familyPreference } from "./archetypes.ts";
 import type { DialectRegistry } from "./component-dialects.ts";
 import { DIMENSION_LABELS, fontPairing as findPairing, GLOBAL_FORBIDDEN_DEFAULTS, pairingsFor, VALUE_TRAIT_AFFINITY } from "./design-tokens.ts";
-import type { HistoryEntry, HistoryFile } from "./history.ts";
-import { comparisonPool, comparisonSet, emptyHistory } from "./history.ts";
+import type { HistoryEntry, HistorySource } from "./history.ts";
+import { comparisonPool, comparisonWindows, DEFAULT_INDUSTRY_LOOKBACK, DEFAULT_LOOKBACK, queryHistory, toHistoryFile } from "./history.ts";
 import type { IndustryRegistry } from "./industries.ts";
 import { classifyLead, getArchetype } from "./industries.ts";
 import { isModuleKey, moduleTruth } from "./modules.ts";
 import type { DesignReference } from "./references.ts";
 import { selectReferences } from "./references.ts";
-import { buildSeed, seededIndex, seededOrder } from "./seed.ts";
+import type { AvailableImagery } from "./select-archetype.ts";
+import { ctaMatchesConversion, isTrustSensitive, scoreArchetypes } from "./select-archetype.ts";
+import { buildSeed, domainOf, seededOrder } from "./seed.ts";
 import { businessAttributes, citeTrait, inferBrandTraits, traitWeights } from "./traits.ts";
-import { checkCandidate, dnaFingerprint } from "./variation.ts";
+import { DEFAULT_TRUST_SIGNALS, trustSignalTruth } from "./trust-signals.ts";
+import { checkRecent, dnaFingerprint, MIN_DIFFERING_DIMENSIONS, SAME_INDUSTRY_MIN_DIFFERING } from "./variation.ts";
 import { toIso, uniq } from "./util.ts";
 
 export interface EngineData {
@@ -65,12 +75,17 @@ export interface EngineData {
 
 export interface SelectOptions {
   now: string | Date;
-  history?: HistoryFile;
+  history?: HistorySource;       // a repository, a HistoryFile or entries; never a path
   existing?: SiteDnaRecord | null;
-  unlock?: boolean;
+  unlock?: boolean;              // regenerate a locked DNA from scratch (a person's decision)
   override?: DnaOverride;
-  lookback?: number;
-  industryLookback?: number;
+  regenerate?: boolean;          // another valid combination; facts, industry and conversion kept
+  explore?: boolean;             // a different appropriate archetype (explore another direction)
+  imagery?: AvailableImagery;    // photos that fit the business, for archetype scoring
+  allowHighMotion?: boolean;     // explicit permission for kinetic directions in trust sensitive industries
+  lookback?: number;             // global window (default 8)
+  industryLookback?: number;     // same industry window (default 4), always compared
+  industryMinDiffering?: number; // same industry bar (default 7)
   maxCandidates?: number;
 }
 
@@ -79,19 +94,25 @@ export interface SelectResult extends ValidationResult {
   reused: boolean;
 }
 
-// The brief's repair order after "try another appropriate archetype". Color never changes alone:
-// the palette only moves in the last resort step, together with the remaining axes.
-export const REPAIR_ORDER = ["sectionOrder", "typography", "hero", "layoutRhythm", "imagery", "geometry", "componentDialect"] as const;
-export const LAST_RESORT_AXES = ["navigation", "motion", "ctaStyle", "proofStyle", "paletteFamily"] as const;
+// v2 repair order after "1. try another appropriate archetype": 2 hero architecture,
+// 3 typography classification, 4 recompose section order, 5 layout rhythm, 6 geometry,
+// 7 imagery strategy, 8 component dialect, 9 navigation architecture. Colour never changes alone:
+// the palette only moves in the last resort steps, together with every structural axis.
+export const REPAIR_ORDER = ["hero", "typography", "sectionOrder", "layoutRhythm", "geometry", "imagery", "componentDialect", "navigation"] as const;
+export const LAST_RESORT_AXES = ["motion", "ctaStyle", "proofStyle", "paletteFamily"] as const;
+
+// What a lock preserves (v2, Locking and regeneration). Copy and content may still evolve.
+export const LOCKED_AXES = ["archetype", "typography", "paletteFamily", "layoutRhythm", "geometry", "hero", "sectionOrder", "componentDialect"] as const;
 
 const REPAIR_LABELS: Record<string, string> = {
-  sectionOrder: "Recomposed the section order.",
-  typography: "Changed the typography classification.",
   hero: "Changed the hero architecture.",
+  typography: "Changed the typography classification.",
+  sectionOrder: "Recomposed the section order.",
   layoutRhythm: "Changed the layout rhythm.",
-  imagery: "Changed the imagery treatment.",
   geometry: "Changed the geometry.",
+  imagery: "Changed the imagery strategy.",
   componentDialect: "Changed the component dialect.",
+  navigation: "Changed the navigation architecture.",
 };
 
 type AxisKey = "hero" | "navigation" | "typography" | "layoutRhythm" | "geometry" | "imagery" | "motion" | "paletteFamily" | "ctaStyle" | "proofStyle" | "componentDialect" | "sectionOrder";
@@ -150,7 +171,7 @@ export const NEVER_CLAIM = [
   "availability promises such as 24/7 or same day",
 ];
 
-export function buildTruthPlan(modules: readonly string[], facts: BusinessFacts): TruthPlan {
+export function buildTruthPlan(modules: readonly string[], facts: BusinessFacts, trustSignals: readonly string[] = []): TruthPlan {
   const out: TruthPlan["facts"] = [];
   const push = (field: string, label: string, value: string) => {
     if (value) out.push({ field, label, value });
@@ -176,6 +197,7 @@ export function buildTruthPlan(modules: readonly string[], facts: BusinessFacts)
     modules: truths,
     placeholders: truths.filter((t) => t.status === "placeholder").map((t) => t.module),
     neverClaim: [...NEVER_CLAIM],
+    trustSignals: trustSignalTruth(uniq(trustSignals), facts),
   };
 }
 
@@ -201,62 +223,7 @@ export function conversionObjective(profile: IndustryProfile, attrs: BusinessAtt
   return { primary, secondary, reason };
 }
 
-// ---------------------------------------------------------------------------------------------
-// Archetype scoring
-// ---------------------------------------------------------------------------------------------
-
-const CONVERSION_WORDS: Record<string, RegExp> = {
-  call: /call|phone/,
-  "request-estimate": /estimate|quote/,
-  inspection: /inspection|estimate/,
-  quote: /quote|estimate/,
-  book: /book/,
-  appointment: /appointment|book/,
-  consultation: /consult/,
-  reserve: /reserv|book/,
-  tour: /tour/,
-  demo: /demo/,
-  donate: /donat/,
-  rfq: /rfq|quote/,
-};
-
-function ctaMatchesConversion(style: string, conversion: string): boolean {
-  const re = CONVERSION_WORDS[conversion];
-  return re ? re.test(style) : style.includes(conversion);
-}
-
-export function scoreArchetypes(profile: IndustryProfile, traits: readonly TraitSummary[], conversion: ConversionObjective, seed: string): ArchetypeScore[] {
-  const weights = traitWeights(traits);
-  const raw = profile.archetypes.map((a) => {
-    const matchedTraits = a.suitableBrandTraits.filter((t) => weights.has(t));
-    const traitFit = matchedTraits.reduce((s, t) => s + (weights.get(t) || 0), 0);
-    let conversionFit = 0;
-    if (a.primaryConversions && a.primaryConversions.length) {
-      const i = a.primaryConversions.indexOf(conversion.primary);
-      conversionFit = i === 0 ? 3 : i > 0 ? 2 : 0;
-    } else if (a.ctaStyles.some((c) => ctaMatchesConversion(c, conversion.primary))) {
-      conversionFit = 2;
-    }
-    const excludedBy = (a.excludedBrandTraits || []).filter((t) => weights.has(t));
-    return { a, traitFit, conversionFit, matchedTraits, excludedBy };
-  });
-  const eligible = raw.filter((r) => !r.excludedBy.length);
-  const best = Math.max(0, ...eligible.map((r) => r.traitFit));
-  return raw
-    .map((r) => ({
-      id: r.a.id,
-      label: r.a.label,
-      score: r.traitFit * 10 + r.conversionFit,
-      traitFit: r.traitFit,
-      conversionFit: r.conversionFit,
-      matchedTraits: r.matchedTraits,
-      excludedBy: r.excludedBy,
-      appropriate: !r.excludedBy.length && (best === 0 || r.traitFit * 2 >= best),
-      tie: seededIndex(seed, `archetype:${r.a.id}`, 1000003),
-    }))
-    .sort((x, y) => Number(y.appropriate) - Number(x.appropriate) || y.traitFit - x.traitFit || y.conversionFit - x.conversionFit || x.tie - y.tie)
-    .map((s) => ({ id: s.id, label: s.label, score: s.score, traitFit: s.traitFit, conversionFit: s.conversionFit, matchedTraits: s.matchedTraits, excludedBy: s.excludedBy, appropriate: s.appropriate }));
-}
+// Archetype scoring lives in select-archetype.ts (scoreArchetypes, selectArchetype).
 
 // ---------------------------------------------------------------------------------------------
 // Option ordering inside an archetype
@@ -352,7 +319,10 @@ interface ArchetypePlan {
 function planArchetype(archetype: IndustryArchetype, profile: IndustryProfile, base: Omit<OrderContext, "family" | "profile">, families: FamilyRegistry | undefined, warnings: string[]): ArchetypePlan {
   const family = archetype.family ? families?.families.get(archetype.family) : undefined;
   const c: OrderContext = { ...base, family, profile };
-  let motion = motionAllowed(archetype.motion, [profile.motionCeiling, family?.motion.ceiling]);
+  // Trust sensitive industries (health, law, finance, home access) get restrained motion: at most
+  // moderate unless the profile sets its own ceiling or the archetype is explicitly permitted.
+  const industryCeiling = profile.motionCeiling ?? (isTrustSensitive(profile) && !archetype.permitsHighMotion ? "moderate" : undefined);
+  let motion = motionAllowed(archetype.motion, [industryCeiling, family?.motion.ceiling]);
   if (!motion.length) {
     warnings.push(`Every motion option of ${archetype.label} is above a ceiling; the archetype's own list is used.`);
     motion = [...archetype.motion];
@@ -435,6 +405,7 @@ function* stepCandidates(plan: ArchetypePlan, unlocked: readonly AxisKey[], must
 interface Assembly {
   lead: LeadRecord;
   classification: Classification;
+  subIndustry: string;
   profile: IndustryProfile;
   traits: TraitSummary[];
   conversion: ConversionObjective;
@@ -474,17 +445,61 @@ function forbiddenFor(dna: Pick<SiteDNA, "geometry" | "hero" | "imagery" | "typo
   return uniq([...profile.defaultForbiddenPatterns, ...archetype.forbiddenPatterns, ...(family?.forbiddenPatterns || []), ...(dialect?.forbiddenPatterns || []), ...globals, ...extra]);
 }
 
+// The mobile priority a conversion implies, when the archetype lists none.
+const MOBILE_PRIORITY_FOR: Record<string, MobilePriority> = {
+  call: "call-first",
+  book: "book-first",
+  appointment: "book-first",
+  consultation: "book-first",
+  reserve: "book-first",
+  "intro-offer": "book-first",
+  membership: "book-first",
+  tour: "book-first",
+  "check-availability": "book-first",
+  enroll: "book-first",
+  "request-estimate": "form-first",
+  inspection: "form-first",
+  quote: "form-first",
+  rfq: "form-first",
+  valuation: "form-first",
+  demo: "form-first",
+  signup: "form-first",
+  contact: "form-first",
+  order: "menu-first",
+  search: "search-first",
+  purchase: "search-first",
+  donate: "donate-first",
+  volunteer: "donate-first",
+};
+
+// v2 optional treatments: each list the archetype (or, failing that, its industry) defines, in a
+// seeded order; the seed only chooses among values the author allowed. mobilePriority,
+// trustSignals and conversionSecondary are always derived.
+function fillTreatments(dna: SiteDNA, archetype: IndustryArchetype, profile: IndustryProfile, conversion: ConversionObjective, seed: string): void {
+  const target = dna as unknown as Record<string, unknown>;
+  const implied = MOBILE_PRIORITY_FOR[conversion.primary] || "content-first";
+  for (const t of TREATMENT_AXES) {
+    const list = (archetype.treatments?.[t.list] || profile.treatments?.[t.list] || []) as readonly string[];
+    if (!list.length) continue;
+    // The mobile priority follows the conversion whenever the list allows it.
+    target[t.field] = t.field === "mobilePriority" && list.includes(implied) ? implied : seededOrder(list, seed, `treatment:${t.field}`)[0];
+  }
+  if (!dna.mobilePriority) dna.mobilePriority = implied;
+  dna.trustSignals = [...(profile.preferredTrustSignals && profile.preferredTrustSignals.length ? profile.preferredTrustSignals : DEFAULT_TRUST_SIGNALS)];
+  if (conversion.secondary) dna.conversionSecondary = conversion.secondary;
+}
+
 function assemble(plan: ArchetypePlan, values: Values, a: Assembly): SiteDNA {
   const archetype = plan.archetype;
   const sectionOrder = [...(plan.orders.get(values.sectionOrder) || values.sectionOrder.split(","))];
   const typography = values.typography as TypographyStyle;
-  const sub = a.profile.subIndustries?.[a.classification.subIndustry];
+  const sub = a.profile.subIndustries?.[a.subIndustry];
   const dna: SiteDNA = {
     version: 1,
     leadId: a.lead.id,
     businessName: String(a.lead.business || ""),
     industry: a.profile.id,
-    subIndustry: a.classification.subIndustry,
+    subIndustry: a.subIndustry,
     archetype: archetype.id,
     brandTraits: a.traits.map((t) => t.trait),
     primaryConversion: a.conversion.primary,
@@ -506,9 +521,12 @@ function assemble(plan: ArchetypePlan, values: Values, a: Assembly): SiteDNA {
     forbiddenPatterns: [],
     referencesUsed: [],
     seed: a.seed,
+    variationScore: 1,   // set by finishRecord from the variation summary
     createdAt: a.createdAt,
+    locked: false,       // set by finishRecord
   };
   dna.forbiddenPatterns = forbiddenFor(dna, a.profile, archetype, plan.family, a.dialects, a.extraForbidden);
+  fillTreatments(dna, archetype, a.profile, a.conversion, a.seed);
   if (sub) dna.subIndustryLabel = sub.label;
   dna.schemaType = sub?.schemaOrgType || a.profile.schemaOrgType || "LocalBusiness";
   if (a.conversion.secondary) dna.secondaryConversion = a.conversion.secondary;
@@ -534,18 +552,20 @@ interface FastSite {
   hero: string;
   typography: string;
   geometry: string;
+  min: number;       // differing dimensions required against this site
+  clone: boolean;    // whether the hard clone rule applies (false only for a relaxed self check)
 }
 
-function fast(dna: Pick<SiteDNA, (typeof SCALAR_DIMS)[number] | "sectionOrder">): FastSite {
-  return { values: SCALAR_DIMS.map((d) => String(dna[d])), order: dna.sectionOrder.join(","), hero: dna.hero, typography: dna.typography, geometry: dna.geometry };
+function fast(dna: Pick<SiteDNA, (typeof SCALAR_DIMS)[number] | "sectionOrder">, min = MIN_DIFFERING_DIMENSIONS, clone = true): FastSite {
+  return { values: SCALAR_DIMS.map((d) => String(dna[d])), order: dna.sectionOrder.join(","), hero: dna.hero, typography: dna.typography, geometry: dna.geometry, min, clone };
 }
 
 function fastOk(c: FastSite, set: readonly FastSite[], all: readonly FastSite[]): boolean {
   for (const s of set) {
     let diff = c.order === s.order ? 0 : 1;
     for (let i = 0; i < c.values.length; i += 1) if (c.values[i] !== s.values[i]) diff += 1;
-    if (diff < 6) return false;
-    if (c.order === s.order && c.hero === s.hero && c.typography === s.typography && c.geometry === s.geometry) return false;
+    if (diff < s.min) return false;
+    if (s.clone && c.order === s.order && c.hero === s.hero && c.typography === s.typography && c.geometry === s.geometry) return false;
   }
   for (const s of all) {
     if (c.order !== s.order) continue;
@@ -558,40 +578,54 @@ function fastOk(c: FastSite, set: readonly FastSite[], all: readonly FastSite[])
 
 function fastFromValues(archetypeId: string, v: Values): FastSite {
   const values = SCALAR_DIMS.map((d) => (d === "archetype" ? archetypeId : v[d as AxisKey]));
-  return { values, order: v.sectionOrder, hero: v.hero, typography: v.typography, geometry: v.geometry };
+  return { values, order: v.sectionOrder, hero: v.hero, typography: v.typography, geometry: v.geometry, min: 0, clone: true };
 }
 
 // ---------------------------------------------------------------------------------------------
 // Variation summary
 // ---------------------------------------------------------------------------------------------
 
-function summarize(dna: SiteDNA, set: readonly HistoryEntry[], others: readonly SiteDNA[], lookback: number, industryLookback: number, repairs: string[], checked: number) {
-  const check = checkCandidate(dna, set.map((e) => e.dna), [...others]);
-  const comparisons: ComparisonSummary[] = check.comparisons.map(({ site, result }, i) => ({
-    leadId: set[i].leadId,
-    business: set[i].business,
-    industry: set[i].industry,
-    archetype: site.archetype,
-    valid: result.valid,
-    differenceCount: result.differenceCount,
-    differenceRatio: Math.round(result.differenceRatio * 1000) / 1000,
-    matchingDimensions: result.matchingDimensions,
-    differingDimensions: result.differingDimensions,
-    cloneSignatureConflict: result.cloneSignatureConflict,
-    duplicate: result.differenceCount === 0,
+export interface Windows {
+  set: HistoryEntry[];
+  sameIndustry: ReadonlySet<HistoryEntry>;
+  industryMin: number;
+}
+
+function summarize(dna: SiteDNA, w: Windows, others: readonly SiteDNA[], lookback: number, industryLookback: number, repairs: string[], checked: number) {
+  const check = checkRecent(dna, w.set.map((e) => ({ dna: e.dna, sameIndustry: w.sameIndustry.has(e) })), others, { industryMinDiffering: w.industryMin });
+  const comparisons: ComparisonSummary[] = check.comparisons.map((c, i) => ({
+    leadId: w.set[i].leadId,
+    business: w.set[i].business,
+    industry: w.set[i].industry,
+    archetype: c.site.archetype,
+    valid: c.valid,
+    differenceCount: c.result.differenceCount,
+    differenceRatio: Math.round(c.result.differenceRatio * 1000) / 1000,
+    matchingDimensions: c.result.matchingDimensions,
+    differingDimensions: c.result.differingDimensions,
+    cloneSignatureConflict: c.result.cloneSignatureConflict,
+    duplicate: c.result.differenceCount === 0,
+    sameIndustry: c.sameIndustry,
+    required: c.required,
+    optionalDiffering: c.optional.differing,
+    optionalMatching: c.optional.matching,
   }));
   return {
     valid: check.valid,
     summary: {
       score: check.score,
       valid: check.valid,
-      comparedWith: set.length,
+      comparedWith: w.set.length,
       lookback,
       industryLookback,
       duplicateOf: check.duplicate ? check.duplicate.leadId : null,
       comparisons,
       repairs,
       candidatesChecked: checked,
+      industryScore: check.industryScore,
+      industryComparedWith: comparisons.filter((c) => c.sameIndustry).length,
+      industryMinDiffering: check.industryMinDiffering,
+      minDiffering: check.minDiffering,
     },
   };
 }
@@ -692,55 +726,131 @@ function fail(errors: string[], warnings: string[] = []): SelectResult {
   return { ok: false, errors, warnings, record: null, reused: false };
 }
 
+function valuesOf(dna: SiteDNA): Values {
+  const v = {} as Values;
+  for (const k of AXIS_KEYS) v[k] = k === "sectionOrder" ? dna.sectionOrder.join(",") : String(dna[k]);
+  return v;
+}
+
+// The axes a lock leaves free. Regenerating a locked DNA may move only these.
+export const FREE_UNDER_LOCK = ["navigation", "imagery", "motion", "ctaStyle", "proofStyle"] as const;
+
+// Every combination of the free axes around a pinned base, fewest changes first, the base
+// itself excluded. Options come in the plan's order, so the result is deterministic.
+function* freeCombinations(plan: ArchetypePlan, base: Values, axes: readonly AxisKey[]): Generator<Values> {
+  const lists = axes.map((a) => uniq([base[a], ...plan.options[a]]));
+  const sizes = lists.map((l) => l.length);
+  const total = sizes.reduce((p, n) => p * n, 1);
+  const all: { v: Values; changed: number; n: number }[] = [];
+  for (let n = 1; n < total; n += 1) {
+    let rest = n;
+    const v = { ...base };
+    let changed = 0;
+    for (let i = axes.length - 1; i >= 0; i -= 1) {
+      const j = rest % sizes[i];
+      rest = Math.floor(rest / sizes[i]);
+      v[axes[i]] = lists[i][j];
+      if (j) changed += 1;
+    }
+    all.push({ v, changed, n });
+  }
+  all.sort((a, b) => a.changed - b.changed || a.n - b.n);
+  for (const c of all) yield c.v;
+}
+
+// The sub-industry is always populated: the category's, unless the industry was changed by an
+// override or kept from a lock, in which case the profile's first sub-industry (or its id).
+function resolveSubIndustry(profile: IndustryProfile, own: string, industryChanged: boolean, warnings: string[]): string {
+  const subs = profile.subIndustries ? Object.keys(profile.subIndustries) : [];
+  if (!industryChanged) return own || subs[0] || profile.id;
+  if (own && subs.includes(own)) return own;
+  const fallback = subs[0] || profile.id;
+  if (own) warnings.push(`The sub-industry "${own}" comes from the lead's category, not the ${profile.label} profile; "${fallback}" is used.`);
+  return fallback;
+}
+
 export function selectSiteDna(lead: LeadRecord, engine: EngineData, options: SelectOptions): SelectResult {
   const warnings: string[] = [];
+  if (!lead || typeof lead.id !== "string" || !lead.id) return fail(["The lead needs an id."]);
   const now = toIso(options.now);
-  const history = options.history || emptyHistory();
-  const lookback = options.lookback ?? 8;
-  const industryLookback = options.industryLookback ?? 8;
+  const history = toHistoryFile(options.history);
+  const lookback = options.lookback ?? DEFAULT_LOOKBACK;
+  const industryLookback = options.industryLookback ?? DEFAULT_INDUSTRY_LOOKBACK;
+  const industryMin = Math.max(MIN_DIFFERING_DIMENSIONS, options.industryMinDiffering ?? SAME_INDUSTRY_MIN_DIFFERING);
   const existing = options.existing || null;
   const snapshot = snapshotFromLead(lead);
-  const lockedSnapshot = !existing && snapshot && snapshot.locked ? snapshot : null;
-
-  if (!lead || typeof lead.id !== "string" || !lead.id) return fail(["The lead needs an id."]);
-  if (existing && existing.locked && !options.unlock) {
-    if (options.override) return { ok: false, errors: [`The Site DNA for ${lead.business} is locked by ${existing.lockedBy || "a reviewer"}; unlock it before overriding.`], warnings, record: existing, reused: true };
-    return { ok: true, errors: [], warnings, record: existing, reused: true };
-  }
+  const ownEntries = queryHistory(history, { leadId: lead.id });
+  // The lead's current DNA: its record, else the snapshot on the lead, else its latest history entry.
+  const current: SiteDNA | null = existing ? existing.dna : snapshot ? snapshot.dna : ownEntries.length ? ownEntries[ownEntries.length - 1].dna : null;
+  const lockInfo = existing && existing.locked
+    ? { by: existing.lockedBy, at: existing.lockedAt, overridden: existing.overridden, override: existing.override }
+    : !existing && snapshot && snapshot.locked
+      ? { by: snapshot.lockedBy, at: snapshot.lockedAt, overridden: snapshot.overridden, override: null }
+      : null;
+  const locked = lockInfo !== null && !options.unlock && current !== null;
+  const lockedBy = lockInfo?.by || "a reviewer";
+  if (locked && options.override) return { ok: false, errors: [`The Site DNA for ${lead.business} is locked by ${lockedBy}; unlock it before overriding.`], warnings, record: existing, reused: true };
+  if (locked && options.explore) return { ok: false, errors: [`The Site DNA for ${lead.business} is locked by ${lockedBy}; unlock it before exploring another direction, which changes the archetype.`], warnings, record: existing, reused: true };
+  if (options.override && (options.regenerate || options.explore)) return fail(["Override, regenerate and explore are separate actions; pick one."]);
+  const redirect = Boolean(options.regenerate || options.explore);
 
   const classification = classifyLead(lead, { categories: engine.categories, registry: engine.registry });
   warnings.push(...classification.warnings);
   const overrideIndustry = options.override?.fields.industry;
+  // A lock, a regeneration and an exploration keep the industry of the current DNA.
+  const keptIndustry = current && (locked || redirect) && engine.registry.profiles.has(current.industry) ? current.industry : "";
   let industryId = classification.industry;
   if (overrideIndustry) {
     if (!engine.registry.profiles.has(overrideIndustry)) return fail([`The override names the industry "${overrideIndustry}", which has no loaded profile.`], warnings);
     industryId = overrideIndustry;
-  } else if (lockedSnapshot && !options.unlock && engine.registry.profiles.has(lockedSnapshot.dna.industry)) {
-    industryId = lockedSnapshot.dna.industry;
+  } else if (keptIndustry) {
+    industryId = keptIndustry;
   } else if (!classification.ok) {
     return fail(classification.errors, warnings);
   }
   const profile = engine.registry.profiles.get(industryId) as IndustryProfile;
-  const cls: Classification = { ...classification, ok: true, errors: [], industry: industryId, reason: overrideIndustry ? `Industry set to ${profile.label} by ${options.override?.by}'s override (the category maps to ${classification.industry || "nothing"}).` : classification.reason };
+  const industryChanged = industryId !== classification.industry;
+  const subIndustry = resolveSubIndustry(profile, classification.subIndustry, industryChanged, warnings);
+  const reason = overrideIndustry
+    ? `Industry set to ${profile.label} by ${options.override?.by}'s override (the category maps to ${classification.industry || "nothing"}).`
+    : keptIndustry && industryChanged
+      ? `Industry kept at ${profile.label} from the ${locked ? "locked" : "current"} Site DNA (the category maps to ${classification.industry || "nothing"}).`
+      : classification.reason;
+  const cls: Classification = { ...classification, ok: true, errors: [], industry: industryId, subIndustry, reason };
 
   const attributes = businessAttributes(lead);
   const traits = inferBrandTraits(lead, { now });
   const weights = traitWeights(traits);
   const conversion0 = conversionObjective(profile, attributes, traits);
-  const conversion = options.override?.fields.primaryConversion
-    ? { ...conversion0, primary: options.override.fields.primaryConversion, secondary: conversion0.primary === options.override.fields.primaryConversion ? conversion0.secondary : conversion0.primary, reason: `Primary conversion ${options.override.fields.primaryConversion}, set by override.` }
-    : conversion0;
-  const seed = buildSeed({ leadId: lead.id, business: String(lead.business || ""), domain: String(lead.domain || lead.website || ""), industry: profile.id });
-  const scores = scoreArchetypes(profile, traits, conversion, seed);
+  let conversion = conversion0;
+  const overrideConversion = options.override?.fields.primaryConversion;
+  if (overrideConversion) {
+    conversion = { primary: overrideConversion, secondary: conversion0.primary === overrideConversion ? conversion0.secondary : conversion0.primary, reason: `Primary conversion ${overrideConversion}, set by override.` };
+  } else if (current && (locked || redirect) && current.industry === profile.id && current.primaryConversion !== conversion0.primary && profile.primaryConversions.includes(current.primaryConversion) && (current.primaryConversion !== "call" || attributes.hasPhone)) {
+    // The conversion objective survives a lock and a regeneration while it is still possible.
+    conversion = { primary: current.primaryConversion, secondary: conversion0.primary, reason: `Primary conversion ${current.primaryConversion} kept from the ${locked ? "locked" : "current"} Site DNA, secondary ${conversion0.primary}.` };
+  }
+  const seed = buildSeed({ leadId: lead.id, business: String(lead.business || ""), domain: domainOf(lead), industry: profile.id });
   const facts = factsFromLead(lead, engine.categories);
   const pool = comparisonPool(history, lead.id);
-  const set = comparisonSet(pool.predecessors, profile.id, lookback, industryLookback);
-  const fastSet = set.map((e) => fast(e.dna));
+  const win = comparisonWindows(pool.predecessors, profile.id, lookback, industryLookback);
+  const windows: Windows = { set: win.set, sameIndustry: new Set(win.sameIndustry), industryMin };
+  const fastSet = win.set.map((e) => fast(e.dna, windows.sameIndustry.has(e) ? industryMin : MIN_DIFFERING_DIMENSIONS));
   const fastAll = pool.others.map((d) => fast(d));
   const createdAt = existing ? existing.createdAt : now;
+  const scores = scoreArchetypes(profile, traits, conversion, seed, {
+    subIndustry,
+    attributes,
+    imagery: options.imagery,
+    recentSameIndustry: win.sameIndustry,
+    recentGlobal: win.global,
+    allowHighMotion: options.allowHighMotion,
+    exclude: options.explore && current ? [current.archetype] : [],
+  });
   const assembly: Assembly = {
     lead,
     classification: cls,
+    subIndustry,
     profile,
     traits,
     conversion,
@@ -751,7 +861,7 @@ export function selectSiteDna(lead: LeadRecord, engine: EngineData, options: Sel
     extraForbidden: options.override?.fields.addForbiddenPatterns || [],
     extraRequired: options.override?.fields.addRequiredModules || [],
     fontPairingId: options.override?.fields.fontPairing,
-    recentPairings: new Set(set.map((e) => e.dna.fontPairing?.id).filter((id): id is string => Boolean(id))),
+    recentPairings: new Set(win.set.map((e) => e.dna.fontPairing?.id).filter((id): id is string => Boolean(id))),
   };
   const paletteWeights = new Map<string, number>();
   for (const t of traits) {
@@ -768,21 +878,78 @@ export function selectSiteDna(lead: LeadRecord, engine: EngineData, options: Sel
     }
     return p;
   };
+  const finish = (dna: SiteDNA, archetypeLabel: string, extra: Partial<FinishInput>) => finishRecord({
+    lead, profile, archetypeLabel, dna, cls, attributes, traits, conversion, scores, facts, windows, pool, lookback, industryLookback, repairs: [], checked: 0, engine, now, createdAt,
+    overridden: false, override: null, locked: false, lockedBy: "", lockedAt: "", notes: [], audit: null,
+    ...extra,
+  });
 
+  // ---- Locked: the LOCKED_AXES stay; facts, truth and copy are refreshed ----------------------
+  if (locked && current && lockInfo) {
+    const archetype = getArchetype(profile, current.archetype);
+    if (!archetype) {
+      if (existing) {
+        warnings.push(`The locked archetype "${current.archetype}" is no longer in the ${profile.label} profile; the locked Site DNA is kept exactly as it was.`);
+        return { ok: true, errors: [], warnings, record: existing, reused: true };
+      }
+      return fail([`The locked archetype "${current.archetype}" is no longer in the ${profile.label} profile; unlock the Site DNA to choose again.`], warnings);
+    }
+    const plan = planFor(archetype);
+    const pinned = valuesOf(current);
+    if (!plan.orders.has(pinned.sectionOrder)) plan.orders.set(pinned.sectionOrder, [...current.sectionOrder]);
+    let values = pinned;
+    const repairs: string[] = [];
+    let checked = 0;
+    if (options.regenerate) {
+      const self = [fast(current, 1, false)];
+      const ownAll = ownEntries.map((e) => fast(e.dna));
+      let fallback: Values | null = null;
+      let found: Values | null = null;
+      for (const v of freeCombinations(plan, pinned, FREE_UNDER_LOCK)) {
+        checked += 1;
+        const f = fastFromValues(archetype.id, v);
+        if (!fastOk(f, self, ownAll)) continue;
+        if (!fallback) fallback = v;
+        if (fastOk(f, fastSet, fastAll)) {
+          found = v;
+          break;
+        }
+      }
+      if (found || fallback) {
+        values = (found || fallback) as Values;
+        const moved = FREE_UNDER_LOCK.filter((k) => values[k] !== pinned[k]);
+        repairs.push(`Regenerated inside the lock: changed ${moved.map((k) => DIMENSION_LABELS[k].toLowerCase()).join(", ")}; ${LOCKED_AXES.map((k) => DIMENSION_LABELS[k].toLowerCase()).join(", ")} kept.`);
+        if (!found) warnings.push(`Inside the lock no free combination differs enough from the recent sites; unlock the Site DNA to change the locked axes.`);
+      } else {
+        warnings.push(`The lock leaves no other valid combination for ${lead.business}; the locked Site DNA is kept.`);
+      }
+    }
+    const dna = assemble(plan, values, { ...assembly, fontPairingId: current.fontPairing?.id || assembly.fontPairingId, createdAt: current.createdAt || createdAt });
+    const unchanged = dnaFingerprint(dna) === dnaFingerprint(current);
+    const record = finish(dna, archetype.label, {
+      repairs,
+      checked,
+      createdAt: existing ? existing.createdAt : current.createdAt || now,
+      overridden: lockInfo.overridden,
+      override: lockInfo.override,
+      locked: true,
+      lockedBy: lockInfo.by,
+      lockedAt: lockInfo.at,
+      audit: unchanged && existing ? existing.audit : null,
+      notes: [existing ? "Kept the locked Site DNA; facts and copy were refreshed from the lead." : "Reused the locked Site DNA stored on the lead record."],
+    });
+    return { ok: true, errors: [], warnings, record, reused: unchanged && !options.regenerate };
+  }
+
+  // ---- Unlocked ----------------------------------------------------------------------------------
   let chosen: { plan: ArchetypePlan; values: Values } | null = null;
   const repairs: string[] = [];
   let checked = 0;
   let overridden = false;
-
-  if (lockedSnapshot && !options.unlock && !options.override) {
-    // The lock lives on the lead (demos/ may be gone): rebuild the record around the locked DNA.
-    const dna = lockedSnapshot.dna;
-    const record = finishRecord({ lead, profile, archetypeLabel: getArchetype(profile, dna.archetype)?.label || dna.archetype, dna, cls, attributes, traits, conversion, scores, facts, set, pool, lookback, industryLookback, repairs, checked, engine, now, createdAt: now, overridden: lockedSnapshot.overridden, override: null, locked: true, lockedBy: lockedSnapshot.lockedBy, lockedAt: lockedSnapshot.lockedAt, notes: ["Reused the locked Site DNA stored on the lead record."] });
-    return { ok: true, errors: [], warnings, record, reused: true };
-  }
+  const notes: string[] = [];
 
   if (options.override) {
-    const base = existing && existing.dna.industry === profile.id ? existing.dna : null;
+    const base = current && current.industry === profile.id ? current : null;
     const archetypeId = options.override.fields.archetype || (base ? base.archetype : scores[0].id);
     const archetype = getArchetype(profile, archetypeId);
     if (!archetype) return fail([`The archetype "${archetypeId}" is not one of ${profile.label}'s: ${profile.archetypes.map((a) => a.id).join(", ")}.`], warnings);
@@ -791,7 +958,7 @@ export function selectSiteDna(lead: LeadRecord, engine: EngineData, options: Sel
     const plan = planFor(archetype);
     const values = baseValues(plan);
     if (base && base.archetype === archetype.id) {
-      for (const k of AXIS_KEYS) values[k] = k === "sectionOrder" ? base.sectionOrder.join(",") : String(base[k]);
+      Object.assign(values, valuesOf(base));
       if (!plan.orders.has(values.sectionOrder)) plan.orders.set(values.sectionOrder, [...base.sectionOrder]);
     }
     for (const { field } of OVERRIDE_AXES) {
@@ -808,92 +975,98 @@ export function selectSiteDna(lead: LeadRecord, engine: EngineData, options: Sel
     }
     chosen = { plan, values };
     overridden = true;
+    notes.push(`Overridden by ${options.override.by}: ${Object.keys(options.override.fields).join(", ")}.`);
   } else {
     const appropriate = scores.filter((s) => s.appropriate).map((s) => getArchetype(profile, s.id) as IndustryArchetype);
-    const primary = planFor(appropriate[0]);
-    const tryValues = (plan: ArchetypePlan, values: Values) => {
-      checked += 1;
-      return fastOk(fastFromValues(plan.archetype.id, values), fastSet, fastAll);
-    };
+    if (!appropriate.length) {
+      if (options.explore && current) return fail([`No other appropriate ${profile.label} archetype fits ${lead.business}; ${current.archetype} is the only one. Regenerate instead, or add an archetype to the profile.`], warnings);
+      return fail([`No ${profile.label} archetype is appropriate for ${lead.business}: ${scores.map((s) => `${s.label} (${(s.notAppropriateBecause || []).join("; ")})`).join(", ")}.`], warnings);
+    }
     const max = options.maxCandidates ?? 250000;
-    const baseV = baseValues(primary);
-    if (tryValues(primary, baseV)) chosen = { plan: primary, values: baseV };
-    // 1. another appropriate archetype
-    if (!chosen) {
+    // Regenerate and explore also move away from the lead's own current DNA and never return to
+    // any DNA this lead has had before.
+    const own = redirect && current ? [fast(current, MIN_DIFFERING_DIMENSIONS)] : [];
+    const ownAll = redirect ? ownEntries.map((e) => fast(e.dna)) : [];
+    const search = (set: readonly FastSite[], all: readonly FastSite[]) => {
+      const steps: string[] = [];
+      const tryValues = (plan: ArchetypePlan, values: Values) => {
+        checked += 1;
+        return fastOk(fastFromValues(plan.archetype.id, values), set, all);
+      };
+      const primary = planFor(appropriate[0]);
+      const baseV = baseValues(primary);
+      if (tryValues(primary, baseV)) return { found: { plan: primary, values: baseV }, steps };
+      // 1. another appropriate archetype
       for (const a of appropriate.slice(1)) {
         const plan = planFor(a);
         const v = baseValues(plan);
-        if (tryValues(plan, v)) {
-          chosen = { plan, values: v };
-          repairs.push(`Tried another appropriate archetype: ${a.label}.`);
-          break;
-        }
+        if (tryValues(plan, v)) return { found: { plan, values: v }, steps: [`Tried another appropriate archetype: ${a.label}.`] };
       }
-      if (!chosen && appropriate.length > 1) repairs.push(`Other appropriate archetypes (${appropriate.slice(1).map((a) => a.label).join(", ")}) were also too similar as composed.`);
-    }
-    // 2 to 8. recompose, typography, hero, layout, imagery, geometry, dialect (cumulative)
-    const steps: { unlocked: AxisKey[]; must: AxisKey; label: string }[] = [];
-    REPAIR_ORDER.forEach((axis, i) => steps.push({ unlocked: [...REPAIR_ORDER.slice(0, i + 1)], must: axis, label: REPAIR_LABELS[axis] }));
-    LAST_RESORT_AXES.forEach((axis, i) => steps.push({ unlocked: [...REPAIR_ORDER, ...LAST_RESORT_AXES.slice(0, i + 1)], must: axis, label: `Last resort: also changed ${DIMENSION_LABELS[axis].toLowerCase()} together with the structural axes.` }));
-    for (const step of steps) {
-      if (chosen || checked > max) break;
-      for (const a of appropriate) {
-        if (chosen || checked > max) break;
-        const plan = planFor(a);
-        for (const v of stepCandidates(plan, step.unlocked, step.must)) {
-          if (checked > max) break;
-          if (tryValues(plan, v)) {
-            chosen = { plan, values: v };
-            break;
+      if (appropriate.length > 1) steps.push(`Other appropriate archetypes (${appropriate.slice(1).map((a) => a.label).join(", ")}) were also too similar as composed.`);
+      // 2 to 9. hero, typography, section order, layout, geometry, imagery, dialect, navigation
+      // (cumulative), then the last resort axes together with all of them.
+      const ladder: { unlocked: AxisKey[]; must: AxisKey }[] = [];
+      REPAIR_ORDER.forEach((axis, i) => ladder.push({ unlocked: [...REPAIR_ORDER.slice(0, i + 1)], must: axis }));
+      LAST_RESORT_AXES.forEach((axis, i) => ladder.push({ unlocked: [...REPAIR_ORDER, ...LAST_RESORT_AXES.slice(0, i + 1)], must: axis }));
+      for (const step of ladder) {
+        for (const a of appropriate) {
+          if (checked > max) return null;
+          const p = planFor(a);
+          for (const v of stepCandidates(p, step.unlocked, step.must)) {
+            if (checked > max) return null;
+            if (!tryValues(p, v)) continue;
+            if (p !== primary) steps.push(`Moved to the appropriate archetype ${p.archetype.label}.`);
+            const changed = AXIS_KEYS.filter((k) => v[k] !== baseValues(p)[k]);
+            for (const axis of REPAIR_ORDER) if (changed.includes(axis)) steps.push(REPAIR_LABELS[axis]);
+            for (const axis of LAST_RESORT_AXES) if (changed.includes(axis)) steps.push(`Also changed the ${DIMENSION_LABELS[axis].toLowerCase()} (last resort, together with structural axes).`);
+            return { found: { plan: p, values: v }, steps };
           }
         }
-        if (chosen) {
-          if (plan !== primary) repairs.push(`Moved to the appropriate archetype ${plan.archetype.label}.`);
-          const changed = AXIS_KEYS.filter((k) => chosen && chosen.values[k] !== baseValues(plan)[k]);
-          for (const axis of REPAIR_ORDER) if (changed.includes(axis)) repairs.push(REPAIR_LABELS[axis]);
-          for (const axis of LAST_RESORT_AXES) if (changed.includes(axis)) repairs.push(`Also changed the ${DIMENSION_LABELS[axis].toLowerCase()} (last resort, together with structural axes).`);
-        }
       }
+      return null;
+    };
+    let result = search([...fastSet, ...own], [...fastAll, ...ownAll]);
+    if (!result && own.length && current) {
+      result = search([...fastSet, fast(current, 1, false)], [...fastAll, ...ownAll]);
+      if (result) warnings.push(`No new combination differs from ${lead.business}'s previous Site DNA on six dimensions and from the recent sites; the closest valid alternative is used.`);
     }
-    if (!chosen) {
+    if (result) {
+      chosen = result.found;
+      repairs.push(...result.steps);
+      if (options.explore && current) notes.push(`Explored another direction: ${result.found.plan.archetype.label} instead of ${getArchetype(profile, current.archetype)?.label || current.archetype}.`);
+      else if (options.regenerate && current) notes.push("Regenerated: another valid combination, with the facts, industry and conversion kept.");
+    } else {
       // Best effort: the primary base candidate, flagged invalid for a person to resolve.
-      chosen = { plan: primary, values: baseV };
+      const primary = planFor(appropriate[0]);
+      chosen = { plan: primary, values: baseValues(primary) };
       warnings.push(`No Site DNA inside the appropriate ${profile.label} archetypes differs enough from the recent sites (${checked} candidates checked); the best fit base is returned flagged invalid. Override it or add an archetype.`);
     }
   }
 
   const dna = assemble(chosen.plan, chosen.values, assembly);
-  const notes: string[] = [];
-  if (overridden) notes.push(`Overridden by ${options.override?.by}: ${Object.keys(options.override?.fields || {}).join(", ")}.`);
-  const record = finishRecord({
-    lead,
-    profile,
-    archetypeLabel: chosen.plan.archetype.label,
-    dna,
-    cls,
-    attributes,
-    traits,
-    conversion,
-    scores,
-    facts,
-    set,
-    pool,
-    lookback,
-    industryLookback,
+  const record = finish(dna, chosen.plan.archetype.label, {
     repairs,
     checked,
-    engine,
-    now,
-    createdAt,
     overridden,
     override: overridden && options.override ? { ...options.override, at: options.override.at || now } : null,
-    locked: false,
-    lockedBy: "",
-    lockedAt: "",
     notes,
   });
   if (overridden && !record.variation.valid) warnings.push(`The override is too similar to recent sites (variation score ${record.variation.score}); it is kept because a person chose it.`);
   return { ok: true, errors: [], warnings, record, reused: false };
+}
+
+// Convenience actions for the app and the CLI (v2 UI: Generate, Regenerate, Lock, Unlock,
+// Explore another direction, overrides). Each is selectSiteDna with one intent.
+export function regenerateSiteDna(lead: LeadRecord, engine: EngineData, options: Omit<SelectOptions, "regenerate" | "explore" | "override">): SelectResult {
+  return selectSiteDna(lead, engine, { ...options, regenerate: true });
+}
+
+export function exploreAnotherDirection(lead: LeadRecord, engine: EngineData, options: Omit<SelectOptions, "regenerate" | "explore" | "override">): SelectResult {
+  return selectSiteDna(lead, engine, { ...options, explore: true });
+}
+
+export function overrideSiteDna(lead: LeadRecord, engine: EngineData, override: DnaOverride, options: Omit<SelectOptions, "regenerate" | "explore" | "override">): SelectResult {
+  return selectSiteDna(lead, engine, { ...options, override });
 }
 
 interface FinishInput {
@@ -907,7 +1080,7 @@ interface FinishInput {
   conversion: ConversionObjective;
   scores: ArchetypeScore[];
   facts: BusinessFacts;
-  set: HistoryEntry[];
+  windows: Windows;
   pool: { others: SiteDNA[] };
   lookback: number;
   industryLookback: number;
@@ -922,27 +1095,30 @@ interface FinishInput {
   lockedBy: string;
   lockedAt: string;
   notes: string[];
+  audit: SiteDnaRecord["audit"];
 }
 
 function finishRecord(i: FinishInput): SiteDnaRecord {
-  const { summary } = summarize(i.dna, i.set, i.pool.others, i.lookback, i.industryLookback, i.repairs, i.checked);
+  const { summary } = summarize(i.dna, i.windows, i.pool.others, i.lookback, i.industryLookback, i.repairs, i.checked);
   // v2 lists variationScore and locked on the DNA itself; they mirror the record and are not
   // compared dimensions, so the fingerprint does not change.
   i.dna.variationScore = summary.score;
   i.dna.locked = i.locked;
   const archetype = getArchetype(i.profile, i.dna.archetype);
   const refs: ReferenceUse[] = selectReferences(i.engine.references || [], { industry: i.profile.id, archetype: i.dna.archetype, family: archetype?.family, dialect: i.dna.componentDialect, preferred: i.profile.references });
-  const truth = buildTruthPlan(uniq([...i.dna.sectionOrder, ...i.dna.requiredModules]), i.facts);
+  const truth = buildTruthPlan(uniq([...i.dna.sectionOrder, ...i.dna.requiredModules]), i.facts, i.dna.trustSignals || []);
   const reasoning: string[] = [];
   reasoning.push(i.cls.reason);
   reasoning.push(i.traits.length ? `Brand traits from verified fields: ${i.traits.slice(0, 6).map(citeTrait).join(", ")}.` : "No brand traits could be inferred from verified fields; archetypes were ranked by conversion fit and the seed.");
   reasoning.push(i.conversion.reason);
   const top = i.scores.filter((s) => s.appropriate);
-  reasoning.push(`${i.scores[0].label} ranked first on trait fit${i.scores[0].matchedTraits.length ? ` (${i.scores[0].matchedTraits.join(", ")})` : ""}; appropriate: ${top.map((s) => `${s.label} ${s.score}`).join(", ")}${i.scores.some((s) => !s.appropriate) ? `; set aside: ${i.scores.filter((s) => !s.appropriate).map((s) => `${s.label} ${s.score}${s.excludedBy.length ? ` (excluded by ${s.excludedBy.join(", ")})` : ""}`).join(", ")}` : ""}.`);
+  const aside = i.scores.filter((s) => !s.appropriate);
+  reasoning.push(`${i.scores[0].label} ranked first${i.scores[0].matchedTraits.length ? ` on trait fit (${i.scores[0].matchedTraits.join(", ")})` : ""}; appropriate: ${top.map((s) => `${s.label} ${s.score}${s.similarityPenalty ? ` (recent similarity penalty ${s.similarityPenalty})` : ""}`).join(", ") || "none"}${aside.length ? `; set aside: ${aside.map((s) => `${s.label} (${(s.notAppropriateBecause || s.excludedBy).join("; ")})`).join(", ")}` : ""}.`);
   reasoning.push(`${i.archetypeLabel} DNA: ${i.dna.hero} hero, ${i.dna.typography} type (${i.dna.fontPairing ? `${i.dna.fontPairing.display.family} with ${i.dna.fontPairing.body.family}` : "no pairing"}), ${i.dna.geometry} geometry, ${i.dna.imagery} imagery, ${i.dna.layoutRhythm} rhythm, ${i.dna.motion} motion, ${i.dna.componentDialect} dialect, ${i.dna.paletteFamily} palette. The seed ${i.dna.seed} only ordered options of equal fit.`);
   if (summary.comparedWith) {
     const closest = [...summary.comparisons].sort((a, b) => a.differenceCount - b.differenceCount)[0];
-    reasoning.push(`Compared with ${summary.comparedWith} recent sites; the closest (${closest.business}) differs on ${closest.differenceCount} of 13 dimensions; variation score ${summary.score}${summary.valid ? "" : ", below the bar"}.`);
+    const industryPart = summary.industryComparedWith ? `, ${summary.industryComparedWith} of them ${i.profile.label.toLowerCase()} sites held to ${summary.industryMinDiffering} differing dimensions` : "";
+    reasoning.push(`Compared with ${summary.comparedWith} recent sites${industryPart}; the closest (${closest.business}) differs on ${closest.differenceCount} of 13 dimensions; variation score ${summary.score}${summary.valid ? "" : ", below the bar"}.`);
   } else {
     reasoning.push("No earlier sites to compare with; variation score 1.");
   }
@@ -973,7 +1149,7 @@ function finishRecord(i: FinishInput): SiteDnaRecord {
     lockedAt: i.lockedAt,
     overridden: i.overridden,
     override: i.override,
-    audit: null,
+    audit: i.audit,
     createdAt: i.createdAt,
     updatedAt: i.now,
   };

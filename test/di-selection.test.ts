@@ -6,8 +6,8 @@ import type { IndustryArchetype, SiteDNA, SiteDnaRecord } from "../src/design-in
 import { appendHistory, emptyHistory } from "../src/design-intelligence/history.ts";
 import type { HistoryFile } from "../src/design-intelligence/history.ts";
 import { roofing } from "../src/design-intelligence/industries/roofing.ts";
-import { buildSeed, seededOrder, seededPick } from "../src/design-intelligence/seed.ts";
-import { lockRecord, selectSiteDna, snapshotOf, validateOverride } from "../src/design-intelligence/select-site-dna.ts";
+import { buildSeed, domainOf, hashString, seededOrder, seededPick, seedInput } from "../src/design-intelligence/seed.ts";
+import { LOCKED_AXES, lockRecord, selectSiteDna, snapshotOf, validateOverride } from "../src/design-intelligence/select-site-dna.ts";
 import { inferBrandTraits } from "../src/design-intelligence/traits.ts";
 import { compareSiteDNA, dnaFingerprint, findDuplicate, validateAgainstHistory, variationScore } from "../src/design-intelligence/variation.ts";
 import { abcRoofing, engineData, establishedRoofing, NOW, pilatesFixture, pilatesStudio, roofingBatch, stormRoofing } from "./di-fixtures.ts";
@@ -34,11 +34,18 @@ function allowed(archetype: IndustryArchetype, dna: SiteDNA): void {
   assert.equal(dna.sectionOrder[0], "hero");
 }
 
-test("the seed is stable and depends on lead id, business, domain and industry", () => {
-  const a = buildSeed({ leadId: "x", business: "ABC Roofing", domain: "", industry: "roofing" });
-  assert.equal(a, buildSeed({ leadId: "x", business: "  abc roofing ", domain: "", industry: "roofing" }));
-  assert.notEqual(a, buildSeed({ leadId: "x", business: "ABC Roofing", domain: "", industry: "construction" }));
+test("the seed is v2's leadId:businessName:domain:industry hashed with hashString", () => {
+  const input = { leadId: "x", business: "ABC Roofing", domain: "abcroofing.example", industry: "roofing" };
+  assert.equal(seedInput(input), "x:ABC Roofing:abcroofing.example:roofing");
+  const a = buildSeed(input);
+  assert.equal(a, `fnv1a-${hashString("x:ABC Roofing:abcroofing.example:roofing").toString(16).padStart(8, "0")}`);
+  assert.equal(a, buildSeed({ ...input, business: "  ABC Roofing " }), "surrounding whitespace never moves the design");
+  assert.notEqual(a, buildSeed({ ...input, industry: "construction" }));
+  assert.notEqual(a, buildSeed({ ...input, domain: "" }));
   assert.match(a, /^fnv1a-[0-9a-f]{8}$/);
+  assert.equal(domainOf({ website: "https://www.ABCRoofing.example/contact?x=1" }), "abcroofing.example");
+  assert.equal(domainOf({ domain: "abc.example", website: "https://other.example" }), "abc.example");
+  assert.equal(domainOf({}), "");
   const items = ["a", "b", "c", "d"];
   assert.equal(seededOrder(items, a, "n")[0], seededPick(items, a, "n"));
   assert.deepEqual([...seededOrder(items, a, "n")].sort(), items);
@@ -184,12 +191,16 @@ test("regeneration is stable: a lead is compared only with leads that came befor
   assert.deepEqual(again, firstPass);
 });
 
-test("locked DNA comes back unchanged unless unlocked", () => {
+test("locked DNA comes back with its locked axes unless unlocked", () => {
   const record = lockRecord(select(abcRoofing), { by: "Jamey", now: NOW });
   const history = appendHistory(emptyHistory(), { ...select(stormRoofing) }, { event: "select", now: NOW });
   const kept = selectSiteDna(abcRoofing, engineData(), { now: NOW, history, existing: record });
-  assert.ok(kept.ok && kept.reused);
-  assert.equal(kept.record, record);
+  assert.ok(kept.ok && kept.reused && kept.record);
+  assert.equal(kept.record.fingerprint, record.fingerprint);
+  assert.deepEqual(LOCKED_AXES.map((k) => kept.record?.dna[k]), LOCKED_AXES.map((k) => record.dna[k]));
+  assert.equal(kept.record.locked, true);
+  assert.equal(kept.record.dna.locked, true);
+  assert.equal(kept.record.lockedBy, "Jamey");
   const unlocked = selectSiteDna(abcRoofing, engineData(), { now: NOW, history, existing: record, unlock: true });
   assert.ok(unlocked.ok && !unlocked.reused && unlocked.record && !unlocked.record.locked);
   const blocked = selectSiteDna(abcRoofing, engineData(), { now: NOW, existing: record, override: { by: "Jamey", fields: { hero: "asymmetric" } } });
@@ -202,8 +213,11 @@ test("a lock stored on the lead survives a missing SITE_DNA.json", () => {
   const lead = { ...abcRoofing, demoConcept: "Bold storm response site", demo: { shareApproved: false, dna: snapshotOf(record) } };
   const r = selectSiteDna(lead, engineData(), { now: NOW });
   assert.ok(r.ok && r.reused && r.record);
-  assert.deepEqual(r.record.dna, record.dna);
+  assert.equal(r.record.fingerprint, record.fingerprint);
+  for (const k of LOCKED_AXES) assert.deepEqual(r.record.dna[k], record.dna[k], k);
+  assert.equal(r.record.dna.fontPairing?.id, record.dna.fontPairing?.id);
   assert.equal(r.record.locked, true);
+  assert.notDeepEqual(r.record.dna.brandTraits, record.dna.brandTraits, "copy and traits refresh from the lead");
 });
 
 test("a human override inside the bounds is stored with overridden true", () => {

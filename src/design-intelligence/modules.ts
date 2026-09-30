@@ -95,6 +95,7 @@ export const MODULE_CATALOG: Record<ModuleKey, ModuleSpec> = {
   schedule: m("Schedule", "placeholder", ["schedule"], "The class schedule; an owner-to-confirm slot unless sourced."),
   instructors: m("Instructors", "placeholder", ["team"], "Instructor profiles; owner-to-confirm slots, no stock faces."),
   memberships: m("Memberships", "placeholder", ["prices"], "Membership options; owner-to-confirm slots unless sourced."),
+  community: m("Community", "placeholder", ["community"], "The people and rituals around the business (regulars, events, local ties); owner-to-confirm slots unless sourced, never invented names or counts."),
   "product-demo": m("Product demo", "placeholder", ["productMedia"], "A real product view; an owner-to-confirm slot until real screens exist. Never a fake dashboard."),
   "use-cases": m("Use cases", "sourced", ["services"], "Who uses the product and for what, from recorded services or labelled examples."),
   integrations: m("Integrations", "placeholder", ["integrations"], "Integrations; owner-to-confirm slots unless sourced. Never borrowed logos."),

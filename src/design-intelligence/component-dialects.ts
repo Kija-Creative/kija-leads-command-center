@@ -7,7 +7,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import type { FontPairing, ResolvedPalette, SiteDNA, ValidationResult } from "./schema.ts";
+import { COMPONENT_DIALECTS } from "./schema.ts";
+import type { ComponentDialect, DialectId, FontPairing, ResolvedPalette, SiteDNA, ValidationResult } from "./schema.ts";
 import type { GeometryTokens, MotionRules } from "./design-tokens.ts";
 import { isPlainObject, isStringList, KEBAB_RE, PROJECT_ROOT, readJson, relative, uniq } from "./util.ts";
 
@@ -109,12 +110,40 @@ export interface DialectRegistry {
 
 export const DEFAULT_COMPONENTS_DIR = path.join(PROJECT_ROOT, "design-intelligence", "components");
 
+const BASE_DIALECTS: ReadonlySet<string> = new Set(COMPONENT_DIALECTS);
+
+export function isComponentDialect(value: unknown): value is ComponentDialect {
+  return typeof value === "string" && BASE_DIALECTS.has(value);
+}
+
+// The v2 dialects a dialect id is made of: [id] for a base dialect, [first, second] for a
+// compound such as "editorial-luxury" or "warm-local-boutique", null when it is neither.
+export function dialectParts(id: string): ComponentDialect[] | null {
+  if (isComponentDialect(id)) return [id];
+  const bits = id.split("-");
+  for (let i = 1; i < bits.length; i += 1) {
+    const a = bits.slice(0, i).join("-");
+    const b = bits.slice(i).join("-");
+    if (isComponentDialect(a) && isComponentDialect(b) && a !== b) return [a, b];
+  }
+  return null;
+}
+
+export function isDialectId(value: unknown): value is DialectId {
+  return typeof value === "string" && dialectParts(value) !== null;
+}
+
+export function dialectIdError(id: string, where: string): string {
+  return `${where} uses the component dialect "${id}", which is not one of the v2 dialects (${COMPONENT_DIALECTS.join(", ")}) or a compound of two of them such as "editorial-luxury".`;
+}
+
 export function validateDialect(value: unknown, where = "A dialect"): ValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
   if (!isPlainObject(value)) return { ok: false, errors: [`${where} must be a JSON object.`], warnings };
   const name = typeof value.id === "string" ? `Dialect "${value.id}"` : where;
   if (typeof value.id !== "string" || !KEBAB_RE.test(value.id)) errors.push(`${name} needs a lowercase hyphenated id.`);
+  else if (!isDialectId(value.id)) errors.push(dialectIdError(value.id, name));
   for (const f of ["label", "summary"]) {
     if (typeof value[f] !== "string" || !String(value[f]).trim()) errors.push(`${name} needs a ${f}.`);
   }

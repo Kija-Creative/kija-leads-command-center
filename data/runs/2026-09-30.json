@@ -1,0 +1,62 @@
+{
+  "runId": "2026-09-30",
+  "ingestedAt": "2026-09-30T19:18:50.358Z",
+  "mode": "reverify",
+  "plan": {
+    "metros": [
+      "dallas-fort-worth"
+    ],
+    "categories": []
+  },
+  "counts": {
+    "candidates": 0,
+    "accepted": 0,
+    "queued": 0,
+    "rejected": 0,
+    "duplicates": 0,
+    "reverified": 12,
+    "errors": 0
+  },
+  "accepted": [],
+  "queued": [],
+  "rejected": [],
+  "reverified": [
+    "mustang-service-center-dallas-tx",
+    "all-auto-service-body-fort-worth-tx",
+    "gm-auto-care-dallas-tx",
+    "top-tier-auto-repair-dallas-tx",
+    "24-7-diesel-repair-road-service-dallas-tx",
+    "a-b-muffler-shop-grand-prairie-tx",
+    "no-limits-auto-collision-center-dallas-tx",
+    "fenix-auto-body-shop-dallas-tx",
+    "rios-used-tires-irving-tx",
+    "adams-brothers-roof-repair-dallas-tx",
+    "prime-time-septic-pumping-inc-terrell-tx",
+    "bamian-tires-and-auto-repair-dallas-tx"
+  ],
+  "duplicates": [],
+  "errors": [],
+  "warnings": [
+    {
+      "business": "Mustang Service Center",
+      "warnings": [
+        "Mustang Service Center: Website gap 1 is below the minimum of 2."
+      ]
+    },
+    {
+      "business": "All Auto Service & Body",
+      "warnings": [
+        "All Auto Service & Body: Website gap 1 is below the minimum of 2."
+      ]
+    }
+  ],
+  "searched": [
+    {
+      "query": "Independent lead check PDF (kija-lead-check-2026-09-30), Google listings and registry lookups",
+      "source": "Jamey's report",
+      "notes": "Report findings re-checked on 2026-09-30 with npm run probe and direct page reads before applying."
+    }
+  ],
+  "notes": "Applied from Jamey's lead check PDF of 2026-09-30 after re-checking every named domain.",
+  "changed": true
+}

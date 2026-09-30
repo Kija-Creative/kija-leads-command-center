@@ -9,8 +9,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import {
+  ATTRIBUTE_SIGNALS,
   BRAND_TRAITS,
   CONVERSION_KEYS,
+  TREATMENT_AXES,
   GEOMETRY_STYLES,
   HERO_STYLES,
   IMAGERY_STYLES,
@@ -30,9 +32,11 @@ import type {
 } from "./schema.ts";
 import type { FamilyRegistry } from "./archetypes.ts";
 import type { DialectRegistry } from "./component-dialects.ts";
+import { dialectIdError, isDialectId } from "./component-dialects.ts";
 import { paletteContrastErrors } from "./contrast.ts";
 import { fontPairing, styleMeaning } from "./design-tokens.ts";
 import { isModuleKey } from "./modules.ts";
+import { isTrustSignalKey } from "./trust-signals.ts";
 import { isPlainObject, isStringList, KEBAB_RE, PROJECT_ROOT, readJson, relative, unknownValues } from "./util.ts";
 
 export const DEFAULT_INDUSTRIES_DIR = path.join(PROJECT_ROOT, "src", "design-intelligence", "industries");
@@ -75,6 +79,26 @@ function checkModules(list: unknown, where: string, errors: string[]): void {
   }
 }
 
+// v2 treatments: every list optional, every value from its vocabulary (schema.ts TREATMENT_AXES).
+function checkTreatments(value: unknown, where: string, errors: string[]): void {
+  if (value === undefined) return;
+  if (!isPlainObject(value)) {
+    errors.push(`${where} treatments must be an object of lists (headerBehaviors, footerStyles, ...).`);
+    return;
+  }
+  const known = new Set<string>(TREATMENT_AXES.map((t) => t.list));
+  for (const k of Object.keys(value)) if (!known.has(k)) errors.push(`${where} treatments has "${k}", which is not one of: ${[...known].join(", ")}.`);
+  for (const t of TREATMENT_AXES) {
+    const list = value[t.list];
+    if (list === undefined) continue;
+    if (!isStringList(list) || !list.length) {
+      errors.push(`${where} treatments.${t.list} must be a non empty list.`);
+      continue;
+    }
+    for (const v of unknownValues(list, t.vocab)) errors.push(`${where} treatments.${t.list} has "${v}", which is not one of: ${t.vocab.join(", ")}.`);
+  }
+}
+
 function validateArchetype(a: unknown, index: number, profile: Record<string, unknown>, ctx: ProfileContext, errors: string[], warnings: string[]): void {
   const pid = String(profile.id);
   if (!isPlainObject(a)) {
@@ -107,6 +131,23 @@ function validateArchetype(a: unknown, index: number, profile: Record<string, un
     }
     for (const v of list) if (!KEBAB_RE.test(v)) errors.push(`${name} ${String(key)} value "${v}" must be lowercase and hyphenated.`);
   }
+  if (isStringList(a.componentDialects)) {
+    for (const d of a.componentDialects) if (!isDialectId(d)) errors.push(dialectIdError(d, name));
+  }
+  if (typeof a.description !== "string" || !a.description.trim()) warnings.push(`${name} has no description; v2 lists it on every archetype and the brief quotes it.`);
+  if (a.suitableSubIndustries !== undefined) {
+    if (!isStringList(a.suitableSubIndustries)) errors.push(`${name} suitableSubIndustries must be a list of sub-industry ids.`);
+    else if (isPlainObject(profile.subIndustries)) {
+      for (const sub of a.suitableSubIndustries) if (!(sub in profile.subIndustries)) warnings.push(`${name} suits the sub-industry "${sub}", which the profile's subIndustries does not describe.`);
+    }
+  }
+  if (a.prefersAttributes !== undefined) {
+    if (!isStringList(a.prefersAttributes)) errors.push(`${name} prefersAttributes must be a list.`);
+    else for (const v of unknownValues(a.prefersAttributes, ATTRIBUTE_SIGNALS)) errors.push(`${name} prefersAttributes has "${v}", which is not one of: ${ATTRIBUTE_SIGNALS.join(", ")}.`);
+  }
+  if (a.imageryDemand !== undefined && !["low", "medium", "high"].includes(String(a.imageryDemand))) errors.push(`${name} imageryDemand must be low, medium or high.`);
+  if (a.permitsHighMotion !== undefined && typeof a.permitsHighMotion !== "boolean") errors.push(`${name} permitsHighMotion must be true or false.`);
+  checkTreatments(a.treatments, name, errors);
   const palettes = isPlainObject(profile.palettes) ? profile.palettes : {};
   if (isStringList(a.paletteFamilies)) {
     for (const fam of a.paletteFamilies) {
@@ -167,7 +208,7 @@ function validateArchetype(a: unknown, index: number, profile: Record<string, un
     }
   }
   if (profile.trustSensitive === true && isStringList(a.motion) && a.motion.some((mo) => mo === "kinetic" || mo === "cinematic")) {
-    warnings.push(`${name} allows kinetic or cinematic motion in a trust sensitive industry; the brief asks for restraint there.`);
+    warnings.push(`${name} allows kinetic or cinematic motion in a trust sensitive industry; motion is capped at moderate there and a kinetic direction is set aside unless permitsHighMotion is true.`);
   }
 }
 
@@ -196,6 +237,13 @@ export function validateIndustryProfile(value: unknown, ctx: ProfileContext = {}
       if (!isPlainObject(v) || typeof v.label !== "string") errors.push(`${name} sub-industry "${k}" needs a label.`);
     }
   }
+  if (value.preferredTrustSignals !== undefined) {
+    if (!isStringList(value.preferredTrustSignals)) errors.push(`${name} preferredTrustSignals must be a list of trust signal keys.`);
+    else for (const t of value.preferredTrustSignals) if (!isTrustSignalKey(t)) warnings.push(`${name} prefers the trust signal "${t}", which is not in schema.ts TRUST_SIGNAL_KEYS; it renders as an owner-to-confirm slot.`);
+  } else {
+    warnings.push(`${name} has no preferredTrustSignals; v2 lists them on every profile (schema.ts TRUST_SIGNAL_KEYS). Conservative defaults are used.`);
+  }
+  checkTreatments(value.treatments, name, errors);
   if (value.palettes !== undefined && !isPlainObject(value.palettes)) errors.push(`${name} palettes must be an object keyed by palette family.`);
   if (isPlainObject(value.palettes)) {
     for (const [fam, p] of Object.entries(value.palettes)) {

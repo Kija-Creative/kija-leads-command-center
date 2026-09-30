@@ -11,6 +11,12 @@
 // trustSensitive, motionCeiling, palettes (tokens for every palette family named below, each
 // checked for WCAG AA at load), styleNotes, and a family, description and imageryNotes on each
 // archetype. Every other line is as supplied.
+//
+// v2 extension (engine upgrade, 2026-09-30), again additions only: preferredTrustSignals and
+// industry treatments; per archetype suitableSubIndustries, prefersAttributes, treatments (and
+// imageryDemand on Premium Residential); v2's home services section architectures and the
+// Demonstration's two roofer directions as extra section orders; "before-after" imagery on
+// Blue-Collar Modern.
 import type { IndustryProfile } from "../schema.ts";
 
 export const roofing: IndustryProfile = {
@@ -55,6 +61,16 @@ export const roofing: IndustryProfile = {
 
   trustSensitive: true,
 
+  // v2: the trust signals home services lean on (IMPLEMENTATION-BRIEF-v2.md, Truthfulness). Only
+  // the rating, review themes and service area can be sourced from a lead record; the rest are
+  // owner-to-confirm slots.
+  preferredTrustSignals: ["real-projects", "google-rating", "review-themes", "licenses", "warranty", "service-area", "financing", "crew", "manufacturer-certifications"],
+
+  treatments: {
+    localBusinessStrategies: ["service-area"],
+    seoStrategies: ["local-service-pages"],
+  },
+
   motionCeiling: "moderate",
 
   palettes: {
@@ -92,6 +108,21 @@ export const roofing: IndustryProfile = {
       family: "industrial",
       description: "Functional and high trust: strong sans serif, squared geometry, the phone and estimate actions always in reach, project photography, low motion.",
       imageryNotes: "Roofs, crews and job sites shown plainly and tightly cropped; technical detail over atmosphere.",
+      suitableSubIndustries: ["roofing"],
+      prefersAttributes: ["phone", "address", "hours"],
+      treatments: {
+        headerBehaviors: ["sticky", "sticky-mobile-bar"],
+        footerStyles: ["contact-led", "directory", "utility"],
+        backgroundTreatments: ["border-separated", "tonal-shift", "technical-grid"],
+        buttonTreatments: ["solid-block", "oversized-block"],
+        cardTreatments: ["hairline-border", "spec-sheet"],
+        imageShapes: ["rectangle", "landscape"],
+        iconStyles: ["line", "numerals", "technical-glyph"],
+        spacingDensities: ["compact", "balanced"],
+        contentDensities: ["dense", "balanced"],
+        storytellingModes: ["direct-response"],
+        mobilePriorities: ["call-first", "form-first"],
+      },
 
       suitableBrandTraits: [
         "established",
@@ -158,6 +189,9 @@ export const roofing: IndustryProfile = {
           "service-area",
           "estimate",
         ],
+        // v2 home services architectures (IMPLEMENTATION-BRIEF-v2.md, Conversion architecture)
+        ["hero", "emergency-or-estimate", "trust-strip", "services", "projects", "why-us", "process", "reviews", "service-area", "warranty", "estimate"],
+        ["hero", "services", "emergency", "before-after", "crew", "credentials", "reviews", "financing", "service-area", "contact"],
       ],
 
       requiredModules: [
@@ -178,6 +212,22 @@ export const roofing: IndustryProfile = {
       family: "editorial",
       description: "Architectural photography, a warmer neutral palette, larger whitespace, sophisticated typography and craftsmanship presented like a residential architecture feature.",
       imageryNotes: "Large, calm photographs of finished residential roofs and material details; the house as architecture.",
+      suitableSubIndustries: ["roofing"],
+      prefersAttributes: ["rating", "sourced-services"],
+      imageryDemand: "high",
+      treatments: {
+        headerBehaviors: ["transparent-to-solid", "sticky-condensing"],
+        footerStyles: ["editorial", "minimal"],
+        backgroundTreatments: ["continuous-light", "full-bleed-imagery", "material-texture"],
+        buttonTreatments: ["solid-soft", "underline-link", "text-arrow"],
+        cardTreatments: ["image-led", "none"],
+        imageShapes: ["full-bleed", "landscape", "portrait"],
+        iconStyles: ["none", "numerals"],
+        spacingDensities: ["airy"],
+        contentDensities: ["sparse", "balanced"],
+        storytellingModes: ["craft-story", "project-story"],
+        mobilePriorities: ["form-first", "call-first"],
+      },
 
       suitableBrandTraits: [
         "premium",
@@ -269,6 +319,8 @@ export const roofing: IndustryProfile = {
           "reviews",
           "estimate",
         ],
+        // v2 reference direction for a premium residential roofer (IMPLEMENTATION-BRIEF-v2.md, Demonstration)
+        ["hero", "projects", "craftsmanship", "services", "materials", "process", "warranty", "reviews", "estimate"],
       ],
 
       requiredModules: [
@@ -288,6 +340,21 @@ export const roofing: IndustryProfile = {
       family: "documentary",
       description: "Bold typography, high contrast, real crew and job-site imagery, energetic layouts and a straightforward CTA treatment.",
       imageryNotes: "Crews on roofs, trucks, tear-offs and weather: documentary and energetic, never glossy.",
+      suitableSubIndustries: ["roofing"],
+      prefersAttributes: ["phone", "rating", "reviews"],
+      treatments: {
+        headerBehaviors: ["sticky", "sticky-mobile-bar"],
+        footerStyles: ["contact-led", "oversized-type"],
+        backgroundTreatments: ["dark-sections", "oversized-type", "split-image"],
+        buttonTreatments: ["oversized-block", "solid-block"],
+        cardTreatments: ["flat-tonal", "numbered-list"],
+        imageShapes: ["mixed-crop", "square", "landscape"],
+        iconStyles: ["solid", "numerals"],
+        spacingDensities: ["compact", "balanced"],
+        contentDensities: ["balanced", "dense"],
+        storytellingModes: ["direct-response", "documentary"],
+        mobilePriorities: ["call-first", "form-first"],
+      },
 
       suitableBrandTraits: [
         "local",
@@ -327,6 +394,7 @@ export const roofing: IndustryProfile = {
       imagery: [
         "documentary",
         "collage",
+        "before-after",
         "project-gallery",
       ],
 
@@ -368,6 +436,8 @@ export const roofing: IndustryProfile = {
           "reviews",
           "estimate",
         ],
+        // v2 reference direction for a family-owned local roofer (IMPLEMENTATION-BRIEF-v2.md, Demonstration)
+        ["hero", "ratings", "services", "crew", "before-after", "process", "reviews", "service-area", "estimate"],
       ],
 
       requiredModules: [

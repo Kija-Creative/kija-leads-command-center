@@ -105,7 +105,8 @@ test("fabricated trust signals are flagged through the demo guardrails", () => {
   assert.match(msgs, /Unbacked claim "Licensed"/i);
   assert.match(msgs, /since 1998/);
   assert.match(msgs, /900/);
-  const html = fixturePage(rec).replace(/<div data-module="coverage-terms" data-placeholder="owner-to-confirm">/, "<div data-module=\"coverage-terms\">");
+  // Strip every owner-to-confirm marker, wherever the section order put the warranty module.
+  const html = fixturePage(rec).split(" data-placeholder=\"owner-to-confirm\"").join("");
   const b = auditSite({ html, record: rec, profile: roofing, lead: abcRoofing, now: NOW });
   assert.ok(errorsOf(b, "fabricated-trust").some((m) => /"warranty" module must render as a labelled owner-to-confirm placeholder/.test(m)));
 });

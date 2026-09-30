@@ -5,14 +5,18 @@
 //   const { record } = engine.select(lead, { now, history }); // Site DNA before any frontend work
 //   const { markdown } = engine.brief(record, lead, { assets, history });
 //   const audit = engine.audit(html, record, { history, lead, now });
+//
+// history is a HistorySource everywhere: jsonHistoryRepository(file), memoryHistoryRepository(),
+// a HistoryFile value or a list of entries. Never a path.
 import path from "node:path";
 import type { AuditResult, CategoryRegistry, LeadRecord, SiteDnaRecord } from "./schema.ts";
 import { DEFAULT_ARCHETYPES_DIR, loadArchetypeFamilies } from "./archetypes.ts";
 import type { FamilyRegistry } from "./archetypes.ts";
-import { auditSite } from "./audit.ts";
+import { auditSite, auditSiteWithVisual } from "./audit.ts";
+import type { VisualSimilarityProvider } from "./audit.ts";
 import { DEFAULT_COMPONENTS_DIR, loadDialects } from "./component-dialects.ts";
 import type { DialectRegistry } from "./component-dialects.ts";
-import type { HistoryEntry, HistoryFile } from "./history.ts";
+import type { HistorySource } from "./history.ts";
 import { DEFAULT_CATEGORIES_FILE, DEFAULT_INDUSTRIES_DIR, getArchetype, loadCategories, loadIndustries } from "./industries.ts";
 import type { IndustryRegistry } from "./industries.ts";
 import { buildGenerationBrief } from "./prompt-builder.ts";
@@ -38,6 +42,7 @@ export * from "./references.ts";
 export * from "./history.ts";
 export * from "./select-site-dna.ts";
 export * from "./select-archetype.ts";
+export * from "./trust-signals.ts";
 export * from "./prompt-builder.ts";
 export * from "./audit.ts";
 export * from "./renderer-contract.ts";
@@ -64,8 +69,9 @@ export interface Engine {
   errors: string[];
   warnings: string[];
   select(lead: LeadRecord, options: SelectOptions): SelectResult;
-  brief(record: SiteDnaRecord, lead: LeadRecord, opts: { assets?: StockAsset[]; history: HistoryFile | HistoryEntry[] }): { markdown: string; json: BriefJson };
-  audit(html: string, record: SiteDnaRecord, opts: { history?: HistoryFile | HistoryEntry[]; lead?: LeadRecord; now?: string | Date }): AuditResult;
+  brief(record: SiteDnaRecord, lead: LeadRecord, opts: { assets?: StockAsset[]; history: HistorySource }): { markdown: string; json: BriefJson };
+  audit(html: string, record: SiteDnaRecord, opts: { history?: HistorySource; lead?: LeadRecord; now?: string | Date }): AuditResult;
+  auditWithVisual(html: string, record: SiteDnaRecord, opts: { history?: HistorySource; lead?: LeadRecord; now?: string | Date; visual?: VisualSimilarityProvider }): Promise<AuditResult>;
 }
 
 // Loads industries, families, dialects, references and categories. Problems in the data come
@@ -109,6 +115,11 @@ export async function createEngine(opts: EngineOptions = {}): Promise<Engine> {
       const profile = registry.profiles.get(record.dna.industry);
       if (!profile) throw new Error(`No loaded industry profile "${record.dna.industry}" for ${record.business}.`);
       return auditSite({ html, record, profile, history: o.history, lead: o.lead, now: o.now });
+    },
+    auditWithVisual(html, record, o) {
+      const profile = registry.profiles.get(record.dna.industry);
+      if (!profile) throw new Error(`No loaded industry profile "${record.dna.industry}" for ${record.business}.`);
+      return auditSiteWithVisual({ html, record, profile, history: o.history, lead: o.lead, now: o.now, visual: o.visual });
     },
   };
 }

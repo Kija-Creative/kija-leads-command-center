@@ -18,7 +18,7 @@ const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
 const DEFAULT_TARGETS = ["src", "server", "app", "test", "design-intelligence"];
 // The engine and its command line tools are held to errors for unused code; older modules get
 // warnings so hygiene debt is visible without hiding real bugs among it.
-const STRICT_FILES = ["src/design-intelligence/**", "design-intelligence/**", "src/cli/typecheck.js", "src/cli/lint.js", "src/cli/dna.js", "src/cli/brief.js", "src/cli/audit.js", "test/di-*"];
+const STRICT_FILES = ["src/design-intelligence/**", "design-intelligence/**", "src/cli/typecheck.js", "src/cli/lint.js", "src/cli/dna.js", "src/cli/brief.js", "src/cli/audit.js", "src/cli/build.js", "test/di-*"];
 const IGNORES = ["workflows/**", "**/node_modules/**", ".design-references/**", "demos/**", "pitches/**", "exports/**", "test-output/**", "data/**", "research/**", "seed/**"];
 
 // Resolves a package from the tool folders, also through the packages that bundle it.

@@ -14,7 +14,7 @@ export const DEFAULT_HISTORY_FILE = path.join(PROJECT_ROOT, "data", "site-dna-hi
 export const MIN_HISTORY_CAP = 50;
 export const DEFAULT_HISTORY_CAP = 500;
 
-export const HISTORY_EVENTS = ["select", "override", "lock", "unlock", "build"] as const;
+export const HISTORY_EVENTS = ["select", "regenerate", "explore", "override", "lock", "unlock", "build"] as const;
 export type HistoryEvent = (typeof HISTORY_EVENTS)[number];
 
 export interface HistoryEntry {
@@ -94,18 +94,87 @@ export function appendHistory(history: HistoryFile, record: SiteDnaRecord, opts:
   return { version: 1, cap, note: history.note || HISTORY_NOTE, entries: entries.length > cap ? entries.slice(entries.length - cap) : entries };
 }
 
-// The storage seam: selection and comparison work on a HistoryFile value, never on a path, so
-// a database can replace the JSON file by implementing this interface.
+// ---------------------------------------------------------------------------------------------
+// The storage seam (v2: "a simple repository or storage abstraction; the comparison engine must
+// NOT be tightly coupled to a JSON file"). Selection, the prompt builder and the audit take a
+// HistorySource: a repository, a HistoryFile value or a plain list of entries, never a path. A
+// database replaces the JSON file by implementing HistoryRepository; nothing else changes.
+// ---------------------------------------------------------------------------------------------
+
 export interface HistoryRepository {
-  load(): HistoryFile;
-  save(history: HistoryFile): void;
+  readonly kind: string;                      // "json-file", "memory", or a database's name
+  append(record: SiteDnaRecord, opts: { event: HistoryEvent; now: string | Date }): HistoryEntry;
+  all(): HistoryEntry[];                      // every entry, oldest first
+  recent(n: number): HistoryEntry[];          // the latest n entries, oldest first
+  byIndustry(industry: string, n?: number): HistoryEntry[];   // oldest first; the latest n when given
+  byArchetype(archetype: string, n?: number): HistoryEntry[];
+  latestPerLead(): HistoryEntry[];            // one entry per lead, ordered by first appearance
+  snapshot(): HistoryFile;                    // the whole history as a value (a copy)
 }
 
-export function jsonHistoryRepository(file: string = DEFAULT_HISTORY_FILE): HistoryRepository {
+export type HistorySource = HistoryFile | HistoryRepository | readonly HistoryEntry[];
+
+function lastN<T>(items: readonly T[], n?: number): T[] {
+  if (n === undefined) return [...items];
+  return n <= 0 ? [] : items.slice(-n);
+}
+
+function repositoryOver(kind: string, get: () => HistoryFile, set: (h: HistoryFile) => void): HistoryRepository {
   return {
-    load: () => loadHistory(file),
-    save: (history) => saveHistory(file, history),
+    kind,
+    append(record, opts) {
+      const next = appendHistory(get(), record, opts);
+      set(next);
+      return next.entries[next.entries.length - 1];
+    },
+    all: () => [...get().entries],
+    recent: (n) => lastN(get().entries, n),
+    byIndustry: (industry, n) => lastN(queryHistory(get(), { industry }), n),
+    byArchetype: (archetype, n) => lastN(queryHistory(get(), { archetype }), n),
+    latestPerLead: () => latestPerLead(get()),
+    snapshot: () => structuredClone(get()),
   };
+}
+
+// In memory, for tests and dry runs. Starts from a copy of `initial` (a HistoryFile or entries).
+export function memoryHistoryRepository(initial: HistoryFile | readonly HistoryEntry[] = emptyHistory(), cap = DEFAULT_HISTORY_CAP): HistoryRepository {
+  let state: HistoryFile = Array.isArray(initial)
+    ? { ...emptyHistory(cap), entries: structuredClone([...initial]) }
+    : structuredClone(initial as HistoryFile);
+  return repositoryOver("memory", () => state, (h) => {
+    state = h;
+  });
+}
+
+// data/site-dna-history.json. Reads the file once, writes it atomically on every append, so a
+// crash never leaves a half written history and the cap (at least 50) is enforced on disk.
+export function jsonHistoryRepository(file: string = DEFAULT_HISTORY_FILE): HistoryRepository {
+  let state: HistoryFile | null = null;
+  const get = () => {
+    if (!state) state = loadHistory(file);
+    return state;
+  };
+  return repositoryOver("json-file", get, (h) => {
+    saveHistory(file, h);
+    state = h;
+  });
+}
+
+function isRepository(value: unknown): value is HistoryRepository {
+  return isPlainObject(value) && typeof value.all === "function" && typeof value.append === "function" && typeof value.snapshot === "function";
+}
+
+// Any history source as a HistoryFile value. A path is refused on purpose.
+export function toHistoryFile(source: HistorySource | null | undefined): HistoryFile {
+  if (source === null || source === undefined) return emptyHistory();
+  if (typeof source === "string") throw new TypeError("The comparison engine takes a HistoryRepository, a HistoryFile or a list of entries, never a file path. Use jsonHistoryRepository(file).");
+  if (Array.isArray(source)) return { ...emptyHistory(), entries: [...(source as readonly HistoryEntry[])] };
+  if (isRepository(source)) return source.snapshot();
+  return source as HistoryFile;
+}
+
+export function historyEntries(source: HistorySource | null | undefined): HistoryEntry[] {
+  return [...toHistoryFile(source).entries];
 }
 
 export interface HistoryQuery {
@@ -153,11 +222,27 @@ export function comparisonPool(history: HistoryFile, leadId: string): Comparison
   return { predecessors, others };
 }
 
-// The comparison set: the last `lookback` sites overall plus the last `industryLookback` sites
-// of the same industry, without repeats, oldest first (the most recent site last).
-export function comparisonSet(predecessors: readonly HistoryEntry[], industry: string, lookback = 8, industryLookback = 8): HistoryEntry[] {
-  const recent = predecessors.slice(-lookback);
-  const sameIndustry = predecessors.filter((e) => e.industry === industry).slice(-industryLookback);
-  const keep = new Set([...recent, ...sameIndustry]);
-  return predecessors.filter((e) => keep.has(e));
+// v2 comparison windows. The global window is the last `lookback` sites of any industry; the
+// industry window is the last `industryLookback` sites of the same industry, kept in the
+// comparison even when they are older than the global window, and held to the stricter same
+// industry bar (variation.ts SAME_INDUSTRY_MIN_DIFFERING).
+export const DEFAULT_LOOKBACK = 8;
+export const DEFAULT_INDUSTRY_LOOKBACK = 4;
+
+export interface ComparisonWindows {
+  set: HistoryEntry[];           // global and industry windows together, oldest first, no repeats
+  global: HistoryEntry[];
+  sameIndustry: HistoryEntry[];
+}
+
+export function comparisonWindows(predecessors: readonly HistoryEntry[], industry: string, lookback = DEFAULT_LOOKBACK, industryLookback = DEFAULT_INDUSTRY_LOOKBACK): ComparisonWindows {
+  const global = lookback > 0 ? predecessors.slice(-lookback) : [];
+  const sameIndustry = industryLookback > 0 ? predecessors.filter((e) => e.industry === industry).slice(-industryLookback) : [];
+  const keep = new Set([...global, ...sameIndustry]);
+  return { set: predecessors.filter((e) => keep.has(e)), global, sameIndustry };
+}
+
+// The comparison set alone (both windows), oldest first, the most recent site last.
+export function comparisonSet(predecessors: readonly HistoryEntry[], industry: string, lookback = DEFAULT_LOOKBACK, industryLookback = DEFAULT_INDUSTRY_LOOKBACK): HistoryEntry[] {
+  return comparisonWindows(predecessors, industry, lookback, industryLookback).set;
 }

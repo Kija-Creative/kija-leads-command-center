@@ -19,34 +19,51 @@ export const pilatesFixture: IndustryProfile = {
   subIndustries: { pilates: { label: "Pilates studio", schemaOrgType: "ExerciseGym" } },
   schemaOrgType: "ExerciseGym",
   motionCeiling: "kinetic",
+  preferredTrustSignals: ["instructors", "methodology", "studio", "schedule", "community", "class-descriptions", "google-rating"],
   palettes: {
+    "pilates-stone": { label: "Stone and warm neutral", tone: "light", tokens: { bg: "#f3efe9", surface: "#fbf8f4", ink: "#2b2622", muted: "#5d554d", line: "#e1d8cc", primary: "#6b4f3a", "on-primary": "#ffffff", accent: "#a89078" } },
     "linen-clay": { label: "Linen and clay", tone: "light", tokens: { bg: "#f5f0e8", surface: "#fffaf3", ink: "#2a2420", muted: "#5f554c", line: "#e4d9ca", primary: "#7d4b35", "on-primary": "#ffffff", accent: "#b98b6e" } },
     "sage-stone": { label: "Sage and stone", tone: "light", tokens: { bg: "#eef0ea", surface: "#ffffff", ink: "#1f2620", muted: "#4f5a51", line: "#d5dbd2", primary: "#3f5a45", "on-primary": "#ffffff", accent: "#a7b59c" } },
     "ink-volt": { label: "Ink and volt", tone: "dark", tokens: { bg: "#101214", surface: "#1a1d20", ink: "#f2f4f1", muted: "#b3b9b4", line: "#2c3135", primary: "#d7ff3a", "on-primary": "#101214", accent: "#ffffff" } },
   },
   archetypes: [
     {
+      // v2 Demonstration: Boutique Editorial (asymmetric, minimal, warm-serif + humanist-sans,
+      // stone and warm neutral, editorial or narrative, subtle-radius, lifestyle, subtle motion,
+      // intro offer, instructor, studio and methodology proof, boutique dialect).
       id: "boutique-editorial",
       label: "Boutique Editorial",
       family: "editorial",
+      description: "Refined type, warm spacing and human movement imagery; a boutique studio, never a gym.",
       suitableBrandTraits: ["boutique", "editorial", "calm", "premium", "warm"],
-      heroes: ["editorial-split", "type-led"],
+      heroes: ["asymmetric", "editorial-split", "type-led"],
       navigation: ["minimal", "editorial"],
-      typography: ["editorial-serif", "serif-sans"],
+      typography: ["warm-serif", "editorial-serif", "serif-sans"],
       layoutRhythms: ["editorial", "narrative"],
       geometries: ["subtle-radius", "architectural"],
-      imagery: ["editorial", "lifestyle", "macro-detail"],
+      imagery: ["lifestyle", "editorial", "macro-detail"],
       motion: ["subtle"],
-      paletteFamilies: ["linen-clay", "sage-stone"],
+      paletteFamilies: ["pilates-stone", "linen-clay", "sage-stone"],
       ctaStyles: ["intro-offer-book"],
-      proofStyles: ["review-led", "instructor-story"],
-      componentDialects: ["editorial", "editorial-luxury"],
+      proofStyles: ["instructor-story", "review-led"],
+      componentDialects: ["boutique", "editorial", "editorial-luxury"],
       sectionOrders: [
+        ["hero", "intro-offer", "methodology", "studio", "classes", "instructors", "schedule", "memberships", "community", "booking"],
         ["hero", "intro-offer", "methodology", "classes", "instructors", "schedule", "reviews", "booking"],
         ["hero", "classes", "intro-offer", "instructors", "methodology", "schedule", "faq", "booking"],
       ],
       requiredModules: ["booking"],
       forbiddenPatterns: ["neon-gradient"],
+      treatments: {
+        headerBehaviors: ["static", "sticky-condensing"],
+        backgroundTreatments: ["continuous-light", "tonal-shift"],
+        buttonTreatments: ["solid-soft", "underline-link"],
+        cardTreatments: ["none", "image-led"],
+        spacingDensities: ["airy"],
+        contentDensities: ["sparse"],
+        storytellingModes: ["methodology"],
+        mobilePriorities: ["book-first"],
+      },
     },
     {
       id: "organic-minimal",
@@ -96,23 +113,111 @@ export const pilatesFixture: IndustryProfile = {
   },
 };
 
+// A medical fixture profile (id "medical", so the engine treats it as trust sensitive by
+// industry even without the flag). Its third archetype is a deliberately inappropriate kinetic
+// direction whose traits match an "energetic" lead best: v2 test 2 proves it is never selected
+// unless explicitly permitted. The real medical profile is another author's file.
+export const medicalFixture: IndustryProfile = {
+  id: "medical",
+  label: "Medical (fixture)",
+  primaryConversions: ["appointment", "call"],
+  requiredModules: ["providers", "services", "insurance", "locations"],
+  defaultForbiddenPatterns: ["generic-saas-bento"],
+  preferredTrustSignals: ["providers", "credentials", "insurance-accepted", "hospital-affiliation", "patient-process", "locations", "google-rating"],
+  subIndustries: { clinic: { label: "Medical clinic", schemaOrgType: "MedicalClinic" } },
+  schemaOrgType: "MedicalClinic",
+  palettes: {
+    "clinical-blue": { label: "Clinical blue", tone: "light", tokens: { bg: "#f5f8fa", surface: "#ffffff", ink: "#14212b", muted: "#4a5a66", line: "#d7e0e6", primary: "#1d5c8c", "on-primary": "#ffffff", accent: "#6aa6c8" } },
+    "clinical-green": { label: "Clinical green", tone: "light", tokens: { bg: "#f4f8f5", surface: "#ffffff", ink: "#16241b", muted: "#4b5d51", line: "#d6e2da", primary: "#2f6b4a", "on-primary": "#ffffff", accent: "#8fbf9f" } },
+    "ink-volt": { label: "Ink and volt", tone: "dark", tokens: { bg: "#101214", surface: "#1a1d20", ink: "#f2f4f1", muted: "#b3b9b4", line: "#2c3135", primary: "#d7ff3a", "on-primary": "#101214", accent: "#ffffff" } },
+  },
+  styleNotes: {
+    "appointment-calm": "A calm Request an appointment action with the phone beside it.",
+    "provider-led": "Providers as owner-to-confirm profiles; credentials are slots until sourced.",
+    "bold-book": "A loud booking action in the display face.",
+  },
+  archetypes: [
+    {
+      id: "clinical-authority",
+      label: "Clinical Authority",
+      description: "Clarity and calm hierarchy; providers and services first.",
+      suitableBrandTraits: ["clinical", "precise", "calm", "trusted"],
+      heroes: ["editorial-split", "utility"],
+      navigation: ["solid", "two-tier"],
+      typography: ["humanist-sans", "neo-grotesk"],
+      layoutRhythms: ["modular", "editorial"],
+      geometries: ["subtle-radius", "rounded"],
+      imagery: ["people-first", "environment-first"],
+      motion: ["none", "subtle"],
+      paletteFamilies: ["clinical-blue", "clinical-green"],
+      ctaStyles: ["appointment-calm"],
+      proofStyles: ["provider-led"],
+      componentDialects: ["clinical", "institutional"],
+      sectionOrders: [["hero", "appointment", "services", "providers", "insurance", "locations", "faq", "contact"]],
+      requiredModules: ["appointment"],
+      forbiddenPatterns: [],
+    },
+    {
+      id: "human-family-care",
+      label: "Human / Family Care",
+      description: "Warm, approachable care with people-first imagery.",
+      suitableBrandTraits: ["warm", "approachable", "community"],
+      heroes: ["image-left", "centered"],
+      navigation: ["centered-brand", "solid"],
+      typography: ["warm-serif", "humanist-sans"],
+      layoutRhythms: ["narrative", "alternating"],
+      geometries: ["rounded", "organic"],
+      imagery: ["people-first", "lifestyle"],
+      motion: ["subtle"],
+      paletteFamilies: ["clinical-green"],
+      ctaStyles: ["appointment-calm"],
+      proofStyles: ["provider-led"],
+      componentDialects: ["warm-local", "clinical"],
+      sectionOrders: [["hero", "appointment", "providers", "services", "patient-comfort", "insurance", "locations", "contact"]],
+      requiredModules: ["appointment"],
+      forbiddenPatterns: [],
+    },
+    {
+      id: "kinetic-clinic",
+      label: "Kinetic Clinic (inappropriate on purpose)",
+      description: "A high motion, kinetic direction that has no place in medicine unless a person permits it.",
+      suitableBrandTraits: ["energetic", "bold", "high-energy", "modern"],
+      heroes: ["type-led", "layered"],
+      navigation: ["floating"],
+      typography: ["industrial-condensed"],
+      layoutRhythms: ["asymmetric"],
+      geometries: ["hard-edge"],
+      imagery: ["collage"],
+      motion: ["moderate", "kinetic"],
+      paletteFamilies: ["ink-volt"],
+      ctaStyles: ["bold-book"],
+      proofStyles: ["provider-led"],
+      componentDialects: ["kinetic"],
+      sectionOrders: [["hero", "services", "providers", "appointment", "insurance", "locations", "contact"]],
+      requiredModules: ["appointment"],
+      forbiddenPatterns: [],
+    },
+  ],
+};
+
 export const categories: CategoryRegistry = {
   roofing: { label: "Roofing", vertical: "contractor", industry: "roofing", subIndustry: "roofing", serviceDefaults: ["Roof repair", "Roof replacement", "Storm damage inspections"] },
   pilates: { label: "Pilates studio", vertical: "personal-care", industry: "pilates-fixture", subIndustry: "pilates", serviceDefaults: ["Reformer classes", "Mat classes", "Private sessions"] },
+  "medical-clinic": { label: "Medical clinic", vertical: "health", industry: "medical", subIndustry: "clinic", serviceDefaults: ["Primary care visits", "Annual physicals"] },
   general: { label: "Local service", vertical: "general", industry: "roofing", subIndustry: "roofing", serviceDefaults: [] },
 };
 
-export function registry(): IndustryRegistry {
+export function registry(extra: IndustryProfile[] = []): IndustryRegistry {
   return {
-    profiles: new Map<string, IndustryProfile>([["roofing", roofing], ["pilates-fixture", pilatesFixture]]),
+    profiles: new Map<string, IndustryProfile>([["roofing", roofing], ["pilates-fixture", pilatesFixture], ["medical", medicalFixture], ...extra.map((p): [string, IndustryProfile] => [p.id, p])]),
     files: new Map(),
     errors: [],
     warnings: [],
   };
 }
 
-export function engineData(): EngineData {
-  return { registry: registry(), categories };
+export function engineData(extra: IndustryProfile[] = []): EngineData {
+  return { registry: registry(extra), categories };
 }
 
 function lead(fields: Partial<LeadRecord> & { id: string; business: string }): LeadRecord {
@@ -184,6 +289,45 @@ export const pilatesStudio = lead({
   demoConcept: "Boutique editorial pilates studio site with class schedule, intro offer and calm minimal photography.",
   pitchAngle: "A calm, premium studio that deserves a boutique presence.",
 });
+
+// An energetic medical fixture lead: its wording matches the kinetic archetype best.
+export const energeticClinic = lead({
+  id: "fixture-energetic-clinic-dallas-tx",
+  business: "Example Energetic Clinic (fixture)",
+  category: "Medical clinic",
+  categoryKey: "medical-clinic",
+  phone: "214-555-0104",
+  googleRating: null,
+  googleReviews: null,
+  demoConcept: "Bold, high-energy modern clinic site with a loud booking action.",
+  pitchAngle: "Bold and modern.",
+});
+
+// A lead with almost nothing on record, for the truthfulness test: no rating, no reviews, no
+// themes, no services, no year.
+export const bareRoofing = lead({
+  id: "fixture-bare-roofing-dallas-tx",
+  business: "Example Bare Roofing (fixture)",
+  phone: "214-555-0105",
+  googleRating: null,
+  googleReviews: null,
+  reviewThemes: [],
+  demoConcept: "",
+  pitchAngle: "",
+});
+
+// Pilates fixtures for filling the global window with another industry.
+export function pilatesBatch(n: number): LeadRecord[] {
+  return Array.from({ length: n }, (_, i) => lead({
+    id: `fixture-studio-${i + 1}-dallas-tx`,
+    business: `Example Studio ${i + 1} (fixture)`,
+    category: "Pilates studio",
+    categoryKey: "pilates",
+    phone: `214-555-01${String(40 + i).padStart(2, "0")}`,
+    demoConcept: "Boutique editorial pilates studio site with class schedule and intro offer.",
+    pitchAngle: "Calm and premium.",
+  }));
+}
 
 // Many roofing fixtures for variation tests.
 export function roofingBatch(n: number): LeadRecord[] {

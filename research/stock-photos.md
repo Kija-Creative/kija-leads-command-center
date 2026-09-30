@@ -9,10 +9,10 @@ Strong barber, salon, auto, collision, home service and contractor sites are pho
 | group | photos | covers |
 |---|---|---|
 | barber | 10 | fades and lineups in progress, straight razor and hot towel shaves, beard trims, tools, a shop interior |
-| salon | 10 | two salon interiors, shampoo, color, foils, manicure, polish, tattoo in progress, two pet grooming |
+| salon | 14 | two salon interiors, shampoo, color, foils, manicure, polish, tattoo in progress, six pet grooming (four added 2026-09-30: puppy in the tub, chihuahua at the tub, schnauzer on the table, freshly groomed poodle) |
 | auto | 10 | undercarriage, bench engine work, an independent shop bay, electrical diagnostics, tire change on a lift, engine bay hands, two diesel truck shots, under lift repair |
 | collision | 9 | spray gun and paint booth, bare metal bodywork, paint correction polishing, finish inspection, wipe down, interior detail |
-| home | 9 | rooftop HVAC repair, outdoor condenser, electrical panel, two plumbing, service van, technician at van, two clean interiors |
+| home | 10 | rooftop HVAC repair, outdoor condenser, electrical panel, two plumbing, service van, technician at van, two clean interiors, a rural house on open land (added 2026-09-30 for septic and other rural trades) |
 | contractor | 10 | roof tear off, roof detail, concrete screed, two fences, pool, hedge trimming, landscaped front yard, painting, kitchen remodel |
 | **total** | **58** | |
 
@@ -75,7 +75,7 @@ Strong barber, salon, auto, collision, home service and contractor sites are pho
 - Group mapping from `config/categories.json` keys: `barber` uses barber; `hair-salon`, `nail-salon`, `tattoo`, `pet-grooming` use salon; `auto-body-collision` and `auto-detailing` use collision first, then auto; every other auto key uses auto; `hvac`, `plumbing`, `electrical`, `septic`, `garage-door`, `restoration`, `appliance-repair`, `pest-control` use home; contractor keys use contractor; `general` uses no photos unless Jamey picks a group. Within a group, prefer photos whose subject matches the lead's sourced `services` (for example the diesel shots for `diesel-truck-repair`, the pet photos for `pet-grooming`, the tattoo photo for `tattoo`).
 - Choose deterministically (hash the lead id, like palettes) so a rebuild shows the same photos, and never repeat a photo within one demo.
 - Sizes: `url` is about 1600 wide. To change size, change only the query parameters: Unsplash `w`, `h`, `fit=crop`, `q`; Pexels `w`, `h`, `fit=crop`. Never change the path. A `srcset` at 800, 1200 and 1600 wide is a good default.
-- Crops: all 58 are landscape and crop cleanly to 16:9 and 3:2. For a 4:5 or taller crop set `object-fit: cover` and `object-position` from `focus`; the focus values were estimated from the photos, so check the crop at 390 wide before a demo ships.
+- Crops: the original 58 are landscape; the pet grooming additions of 2026-09-30 include three portrait photos (see `orientation`). The landscape photos crop cleanly to 16:9 and 3:2. For a 4:5 or taller crop set `object-fit: cover` and `object-position` from `focus`; the focus values were estimated from the photos, so check the crop at 390 wide before a demo ships.
 - Unsplash URLs use `auto=format`, so modern browsers get AVIF or WebP and older clients get the original JPEG. Pexels URLs return JPEG (AVIF when the browser asks for it).
 
 ## 4. People, captions and credits (required)
@@ -149,6 +149,8 @@ Process:
 
 Rejected during review, as examples of what the rules catch: a condenser with a manufacturer logo on its face; a roofing crew wearing a solar company's branded shirts and caps; a salon photo whose Unsplash description names and advertises the real salon it was shot in; a fence with a fence company's sign on the post; a wheelbarrow with a readable tool brand; roofing underlayment printed with a brand name; a shop with branded oil drums; a mixer truck with a readable plate and company name; shirts with printed company names; car maker badges in focus (several European car shots); and photos posted by accounts named after a lawn care company, a pool company, a tile retailer and a trade fair, whose credit line would name a business.
 
+Added 2026-09-30 for the roofing showcase (the library had only two roof photos): `contractor-roof-brick-ranch`, `contractor-roof-brick-hip`, `contractor-roof-chimney-ladder` and `contractor-roof-shingle-closeup`. Same review: Unsplash page data read for each (`premium: false, plus: false`, photographer, size), each photo viewed at 1,200 wide for people, signage and brands (none), and a GET of each 1600 wide `url` returned 200 `image/jpeg`. Rejected in that pass: an aerial shingle roof posted by a roofing company's own account whose description names the company and its job (it would show a competitor's work), and solar installer roof shots.
+
 Known small compromises Jamey may want to swap:
 
 - `contractor-concrete-screed`: the Pexels account that posted it is a Vietnamese concrete company, so the credit line shows a company name ("SÀI GÒN CÔNG TY CP SẢN XUẤT - THƯƠNG MẠI"). Nothing in the photo names them. It was the only strong concrete pour photo without branded vests or plates.
@@ -186,6 +188,10 @@ Known small compromises Jamey may want to swap:
 | `salon-tattoo-machine-detail` | Tattoo in progress | Unsplash | benjamin lehman | hands |
 | `salon-dog-grooming-scissors` | Scissor finish on a small dog | Unsplash | Buddy AN | hands |
 | `salon-dog-grooming-table` | Grooming at the table | Pexels | Tima Miroshnichenko | face |
+| `salon-dog-bath-puppy-tub` | Wet puppy in the tub | Pexels | Benjamin Lehman | none |
+| `salon-dog-poodle-fresh-groom` | Freshly groomed poodle (portrait) | Pexels | Helena Lopes | none |
+| `salon-dog-chihuahua-bowtie-tub` | Chihuahua in a bow tie at the tub (portrait) | Pexels | Breno Cardoso | none |
+| `salon-dog-schnauzer-towel-brush` | Schnauzer on the grooming table (portrait) | Pexels | Mladen Šćekić | none |
 | `auto-underside-inspection` | Undercarriage inspection | Pexels | Jose Ricardo Barraza Morachis | partial |
 | `auto-engine-head-rebuild` | Engine rebuild on the bench | Pexels | Artem Podrez | partial |
 | `auto-independent-shop-bay` | Independent shop bay | Unsplash | Kato Blackmore | partial |
@@ -212,10 +218,15 @@ Known small compromises Jamey may want to swap:
 | `home-plumbing-rough-in` | Plumbing rough in | Pexels | Mikael Blomkvist | face |
 | `home-service-van-ladder` | Service van | Pexels | Sonny Sixteen | none |
 | `home-technician-at-van` | Technician at the van | Pexels | Tima Miroshnichenko | face |
+| `home-rural-house-open-field` | Rural house on open land | Unsplash | Bradley Gossett | none |
 | `home-living-room-bright` | Bright living room | Pexels | Curtis Adams | none |
 | `home-living-room-fireplace` | Living room with fireplace | Unsplash | Zac Gudakov | none |
 | `contractor-roof-tear-off` | Roof tear off | Unsplash | Zohair Mirza | partial |
 | `contractor-roof-shakes-detail` | Roof detail | Unsplash | Christian Harb | none |
+| `contractor-roof-brick-ranch` | Brick ranch house with a shingle roof | Unsplash | Roger Starnes Sr | none |
+| `contractor-roof-brick-hip` | Brick house with a hip and gable shingle roof | Unsplash | Roger Starnes Sr | none |
+| `contractor-roof-chimney-ladder` | Chimney flashing and a ladder on a shingle roof | Unsplash | Martin Martz | none |
+| `contractor-roof-shingle-closeup` | Asphalt shingles, close up | Unsplash | Hal Gatewood | none |
 | `contractor-concrete-screed` | Concrete pour and screed | Pexels | SÀI GÒN CÔNG TY CP SẢN XUẤT - THƯƠNG MẠI | partial |
 | `contractor-wood-rail-fence` | Wood rail fence | Pexels | Lynn Elder | none |
 | `contractor-privacy-fence-yard` | Privacy fence | Unsplash | kev | none |

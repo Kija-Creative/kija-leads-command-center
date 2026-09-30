@@ -1,0 +1,134 @@
+{
+  "runId": "2026-09-30",
+  "mode": "reverify",
+  "plan": { "metros": ["dallas-fort-worth"], "categories": [] },
+  "searched": [
+    { "query": "Independent lead check PDF (kija-lead-check-2026-09-30), Google listings and registry lookups", "source": "Jamey's report", "notes": "Report findings re-checked on 2026-09-30 with npm run probe and direct page reads before applying." }
+  ],
+  "leads": [],
+  "queue": [],
+  "rejected": [],
+  "reverify": [
+    {
+      "id": "mustang-service-center-dallas-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 1,
+      "websiteStatus": "Has its own live website, mustangservicecenter.com, showing the shop's phone 214-824-6716 (checked 2026-09-30).",
+      "confidence": "High",
+      "verification": { "status": "verified", "checkedAt": "2026-09-30", "checks": [ { "check": "domain probe", "result": "mustangservicecenter.com is live (HTTP 200), titled Mustang Service Center, Independent Auto Repair in Dallas, and shows the shop's phone and name.", "url": "https://mustangservicecenter.com/" } ], "notes": "Lead check 2026-09-30 reported the domain registered July 19, 2026." },
+      "sources": [ { "url": "https://mustangservicecenter.com/", "label": "mustangservicecenter.com", "checkedAt": "2026-09-30" } ],
+      "decision": "reject",
+      "reason": "It now has its own website (mustangservicecenter.com, live with the shop's phone, checked 2026-09-30)."
+    },
+    {
+      "id": "all-auto-service-body-fort-worth-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 1,
+      "websiteStatus": "Has its own live website, allautoserviceandbody.com, showing the shop's phone 682-224-2942 (checked 2026-09-30).",
+      "confidence": "High",
+      "verification": { "status": "verified", "checkedAt": "2026-09-30", "checks": [ { "check": "domain probe", "result": "allautoserviceandbody.com is live (HTTP 200), titled All Auto Service and Body, Fort Worth Auto Repair and Collision, and shows the shop's phone and name.", "url": "https://allautoserviceandbody.com/" } ], "notes": "Lead check 2026-09-30 reported the domain registered Sept 13, 2026." },
+      "sources": [ { "url": "https://allautoserviceandbody.com/", "label": "allautoserviceandbody.com", "checkedAt": "2026-09-30" } ],
+      "decision": "reject",
+      "reason": "It now has its own website (allautoserviceandbody.com, live with the shop's phone, checked 2026-09-30)."
+    },
+    {
+      "id": "gm-auto-care-dallas-tx",
+      "googleRating": 0, "googleReviews": 648, "websiteGap": 3,
+      "websiteStatus": "No website of its own. gmautocare.com belongs to Grand Master Auto Care, an unrelated shop with a 630 (Illinois) phone number (checked 2026-09-30).",
+      "confidence": "High",
+      "verification": { "status": "verified", "checkedAt": "2026-09-30", "checks": [ { "check": "domain probe", "result": "gmautocare.com is live but is Grand Master Auto Care, phone (630) 454-7983, with no Dallas address or 972-681-4966 on the page.", "url": "https://www.gmautocare.com/" }, { "check": "review count", "result": "648 Google reviews on Sept 30, 2026 per Jamey's lead check (was 501).", "url": "" } ], "notes": "The lead check also mentioned a possible sister shop in Mesquite; nothing on gmautocare.com connects to it." },
+      "sources": [ { "url": "https://www.gmautocare.com/", "label": "gmautocare.com (unrelated business)", "checkedAt": "2026-09-30" } ],
+      "decision": "keep",
+      "reason": "The only matching domain is an unrelated Illinois shop; review count updated to 648."
+    },
+    {
+      "id": "top-tier-auto-repair-dallas-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 3,
+      "websiteStatus": "No working website. toptierautodallas.com has an expired certificate and now redirects to an unrelated gambling spam site (checked 2026-09-30).",
+      "confidence": "High",
+      "verification": { "status": "verified", "checkedAt": "2026-09-30", "checks": [ { "check": "domain probe", "result": "toptierautodallas.com fails with an expired certificate; read without certificate checks it redirects to beyoucenter.org, a gambling spam page, with no shop details.", "url": "https://toptierautodallas.com/" } ], "notes": "Handle carefully in any pitch: state it as what a customer would see today, without blame." },
+      "sources": [ { "url": "https://toptierautodallas.com/", "label": "toptierautodallas.com (lapsed, redirects to spam)", "checkedAt": "2026-09-30" } ],
+      "decision": "keep",
+      "reason": "Its old domain no longer works and redirects to spam, so it has no working site."
+    },
+    {
+      "id": "24-7-diesel-repair-road-service-dallas-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 3,
+      "websiteStatus": "No working website. 247dieselrepair.com shows an expired Squarespace site and 24-7dieselrepair.com a parked Coming Soon page (checked 2026-09-30).",
+      "confidence": "High",
+      "verification": { "status": "verified", "checkedAt": "2026-09-30", "checks": [ { "check": "domain probe", "result": "247dieselrepair.com returns 404, Squarespace Website Expired; 24-7dieselrepair.com is a parked Coming Soon page. Neither shows 9305 S Central Expy or 817-902-6422.", "url": "https://www.247dieselrepair.com/" } ], "notes": "" },
+      "sources": [ { "url": "https://www.247dieselrepair.com/", "label": "247dieselrepair.com (expired)", "checkedAt": "2026-09-30" } ],
+      "decision": "keep",
+      "reason": "Both candidate domains are expired or parked."
+    },
+    {
+      "id": "a-b-muffler-shop-grand-prairie-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 2,
+      "websiteStatus": "No owned site; Facebook only. abmuffler.com redirects to an unrelated Louisiana business (checked 2026-09-30).",
+      "confidence": "High",
+      "verification": { "status": "verified", "checkedAt": "2026-09-30", "checks": [ { "check": "domain probe", "result": "abmuffler.com redirects to golto.com, Bossier City Auto Repair and Louisiana Truck Outfitters, unrelated to this shop.", "url": "https://abmuffler.com/" }, { "check": "review count", "result": "Jamey's lead check reports the review count has grown (rescored 78 to 85); recount on the next run.", "url": "" } ], "notes": "" },
+      "sources": [ { "url": "https://abmuffler.com/", "label": "abmuffler.com (redirects to an unrelated business)", "checkedAt": "2026-09-30" } ],
+      "decision": "keep",
+      "reason": "The matching domain belongs to someone else."
+    },
+    {
+      "id": "no-limits-auto-collision-center-dallas-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 3,
+      "websiteStatus": "No site of its own. nolimitsautobody.com is an unrelated business with Maryland (301) phone numbers (checked 2026-09-30).",
+      "confidence": "Medium-High",
+      "verification": { "status": "verified", "checkedAt": "2026-09-30", "checks": [ { "check": "domain probe", "result": "nolimitsautobody.com is live but lists (301) 257-2315 and (301) 213-1894 and nothing about Dallas or 214-334-2010.", "url": "https://nolimitsautobody.com/" } ], "notes": "" },
+      "sources": [ { "url": "https://nolimitsautobody.com/", "label": "nolimitsautobody.com (unrelated business)", "checkedAt": "2026-09-30" } ],
+      "decision": "keep",
+      "reason": "The matching domain is an unrelated Maryland shop."
+    },
+    {
+      "id": "fenix-auto-body-shop-dallas-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 3,
+      "websiteStatus": "No site of its own found. fenixbodyshop.com is an unrelated Fenix Body Shop in Katy, TX (checked 2026-09-30); the website button on its Maps listing still needs a look.",
+      "confidence": "Medium",
+      "verification": { "status": "needs-recheck", "checkedAt": "2026-09-30", "checks": [ { "check": "domain probe", "result": "fenixbodyshop.com is Fenix Body Shop at 18035 West Little York Rd, Katy, TX, phone (832) 427-5207, not this Dallas shop.", "url": "https://fenixbodyshop.com/" } ], "notes": "Move from Research to New once the Maps listing's website button is checked and shows no other site." },
+      "sources": [ { "url": "https://fenixbodyshop.com/", "label": "fenixbodyshop.com (unrelated Katy business)", "checkedAt": "2026-09-30" } ],
+      "decision": "keep",
+      "reason": "The matching domain is an unrelated Katy shop; one check remains."
+    },
+    {
+      "id": "rios-used-tires-irving-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 2,
+      "websiteStatus": "No owned website; Facebook only. riostireshop.com is an unrelated Rios Tire Shop in New Braunfels, TX (checked 2026-09-30).",
+      "confidence": "High",
+      "verification": { "status": "verified", "checkedAt": "2026-09-30", "checks": [ { "check": "domain probe", "result": "riostireshop.com is Rios Tire Shop #1 in New Braunfels, with no Irving address or 972-871-7635. The agency registration the lead check noticed belongs to that shop.", "url": "https://riostireshop.com/" } ], "notes": "" },
+      "sources": [ { "url": "https://riostireshop.com/", "label": "riostireshop.com (unrelated New Braunfels business)", "checkedAt": "2026-09-30" } ],
+      "decision": "keep",
+      "reason": "The matching domain is an unrelated New Braunfels shop."
+    },
+    {
+      "id": "adams-brothers-roof-repair-dallas-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 3,
+      "websiteStatus": "Possibly a lead-generation listing, not a Dallas roofer: the same name appears in Trenton NJ, Marietta GA and Houston with different phones, on throwaway .best and .homes sites, and 469-940-4277 has no footprint online (checked 2026-09-30).",
+      "confidence": "Low",
+      "verification": { "status": "needs-recheck", "checkedAt": "2026-09-30", "checks": [ { "check": "exact-name search", "result": "Adams Brothers Roof Repair results are Marietta GA (3636 Dallas Hwy, 470-684-4333), Trenton NJ (862-370-3440) and a Dallas directory entry at 1324 W Davis St; sites on adamsroofrepair.best and adamsroofing.homes.", "url": "http://www.roofingquotes.com/united-states/dallas/roofing-contractor/adams-brothers-roof-repair/connect" }, { "check": "phone search", "result": "469-940-4277 returns no business listing anywhere.", "url": "" } ], "notes": "Hold. Confirm it is a real, independent Dallas business (listing photos, street view of 1324 W Davis St, Texas SOS search) before any demo or outreach." },
+      "sources": [ { "url": "https://adamsroofrepair.best/", "label": "adamsroofrepair.best (Marietta GA)", "checkedAt": "2026-09-30" }, { "url": "https://adamsbrothersroofrepair.com/", "label": "adamsbrothersroofrepair.com (Trenton NJ)", "checkedAt": "2026-09-30" } ],
+      "decision": "keep",
+      "reason": "Held for a legitimacy check; likely a lead-generation listing."
+    },
+    {
+      "id": "prime-time-septic-pumping-inc-terrell-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 3,
+      "websiteStatus": "Phone-only presence. It owns primetimesepticpumping.com, used for email only, with no website on it (lead check 2026-09-30).",
+      "confidence": "High",
+      "verification": { "status": "verified", "checkedAt": "2026-09-30", "checks": [ { "check": "owned domain", "result": "Jamey's lead check found primetimesepticpumping.com in use for email only. The pitch can offer to build on the domain they already own.", "url": "" }, { "check": "review count", "result": "Review count has grown per the lead check (rescored 95 to 96); recount on the next run.", "url": "" } ], "notes": "" },
+      "sources": [],
+      "decision": "keep",
+      "reason": "Owns an unused domain; a strong pitch point."
+    },
+    {
+      "id": "bamian-tires-and-auto-repair-dallas-tx",
+      "googleRating": 0, "googleReviews": 0, "websiteGap": 3,
+      "websiteStatus": "No website. It owns bamiantires.com with no site on it (lead check 2026-09-30).",
+      "confidence": "High",
+      "verification": { "status": "verified", "checkedAt": "2026-09-30", "checks": [ { "check": "owned domain", "result": "Jamey's lead check found bamiantires.com registered with no site on it. The pitch can offer to build on the domain they already own.", "url": "" } ], "notes": "" },
+      "sources": [],
+      "decision": "keep",
+      "reason": "Owns an unused domain; a strong pitch point."
+    }
+  ],
+  "notes": "Applied from Jamey's lead check PDF of 2026-09-30 after re-checking every named domain."
+}

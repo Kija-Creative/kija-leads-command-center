@@ -24,6 +24,7 @@
     "lint": "node src/cli/lint.js",
     "dna": "node src/cli/dna.js",
     "brief": "node src/cli/brief.js",
-    "audit": "node src/cli/audit.js"
+    "audit": "node src/cli/audit.js",
+    "build": "node src/cli/build.js"
   }
 }
