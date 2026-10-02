@@ -1,0 +1,294 @@
+{
+  "runId": "2026-09-28",
+  "week": "2026-W40",
+  "weekIndex": 0,
+  "metros": [
+    {
+      "key": "dallas-fort-worth",
+      "name": "Dallas-Fort Worth",
+      "states": [
+        "TX"
+      ],
+      "anchorCities": [
+        "Dallas",
+        "Fort Worth",
+        "Arlington",
+        "Plano",
+        "Irving",
+        "Grand Prairie"
+      ],
+      "region": "Southwest",
+      "rank": 4
+    },
+    {
+      "key": "new-york",
+      "name": "New York City area",
+      "states": [
+        "NY",
+        "NJ",
+        "PA"
+      ],
+      "anchorCities": [
+        "Queens",
+        "Brooklyn",
+        "The Bronx",
+        "Newark",
+        "Jersey City",
+        "Yonkers"
+      ],
+      "region": "Northeast",
+      "rank": 1
+    },
+    {
+      "key": "atlanta",
+      "name": "Atlanta",
+      "states": [
+        "GA"
+      ],
+      "anchorCities": [
+        "Atlanta",
+        "Marietta",
+        "Sandy Springs",
+        "Alpharetta",
+        "Decatur",
+        "Lawrenceville"
+      ],
+      "region": "Southeast",
+      "rank": 6
+    },
+    {
+      "key": "chicago",
+      "name": "Chicago",
+      "states": [
+        "IL",
+        "IN",
+        "WI"
+      ],
+      "anchorCities": [
+        "Chicago",
+        "Naperville",
+        "Joliet",
+        "Elgin",
+        "Aurora",
+        "Gary"
+      ],
+      "region": "Midwest",
+      "rank": 3
+    },
+    {
+      "key": "houston",
+      "name": "Houston",
+      "states": [
+        "TX"
+      ],
+      "anchorCities": [
+        "Houston",
+        "Pasadena",
+        "Sugar Land",
+        "The Woodlands",
+        "Katy",
+        "Pearland"
+      ],
+      "region": "Southwest",
+      "rank": 5
+    }
+  ],
+  "categories": [
+    "auto-repair",
+    "hvac",
+    "roofing",
+    "barber",
+    "auto-body-collision",
+    "plumbing"
+  ],
+  "quota": 10,
+  "homeMetro": "dallas-fort-worth",
+  "homeMaxLeads": 3,
+  "exclusions": [
+    "2142729897",
+    "2143342010",
+    "2143883888",
+    "2145269207",
+    "2146056471",
+    "2147579811",
+    "2148246716",
+    "2148289690",
+    "2149464100",
+    "2149804863",
+    "24 7 diesel repair and road service|TX",
+    "4692318776",
+    "4694811273",
+    "4695528185",
+    "4696085410",
+    "4696770690",
+    "4698971144",
+    "4699404277",
+    "6822242942",
+    "8179026422",
+    "8179172882",
+    "8179239211",
+    "9722646325",
+    "9724843595",
+    "9726814966",
+    "9728717635",
+    "a and b muffler shop|TX",
+    "adams brothers roof repair|TX",
+    "all auto service and body|TX",
+    "als auto repair shop|TX",
+    "auto shop near me|TX",
+    "bamian tires and auto repair|TX",
+    "bees auto body|TX",
+    "brownies|TX",
+    "dallas home mold water fire damage|TX",
+    "fenix auto body shop|TX",
+    "fort worth mobile mechanic|TX",
+    "gm auto care|TX",
+    "j and n auto service|TX",
+    "l and r paint and body shop|TX",
+    "most famous cutz|TX",
+    "mustang service center|TX",
+    "no limits auto collision center|TX",
+    "p v auto services|TX",
+    "papas and ninos bodyshop|TX",
+    "parlor barbershop|TX",
+    "prime time septic pumping|TX",
+    "rios used tires|TX",
+    "top tier auto repair|TX",
+    "worth automotive and exhaust|TX"
+  ],
+  "excludedBusinesses": [
+    "24/7 Diesel Repair & Road Service, Dallas, TX (lead)",
+    "A & B Muffler Shop, Grand Prairie, TX (lead)",
+    "Adams Brothers Roof Repair, Dallas, TX (lead)",
+    "Al's Auto Repair Shop, Dallas, TX (lead)",
+    "All Auto Service & Body, Fort Worth, TX (lead)",
+    "Auto Shop Near Me, Dallas, TX (lead)",
+    "Bamian Tires and Auto Repair, Dallas, TX (lead)",
+    "Bee's Auto Body, Dallas, TX (lead)",
+    "Brownie's, Dallas, TX (lead)",
+    "Dallas Home Mold Water Fire Damage, Fort Worth, TX (queue)",
+    "Fenix Auto Body Shop, Dallas, TX (lead)",
+    "Fort Worth Mobile Mechanic, Fort Worth, TX (queue)",
+    "GM AUTO CARE, Dallas, TX (lead)",
+    "J & N Auto Service, Fort Worth, TX (lead)",
+    "L & R Paint & Body Shop, Dallas, TX (lead)",
+    "Most Famous Cutz, Dallas, TX (lead)",
+    "Mustang Service Center, Dallas, TX (lead)",
+    "NO LIMITS AUTO COLLISION CENTER, Dallas, TX (lead)",
+    "P V Auto Services, Dallas, TX (queue)",
+    "Papas and Ninos Bodyshop, Dallas, TX (lead)",
+    "Prime Time Septic Pumping, Inc., Terrell, TX (lead)",
+    "Rios Used Tires, Irving, TX (lead)",
+    "The Parlor Barbershop, Dallas, TX (queue)",
+    "Top Tier Auto Repair, Dallas, TX (lead)",
+    "Worth Automotive And Exhaust, Fort Worth, TX (queue)"
+  ],
+  "generatedAt": "2026-10-02T16:53:02.318Z",
+  "thresholds": {
+    "minRating": 4.5,
+    "preferredRating": 4.7,
+    "minReviews": 20,
+    "preferredReviews": 30,
+    "strongReviews": 75,
+    "minWebsiteGap": 2
+  },
+  "categoryDetails": [
+    {
+      "key": "auto-repair",
+      "label": "Auto repair",
+      "vertical": "auto",
+      "searchTerms": [
+        "auto repair",
+        "auto repair shop",
+        "mechanic",
+        "car repair",
+        "brake repair",
+        "engine repair"
+      ],
+      "placesTypes": [
+        "car_repair"
+      ],
+      "focusNote": ""
+    },
+    {
+      "key": "hvac",
+      "label": "HVAC",
+      "vertical": "home-services",
+      "searchTerms": [
+        "hvac",
+        "ac repair",
+        "air conditioning repair",
+        "heating and air",
+        "furnace repair",
+        "hvac contractor"
+      ],
+      "placesTypes": [],
+      "focusNote": "Sheet theme, Independent HVAC companies: High-ticket calls; weak sites can directly cost leads. Prioritize 4.7+ and 40+ reviews; exclude franchises."
+    },
+    {
+      "key": "roofing",
+      "label": "Roofing",
+      "vertical": "contractor",
+      "searchTerms": [
+        "roofing contractor",
+        "roof repair",
+        "roofer",
+        "roof replacement",
+        "storm damage roofing"
+      ],
+      "placesTypes": [
+        "roofing_contractor"
+      ],
+      "focusNote": ""
+    },
+    {
+      "key": "barber",
+      "label": "Barber shop",
+      "vertical": "personal-care",
+      "searchTerms": [
+        "barber shop",
+        "barber",
+        "barbershop",
+        "mens haircut",
+        "fade haircut"
+      ],
+      "placesTypes": [
+        "barber_shop"
+      ],
+      "focusNote": "Sheet theme, Barbers / salons: Visually strong, booking-oriented and brandable. Prefer unique independents with 75+ reviews and no good booking/site experience."
+    },
+    {
+      "key": "auto-body-collision",
+      "label": "Auto body and collision",
+      "vertical": "auto",
+      "searchTerms": [
+        "auto body shop",
+        "collision repair",
+        "body shop",
+        "dent repair",
+        "paint and body",
+        "paintless dent repair"
+      ],
+      "placesTypes": [],
+      "focusNote": "Sheet theme, Dent repair / collision: Before/after proof makes private demos persuasive. Prioritize 4.7+ and 30+ reviews; inspect visual quality of current presence."
+    },
+    {
+      "key": "plumbing",
+      "label": "Plumbing",
+      "vertical": "home-services",
+      "searchTerms": [
+        "plumber",
+        "plumbing",
+        "drain cleaning",
+        "water heater repair",
+        "emergency plumber",
+        "leak repair"
+      ],
+      "placesTypes": [
+        "plumber"
+      ],
+      "focusNote": "Sheet theme, Independent plumbers: Emergency/high-value service makes conversion improvements easy to quantify. Prioritize 4.7+ and 50+ reviews; verify domain independently."
+    }
+  ],
+  "chainsFile": "config/chains.json"
+}

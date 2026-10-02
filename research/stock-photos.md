@@ -8,7 +8,7 @@ Strong barber, salon, auto, collision, home service and contractor sites are pho
 
 | group | photos | covers |
 |---|---|---|
-| barber | 10 | fades and lineups in progress, straight razor and hot towel shaves, beard trims, tools, a shop interior |
+| barber | 12 | fades and lineups in progress, straight razor and hot towel shaves, beard trims, tools, a shop interior, a dark leather chair shot and a chrome chair detail (two added 2026-10-02) |
 | salon | 14 | two salon interiors, shampoo, color, foils, manicure, polish, tattoo in progress, six pet grooming (four added 2026-09-30: puppy in the tub, chihuahua at the tub, schnauzer on the table, freshly groomed poodle) |
 | auto | 10 | undercarriage, bench engine work, an independent shop bay, electrical diagnostics, tire change on a lift, engine bay hands, two diesel truck shots, under lift repair |
 | collision | 9 | spray gun and paint booth, bare metal bodywork, paint correction polishing, finish inspection, wipe down, interior detail |
@@ -151,6 +151,10 @@ Rejected during review, as examples of what the rules catch: a condenser with a 
 
 Added 2026-09-30 for the roofing showcase (the library had only two roof photos): `contractor-roof-brick-ranch`, `contractor-roof-brick-hip`, `contractor-roof-chimney-ladder` and `contractor-roof-shingle-closeup`. Same review: Unsplash page data read for each (`premium: false, plus: false`, photographer, size), each photo viewed at 1,200 wide for people, signage and brands (none), and a GET of each 1600 wide `url` returned 200 `image/jpeg`. Rejected in that pass: an aerial shingle roof posted by a roofing company's own account whose description names the company and its job (it would show a competitor's work), and solar installer roof shots.
 
+Added 2026-10-02 for the Brownie's showcase (the barber group had one room photo): `barber-leather-chair-dark-shop` (Redd Francisco, Unsplash) and `barber-chrome-chairs-detail` (Klara Kulikova, Unsplash). Same review: Unsplash page data read for each (free license, not Unsplash+, no business named), each viewed at 1,600 wide for logos and readable signage (a few shelf bottles with illegible labels in the first), and a GET of each 1600 wide `url` returned 200 `image/jpeg`. Rejected in that pass: a chair photo whose page names a real Hartford barbershop, a shop interior whose page describes a real shop in Cork, and three interiors with readable shop signs, framed portraits or branded products.
+
+Added 2026-10-02 for the A & B Muffler Shop showcase (the auto group had no exhaust, weld or fabrication photos): `auto-exhaust-pipe-angle-gauge` (Martin Baron), `auto-weld-blue-arc` (Rob Lambert), `auto-exhaust-tips-black-close` (Obi) and `auto-exhaust-tips-heat-blue` (Shaturniano's Photography), all Unsplash. Same review: each photo page read (free Unsplash License, not Unsplash+, no business named), image metadata read for source size, each viewed at 1,600 wide for logos, plates and readable signage, and a GET of each 1600 wide `url` returned 200 `image/jpeg`. The first photo shows a recognizable face at a bench and is for a mood image in a gallery, never a team section. The heat blue photo has a faint, illegible stamp on one tip. Rejected in that pass: tips with a visible license plate (two photos by Zack Szadurski), a motorcycle silencer with a readable maker logo, a torch cutting shot with readable glove and trouser brand text, a carbon tip with a maker badge, and an Unsplash+ exhaust photo.
+
 Known small compromises Jamey may want to swap:
 
 - `contractor-concrete-screed`: the Pexels account that posted it is a Vietnamese concrete company, so the credit line shows a company name ("SÀI GÒN CÔNG TY CP SẢN XUẤT - THƯƠNG MẠI"). Nothing in the photo names them. It was the only strong concrete pour photo without branded vests or plates.
@@ -178,6 +182,8 @@ Known small compromises Jamey may want to swap:
 | `barber-beard-trim-clipper` | Beard trim with a clipper | Pexels | Gustavo Fring | partial |
 | `barber-tools-razors-brush` | Razors and shaving brush on a towel | Pexels | Nikolaos Dimou | none |
 | `barber-vintage-chairs-interior` | Barbershop interior with vintage chairs | Pexels | wal_ 172619 | none |
+| `barber-leather-chair-dark-shop` | Quilted leather barber chair in a dark shop | Unsplash | Redd Francisco | none |
+| `barber-chrome-chairs-detail` | Chrome and black leather barber chairs, detail | Unsplash | Klara Kulikova | none |
 | `salon-interior-styling-stations` | Salon interior with styling stations | Unsplash | Giorgio Trovato | partial |
 | `salon-interior-backwash` | Salon floor with backwash chairs | Pexels | Max Vakhtbovych | none |
 | `salon-shampoo-backwash` | Shampoo at the backwash | Unsplash | Lindsay Cash | face |
@@ -202,6 +208,10 @@ Known small compromises Jamey may want to swap:
 | `auto-diesel-semi-in-bay` | Semi truck in the bay | Pexels | cottonbro studio | partial |
 | `auto-under-lift-repair` | Repair under the lift | Pexels | Enis Yavuz | partial |
 | `auto-engine-bay-hands` | Engine bay work | Pexels | Jose Ricardo Barraza Morachis | hands |
+| `auto-exhaust-pipe-angle-gauge` | Measuring a bent exhaust pipe with an angle gauge | Unsplash | Martin Baron | face |
+| `auto-weld-blue-arc` | Welding a steel tube with a blue arc | Unsplash | Rob Lambert | partial |
+| `auto-exhaust-tips-black-close` | Dual black exhaust tips, close up | Unsplash | Obi | none |
+| `auto-exhaust-tips-heat-blue` | Heat tinted blue exhaust tips | Unsplash | Shaturniano's Photography | none |
 | `collision-spray-gun-parts` | Spray gun on painted parts | Pexels | Dextar Studio | hands |
 | `collision-paint-booth-shell` | Body shell in the paint booth | Pexels | Vladan Rajkovic | none |
 | `collision-bare-metal-bodywork` | Bare metal bodywork | Unsplash | Egor Vikhrev | none |

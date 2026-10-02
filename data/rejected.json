@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "key": "2145412788",
+    "business": "AA Auto Body Shop",
+    "city": "Dallas",
+    "state": "TX",
+    "phone": "214-541-2788",
+    "reason": "Owns a working website, aaautobodytx.com, with services, address, phone and a contact option, which fails the website gap threshold.",
+    "evidenceUrl": "https://aaautobodytx.com/",
+    "rejectedAt": "2026-10-02",
+    "runId": "2026-09-28"
+  },
+  {
+    "key": "3466677118",
+    "business": "H Town Roof & Constructions LLC.",
+    "city": "Houston",
+    "state": "TX",
+    "phone": "346-667-7118",
+    "reason": "Owns a working website with services, FAQs, contact forms, phone and address, listed in the Google Maps website field.",
+    "evidenceUrl": "https://htownroofco.com/",
+    "rejectedAt": "2026-10-02",
+    "runId": "2026-09-28"
+  },
+  {
+    "key": "4048352419",
+    "business": "Emory Haircutters Barber Shop",
+    "city": "Decatur",
+    "state": "GA",
+    "phone": "404-835-2419",
+    "reason": "Owns a working website (emoryhaircutters.com) with the shop's address, phone and per barber appointment booking, and the Maps website field points to it.",
+    "evidenceUrl": "https://www.emoryhaircutters.com/",
+    "rejectedAt": "2026-10-02",
+    "runId": "2026-09-28"
+  },
+  {
+    "key": "8327828553",
+    "business": "Texas Brother’s Roofing & Construction LLC",
+    "city": "Houston",
+    "state": "TX",
+    "phone": "832-782-8553",
+    "reason": "Owns a working website with services pages, a contact page, phone and a free estimate path, listed in the Google Maps website field.",
+    "evidenceUrl": "https://txbrothersroofingandconstruction.com/",
+    "rejectedAt": "2026-10-02",
+    "runId": "2026-09-28"
+  }
+]

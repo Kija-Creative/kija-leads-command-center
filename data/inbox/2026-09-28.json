@@ -1,0 +1,2683 @@
+{
+  "runId": "2026-09-28",
+  "mode": "weekly",
+  "plan": {
+    "metros": [
+      "dallas-fort-worth",
+      "new-york",
+      "atlanta",
+      "chicago",
+      "houston"
+    ],
+    "categories": [
+      "auto-repair",
+      "hvac",
+      "roofing",
+      "barber",
+      "auto-body-collision",
+      "plumbing"
+    ]
+  },
+  "searched": [
+    {
+      "query": "google.com/maps/search/barber shop in Fort Worth TX",
+      "source": "google-maps",
+      "notes": "Browser pane shows a limited Maps view: only sponsored results listed, so category browsing is not usable. Switched to name lookups."
+    },
+    {
+      "query": "google.com/maps/search/auto repair in Plano TX",
+      "source": "google-maps",
+      "notes": "Same limited view, one sponsored result with a website. No candidates."
+    },
+    {
+      "query": "auto repair, plumbing, roofing, hvac, barbershop, collision (Dallas, Fort Worth, Arlington, Plano, Irving, Grand Prairie) restricted to facebook.com",
+      "source": "websearch",
+      "notes": "About 14 searches across all six categories to surface businesses with a Facebook page; roughly 110 names then looked up one at a time on public Google Maps listings to read the website field, rating, review count and phone."
+    },
+    {
+      "query": "auto body collision repair Dallas TX 5.0 stars facebook.com; paintless dent repair Fort Worth; hvac Grand Prairie; roofing contractor Irving; independent plumber Arlington",
+      "source": "websearch",
+      "notes": "Aggregator and directory results (lantern.llc, serviceforge, expertise.com). Used only for names. Nearly all named HVAC, plumbing, roofing, PDR and collision shops showed an owned domain on Maps and were dropped."
+    },
+    {
+      "query": "Maps listing reads for HVAC (North Star, Air Clinic, Ally, Stay Kool, R&R, Texas Air & Heat, Texas Ace), plumbing (Logic, Royal Flush, Westside, Fischer & Boone, Service Company, The Plumbing House, Anytime 365, McKinzie), roofing (Rosehill, Dane, Medrano, Nailed It, Jenkins, Joe Hall)",
+      "source": "google-maps",
+      "notes": "All showed an owned website on the listing. No qualifying HVAC, plumbing or roofing candidate found this run; Jason's Plumbing (4.1, 14) and Air Temp of Texas (4.2, 5) have no site but miss the rating and review floors."
+    },
+    {
+      "query": "Maps listing reads for auto and body shops (Love Field, All Star, Dallas Auto Body Repair, Prestige Collision, Silver Lining, Beltline, Kayex, JC's, Prime Auto Collision, Budget Collision, Master's Touch, Thornhill, Marlow, Destin and others)",
+      "source": "google-maps",
+      "notes": "All had owned domains. Bruton Auto Repair has no site but is 4.1. Kairos Customs & Auto Body (Irving) 4.6 from 22 with no website field, borderline, not returned. Dragon Body Shop 5.0 from 14 fails review floor."
+    },
+    {
+      "query": "Maps listing reads for barbers (Alton's, Arochi's, Dream Cut, Founders, Hudson's, Lion's Legacy, Legacy Barber Lounge, Cut and Shave, Razor's Edge, House of Fades, Race Street, Authentic Gentleman)",
+      "source": "google-maps",
+      "notes": "Most have owned domains; Race Street and Authentic Gentleman show as closed. Adam's Barber Shop (13 reviews) and Suave House (14 reviews) have no site but fail the review floor."
+    },
+    {
+      "query": "barber shop Queens NY \"no website\" reviews",
+      "source": "WebSearch",
+      "notes": "Directory results only; no usable no-website leads. Hugo Ace and Hustle Barbershop surfaced but not checked."
+    },
+    {
+      "query": "plumber Brooklyn NY facebook only 5 star reviews independent",
+      "source": "WebSearch",
+      "notes": "Thumbtack and review mirrors only; nothing usable."
+    },
+    {
+      "query": "auto body shop Bronx NY collision repair reviews facebook",
+      "source": "WebSearch",
+      "notes": "Surfaced AAJ Auto Collision, Complete Auto Body (wix site), Bruckner Collision; not checked further."
+    },
+    {
+      "query": "google.com/maps/search/barber shop in Queens NY (run twice)",
+      "source": "Google Maps in browser",
+      "notes": "6 listings at 4.5+ and 20+ reviews; all had an owned website or none passed. Prestige Cuts has barbershopinqueensny.com."
+    },
+    {
+      "query": "google.com/maps/search/barber shop in Brooklyn NY",
+      "source": "Google Maps in browser",
+      "notes": "12 listings checked. All have owned sites except Thee Brooklyn Barber (Instagram only); Smith Street Barbershop has only a square.site page."
+    },
+    {
+      "query": "google.com/maps/search/plumber in Queens NY",
+      "source": "Google Maps in browser",
+      "notes": "8 listings checked, all have websites."
+    },
+    {
+      "query": "google.com/maps/search/barbershop in The Bronx NY",
+      "source": "Google Maps in browser",
+      "notes": "6 checked, 2 with no website field."
+    },
+    {
+      "query": "google.com/maps/search/auto body shop in The Bronx NY",
+      "source": "Google Maps in browser",
+      "notes": "6 checked, 2 with no website field."
+    },
+    {
+      "query": "google.com/maps/search/auto repair shop in Newark NJ",
+      "source": "Google Maps in browser",
+      "notes": "4 checked, 3 with no website field."
+    },
+    {
+      "query": "google.com/maps/search/roofing contractor in Queens NY",
+      "source": "Google Maps in browser",
+      "notes": "7 checked, all have websites."
+    },
+    {
+      "query": "auto repair Marietta GA no website facebook 4.9 reviews",
+      "source": "WebSearch",
+      "notes": "Directory results only (lantern.llc, magicpin). Max Auto Repair has an owned site. BAM Auto Repair lists bamcollision.com/bamautorepair, so likely owned site; not pursued."
+    },
+    {
+      "query": "barber shop Decatur GA facebook only booking reviews",
+      "source": "WebSearch",
+      "notes": "Fresha and Genbook booking pages, nothing confirming a missing site."
+    },
+    {
+      "query": "plumber Lawrenceville GA facebook page 5 star reviews independent",
+      "source": "WebSearch",
+      "notes": "Only Benjamin Franklin (franchise) and Thumbtack listings; no usable candidate."
+    },
+    {
+      "query": "auto body shop in Marietta GA",
+      "source": "google-maps",
+      "notes": "Limited signed-out view showed one result (RJ's Auto Body Plus, 4.6, shows a Website button); dropped."
+    },
+    {
+      "query": "BAM Auto Repair 598 Powder Springs St Marietta GA",
+      "source": "WebSearch/WebFetch",
+      "notes": "Directory page lists an owned site and only 21 reviews; dropped."
+    },
+    {
+      "query": "hvac Alpharetta GA heating and air independent facebook page reviews 4.9",
+      "source": "WebSearch",
+      "notes": "Results (Gagne, Staton, ClimateSmith) are established companies likely with sites; not pursued."
+    },
+    {
+      "query": "roofing contractor Sandy Springs GA facebook page reviews 5.0 small family",
+      "source": "WebSearch",
+      "notes": "Directory results; Fowler Exteriors has a site; others under 20 reviews."
+    },
+    {
+      "query": "barber shop in Decatur GA",
+      "source": "google-maps",
+      "notes": "Read the first results page by hand (6 listings). The limited signed-out view did not show Website buttons or a detail panel, so the website field could not be read for any of them."
+    },
+    {
+      "query": "paintless dent repair Atlanta GA mobile facebook page 5 star reviews",
+      "source": "WebSearch",
+      "notes": "Dent Vanish, Five Star Dent Removal, Dent Repair Guys all appear to have sites; not pursued."
+    },
+    {
+      "query": "Emory Haircutters Clairmont Rd Decatur; Maxim Barbers Decatur",
+      "source": "WebSearch/WebFetch",
+      "notes": "Only Fresha pages found for Emory Haircutters; Fresha pages disagree on phone. Maxim Barbers only has reviews and news mentions, no website evidence either way."
+    },
+    {
+      "query": "independent barber shop Joliet IL facebook page reviews no website",
+      "source": "WebSearch",
+      "notes": "Returned Booksy pages only; used for names, no ratings relied on."
+    },
+    {
+      "query": "auto body collision repair Gary IN no website 5.0 reviews",
+      "source": "WebSearch",
+      "notes": "Only Gerber Collision (chain). Not useful."
+    },
+    {
+      "query": "plumber Elgin IL facebook only plumbing emergency reviews",
+      "source": "WebSearch",
+      "notes": "Directory results, all with owned sites or chains. No leads."
+    },
+    {
+      "query": "roofing contractor Aurora IL facebook page 5 star reviews",
+      "source": "WebSearch",
+      "notes": "Directory results with tiny review counts. No leads."
+    },
+    {
+      "query": "Google Maps: barber shop in Joliet IL",
+      "source": "google.com/maps (browser)",
+      "notes": "Limited view, 2 results. Original Barber Company has a square.site site, dropped."
+    },
+    {
+      "query": "Google Maps: plumber in Elgin IL; plumber in Joliet IL; plumber in Aurora IL",
+      "source": "google.com/maps (browser)",
+      "notes": "All top results show a Website button. Only Prestige Plumbing (North Aurora) lacked one."
+    },
+    {
+      "query": "Google Maps: roofing contractor in Aurora IL; Joliet IL; Elgin IL; Gary IN",
+      "source": "google.com/maps (browser)",
+      "notes": "Nothing qualifying: no-website roofers had under 20 reviews or under 4.5."
+    },
+    {
+      "query": "Google Maps: auto body shop in Gary IN; Joliet IL; Elgin IL",
+      "source": "google.com/maps (browser)",
+      "notes": "Greg's Body Shop (Joliet) and Kavin Collision (Gary) have no website. Others have sites or low ratings."
+    },
+    {
+      "query": "Google Maps: auto repair shop in Joliet IL; mechanic in Elgin IL; auto repair in Naperville IL",
+      "source": "google.com/maps (browser)",
+      "notes": "Joliet Auto Repair Shop Inc and Mike More Miles lacked a website. Elgin results all had sites. Naperville page did not load text."
+    },
+    {
+      "query": "Google Maps: hvac in Gary IN; hvac contractor in Joliet IL and Elgin IL; heating and air in Aurora IL; furnace repair in Naperville IL",
+      "source": "google.com/maps (browser)",
+      "notes": "Every 4.5+/20+ result showed a Website button. No HVAC candidates."
+    },
+    {
+      "query": "Google Maps: barber shop in Gary IN, Elgin IL, Aurora IL, then opened 11 listings",
+      "source": "google.com/maps (browser)",
+      "notes": "Result lists hide the Website button for barbers, so each listing was opened. Billco, Knock Out Cuts, Dapper Looks, Scum Lounge, Made Men have own domains or app pages; Central Barber Shop and Big Boss list facebook.com only; Lincoln Avenue lists a Booksy page only."
+    },
+    {
+      "query": "Web checks for owned sites: Greg's Body Shop, Joliet Auto Repair Shop, Mike More Miles, Prestige Plumbing, Central Barber Shop",
+      "source": "WebSearch",
+      "notes": "No owned site surfaced for Greg's, Joliet Auto Repair Shop, Prestige or Central Barber. Mike More Miles appears in a repair-shop website vendor blog, so a site may exist; dropped."
+    },
+    {
+      "query": "barber shop Pasadena TX facebook only no website reviews",
+      "source": "WebSearch",
+      "notes": "Only directories and Floyd's (owned site) surfaced; no qualifying independent found."
+    },
+    {
+      "query": "auto repair shop Pearland TX facebook page 5 star reviews",
+      "source": "WebSearch",
+      "notes": "Results were Christian Brothers (chain), Pearland Auto Pro, Collision Motor Specialist; none confirmed as site-less; none carried."
+    },
+    {
+      "query": "plumber Katy TX \"no website\" reviews",
+      "source": "WebSearch",
+      "notes": "Directory results only (homeguide, lantern); 1st Plumber Katy TX 4.9 from 31 mentioned but site status unverified; not carried."
+    },
+    {
+      "query": "Houston TX mobile mechanic OR auto repair facebook.com call or text 4.9 stars Google reviews",
+      "source": "WebSearch",
+      "notes": "Directory mirrors listed Stella Link Mobile Complete Auto Repair, Houston Mobile Mechanic & Diesel Repair and others; site status unverified."
+    },
+    {
+      "query": "roofing contractor Houston TX facebook page only reviews 5.0 Google Pasadena Katy",
+      "source": "WebSearch",
+      "notes": "RoofVista directory listed several 5.0 Houston roofers; 2 carried, others have owned sites or unclear."
+    },
+    {
+      "query": "reviews.birdeye.com HVAC Houston TX \"no website\"",
+      "source": "WebSearch",
+      "notes": "Only tiny-review-count HVAC listings (18 and 9 reviews); none met floors."
+    },
+    {
+      "query": "auto body collision repair Houston TX facebook \"paintless dent repair\" 5 star",
+      "source": "WebSearch",
+      "notes": "Lantern directory pages returned 404 on fetch; Dents R Us and Dent Sharks not verified for website status; not carried."
+    },
+    {
+      "query": "Texas Brother's Roofing & Construction Houston TX (plus phone/facebook variant)",
+      "source": "WebSearch and WebFetch roofvista.com",
+      "notes": "RoofVista shows 5.0 from 76 Google reviews and no website or phone listed; no owned domain surfaced."
+    },
+    {
+      "query": "H Town Roof & Constructions Houston (plus phone variant)",
+      "source": "WebSearch and WebFetch roofvista.com",
+      "notes": "RoofVista shows 5.0 from 75 reviews, no website listed; no owned domain surfaced in search."
+    },
+    {
+      "query": "Top Roofing LLC / Bustamante Roofing and Construction Houston website",
+      "source": "WebSearch",
+      "notes": "Bustamante has an owned domain (bustamanteroofing.com) and a GAF page; rejected as likely owning a site. Top Roofing not carried, site status unclear."
+    },
+    {
+      "query": "Stella Link Mobile Complete Auto Repair 9403 Stella Link Rd Houston",
+      "source": "WebSearch",
+      "notes": "Aggregators show 4.9 stars; review count conflicts across sources (147 vs 673); no owned domain surfaced but unverified."
+    },
+    {
+      "query": "https://www.google.com/maps/search/barber+shop+in+Pasadena+TX",
+      "source": "browser pane",
+      "notes": "Navigation to google.com was denied. Claude in Chrome extension was not connected. No Google Maps listing could be read this run."
+    }
+  ],
+  "leads": [
+    {
+      "business": "Victoria and Sons Auto Repair",
+      "category": "Auto repair",
+      "categoryKey": "auto-repair",
+      "city": "Newark",
+      "state": "NJ",
+      "metro": "new-york",
+      "address": "1233 Broad St, Newark, NJ 07114",
+      "area": "",
+      "phone": "973-623-1414",
+      "phoneLineType": "unknown",
+      "googleRating": 4.8,
+      "googleReviews": 498,
+      "ratingSource": "google-maps-observed",
+      "googleMapsUrl": "https://www.google.com/maps/place/Victoria+and+Sons+Auto+Repair/@40.7189958,-74.1823639,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2530e06eb7af5:0x975c2a2fd5644e6f!8m2!3d40.7189958!4d-74.1823639!16s%2Fg%2F1tksjq82",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 3,
+      "ticketValue": 3,
+      "visualFit": 2,
+      "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe; only directory pages that mirror the Maps data exist.",
+      "presence": {
+        "facebook": "",
+        "instagram": "",
+        "yelp": "",
+        "booking": "",
+        "other": []
+      },
+      "confidence": "Medium-High",
+      "whyKija": "Nearly 500 Google reviews prove the trust, with 168 listing photos and a regular flow of recent customers, but searchers have no page of their own to see services and request an appointment.",
+      "pitchAngle": "Almost 500 customers already vouch for your shop on Google; a site of your own can turn that trust into booked repair visits.",
+      "demoConcept": "Clean neighborhood repair shop site with review proof, a service grid, hours and a mobile first call and appointment request.",
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Victoria+and+Sons+Auto+Repair/@40.7189958,-74.1823639,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2530e06eb7af5:0x975c2a2fd5644e6f!8m2!3d40.7189958!4d-74.1823639!16s%2Fg%2F1tksjq82",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://autorepairscore.com/nj/newark/victoria-and-sons-auto-repair-newark-new-jersey",
+          "label": "autorepairscore.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/search?find_desc=Victoria+and+Sons+Auto+Repair&find_loc=Newark%2C+NJ",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checkedAt": "2026-10-02",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searches for the exact name with Newark NJ, with the ampersand variant, with the address and for the quoted phone 973-623-1414 returned only directory pages (autorepairscore, chamberofcommerce, repaircost, wheree, salamapp) and no owned domain.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Read on 2026-10-02: 4.8 from 498 reviews, Auto repair shop, 1233 Broad St Newark, phone (973) 623-1414, no website field and an Add website prompt, 168 photos, open until 6 PM.",
+            "url": "https://www.google.com/maps/place/Victoria+and+Sons+Auto+Repair/@40.7189958,-74.1823639,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2530e06eb7af5:0x975c2a2fd5644e6f!8m2!3d40.7189958!4d-74.1823639!16s%2Fg%2F1tksjq82"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 64 guessed domains for \"Victoria and Sons Auto Repair\": 0 resolve, 0 serve a page, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "No Facebook page (a guessed page URL was unavailable), Instagram, Yelp listing or booking page was found for the business; Yelp search for the name returned other shops. Only aggregator directories list it.",
+            "url": "https://www.yelp.com/search?find_desc=Victoria+and+Sons+Auto+Repair&find_loc=Newark%2C+NJ"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Operating: Maps shows it open until 6 PM with reviews from 1 to 2 months ago. Independent, no match on the chain list. Phone 973-623-1414 is on the Maps listing and mirrored by directories (autorepairscore, chamberofcommerce); no Facebook, Yelp or BBB page was found as an independent second source.",
+            "url": ""
+          },
+          {
+            "check": "review integrity",
+            "result": "Read the full spread (457 five star, 14 four, 4 three, 3 two, 20 one) and the three newest reviews, written by a Local Guide with 182 reviews, one with 10 and one with 6, with specific varied detail; no banner, incentive or repeated phrasing seen. Only three reviews load in the limited Maps view, so burst and thin account tests were not possible beyond that sample.",
+            "url": "https://www.google.com/maps/place/Victoria+and+Sons+Auto+Repair/@40.7189958,-74.1823639,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2530e06eb7af5:0x975c2a2fd5644e6f!8m2!3d40.7189958!4d-74.1823639!16s%2Fg%2F1tksjq82"
+          }
+        ],
+        "notes": "websiteGap 3: nothing owned found and the Maps website field is empty. ticketValue 3: category default. visualFit 2: category default. Confidence Medium-High, not High, because the phone has only one primary source and only three reviews were readable. services and reviewThemes left empty: fewer than ten reviews read and no service list on a primary source."
+      }
+    },
+    {
+      "business": "Greg's Body Shop",
+      "category": "Auto body and collision",
+      "categoryKey": "auto-body-collision",
+      "city": "Joliet",
+      "area": "",
+      "state": "IL",
+      "metro": "chicago",
+      "address": "2221 Oak Leaf St, Joliet, IL 60436",
+      "phone": "(815) 741-4244",
+      "phoneLineType": "unknown",
+      "googleRating": 4.7,
+      "googleReviews": 277,
+      "ratingSource": "google-maps-observed",
+      "googleMapsUrl": "https://www.google.com/maps/search/Greg%27s+Body+Shop+Joliet+IL",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 3,
+      "visualFit": 3,
+      "websiteStatus": "No working owned website surfaced; the domain on the Facebook page, gregsbodyshop.net, shows only a Launching Soon placeholder, and the Maps website field is empty.",
+      "presence": {
+        "facebook": "https://www.facebook.com/p/Gregs-Body-Shop-100063608890943/",
+        "instagram": "",
+        "yelp": "",
+        "booking": "",
+        "other": [
+          "https://gregsbodyshop.net/"
+        ]
+      },
+      "confidence": "Medium-High",
+      "whyKija": "277 Google reviews at 4.7 show strong local trust for a collision shop, and searchers who look it up find only a Facebook page and a Launching Soon placeholder, so there is nowhere to see paint and body work or request an estimate. Body and paint repair is highly visual, which suits before and after proof.",
+      "pitchAngle": "Your 277 Google reviews already vouch for the work; a finished site on the domain you already hold turns that trust into estimate requests.",
+      "demoConcept": "Clean, confident collision shop site that leads with before and after paint and body photos and review proof, with a photo based estimate request and a tap to call on mobile.",
+      "services": [
+        "Collision repair",
+        "Dent repair",
+        "Rust spot repair"
+      ],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/search/Greg%27s+Body+Shop+Joliet+IL",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.facebook.com/p/Gregs-Body-Shop-100063608890943/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://gregsbodyshop.net/",
+          "label": "gregsbodyshop.net",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://threebestrated.com/auto-body-shops-in-joliet-il",
+          "label": "threebestrated.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checkedAt": "2026-10-02",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the name with Joliet IL, the address and the phone; results were directories and the Facebook page, and no live owned site appeared. A directory lists a contact email on the gregsbodyshop.net domain but no site content.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Read on 2026-10-02: 4.7 from 277 reviews (246 five, 10 four, 3 three, 2 two, 16 one star), Auto body shop, 2221 Oak Leaf St, open until 5 PM, (815) 741-4244, 105 photos, 'Claim this business' and 'Add website' shown with no website field.",
+            "url": "https://www.google.com/maps/search/Greg%27s+Body+Shop+Joliet+IL"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 56 guessed domains for \"Greg's Body Shop\": 5 resolve, 5 serve a page, 3 look parked or for sale, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "The Facebook page (262 followers, 94% recommend from 23 reviews) lists the phone and the website gregsbodyshop.net; that domain serves a GoDaddy builder page reading Launching Soon with a 2024 copyright and no services, phone or estimate path. No Instagram, Yelp or booking page surfaced in search.",
+            "url": "https://www.facebook.com/p/Gregs-Body-Shop-100063608890943/"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Operating: Maps shows open hours and the readable reviews are dated 1 to 8 months ago. Independent: the name does not match config/chains.json and a directory describes a single location. The phone (815) 741-4244 matches on the Maps listing and the Facebook page.",
+            "url": ""
+          },
+          {
+            "check": "review integrity",
+            "result": "Read the star spread, topic chips and 3 reviews in the limited Maps view: reviewers have 7 to 9 reviews with some photos and varied detail, no warning banner or incentive wording; the 5-or-1 skew (246 five, 16 one, 15 in between) is one soft signal and the 10 newest could not be read.",
+            "url": ""
+          }
+        ],
+        "notes": "websiteGap 2: the business's own domain gregsbodyshop.net exists but shows only a Launching Soon placeholder, which counts as a very weak single page rather than a credible site. ticketValue 3: category default. visualFit 3: category default, collision and paint work is visual and 105 Maps photos exist. Confidence Medium-High: owned placeholder domain and only 3 reviews readable. Directory ratings (4.8 to 4.9) differ from Maps 4.7 and are stale mirrors, not used. Founding year differs across directories so it is left blank."
+      }
+    },
+    {
+      "business": "The Big Boss Barber Shop",
+      "category": "Barber shop",
+      "categoryKey": "barber",
+      "city": "Aurora",
+      "area": "Downtown Aurora",
+      "state": "IL",
+      "metro": "chicago",
+      "address": "37 S Stolp Ave, Aurora, IL 60506",
+      "phone": "(630) 801-8901",
+      "phoneLineType": "mobile",
+      "googleRating": 4.6,
+      "googleReviews": 192,
+      "ratingSource": "google-maps-observed",
+      "googleMapsUrl": "https://www.google.com/maps/place/The+Big+Boss+Barber+Shop/@41.7575971,-88.3161711,17z/data=!3m1!4b1!4m6!3m5!1s0x880efaafce42315b:0xa09f4edaa0f9e09f!8m2!3d41.7575971!4d-88.3161711!16s%2Fg%2F1tdm49vd",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 1,
+      "visualFit": 3,
+      "websiteStatus": "No owned website surfaced in search or the domain probe; the Facebook page (the Maps website field) and an Instagram profile are the only web presence, and no working booking page was found.",
+      "presence": {
+        "facebook": "https://www.facebook.com/TheBigBossBarbershop",
+        "instagram": "https://www.instagram.com/thebigbossbarbershop/",
+        "yelp": "https://www.yelp.com/biz/the-big-boss-barbershop-aurora",
+        "booking": "",
+        "other": []
+      },
+      "confidence": "Medium-High",
+      "whyKija": "192 Google reviews at 4.6 and a long run of Yelp and Facebook praise show a busy downtown shop with real regulars, yet searchers land on a Facebook page with no booking path or service list of its own.",
+      "pitchAngle": "Your 192 Google reviews already vouch for the work; a home of your own for the barbers, services and booking turns that trust into full chairs.",
+      "demoConcept": "Classic downtown barbershop site with a barber lineup, a short services list (haircut, haircut and shave, shave only) and an appointment request path, leading with review proof and shop photos.",
+      "services": [
+        "Haircut",
+        "Haircut and shave",
+        "Shave only"
+      ],
+      "reviewThemes": [
+        "Friendly, professional barbers",
+        "Hot towel shave and beard work",
+        "Popular, so book ahead",
+        "Clean, welcoming shop atmosphere"
+      ],
+      "languages": [],
+      "established": 2010,
+      "hours": "Tue to Thu 10 AM to 7:30 PM, Fri 8 AM to 8 PM, Sat 8 AM to 5 PM, closed Sun and Mon",
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/The+Big+Boss+Barber+Shop/@41.7575971,-88.3161711,17z/data=!3m1!4b1!4m6!3m5!1s0x880efaafce42315b:0xa09f4edaa0f9e09f!8m2!3d41.7575971!4d-88.3161711!16s%2Fg%2F1tdm49vd",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.facebook.com/TheBigBossBarbershop",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/biz/the-big-boss-barbershop-aurora",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.instagram.com/thebigbossbarbershop/",
+          "label": "instagram.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checkedAt": "2026-10-02",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched \"The Big Boss Barber Shop\" Aurora IL and the phone number in quotes through a web search tool plus a follow up for Instagram and booking pages; no domain owned by the shop surfaced, only directories, Facebook, Instagram and Yelp.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Read on 2026-10-02: 4.6 from 192 reviews (160 five star, 12 four, 4 three, 2 two, 14 one), category Barber shop, 37 S Stolp Ave, (630) 801-8901, open Tue to Sat, website field is the Facebook page only.",
+            "url": "https://www.google.com/maps/place/The+Big+Boss+Barber+Shop/@41.7575971,-88.3161711,17z/data=!3m1!4b1!4m6!3m5!1s0x880efaafce42315b:0xa09f4edaa0f9e09f!8m2!3d41.7575971!4d-88.3161711!16s%2Fg%2F1tdm49vd"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 56 guessed domains for \"The Big Boss Barber Shop\": 3 resolve, 3 serve a page, 1 look parked or for sale, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "Facebook page (959 followers, 98% recommend from 77 reviews) lists the address and phone and no website; Instagram bio mentions Downtown Aurora and Est. 2010 with no readable link; Yelp page is claimed with no website. A Setmore page once tied to a barber there now shows a different business, and a Booksy listing URL redirected to a city search, so no working booking page was found.",
+            "url": "https://www.facebook.com/TheBigBossBarbershop"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Operating: Maps shows current hours and open status, Google reviews from 3 months ago, Facebook and Yelp list the same hours. Independent single location, name does not match config/chains.json. Phone (630) 801-8901 is the same on Maps, Facebook (labeled Mobile) and Yelp.",
+            "url": "https://www.yelp.com/biz/the-big-boss-barbershop-aurora"
+          },
+          {
+            "check": "review integrity",
+            "result": "No hard stops: no warning banner, normal address, no incentive wording. Spread includes 4, 3, 2 and 1 star reviews with an owner reply; Yelp shows 10 recommended reviews from 2016 to 2025 by reviewers in several towns with specific detail, and Yelp is 4.0 from 14 against 4.6 from 192 on Google (a platform gap). Only 3 Google reviews were readable in the limited Maps view. Signals counted: 1.",
+            "url": "https://www.yelp.com/biz/the-big-boss-barbershop-aurora"
+          }
+        ],
+        "notes": "websiteGap 2: Facebook and Instagram are the only web presence and the Maps website field is Facebook. ticketValue 1: category default. visualFit 3: category default. Confidence Medium-High: all six checks done but only 3 Google reviews were readable, so reviewThemes come from 10 Yelp reviews and Maps topic counts. established 2010 comes from the Instagram bio. Facebook labels the phone Mobile, so phoneLineType is mobile."
+      }
+    },
+    {
+      "business": "Lincoln Avenue Barber Shop",
+      "category": "Barber shop",
+      "categoryKey": "barber",
+      "city": "Elgin",
+      "area": "",
+      "state": "IL",
+      "metro": "chicago",
+      "address": "50 S Grove Ave Unit C, Elgin, IL 60120",
+      "phone": "(224) 689-3510",
+      "phoneLineType": "unknown",
+      "googleRating": 4.8,
+      "googleReviews": 153,
+      "ratingSource": "google-maps-observed",
+      "googleMapsUrl": "https://www.google.com/maps/place/Lincoln+Avenue+Barber+Shop/@42.0362851,-88.2836886,17z/data=!3m1!4b1!4m6!3m5!1s0x880f059141630a9f:0x476f316d9efaa366!8m2!3d42.0362851!4d-88.2836886!16s%2Fg%2F11gf627kbd",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 1,
+      "visualFit": 3,
+      "websiteStatus": "No owned website surfaced in search or the domain probe; the Booksy booking page (lincolnave.booksy.com) and a Facebook page are the only web presence.",
+      "presence": {
+        "facebook": "https://www.facebook.com/lincolnavebarbershop/",
+        "instagram": "",
+        "yelp": "",
+        "booking": "https://lincolnave.booksy.com/",
+        "other": [
+          "https://reviews.birdeye.com/lincoln-avenue-barber-shop-170199450569485"
+        ]
+      },
+      "confidence": "Medium-High",
+      "whyKija": "A 4.8 rating from 153 Google reviews and a Booksy page showing several barbers each with hundreds of reviews point to a busy multi chair shop whose own name and look live only inside a booking platform.",
+      "pitchAngle": "Your 153 Google reviews already vouch for the shop; a home of your own for the barbers, the look of the place and booking turns that trust into more booked chairs.",
+      "demoConcept": "Warm editorial barbershop site with a barber lineup, a Book now path into the existing Booksy calendar and review proof up front.",
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "Tue to Thu 10 AM to 7 PM, Fri 9 AM to 8 PM, Sat 10 AM to 5 PM, closed Sun and Mon",
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Lincoln+Avenue+Barber+Shop/@42.0362851,-88.2836886,17z/data=!3m1!4b1!4m6!3m5!1s0x880f059141630a9f:0x476f316d9efaa366!8m2!3d42.0362851!4d-88.2836886!16s%2Fg%2F11gf627kbd",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.facebook.com/lincolnavebarbershop/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://booksy.com/en-us/676926_lincoln-avenue-barber-shop_barber-shop_134819_elgin",
+          "label": "booksy.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checkedAt": "2026-10-02",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched \"Lincoln Avenue Barber Shop\" Elgin IL, a Facebook and Instagram query and the phone number in quotes through a web search tool; results were Booksy, Facebook, Nextdoor, Birdeye and directories, no domain owned by the shop.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Read on 2026-10-02: 4.8 from 153 reviews (141 five star, 5 four, 3 three, 0 two, 4 one), 50 S Grove Ave Unit C, (224) 689-3510, hours Tue to Sat, website field is lincolnave.booksy.com.",
+            "url": "https://www.google.com/maps/place/Lincoln+Avenue+Barber+Shop/@42.0362851,-88.2836886,17z/data=!3m1!4b1!4m6!3m5!1s0x880f059141630a9f:0x476f316d9efaa366!8m2!3d42.0362851!4d-88.2836886!16s%2Fg%2F11gf627kbd"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 53 guessed domains for \"Lincoln Avenue Barber Shop\": 3 resolve, 2 serve a page, 1 look parked or for sale, 1 forward to a third party profile (lincolnave.booksy.com to booksy.com), and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "Facebook page (824 followers, 100% recommend from 32 reviews) lists the address, phone and lincolnave.booksy.com as its website; Booksy profile shows 4.9 from 725 reviews with several barbers booking individually; no Yelp listing in a Yelp search and no Instagram profile found.",
+            "url": "https://www.facebook.com/lincolnavebarbershop/"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Operating: Maps shows current hours, Google reviews from 5 months ago and Facebook posts this year. Independent single location, name does not match config/chains.json. Phone (224) 689-3510 is the same on Maps, Facebook and a directory snippet, and Maps topic counts mention a new location, consistent with the current address.",
+            "url": "https://www.facebook.com/lincolnavebarbershop/"
+          },
+          {
+            "check": "review integrity",
+            "result": "No hard stops and 0 signals counted: reviews run from about 7 years ago to 5 months ago, reviewers include Local Guides with photos, one owner reply, 8 of 153 reviews are 2 to 4 stars, Facebook and Birdeye (151 reviews) roughly agree. Only 3 Google reviews were readable in the limited Maps view and Yelp has no listing, so the check is partial.",
+            "url": ""
+          }
+        ],
+        "notes": "websiteGap 2: a Booksy booking page and Facebook are the only web presence, so there is no owned site. ticketValue 1: category default. visualFit 3: category default. Confidence Medium-High because only 3 Google reviews were readable; services and reviewThemes left empty because no service list or 10 reviews were read."
+      }
+    },
+    {
+      "business": "Elvis Auto Repair",
+      "category": "Auto repair",
+      "categoryKey": "auto-repair",
+      "city": "Newark",
+      "area": "",
+      "state": "NJ",
+      "metro": "new-york",
+      "address": "555 18th Ave, Newark, NJ 07103",
+      "phone": "(862) 600-1634",
+      "phoneLineType": "unknown",
+      "googleRating": 4.8,
+      "googleReviews": 105,
+      "ratingSource": "google-maps-observed",
+      "googleMapsUrl": "https://www.google.com/maps/place/Elvis+Auto+Repair/@40.7326313,-74.2088095,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2533fbd4a1985:0x883f91407cb38753!8m2!3d40.7326313!4d-74.2088095!16s%2Fg%2F11ngkzpsgm",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 3,
+      "visualFit": 2,
+      "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe; the Facebook page is the only web presence.",
+      "presence": {
+        "facebook": "https://www.facebook.com/p/Elvis-auto-repair-100063753317392/",
+        "instagram": "",
+        "yelp": "",
+        "booking": "",
+        "other": []
+      },
+      "confidence": "Medium-High",
+      "whyKija": "4.8 stars from 105 Google reviews show strong local trust, but searchers find only a Facebook page and a Maps listing, with no owned page that shows services or takes an estimate request.",
+      "pitchAngle": "Your 105 Google reviews already vouch for the work; an owned site can turn that trust into estimate requests and calls.",
+      "demoConcept": "Straightforward neighborhood mechanic site that leads with review proof, a click to call button, hours and map, and a short estimate request form.",
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "Mon-Fri 9 AM-6 PM, Sat 9 AM-3 PM, Sun closed",
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Elvis+Auto+Repair/@40.7326313,-74.2088095,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2533fbd4a1985:0x883f91407cb38753!8m2!3d40.7326313!4d-74.2088095!16s%2Fg%2F11ngkzpsgm",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.facebook.com/p/Elvis-auto-repair-100063753317392/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/search?find_desc=Elvis+Auto+Repair&find_loc=Newark%2C+NJ+07103",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checkedAt": "2026-10-02",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searches for \"Elvis Auto Repair\" Newark NJ and for the phone in quotes found the Facebook page and directory pages but no owned domain; a different Newark listing with the same name at 404 S 10th St and a different phone points to a localsearch.com directory page, which is not an owned site.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Read on 2026-10-02: 4.8 from 105 reviews, Auto repair shop, 555 18th Ave Newark NJ 07103, (862) 600-1634, Mon-Fri 9 AM-6 PM and Sat 9 AM-3 PM, and an Add website prompt with no website field.",
+            "url": "https://www.google.com/maps/place/Elvis+Auto+Repair/@40.7326313,-74.2088095,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2533fbd4a1985:0x883f91407cb38753!8m2!3d40.7326313!4d-74.2088095!16s%2Fg%2F11ngkzpsgm"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 52 guessed domains for \"Elvis Auto Repair\": 3 resolve, 3 serve a page, 1 look parked or for sale, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "Facebook page lists 555 18th Avenue Newark and (862) 600-1634 with no website field and no booking link; no Instagram page was found, and the Yelp search for the 07103 area showed no listing for this address (the Elvis Auto Repair result there is in Paterson).",
+            "url": "https://www.facebook.com/p/Elvis-auto-repair-100063753317392/"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Operating with hours posted on Maps, Google reviews from 6 to 8 months ago with owner replies, and a Facebook page with a post from August 2024; not a chain (no match in config/chains.json) and the same phone and address appear on the Maps listing and the Facebook page, though a second Newark listing with the same name sits at another address and phone.",
+            "url": "https://www.facebook.com/p/Elvis-auto-repair-100063753317392/"
+          },
+          {
+            "check": "review integrity",
+            "result": "Rating spread read on Maps was 98 five star, 2 four star, 1 three star, 0 two star and 4 one star, which counts as one signal; the three readable reviews came from accounts with 4 to 9 reviews and photos with personal owner replies, but only three reviews were visible in the limited Maps view so bursts and the ten newest reviewers were not assessed.",
+            "url": "https://www.google.com/maps/place/Elvis+Auto+Repair/@40.7326313,-74.2088095,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2533fbd4a1985:0x883f91407cb38753!8m2!3d40.7326313!4d-74.2088095!16s%2Fg%2F11ngkzpsgm"
+          }
+        ],
+        "notes": "websiteGap 2: a Facebook page is the only web presence. ticketValue 3: category default. visualFit 2: category default. Services and review themes left empty because fewer than 10 reviews were readable and no services list was read. Soft spots: review reading limited to three reviews, and a same-name Newark listing at 404 S 10th St (different address and phone) should be kept in mind when matching records."
+      }
+    },
+    {
+      "business": "Triple M Auto Body Inc DBA Grand Prix Auto",
+      "category": "Auto body and collision",
+      "categoryKey": "auto-body-collision",
+      "city": "Bronx",
+      "area": "",
+      "state": "NY",
+      "metro": "new-york",
+      "address": "3050 Boston Rd, Bronx, NY 10469",
+      "phone": "718-231-6500",
+      "phoneLineType": "unknown",
+      "googleRating": 4.9,
+      "googleReviews": 79,
+      "ratingSource": "google-maps-observed",
+      "googleMapsUrl": "https://www.google.com/maps/place/Triple+M+Auto+Body+Inc+DBA+Grand+Prix+Auto/@40.8702772,-73.856356,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2f35d9141eceb:0xc7292b08ed1da913!8m2!3d40.8702772!4d-73.856356!16s%2Fg%2F11nxps1jgj",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 3,
+      "ticketValue": 3,
+      "visualFit": 3,
+      "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe; the only web presence found is a Yelp page.",
+      "presence": {
+        "facebook": "",
+        "instagram": "",
+        "yelp": "https://www.yelp.com/biz/tonys-grand-prix-auto-body-shop-bronx",
+        "booking": "",
+        "other": []
+      },
+      "confidence": "Medium-High",
+      "whyKija": "79 Google reviews at 4.9 praise price, turnaround and help with insurance paperwork on collision work, yet the Maps listing has no website to send those searchers to. Bodywork is a high-ticket job and before and after repairs are easy to prove visually.",
+      "pitchAngle": "79 reviews already vouch for the repairs and the turnaround; an owned site with before and after work turns that trust into estimate requests.",
+      "demoConcept": "Bold garage-style collision site that leads with before and after repairs and review proof, with a photo estimate request and a tap to call for the Boston Road shop.",
+      "services": [
+        "Bumper repair",
+        "Rear-end damage",
+        "Accident repair",
+        "Scratch repair",
+        "Paint match"
+      ],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Triple+M+Auto+Body+Inc+DBA+Grand+Prix+Auto/@40.8702772,-73.856356,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2f35d9141eceb:0xc7292b08ed1da913!8m2!3d40.8702772!4d-73.856356!16s%2Fg%2F11nxps1jgj",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/biz/tonys-grand-prix-auto-body-shop-bronx",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checkedAt": "2026-10-02",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the full name with Bronx NY, the name with the 3050 Boston Rd address, and the phone in quotes; the first results were other Bronx shops, business-for-sale and parts directories and an unrelated Los Angeles Grand Prix Auto Body, with no domain belonging to this business.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Read on 2026-10-02: 4.9 from 79 reviews (77 five star, 1 four star, 1 one star), Auto body shop, 3050 Boston Rd Bronx NY 10469, (718) 231-6500, no website field (Add website prompt shown) and a Claim this business link.",
+            "url": "https://www.google.com/maps/place/Triple+M+Auto+Body+Inc+DBA+Grand+Prix+Auto/@40.8702772,-73.856356,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2f35d9141eceb:0xc7292b08ed1da913!8m2!3d40.8702772!4d-73.856356!16s%2Fg%2F11nxps1jgj"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 52 guessed domains for \"Triple M Auto Body Inc DBA Grand Prix Auto\": 0 resolve, 0 serve a page, and none shows the business phone or name. A second probe on \"Grand Prix Auto\" found only grandprixauto.com, a racing car parts retailer with no Bronx or phone match, plus unrelated or parked grandprix domains.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "Found an unclaimed Yelp page at the same address and phone under a slightly different trading name, with no website link; searches found no Facebook, Instagram or booking page for this business.",
+            "url": "https://www.yelp.com/biz/tonys-grand-prix-auto-body-shop-bronx"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Operating: Maps shows current hours and reviews from 2 and 5 months ago, and Yelp has reviews through 2024. Independent and not a match on config/chains.json. The same phone (718) 231-6500 and address appear on the Maps listing and the Yelp page; phone line type unknown.",
+            "url": "https://www.yelp.com/biz/tonys-grand-prix-auto-body-shop-bronx"
+          },
+          {
+            "check": "review integrity",
+            "result": "No hard stops seen. Two soft signals: 77 of 79 Maps ratings are five star with only one 4 star and one 1 star, and one staff member is named in most of the 8 reviews read. Positives are reviews spread from 2019 to the last few months, reviewer photos, specific turnaround and insurance detail, and Yelp 5.0 from 5 reviews roughly agreeing.",
+            "url": "https://www.yelp.com/biz/tonys-grand-prix-auto-body-shop-bronx"
+          }
+        ],
+        "notes": "websiteGap 3: nothing owned found and the Maps website field is empty. ticketValue 3: category default. visualFit 3: category default, before and after bodywork is provable. Confidence Medium-High: two review signals lowered it from High. Only 8 reviews were readable in the limited Maps view plus Yelp, below 10, so reviewThemes was left empty. Trading name differs between Maps and Yelp at the same address and phone. Hours not recorded because the Maps view showed only today's close time."
+      }
+    }
+  ],
+  "queue": [
+    {
+      "candidate": "Ivan's Barbershop",
+      "category": "Barber shop",
+      "categoryKey": "barber",
+      "city": "Arlington",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "whyItMayFit": "4.9 stars from 326 Google reviews with a Booksy page as the only website and a clean phone match on Maps and Facebook; a multi-barber independent suits a brandable booking-first demo.",
+      "websiteStatus": "The Maps website field and booking button lead to a Booksy page, and the Facebook page is the other web presence; no owned domain surfaced in search or the domain probe.",
+      "verificationNeeded": "Read the newest ten Google reviews in a full (not limited) Maps view to finish the review integrity check and read at least ten reviews for themes; confirm there is no owned domain linked from Instagram if one exists.",
+      "ownerContact": "",
+      "phone": "817-987-2555",
+      "googleRating": 4.9,
+      "googleReviews": 326,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Ivan%E2%80%99s+Barbershop/data=!4m7!3m6!1s0x864e8786edca5c8b:0x78c9879e90cf10fc!8m2!3d32.7388504!4d-97.1178942!16s%2Fg%2F1tdjxf1z",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.facebook.com/ivansbarbershoptx/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://booksy.com/en-us/dl/show-business/1584192",
+          "label": "booksy.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/search?find_desc=Ivan%27s+Barbershop&find_loc=Arlington%2C+TX",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Review integrity check incomplete because the limited Maps view shows only three reviews, and two soft signals lower confidence to Medium.",
+      "lead": {
+        "business": "Ivan's Barbershop",
+        "category": "Barber shop",
+        "categoryKey": "barber",
+        "city": "Arlington",
+        "state": "TX",
+        "metro": "dallas-fort-worth",
+        "address": "916 W Division St, Arlington, TX 76012",
+        "area": "",
+        "phone": "817-987-2555",
+        "phoneLineType": "unknown",
+        "googleRating": 4.9,
+        "googleReviews": 326,
+        "ratingSource": "google-maps-observed",
+        "googleMapsUrl": "https://www.google.com/maps/place/Ivan%E2%80%99s+Barbershop/data=!4m7!3m6!1s0x864e8786edca5c8b:0x78c9879e90cf10fc!8m2!3d32.7388504!4d-97.1178942!16s%2Fg%2F1tdjxf1z",
+        "placeId": "",
+        "placeIdCheckedAt": "",
+        "websiteGap": 2,
+        "ticketValue": 1,
+        "visualFit": 3,
+        "websiteStatus": "The Maps website field and booking button lead to a Booksy page, and the Facebook page is the other web presence; no owned domain surfaced in search or the domain probe.",
+        "presence": {
+          "facebook": "https://www.facebook.com/ivansbarbershoptx/",
+          "instagram": "",
+          "yelp": "",
+          "booking": "https://booksy.com/en-us/dl/show-business/1584192",
+          "other": []
+        },
+        "confidence": "Medium",
+        "whyKija": "A multi-chair barbershop with 326 Google reviews and a steady Booksy presence, but searchers land on a third party booking page instead of a page that shows the shop and its barbers.",
+        "pitchAngle": "Hundreds of clients already vouch for the fades at your shop; a page of your own can show the space and the barbers before the booking tap.",
+        "demoConcept": "Dark, photo-led barbershop site with a barber roster, a clean fade gallery, review proof and a book now button that opens the existing Booksy page.",
+        "services": [],
+        "reviewThemes": [],
+        "languages": [],
+        "established": null,
+        "hours": "",
+        "sources": [
+          {
+            "url": "https://www.google.com/maps/place/Ivan%E2%80%99s+Barbershop/data=!4m7!3m6!1s0x864e8786edca5c8b:0x78c9879e90cf10fc!8m2!3d32.7388504!4d-97.1178942!16s%2Fg%2F1tdjxf1z",
+            "label": "google.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.facebook.com/ivansbarbershoptx/",
+            "label": "facebook.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://booksy.com/en-us/dl/show-business/1584192",
+            "label": "booksy.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.yelp.com/search?find_desc=Ivan%27s+Barbershop&find_loc=Arlington%2C+TX",
+            "label": "yelp.com",
+            "checkedAt": "2026-10-02"
+          }
+        ],
+        "verification": {
+          "status": "needs-recheck",
+          "checkedAt": "2026-10-02",
+          "checks": [
+            {
+              "check": "exact-name search",
+              "result": "Searches for the exact name with Arlington TX and for the phone in quotes returned no owned domain for this business; the only name matches were other barbershops and booking pages.",
+              "url": ""
+            },
+            {
+              "check": "maps listing",
+              "result": "Read on 2026-10-02: 4.9 from 326 reviews, Barber shop, 916 W Division St Arlington, phone (817) 987-2555, website field shows booksy.com only, Book online button, open until 7 PM.",
+              "url": "https://www.google.com/maps/place/Ivan%E2%80%99s+Barbershop/data=!4m7!3m6!1s0x864e8786edca5c8b:0x78c9879e90cf10fc!8m2!3d32.7388504!4d-97.1178942!16s%2Fg%2F1tdjxf1z"
+            },
+            {
+              "check": "domain probe",
+              "result": "Domain probe found ivansbarbershop.com live and naming \"Ivan's Barbershop\" but not showing the phone, and the page does not mention Arlington. Opened it: it is a barbershop in Brighton, Colorado with a different phone, so it is unrelated. All other guessed domains did not resolve.",
+              "url": "https://ivansbarbershop.com/"
+            },
+            {
+              "check": "social and third party",
+              "result": "Facebook page lists the same address and phone, no website field, and a Booksy booking path; Yelp shows a listing with 2 reviews at 3.0; Booksy page exists. No Instagram link was found.",
+              "url": "https://www.facebook.com/ivansbarbershoptx/"
+            },
+            {
+              "check": "status, chain and sanity",
+              "result": "Operating: Maps shows it open with reviews from 2 to 3 months ago and the Facebook page posted in May. Independent single shop, no chain match. Phone 817-987-2555 matches on Maps and Facebook. Two other listings share the street address (a barber suite and a booth listing) with different phones.",
+              "url": ""
+            },
+            {
+              "check": "review integrity",
+              "result": "Limited Maps view loaded only three reviews. Spread is 310 five star, 8 four, 1 three, 2 two and 5 one. Two of the three readable reviewers have 1 or 2 reviews and two of three reviews name the same barber; no banner, incentive or keyword stuffing seen. The newest ten could not be read, so this check is incomplete.",
+              "url": "https://www.google.com/maps/place/Ivan%E2%80%99s+Barbershop/data=!4m7!3m6!1s0x864e8786edca5c8b:0x78c9879e90cf10fc!8m2!3d32.7388504!4d-97.1178942!16s%2Fg%2F1tdjxf1z"
+            }
+          ],
+          "notes": "websiteGap 2: Booksy page and Facebook are the only web presence. ticketValue 1: category default. visualFit 3: category default. Review integrity could not be completed (three reviews readable), so confidence is Medium and the lead waits in the queue. reviewThemes left empty because fewer than ten reviews were read."
+        }
+      }
+    },
+    {
+      "candidate": "A&M Barber Studio",
+      "category": "Barber shop",
+      "categoryKey": "barber",
+      "city": "Grand Prairie",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "whyItMayFit": "4.9 stars from 297 Google reviews, an active Facebook page and only third party booking and one page builder presence; strong visual fit for a barber.",
+      "websiteStatus": "Searchers find a Booksy booking page, a Facebook page and a single page Adobe Express page with older contact details; no owned domain was confirmed.",
+      "verificationNeeded": "Confirm which phone is current (972-639-0348 on Maps and Facebook versus 214-677-1267 on an older page); open ambarberstudio.com over https in a full browser or check its history to see whether it ever belonged to the shop; read the newest ten Google reviews in a full Maps view; confirm A&M Barbershop The Classic on Carrier Pkwy is a separate shop.",
+      "ownerContact": "",
+      "phone": "972-639-0348",
+      "googleRating": 4.9,
+      "googleReviews": 297,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/A%26M+Barber+Studio/data=!4m6!3m5!1s0x864e855bffb1836f:0x4f933b47be2028bf!8m2!3d32.743765!4d-97.0153719!16s%2Fg%2F11lfpnjkwq",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.facebook.com/AnMBarberStudio/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://new.express.adobe.com/page/XStWwB4IBUe3H/",
+          "label": "adobe.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/search?find_desc=A%26M+Barber+Studio&find_loc=Grand+Prairie%2C+TX",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Phone differs across sources, one exact-name domain is unresolved, and the review sample was too small to finish the integrity check.",
+      "lead": {
+        "business": "A&M Barber Studio",
+        "category": "Barber shop",
+        "categoryKey": "barber",
+        "city": "Grand Prairie",
+        "state": "TX",
+        "metro": "dallas-fort-worth",
+        "address": "834 Fort Worth St, Grand Prairie, TX 75050",
+        "area": "",
+        "phone": "972-639-0348",
+        "phoneLineType": "unknown",
+        "googleRating": 4.9,
+        "googleReviews": 297,
+        "ratingSource": "google-maps-observed",
+        "googleMapsUrl": "https://www.google.com/maps/place/A%26M+Barber+Studio/data=!4m6!3m5!1s0x864e855bffb1836f:0x4f933b47be2028bf!8m2!3d32.743765!4d-97.0153719!16s%2Fg%2F11lfpnjkwq",
+        "placeId": "",
+        "placeIdCheckedAt": "",
+        "websiteGap": 2,
+        "ticketValue": 1,
+        "visualFit": 3,
+        "websiteStatus": "Searchers find a Booksy booking page, a Facebook page and a single page Adobe Express page with older contact details; no owned domain was confirmed.",
+        "presence": {
+          "facebook": "https://www.facebook.com/AnMBarberStudio/",
+          "instagram": "",
+          "yelp": "",
+          "booking": "https://ambarberstudio77.booksy.com/a",
+          "other": [
+            "https://new.express.adobe.com/page/XStWwB4IBUe3H/"
+          ]
+        },
+        "confidence": "Medium",
+        "whyKija": "Close to 300 Google reviews and an active Facebook page with 3.4K followers, yet the web presence is a booking page and a one page builder site with an old phone number.",
+        "pitchAngle": "Nearly 300 clients already vouch for the cuts at your shop; one page of your own can keep your logo, your barbers and your current number in front of them.",
+        "demoConcept": "Bold, photo-led barber studio site with a barber lineup, haircut gallery, review proof and a book now button that opens the existing booking page.",
+        "services": [],
+        "reviewThemes": [],
+        "languages": [],
+        "established": 2016,
+        "hours": "",
+        "sources": [
+          {
+            "url": "https://www.google.com/maps/place/A%26M+Barber+Studio/data=!4m6!3m5!1s0x864e855bffb1836f:0x4f933b47be2028bf!8m2!3d32.743765!4d-97.0153719!16s%2Fg%2F11lfpnjkwq",
+            "label": "google.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.facebook.com/AnMBarberStudio/",
+            "label": "facebook.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://new.express.adobe.com/page/XStWwB4IBUe3H/",
+            "label": "adobe.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.yelp.com/search?find_desc=A%26M+Barber+Studio&find_loc=Grand+Prairie%2C+TX",
+            "label": "yelp.com",
+            "checkedAt": "2026-10-02"
+          }
+        ],
+        "verification": {
+          "status": "needs-recheck",
+          "checkedAt": "2026-10-02",
+          "checks": [
+            {
+              "check": "exact-name search",
+              "result": "Name search with Grand Prairie TX found the Facebook page, a Booksy page and a single page Adobe Express page for A&M Barbershop at the same address; no owned domain surfaced. The quoted phone returned nothing.",
+              "url": ""
+            },
+            {
+              "check": "maps listing",
+              "result": "Read on 2026-10-02: 4.9 from 297 reviews, Barber shop, 834 Fort Worth St Grand Prairie, phone (972) 639-0348, website field shows thecut.co and an Add website prompt, open until 7 PM.",
+              "url": "https://www.google.com/maps/place/A%26M+Barber+Studio/data=!4m6!3m5!1s0x864e855bffb1836f:0x4f933b47be2028bf!8m2!3d32.743765!4d-97.0153719!16s%2Fg%2F11lfpnjkwq"
+            },
+            {
+              "check": "domain probe",
+              "result": "Domain probe checked 56 guessed domains for \"A&M Barber Studio\": 5 resolve, 3 serve a page, 1 look parked or for sale, and none shows the business phone or name. Separately, ambarberstudio.com resolves but returns a 502 error with an expired certificate, so its ownership is unresolved.",
+              "url": ""
+            },
+            {
+              "check": "social and third party",
+              "result": "Facebook page (3.4K followers) lists the Maps phone and a Booksy link; an Adobe Express single page shows the same address with an older phone (214) 677-1267 and Facebook and Instagram handles anmbarbershop. Yelp shows 1 review at 5.0. A related listing, A&M Barbershop The Classic on Carrier Pkwy, shares the name but a different address.",
+              "url": "https://www.facebook.com/AnMBarberStudio/"
+            },
+            {
+              "check": "status, chain and sanity",
+              "result": "Operating: Facebook posted on September 15 and Maps reviews are 2 to 3 months old. Independent, no chain match. Phone 972-639-0348 matches on Maps and Facebook but a directory and the builder page show 214-677-1267, so the phone needs confirming.",
+              "url": ""
+            },
+            {
+              "check": "review integrity",
+              "result": "Limited Maps view loaded three reviews. Spread is 287 five star, 4 four, 1 three, 1 two, 4 one. Two of three reviewers have a single review, two reviews name a barber or handle, owner replies are short. Facebook (94 percent of 13) and Yelp (5.0 from 1) are consistent. The newest ten could not be read, so this check is incomplete.",
+              "url": "https://www.google.com/maps/place/A%26M+Barber+Studio/data=!4m6!3m5!1s0x864e855bffb1836f:0x4f933b47be2028bf!8m2!3d32.743765!4d-97.0153719!16s%2Fg%2F11lfpnjkwq"
+            }
+          ],
+          "notes": "websiteGap 2: booking pages, Facebook and a weak single page builder site only. ticketValue 1: category default. visualFit 3: category default. Established 2016 comes from the Adobe Express page. reviewThemes left empty because fewer than ten reviews were read. Confidence Medium for: inconsistent phone across sources, unresolved ambarberstudio.com, incomplete review sample."
+        }
+      }
+    },
+    {
+      "candidate": "Thee Brooklyn Barber",
+      "category": "Barber shop",
+      "categoryKey": "barber",
+      "city": "Brooklyn",
+      "state": "NY",
+      "metro": "new-york",
+      "whyItMayFit": "4.8 stars from 360 Google reviews at the Wythe Ave shop with only an Instagram profile as its website, in a visual, brandable category.",
+      "websiteStatus": "The Maps website field is the Instagram profile and no owned domain surfaced in search or the domain probe.",
+      "verificationNeeded": "Confirm whether Thee Brooklyn Barber is a small local group of three shops under one owner or separate shops, which Maps listing is the original, and that 718-690-0663 appears on a second independent source; decide whether a three shop local brand fits Kija's independent focus.",
+      "ownerContact": "",
+      "phone": "718-690-0663",
+      "googleRating": 4.8,
+      "googleReviews": 360,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Thee+Brooklyn+Barber/@40.7198357,-73.9602472,17z/data=!3m1!4b1!4m6!3m5!1s0x89c25937d2997727:0x92803bd86b439377!8m2!3d40.7198357!4d-73.9602472!16s%2Fg%2F11gy80169y",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.instagram.com/theebrooklynbarber/",
+          "label": "instagram.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/search?find_desc=Thee+Brooklyn+Barber&find_loc=Brooklyn%2C+NY",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Multi-shop brand with a near duplicate listing and an unconfirmed phone, so independence and identity are not clear enough to qualify.",
+      "lead": {
+        "business": "Thee Brooklyn Barber",
+        "category": "Barber shop",
+        "categoryKey": "barber",
+        "city": "Brooklyn",
+        "state": "NY",
+        "metro": "new-york",
+        "address": "158 Wythe Ave, Brooklyn, NY 11249",
+        "area": "Williamsburg",
+        "phone": "718-690-0663",
+        "phoneLineType": "unknown",
+        "googleRating": 4.8,
+        "googleReviews": 360,
+        "ratingSource": "google-maps-observed",
+        "googleMapsUrl": "https://www.google.com/maps/place/Thee+Brooklyn+Barber/@40.7198357,-73.9602472,17z/data=!3m1!4b1!4m6!3m5!1s0x89c25937d2997727:0x92803bd86b439377!8m2!3d40.7198357!4d-73.9602472!16s%2Fg%2F11gy80169y",
+        "placeId": "",
+        "placeIdCheckedAt": "",
+        "websiteGap": 2,
+        "ticketValue": 1,
+        "visualFit": 3,
+        "websiteStatus": "The Maps website field is the Instagram profile and no owned domain surfaced in search or the domain probe.",
+        "presence": {
+          "facebook": "",
+          "instagram": "https://www.instagram.com/theebrooklynbarber/",
+          "yelp": "",
+          "booking": "",
+          "other": []
+        },
+        "confidence": "Medium",
+        "whyKija": "360 Google reviews and an active Instagram feed show real demand across a few Williamsburg and Greenpoint shops, but searchers get only an Instagram profile to learn about the shops.",
+        "pitchAngle": "Hundreds of neighbors already vouch for the walk-in cuts; a page of your own can show each shop, its hours and its barbers in one place.",
+        "demoConcept": "Neighborhood barbershop site with a shop locator for each location, walk-in hours, a cuts gallery and review proof, with a tap to call as the main action.",
+        "services": [],
+        "reviewThemes": [],
+        "languages": [],
+        "established": null,
+        "hours": "",
+        "sources": [
+          {
+            "url": "https://www.google.com/maps/place/Thee+Brooklyn+Barber/@40.7198357,-73.9602472,17z/data=!3m1!4b1!4m6!3m5!1s0x89c25937d2997727:0x92803bd86b439377!8m2!3d40.7198357!4d-73.9602472!16s%2Fg%2F11gy80169y",
+            "label": "google.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.instagram.com/theebrooklynbarber/",
+            "label": "instagram.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.yelp.com/search?find_desc=Thee+Brooklyn+Barber&find_loc=Brooklyn%2C+NY",
+            "label": "yelp.com",
+            "checkedAt": "2026-10-02"
+          }
+        ],
+        "verification": {
+          "status": "needs-recheck",
+          "checkedAt": "2026-10-02",
+          "checks": [
+            {
+              "check": "exact-name search",
+              "result": "Web searches for the exact name and the quoted phone returned no owned domain; results were other Brooklyn barbershops and directories.",
+              "url": ""
+            },
+            {
+              "check": "maps listing",
+              "result": "Read on 2026-10-02: 4.8 from 360 reviews, Barber shop, 158 Wythe Ave Brooklyn, phone (718) 690-0663, website field shows instagram.com, open until 8 PM.",
+              "url": "https://www.google.com/maps/place/Thee+Brooklyn+Barber/@40.7198357,-73.9602472,17z/data=!3m1!4b1!4m6!3m5!1s0x89c25937d2997727:0x92803bd86b439377!8m2!3d40.7198357!4d-73.9602472!16s%2Fg%2F11gy80169y"
+            },
+            {
+              "check": "domain probe",
+              "result": "Domain probe checked 40 guessed domains for \"Thee Brooklyn Barber\": 0 resolve, 0 serve a page, and none shows the business phone or name.",
+              "url": ""
+            },
+            {
+              "check": "social and third party",
+              "result": "Instagram (558 followers) lists three shop addresses (Graham Ave, Nassau Ave and Wythe Ave) and links only to Apple Maps; Yelp has three separate listings for the brand. No Facebook page or booking platform was confirmed.",
+              "url": "https://www.instagram.com/theebrooklynbarber/"
+            },
+            {
+              "check": "status, chain and sanity",
+              "result": "Operating with reviews 2 to 3 months old and open until 8 PM. No match on the chain list, but the brand has at least three shops and a second Maps listing with look-alike characters in the name, so independence and which listing is the original need confirming. Phone seen on Maps only.",
+              "url": ""
+            },
+            {
+              "check": "review integrity",
+              "result": "Limited Maps view loaded three reviews. Spread is 333 five star, 6 four, 4 three, 7 two and 10 one, including a five year old critical review and a Local Guide with 261 reviews, a varied and steady pattern. Yelp shows this shop at 4.5 from 53 reviews and a Graham Ave listing near-duplicates the name. No banner or incentive seen; newest ten not readable.",
+              "url": "https://www.google.com/maps/place/Thee+Brooklyn+Barber/@40.7198357,-73.9602472,17z/data=!3m1!4b1!4m6!3m5!1s0x89c25937d2997727:0x92803bd86b439377!8m2!3d40.7198357!4d-73.9602472!16s%2Fg%2F11gy80169y"
+            }
+          ],
+          "notes": "websiteGap 2: Instagram is the only web presence. ticketValue 1: category default. visualFit 3: category default. Confidence Medium: multi-shop brand with a near duplicate Maps listing, phone on one source, and a Yelp versus Google gap. reviewThemes left empty because fewer than ten reviews were read."
+        }
+      }
+    },
+    {
+      "candidate": "Good Fellas Barber Shop",
+      "category": "Barber shop",
+      "categoryKey": "barber",
+      "city": "Bronx",
+      "state": "NY",
+      "metro": "new-york",
+      "whyItMayFit": "4.6 stars from 286 Google reviews, 84 photos, and no website field on the Maps listing for an independent barber shop.",
+      "websiteStatus": "No owned website surfaced in search or the domain probe; the Maps website field is empty and the only listings found are directories and an unaffiliated booking aggregator page.",
+      "verificationNeeded": "Confirm the shop's real phone on Yelp, Facebook or Instagram (Maps and an aggregator show (929) 664-2988, other mirrors show different numbers), find any owned domain on those profiles, and read the 10 newest Google reviews in a full Maps view.",
+      "ownerContact": "",
+      "phone": "(929) 664-2988",
+      "googleRating": 4.6,
+      "googleReviews": 286,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/search/Good+Fellas+Barber+Shop+2452B+Eastchester+Rd+Bronx+NY",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.fresha.com/lvp/good-fellas-barber-shop-eastchester-road-ovxBaQ",
+          "label": "fresha.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://reviews.birdeye.com/good-fellas-barber-shop-170224254302037",
+          "label": "reviews.birdeye.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.giftly.com/gift-card/good-fellas-barber-shop-the-bronx",
+          "label": "giftly.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Phone sources conflict and Yelp and social profiles could not be read, so confidence is Medium.",
+      "lead": {
+        "business": "Good Fellas Barber Shop",
+        "category": "Barber shop",
+        "categoryKey": "barber",
+        "city": "Bronx",
+        "area": "Pelham Gardens",
+        "state": "NY",
+        "metro": "new-york",
+        "address": "2452B Eastchester Rd, Bronx, NY 10469",
+        "phone": "(929) 664-2988",
+        "phoneLineType": "unknown",
+        "googleRating": 4.6,
+        "googleReviews": 286,
+        "ratingSource": "google-maps-observed",
+        "googleMapsUrl": "https://www.google.com/maps/search/Good+Fellas+Barber+Shop+2452B+Eastchester+Rd+Bronx+NY",
+        "placeId": "",
+        "placeIdCheckedAt": "",
+        "websiteGap": 3,
+        "ticketValue": 1,
+        "visualFit": 3,
+        "websiteStatus": "No owned website surfaced in search or the domain probe; the Maps website field is empty and the only listings found are directories and an unaffiliated booking aggregator page.",
+        "presence": {
+          "facebook": "",
+          "instagram": "",
+          "yelp": "",
+          "booking": "",
+          "other": []
+        },
+        "confidence": "Medium",
+        "whyKija": "A neighborhood barber shop with 286 Google reviews and a strong photo count has earned real local trust, but searchers who tap through find only a phone number and directory pages.",
+        "pitchAngle": "Your 286 Google reviews already show how many people trust these chairs; an owned home for the shop turns that trust into booked appointments.",
+        "demoConcept": "Sharp, photo led barber site with the fade and hot towel work up front, a clear price and service list, and a tap to book or call, leading with the review proof.",
+        "services": [
+          "Men's Haircut",
+          "Beard Trim",
+          "Hot Towel Shave",
+          "Head Shave"
+        ],
+        "reviewThemes": [],
+        "languages": [],
+        "established": null,
+        "hours": "",
+        "sources": [
+          {
+            "url": "https://www.google.com/maps/search/Good+Fellas+Barber+Shop+2452B+Eastchester+Rd+Bronx+NY",
+            "label": "google.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.fresha.com/lvp/good-fellas-barber-shop-eastchester-road-ovxBaQ",
+            "label": "fresha.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://reviews.birdeye.com/good-fellas-barber-shop-170224254302037",
+            "label": "reviews.birdeye.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.giftly.com/gift-card/good-fellas-barber-shop-the-bronx",
+            "label": "giftly.com",
+            "checkedAt": "2026-10-02"
+          }
+        ],
+        "verification": {
+          "status": "needs-recheck",
+          "checkedAt": "2026-10-02",
+          "checks": [
+            {
+              "check": "exact-name search",
+              "result": "Searched the name with Bronx NY and the address; only directories, mirrors and a Fresha aggregator page surfaced, and no owned domain appeared. A search on the phone in quotes returned nothing relevant.",
+              "url": ""
+            },
+            {
+              "check": "maps listing",
+              "result": "Read on 2026-10-02: 4.6 from 286 reviews (244 five, 14 four, 6 three, 9 two, 13 one star), Barber shop, 2452B Eastchester Rd, open until 6 PM, (929) 664-2988, 84 photos, and 'Add website' shown with no website field.",
+              "url": "https://www.google.com/maps/search/Good+Fellas+Barber+Shop+2452B+Eastchester+Rd+Bronx+NY"
+            },
+            {
+              "check": "domain probe",
+              "result": "Domain probe found goodfellasbarbershop.net live and naming \"Good Fellas Barber Shop\" but not showing the phone, and the page does not mention Bronx. Open it and confirm whether it belongs to this business.",
+              "url": "http://goodfellasbarbershop.net/"
+            },
+            {
+              "check": "social and third party",
+              "result": "Opened the probe hit and the similar .us domain: both are a Charlotte, North Carolina barbershop with a 704 phone, so they are unrelated. No Facebook or Instagram page was found and Yelp returned 403; only a Fresha aggregator page (marked not affiliated) and directory mirrors exist.",
+              "url": "https://www.fresha.com/lvp/good-fellas-barber-shop-eastchester-road-ovxBaQ"
+            },
+            {
+              "check": "status, chain and sanity",
+              "result": "Maps shows the shop open with hours and reviews from 6 months ago in the readable sample, and the name does not match any chain in config/chains.json. The phone (929) 664-2988 appears on Maps and on the Fresha aggregator page, but mirrors show other numbers (347 and 646 area codes), so a consistent published phone is not established.",
+              "url": ""
+            },
+            {
+              "check": "review integrity",
+              "result": "Read 3 reviews in the limited Maps view plus the star spread and topic chips; reviewers had prior history and different barbers were named, with no warning banner or incentive wording seen, but the 10 newest could not be read so the check is incomplete.",
+              "url": ""
+            }
+          ],
+          "notes": "websiteGap 3: Maps website field empty, nothing owned found, only unaffiliated aggregator pages. ticketValue 1: category default. visualFit 3: category default, 84 Maps photos. Open question: the phone differs across directories (a Yelp mirror shows another number and says 4.5 from 16 Yelp reviews), and Yelp and Facebook could not be read."
+        }
+      }
+    },
+    {
+      "candidate": "Old Tyme Barber Shop",
+      "category": "Barber shop",
+      "categoryKey": "barber",
+      "city": "Arlington",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "whyItMayFit": "4.6 stars from 255 Google reviews for a long running independent barber shop whose only presence is a Facebook page.",
+      "websiteStatus": "No owned website surfaced in search or the domain probe; the Maps website field and the Facebook page are the only web presence.",
+      "verificationNeeded": "In a full Maps view, sort reviews by newest and confirm at least one review or post from the last three months, read 10 reviews for integrity and themes, and confirm services and hours from a source.",
+      "ownerContact": "",
+      "phone": "(817) 845-8687",
+      "googleRating": 4.6,
+      "googleReviews": 255,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/search/Old+Tyme+Barbershop+603+E+Abram+St+Arlington+TX",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.facebook.com/OldTymeBarbershopinArlington/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://reviews.birdeye.com/old-tyme-barber-shop-170239563548574",
+          "label": "reviews.birdeye.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Operating recency and the newest reviews could not be confirmed in the limited Maps view, so confidence is Medium.",
+      "lead": {
+        "business": "Old Tyme Barber Shop",
+        "category": "Barber shop",
+        "categoryKey": "barber",
+        "city": "Arlington",
+        "area": "",
+        "state": "TX",
+        "metro": "dallas-fort-worth",
+        "address": "603 E Abram St, Arlington, TX 76010",
+        "phone": "(817) 845-8687",
+        "phoneLineType": "unknown",
+        "googleRating": 4.6,
+        "googleReviews": 255,
+        "ratingSource": "google-maps-observed",
+        "googleMapsUrl": "https://www.google.com/maps/search/Old+Tyme+Barbershop+603+E+Abram+St+Arlington+TX",
+        "placeId": "",
+        "placeIdCheckedAt": "",
+        "websiteGap": 2,
+        "ticketValue": 1,
+        "visualFit": 3,
+        "websiteStatus": "No owned website surfaced in search or the domain probe; the Maps website field and the Facebook page are the only web presence.",
+        "presence": {
+          "facebook": "https://www.facebook.com/OldTymeBarbershopinArlington/",
+          "instagram": "",
+          "yelp": "",
+          "booking": "",
+          "other": []
+        },
+        "confidence": "Medium",
+        "whyKija": "255 Google reviews and a loyal following for a traditional barber shop show deep local trust, yet the only web presence is a Facebook page with no booking path or service list.",
+        "pitchAngle": "Your 255 Google reviews already say people come back for years; an owned site gives that loyalty a place to book the next chair.",
+        "demoConcept": "Classic barbershop look with warm, old school typography, a service and price list, a book by text or call path, and review proof leading the page.",
+        "services": [],
+        "reviewThemes": [],
+        "languages": [],
+        "established": null,
+        "hours": "",
+        "sources": [
+          {
+            "url": "https://www.google.com/maps/search/Old+Tyme+Barbershop+603+E+Abram+St+Arlington+TX",
+            "label": "google.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.facebook.com/OldTymeBarbershopinArlington/",
+            "label": "facebook.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://reviews.birdeye.com/old-tyme-barber-shop-170239563548574",
+            "label": "reviews.birdeye.com",
+            "checkedAt": "2026-10-02"
+          }
+        ],
+        "verification": {
+          "status": "needs-recheck",
+          "checkedAt": "2026-10-02",
+          "checks": [
+            {
+              "check": "exact-name search",
+              "result": "Searched the name with Arlington TX and the phone in quotes; only directories, mirrors and the Facebook page surfaced and no owned domain appeared.",
+              "url": ""
+            },
+            {
+              "check": "maps listing",
+              "result": "Read on 2026-10-02: 4.6 from 255 reviews (222 five, 10 four, 4 three, 4 two, 15 one star), Barber shop, 603 E Abram St, open until 6 PM, (817) 845-8687, 62 photos, website field shows only m.facebook.com.",
+              "url": "https://www.google.com/maps/search/Old+Tyme+Barbershop+603+E+Abram+St+Arlington+TX"
+            },
+            {
+              "check": "domain probe",
+              "result": "Domain probe checked 52 guessed domains for \"Old Tyme Barber Shop\": 1 resolve, 0 serve a page, and none shows the business phone or name.",
+              "url": ""
+            },
+            {
+              "check": "social and third party",
+              "result": "The public Facebook page (396 followers, 100% recommend from 11 reviews) lists the address and phone with no website field and its newest visible post is from 2021; no Instagram, Yelp page read or booking platform was found. The probe's oldtyme.com resolves to an unrelated beverage business.",
+              "url": "https://www.facebook.com/OldTymeBarbershopinArlington/"
+            },
+            {
+              "check": "status, chain and sanity",
+              "result": "Maps shows the shop open with hours and a listing that is not marked closed, and the name does not match any chain in config/chains.json; the phone (817) 845-8687 matches on Maps and Facebook. A review or post from the last few months was not seen, so operating status is not fully confirmed.",
+              "url": ""
+            },
+            {
+              "check": "review integrity",
+              "result": "Read the star spread, topic chips and 5 distinct reviews in the limited Maps view: reviews span about 5 years from reviewers with their own histories and photos, include one critical review, and show no warning banner or incentive wording; the 10 newest could not be read so the check is incomplete.",
+              "url": ""
+            }
+          ],
+          "notes": "websiteGap 2: Facebook page is the only web presence. ticketValue 1: category default. visualFit 3: category default, 62 Maps photos. Birdeye mirror shows 4.7 from 261 reviews against Maps 4.6 from 255, not used. Open question: confirm a recent Google review or post and read the 10 newest reviews."
+        }
+      }
+    },
+    {
+      "candidate": "Joliet Auto Repair Shop Inc",
+      "category": "Auto repair",
+      "categoryKey": "auto-repair",
+      "city": "Joliet",
+      "state": "IL",
+      "metro": "chicago",
+      "whyItMayFit": "4.8 stars from 157 Google reviews, no website on the Maps listing, no Facebook found and only a dead business.site page, so an owned site would be a clear step up for an auto repair shop.",
+      "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe; a former Google business.site page listed on a mirror now returns 404.",
+      "verificationNeeded": "Read the newest 10 or more Google reviews (the limited Maps view showed 3) and confirm they look like steady real customers; find an independent source for the shop's signed name (Facebook, BBB or a state record) since the Maps name is the category plus the city; explain Yelp showing no reviews against 157 on Google.",
+      "ownerContact": "",
+      "phone": "(815) 409-7724",
+      "googleRating": 4.8,
+      "googleReviews": 157,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Joliet+Auto+Repair+Shop+Inc/@41.5346488,-88.0814999,17z/data=!3m1!4b1!4m6!3m5!1s0x880e66dc527f454f:0x67e09c23ea747dd7!8m2!3d41.5346488!4d-88.0814999!16s%2Fg%2F11ggvydb9w",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/biz/joliet-auto-repair-shop-joliet",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://reviews.birdeye.com/joliet-auto-repair-shop-inc-167685930927079",
+          "label": "birdeye.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Review integrity check incomplete and two review signals open, so confidence is Medium.",
+      "lead": {
+        "business": "Joliet Auto Repair Shop Inc",
+        "category": "Auto repair",
+        "categoryKey": "auto-repair",
+        "city": "Joliet",
+        "area": "",
+        "state": "IL",
+        "metro": "chicago",
+        "address": "550 N Chicago St, Joliet, IL 60432",
+        "phone": "(815) 409-7724",
+        "phoneLineType": "unknown",
+        "googleRating": 4.8,
+        "googleReviews": 157,
+        "ratingSource": "google-maps-observed",
+        "googleMapsUrl": "https://www.google.com/maps/place/Joliet+Auto+Repair+Shop+Inc/@41.5346488,-88.0814999,17z/data=!3m1!4b1!4m6!3m5!1s0x880e66dc527f454f:0x67e09c23ea747dd7!8m2!3d41.5346488!4d-88.0814999!16s%2Fg%2F11ggvydb9w",
+        "placeId": "",
+        "placeIdCheckedAt": "",
+        "websiteGap": 3,
+        "ticketValue": 3,
+        "visualFit": 2,
+        "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe; a former Google business.site page listed on a mirror now returns 404.",
+        "presence": {
+          "facebook": "",
+          "instagram": "",
+          "yelp": "https://www.yelp.com/biz/joliet-auto-repair-shop-joliet",
+          "booking": "",
+          "other": [
+            "https://reviews.birdeye.com/joliet-auto-repair-shop-inc-167685930927079"
+          ]
+        },
+        "confidence": "Medium",
+        "whyKija": "4.8 stars from 157 Google reviews for an auto shop, with no website on the listing, so searchers cannot see services or hours beyond the Maps card.",
+        "pitchAngle": "Your 157 Google reviews already vouch for the work; an owned site turns that trust into more estimate calls.",
+        "demoConcept": "Straightforward neighborhood mechanic site with a services grid, hours and a click to call button, leading with Google review proof.",
+        "services": [],
+        "reviewThemes": [],
+        "languages": [],
+        "established": null,
+        "hours": "Mon to Fri 8 AM to 6 PM, Sat 8 AM to 5 PM, closed Sun",
+        "sources": [
+          {
+            "url": "https://www.google.com/maps/place/Joliet+Auto+Repair+Shop+Inc/@41.5346488,-88.0814999,17z/data=!3m1!4b1!4m6!3m5!1s0x880e66dc527f454f:0x67e09c23ea747dd7!8m2!3d41.5346488!4d-88.0814999!16s%2Fg%2F11ggvydb9w",
+            "label": "google.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.yelp.com/biz/joliet-auto-repair-shop-joliet",
+            "label": "yelp.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://reviews.birdeye.com/joliet-auto-repair-shop-inc-167685930927079",
+            "label": "birdeye.com",
+            "checkedAt": "2026-10-02"
+          }
+        ],
+        "verification": {
+          "status": "needs-recheck",
+          "checkedAt": "2026-10-02",
+          "checks": [
+            {
+              "check": "exact-name search",
+              "result": "Searched \"Joliet Auto Repair Shop Inc\" Joliet IL, the address and the phone number in quotes through a web search tool; results were directories (Birdeye, Yelp, aggregators), no owned domain. A Birdeye page lists autorepairjoliet.business.site, which returns 404 on 2026-10-02.",
+              "url": "https://reviews.birdeye.com/joliet-auto-repair-shop-inc-167685930927079"
+            },
+            {
+              "check": "maps listing",
+              "result": "Read on 2026-10-02: 4.8 from 157 reviews (143 five star, 7 four, 1 three, 0 two, 6 one), Auto repair shop, 550 N Chicago St, (815) 409-7724, hours Mon to Fri 8 AM to 6 PM and Sat 8 AM to 5 PM, 7 photos, Add website shown so no website field.",
+              "url": "https://www.google.com/maps/place/Joliet+Auto+Repair+Shop+Inc/@41.5346488,-88.0814999,17z/data=!3m1!4b1!4m6!3m5!1s0x880e66dc527f454f:0x67e09c23ea747dd7!8m2!3d41.5346488!4d-88.0814999!16s%2Fg%2F11ggvydb9w"
+            },
+            {
+              "check": "domain probe",
+              "result": "Domain probe checked 60 guessed domains for \"Joliet Auto Repair Shop Inc\": 5 resolve, 4 serve a page, 3 look parked or for sale, and none shows the business phone or name.",
+              "url": ""
+            },
+            {
+              "check": "social and third party",
+              "result": "Yelp page is unclaimed, lists the address, phone and hours, shows no website and no reviews; no Facebook, Instagram or booking page found in search. Birdeye mirror shows 4.8 from 167 reviews and lists the dead business.site address.",
+              "url": "https://www.yelp.com/biz/joliet-auto-repair-shop-joliet"
+            },
+            {
+              "check": "status, chain and sanity",
+              "result": "Operating: Maps shows current hours and Google reviews from 1 and 2 months ago. Independent single location, name does not match config/chains.json. Phone (815) 409-7724 is the same on Maps and Yelp; no other independent source was found.",
+              "url": "https://www.yelp.com/biz/joliet-auto-repair-shop-joliet"
+            },
+            {
+              "check": "review integrity",
+              "result": "No hard stop seen, but the check is incomplete: the limited Maps view showed only 3 reviews, Yelp has no reviews against 157 on Google, the Maps listing has 7 photos, and the name is the category plus the city. Signals counted: 2, with the naming question unresolved.",
+              "url": ""
+            }
+          ],
+          "notes": "websiteGap 3: nothing live found, the Maps field is empty and the former business.site page returns 404. ticketValue 3: category default. visualFit 2: category default. Queued at Medium: the review integrity check could not be completed and the phone has only Maps and Yelp as independent sources. services and reviewThemes left empty because no 10 reviews or service list were read."
+        }
+      }
+    },
+    {
+      "candidate": "Prestige Plumbing, Heating & Cooling",
+      "category": "Plumbing",
+      "categoryKey": "plumbing",
+      "city": "North Aurora",
+      "state": "IL",
+      "metro": "chicago",
+      "whyItMayFit": "24-hour plumbing and heating company with 154 Google reviews at 4.5 and no website on its Maps listing; emergency calls make a missing site costly.",
+      "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe; a domain named in a 2014 trade article now redirects to an unrelated site.",
+      "verificationNeeded": "Resolve the gap between the 4.5 Google rating and the 1.7 Yelp rating, confirm which phone is current ((630) 557-1517 on Maps versus (630) 801-8600 on BBB), and read recent Google reviews on a full Maps view to confirm the business is active.",
+      "ownerContact": "",
+      "phone": "(630) 557-1517",
+      "googleRating": 4.5,
+      "googleReviews": 154,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Prestige+Plumbing,+Heating+%26+Cooling/@41.8047182,-88.3256563,17z/data=!3m1!4b1!4m6!3m5!1s0x880ee4cb13ee5765:0xc516fead534aaf2f!8m2!3d41.8047182!4d-88.3256563!16s%2Fg%2F1tppskd7",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.bbb.org/us/il/north-aurora/profile/plumber/prestige-plumbing-heating-cooling-0654-1000012",
+          "label": "bbb.org",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/search?find_desc=Prestige+Plumbing+Heating+Cooling&find_loc=North+Aurora%2C+IL",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://pmmag.com/articles/96366-truck-of-the-month-prestige-plumbing-heating-cooling-north-aurora-ill",
+          "label": "pmmag.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://serviceagent.ai/directory/illinois/north-aurora/hvac/prestige-plumbing-heating-cooling/",
+          "label": "serviceagent.ai",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Sources disagree on rating and phone, so confidence is Medium; rating is also under the 4.7 preference.",
+      "lead": {
+        "business": "Prestige Plumbing, Heating & Cooling",
+        "category": "Plumbing",
+        "categoryKey": "plumbing",
+        "city": "North Aurora",
+        "area": "",
+        "state": "IL",
+        "metro": "chicago",
+        "address": "11 John St Ste A, North Aurora, IL 60542",
+        "phone": "(630) 557-1517",
+        "phoneLineType": "unknown",
+        "googleRating": 4.5,
+        "googleReviews": 154,
+        "ratingSource": "google-maps-observed",
+        "googleMapsUrl": "https://www.google.com/maps/place/Prestige+Plumbing,+Heating+%26+Cooling/@41.8047182,-88.3256563,17z/data=!3m1!4b1!4m6!3m5!1s0x880ee4cb13ee5765:0xc516fead534aaf2f!8m2!3d41.8047182!4d-88.3256563!16s%2Fg%2F1tppskd7",
+        "placeId": "",
+        "placeIdCheckedAt": "",
+        "websiteGap": 3,
+        "ticketValue": 3,
+        "visualFit": 2,
+        "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe; a domain named in a 2014 trade article now redirects to an unrelated site.",
+        "presence": {
+          "facebook": "",
+          "instagram": "",
+          "yelp": "https://www.yelp.com/search?find_desc=Prestige+Plumbing+Heating+Cooling&find_loc=North+Aurora%2C+IL",
+          "booking": "",
+          "other": [
+            "https://www.bbb.org/us/il/north-aurora/profile/plumber/prestige-plumbing-heating-cooling-0654-1000012"
+          ]
+        },
+        "confidence": "Medium",
+        "whyKija": "A 24-hour plumbing and heating company with 154 Google reviews depends on emergency calls, yet searchers find only a Maps listing and directories with no owned page to call from or learn about services.",
+        "pitchAngle": "Your 154 Google reviews already show customers trust the work; an owned site can turn that trust into emergency and scheduled service calls.",
+        "demoConcept": "Plain, call-first plumbing and heating site with a 24-hour click to call button, a service grid, review proof and a short service request form.",
+        "services": [],
+        "reviewThemes": [],
+        "languages": [],
+        "established": 1989,
+        "hours": "Open 24 hours",
+        "sources": [
+          {
+            "url": "https://www.google.com/maps/place/Prestige+Plumbing,+Heating+%26+Cooling/@41.8047182,-88.3256563,17z/data=!3m1!4b1!4m6!3m5!1s0x880ee4cb13ee5765:0xc516fead534aaf2f!8m2!3d41.8047182!4d-88.3256563!16s%2Fg%2F1tppskd7",
+            "label": "google.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.bbb.org/us/il/north-aurora/profile/plumber/prestige-plumbing-heating-cooling-0654-1000012",
+            "label": "bbb.org",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.yelp.com/search?find_desc=Prestige+Plumbing+Heating+Cooling&find_loc=North+Aurora%2C+IL",
+            "label": "yelp.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://pmmag.com/articles/96366-truck-of-the-month-prestige-plumbing-heating-cooling-north-aurora-ill",
+            "label": "pmmag.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://serviceagent.ai/directory/illinois/north-aurora/hvac/prestige-plumbing-heating-cooling/",
+            "label": "serviceagent.ai",
+            "checkedAt": "2026-10-02"
+          }
+        ],
+        "verification": {
+          "status": "needs-recheck",
+          "checkedAt": "2026-10-02",
+          "checks": [
+            {
+              "check": "exact-name search",
+              "result": "Searches for the exact name with North Aurora IL and for the phone in quotes returned only directories (BBB, Manta, Bradford White, ServiceAgent), a 2014 trade magazine article and no owned domain; that article names prestigeplumbingservices.com, which now redirects to an unrelated jewelry site.",
+              "url": "https://pmmag.com/articles/96366-truck-of-the-month-prestige-plumbing-heating-cooling-north-aurora-ill"
+            },
+            {
+              "check": "maps listing",
+              "result": "Read on 2026-10-02: 4.5 from 154 reviews, Plumber, 11 John St Ste A North Aurora IL 60542, open 24 hours, (630) 557-1517, and an Add website prompt with no website field.",
+              "url": "https://www.google.com/maps/place/Prestige+Plumbing,+Heating+%26+Cooling/@41.8047182,-88.3256563,17z/data=!3m1!4b1!4m6!3m5!1s0x880ee4cb13ee5765:0xc516fead534aaf2f!8m2!3d41.8047182!4d-88.3256563!16s%2Fg%2F1tppskd7"
+            },
+            {
+              "check": "domain probe",
+              "result": "Domain probe checked 65 guessed domains for \"Prestige Plumbing, Heating & Cooling\": 7 resolve, 5 serve a page, 2 look parked or for sale, and none shows the business phone or name.",
+              "url": ""
+            },
+            {
+              "check": "social and third party",
+              "result": "No Facebook or Instagram page was found; Yelp lists the business at 1.7 stars from 36 reviews with no website shown in the search card, and the BBB profile is Not BBB Accredited with no separate website.",
+              "url": "https://www.yelp.com/search?find_desc=Prestige+Plumbing+Heating+Cooling&find_loc=North+Aurora%2C+IL"
+            },
+            {
+              "check": "status, chain and sanity",
+              "result": "Maps shows no closure flag and BBB shows no closure, and the name does not match config/chains.json, but the BBB profile lists a different phone, (630) 801-8600, so the phone is not consistently published and the visible Google reviews are 8 to 12 years old.",
+              "url": "https://www.bbb.org/us/il/north-aurora/profile/plumber/prestige-plumbing-heating-cooling-0654-1000012"
+            },
+            {
+              "check": "review integrity",
+              "result": "The limited Maps view surfaced only three old reviews, with a 4.5 Google average against 1.7 on Yelp, one signal; no warning banner, incentive mention or fake listing signs were seen, but recent reviews and the rating spread could not be read.",
+              "url": "https://www.yelp.com/search?find_desc=Prestige+Plumbing+Heating+Cooling&find_loc=North+Aurora%2C+IL"
+            }
+          ],
+          "notes": "websiteGap 3: nothing owned found. ticketValue 3: category default for plumbing. visualFit 2: category default. Open items: phone differs between Maps and BBB, Google and Yelp ratings disagree, no recent Google reviews were readable, and the former domain from the 2014 article is now unrelated. Services and review themes left empty because fewer than 10 reviews were read."
+        }
+      }
+    },
+    {
+      "candidate": "RICKY AUTO SERVICE",
+      "category": "Auto repair",
+      "categoryKey": "auto-repair",
+      "city": "Newark",
+      "state": "NJ",
+      "metro": "new-york",
+      "whyItMayFit": "5.0 stars from 85 Google reviews at 61 E Runyon St with no website field and no social page found.",
+      "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe, and no social page was found.",
+      "verificationNeeded": "Find a second independent source for the phone (a Facebook, Yelp or BBB page), confirm the shop identity given other businesses at the same street address, and read the newest Google reviews and their dates on a full Maps view.",
+      "ownerContact": "",
+      "phone": "(908) 422-4326",
+      "googleRating": 5,
+      "googleReviews": 85,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/RICKY+AUTO+SERVICE/@40.714225,-74.189171,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2539cb1c4ffdd:0x7f587fea8a9d502f!8m2!3d40.714225!4d-74.189171!16s%2Fg%2F11zgs27sf2",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://radiatorrepairhub.com/business/ricky-auto-service-33fa4d5e-aa1c-4e3c-8292-02ead0e6c30d",
+          "label": "radiatorrepairhub.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/search?find_desc=Ricky+Auto+Service&find_loc=Newark%2C+NJ+07114",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Two review signals and a single independent phone source keep confidence at Medium.",
+      "lead": {
+        "business": "RICKY AUTO SERVICE",
+        "category": "Auto repair",
+        "categoryKey": "auto-repair",
+        "city": "Newark",
+        "area": "",
+        "state": "NJ",
+        "metro": "new-york",
+        "address": "61 E Runyon St, Newark, NJ 07114",
+        "phone": "(908) 422-4326",
+        "phoneLineType": "unknown",
+        "googleRating": 5,
+        "googleReviews": 85,
+        "ratingSource": "google-maps-observed",
+        "googleMapsUrl": "https://www.google.com/maps/place/RICKY+AUTO+SERVICE/@40.714225,-74.189171,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2539cb1c4ffdd:0x7f587fea8a9d502f!8m2!3d40.714225!4d-74.189171!16s%2Fg%2F11zgs27sf2",
+        "placeId": "",
+        "placeIdCheckedAt": "",
+        "websiteGap": 3,
+        "ticketValue": 3,
+        "visualFit": 2,
+        "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe, and no social page was found.",
+        "presence": {
+          "facebook": "",
+          "instagram": "",
+          "yelp": "",
+          "booking": "",
+          "other": []
+        },
+        "confidence": "Medium",
+        "whyKija": "A perfect 5.0 from 85 Google reviews shows strong customer trust, yet the only web presence is a Maps listing and directory pages with no owned page for services or estimate requests.",
+        "pitchAngle": "Your 85 Google reviews already show customers trust the shop; an owned site can turn that trust into estimate requests and calls.",
+        "demoConcept": "Clean neighborhood mechanic site with review proof up top, a click to call button, hours and map, and a short estimate request form.",
+        "services": [],
+        "reviewThemes": [],
+        "languages": [],
+        "established": null,
+        "hours": "",
+        "sources": [
+          {
+            "url": "https://www.google.com/maps/place/RICKY+AUTO+SERVICE/@40.714225,-74.189171,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2539cb1c4ffdd:0x7f587fea8a9d502f!8m2!3d40.714225!4d-74.189171!16s%2Fg%2F11zgs27sf2",
+            "label": "google.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://radiatorrepairhub.com/business/ricky-auto-service-33fa4d5e-aa1c-4e3c-8292-02ead0e6c30d",
+            "label": "radiatorrepairhub.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.yelp.com/search?find_desc=Ricky+Auto+Service&find_loc=Newark%2C+NJ+07114",
+            "label": "yelp.com",
+            "checkedAt": "2026-10-02"
+          }
+        ],
+        "verification": {
+          "status": "needs-recheck",
+          "checkedAt": "2026-10-02",
+          "checks": [
+            {
+              "check": "exact-name search",
+              "result": "Searches for the exact name with Newark NJ and for the phone in quotes found only a directory mirror and unrelated businesses named Ricky (a Houston dealer, an Ontario shop), with no owned domain for this shop.",
+              "url": ""
+            },
+            {
+              "check": "maps listing",
+              "result": "Read on 2026-10-02: 5.0 from 85 reviews, Mechanic, 61 E Runyon St Newark NJ 07114, (908) 422-4326, open until 8 PM, details confirmed by the business 11 weeks ago, and an Add website prompt with no website field.",
+              "url": "https://www.google.com/maps/place/RICKY+AUTO+SERVICE/@40.714225,-74.189171,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2539cb1c4ffdd:0x7f587fea8a9d502f!8m2!3d40.714225!4d-74.189171!16s%2Fg%2F11zgs27sf2"
+            },
+            {
+              "check": "domain probe",
+              "result": "Domain probe checked 52 guessed domains for \"Ricky Auto Service\": 5 resolve, 2 serve a page, and none shows the business phone or name.",
+              "url": ""
+            },
+            {
+              "check": "social and third party",
+              "result": "No Facebook, Instagram or Booking page was found for this shop, and the Yelp search for the 07114 area showed no listing for it.",
+              "url": "https://www.yelp.com/search?find_desc=Ricky+Auto+Service&find_loc=Newark%2C+NJ+07114"
+            },
+            {
+              "check": "status, chain and sanity",
+              "result": "Operating per Maps hours and a recent business confirmation, and not a chain (no match in config/chains.json), but the phone appears only on Maps and one directory mirror and search results show other auto businesses at the same street address, so the phone and identity have one independent source.",
+              "url": "https://radiatorrepairhub.com/business/ricky-auto-service-33fa4d5e-aa1c-4e3c-8292-02ead0e6c30d"
+            },
+            {
+              "check": "review integrity",
+              "result": "Two signals: 84 of 85 reviews are five star with one four star and nothing lower, and the three newest reviewers have 1 to 3 reviews each, though with photos; a directory snapshot showed 27 reviews against 85 now, and only three reviews were visible in the limited Maps view so the pattern could not be dated.",
+              "url": "https://www.google.com/maps/place/RICKY+AUTO+SERVICE/@40.714225,-74.189171,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2539cb1c4ffdd:0x7f587fea8a9d502f!8m2!3d40.714225!4d-74.189171!16s%2Fg%2F11zgs27sf2"
+            }
+          ],
+          "notes": "websiteGap 3: nothing owned and no social page found. ticketValue 3: category default. visualFit 2: category default. Phone line type left unknown. Services, hours and review themes left empty because only a directory mirror and three reviews were readable."
+        }
+      }
+    },
+    {
+      "candidate": "IN & OUT Auto Mechanic & Wrecker Service",
+      "category": "Auto repair",
+      "categoryKey": "auto-repair",
+      "city": "Fort Worth",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "whyItMayFit": "4.5 stars from 119 reviews with no website, a Facebook page as the only web presence, and a mix of mechanic and wrecker work that carries higher tickets; at the rating floor, so lower priority.",
+      "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe; the Facebook page is the only web presence.",
+      "verificationNeeded": "Confirm whether the Dallas listing at 5114 W Jefferson Blvd is a second location or an earlier address of the same shop, and read the newest Google reviews and the one star reviews on a full Maps view.",
+      "ownerContact": "",
+      "phone": "(972) 482-5141",
+      "googleRating": 4.5,
+      "googleReviews": 119,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/IN+%26+OUT+Auto+Mechanic+%26+Wrecker+Service+LLC/@32.7318625,-97.2142439,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9bd185b60a7d:0xb5f3ee0f98d9601!8m2!3d32.7318625!4d-97.2142439!16s%2Fg%2F11hmb5w9bv",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.facebook.com/INandOUTAutomechanic/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/biz/in-and-out-auto-mechanic-dallas",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Two review signals and an unresolved same-name Dallas listing keep confidence at Medium; rating sits exactly at the 4.5 floor.",
+      "lead": {
+        "business": "IN & OUT Auto Mechanic & Wrecker Service",
+        "category": "Auto repair",
+        "categoryKey": "auto-repair",
+        "city": "Fort Worth",
+        "area": "",
+        "state": "TX",
+        "metro": "dallas-fort-worth",
+        "address": "6823 E Lancaster Ave, Fort Worth, TX 76112",
+        "phone": "(972) 482-5141",
+        "phoneLineType": "unknown",
+        "googleRating": 4.5,
+        "googleReviews": 119,
+        "ratingSource": "google-maps-observed",
+        "googleMapsUrl": "https://www.google.com/maps/place/IN+%26+OUT+Auto+Mechanic+%26+Wrecker+Service+LLC/@32.7318625,-97.2142439,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9bd185b60a7d:0xb5f3ee0f98d9601!8m2!3d32.7318625!4d-97.2142439!16s%2Fg%2F11hmb5w9bv",
+        "placeId": "",
+        "placeIdCheckedAt": "",
+        "websiteGap": 2,
+        "ticketValue": 3,
+        "visualFit": 2,
+        "websiteStatus": "No owned website surfaced in search, on the Maps listing or in the domain probe; the Facebook page is the only web presence.",
+        "presence": {
+          "facebook": "https://www.facebook.com/INandOUTAutomechanic/",
+          "instagram": "",
+          "yelp": "",
+          "booking": "",
+          "other": []
+        },
+        "confidence": "Medium",
+        "whyKija": "119 Google reviews show steady local trust for a shop that offers both mechanic and wrecker work, yet searchers find only a Facebook page and a Maps listing with no owned page for services or requests.",
+        "pitchAngle": "Your 119 Google reviews already show customers trust the work; an owned site can turn that trust into repair and tow requests.",
+        "demoConcept": "Plain, call-first mechanic and wrecker site with a click to call button, a service grid for repairs and towing, review proof, and a short repair request form.",
+        "services": [
+          "Engine work",
+          "Transmission",
+          "Brakes",
+          "Tune-up",
+          "Oil change",
+          "Wrecker service"
+        ],
+        "reviewThemes": [],
+        "languages": [],
+        "established": null,
+        "hours": "Mon-Fri 9 AM-7 PM, Sat 9 AM-4 PM, Sun closed",
+        "sources": [
+          {
+            "url": "https://www.google.com/maps/place/IN+%26+OUT+Auto+Mechanic+%26+Wrecker+Service+LLC/@32.7318625,-97.2142439,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9bd185b60a7d:0xb5f3ee0f98d9601!8m2!3d32.7318625!4d-97.2142439!16s%2Fg%2F11hmb5w9bv",
+            "label": "google.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.facebook.com/INandOUTAutomechanic/",
+            "label": "facebook.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.yelp.com/biz/in-and-out-auto-mechanic-dallas",
+            "label": "yelp.com",
+            "checkedAt": "2026-10-02"
+          }
+        ],
+        "verification": {
+          "status": "needs-recheck",
+          "checkedAt": "2026-10-02",
+          "checks": [
+            {
+              "check": "exact-name search",
+              "result": "Searches for the exact name with Fort Worth and for the phone in quotes found no owned domain, only similarly named businesses and generic directories.",
+              "url": ""
+            },
+            {
+              "check": "maps listing",
+              "result": "Read on 2026-10-02: 4.5 from 119 reviews, Auto repair shop, 6823 E Lancaster Ave Fort Worth TX 76112, (972) 482-5141, Mon-Fri 9 AM-7 PM and Sat 9 AM-4 PM, and an Add website prompt with no website field.",
+              "url": "https://www.google.com/maps/place/IN+%26+OUT+Auto+Mechanic+%26+Wrecker+Service+LLC/@32.7318625,-97.2142439,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9bd185b60a7d:0xb5f3ee0f98d9601!8m2!3d32.7318625!4d-97.2142439!16s%2Fg%2F11hmb5w9bv"
+            },
+            {
+              "check": "domain probe",
+              "result": "Domain probe checked 65 guessed domains for \"IN & OUT Auto Mechanic & Wrecker Service\": 0 resolve, 0 serve a page, and none shows the business phone or name.",
+              "url": ""
+            },
+            {
+              "check": "social and third party",
+              "result": "Facebook page lists 6823 E Lancaster Ave and (972) 482-5141 with no website field and a post from November 2025; no Instagram page was found, and Yelp has an In & Out Auto Mechanic page at 5114 W Jefferson Blvd in Dallas with one 5.0 review and no website shown, which may be a second location or an earlier address.",
+              "url": "https://www.facebook.com/INandOUTAutomechanic/"
+            },
+            {
+              "check": "status, chain and sanity",
+              "result": "Operating per Maps hours, a Facebook post from November 2025 and Google reviews from the past year, not a chain (no match in config/chains.json), and the same phone and address appear on Maps and Facebook, but a Dallas listing with the same name leaves the shop identity partly unclear.",
+              "url": "https://www.facebook.com/INandOUTAutomechanic/"
+            },
+            {
+              "check": "review integrity",
+              "result": "Two signals: the spread is 103 five star, 1 three star and 15 one star with no two or four star reviews, and the three highlighted reviews all name one mechanic; the readable reviewers are Local Guides with 11 to 37 reviews and photos spanning a year or more, but only three reviews were visible in the limited Maps view so the ten newest could not be assessed.",
+              "url": "https://www.google.com/maps/place/IN+%26+OUT+Auto+Mechanic+%26+Wrecker+Service+LLC/@32.7318625,-97.2142439,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9bd185b60a7d:0xb5f3ee0f98d9601!8m2!3d32.7318625!4d-97.2142439!16s%2Fg%2F11hmb5w9bv"
+            }
+          ],
+          "notes": "websiteGap 2: a Facebook page is the only web presence. ticketValue 3: category default. visualFit 2: category default. Services come from the Facebook intro and the business name; review themes left empty because fewer than 10 reviews were readable. Open items: the Dallas listing with the same name, the 4.5 rating sitting exactly at the floor, and the unread newest reviews."
+        }
+      }
+    },
+    {
+      "candidate": "Central Barber Shop",
+      "category": "Barber shop",
+      "categoryKey": "barber",
+      "city": "Elgin",
+      "state": "IL",
+      "metro": "chicago",
+      "whyItMayFit": "Old-school one-chair barbershop in downtown Elgin with 78 Google reviews at 4.8 and 16 Yelp reviews at 4.9, an unclaimed Maps listing and only a Facebook page plus a builder page as its web presence.",
+      "websiteStatus": "The Maps website field shows only a Facebook page, which in turn links a hub.biz builder page; no owned domain surfaced in search or the domain probe.",
+      "verificationNeeded": "Confirm the current published phone: a recent Yelp review says the number on Maps, Facebook and Yelp is the previous operator's and that a different one is posted on the shop window. Also read the hub.biz builder page (behind a Cloudflare bot check this run) to judge whether it counts as a credible owned site.",
+      "ownerContact": "",
+      "phone": "847-741-2485",
+      "googleRating": 4.8,
+      "googleReviews": 78,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Central+Barber+Shop/@42.037392,-88.283033,17z/data=!3m1!4b1!4m6!3m5!1s0x880f05a7b3791e51:0x30d9c1788b88b4e7!8m2!3d42.037392!4d-88.283033!16s%2Fg%2F1vqthckj",
+          "label": "google.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.facebook.com/centralbarbershopelgin",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.yelp.com/biz/central-barber-shop-elgin",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Phone may be stale after a change of operator and a linked builder page could not be read, so confidence is Medium and the lead waits in the queue.",
+      "lead": {
+        "business": "Central Barber Shop",
+        "category": "Barber shop",
+        "categoryKey": "barber",
+        "city": "Elgin",
+        "area": "",
+        "state": "IL",
+        "metro": "chicago",
+        "address": "172 E Chicago St, Elgin, IL 60120",
+        "phone": "847-741-2485",
+        "phoneLineType": "unknown",
+        "googleRating": 4.8,
+        "googleReviews": 78,
+        "ratingSource": "google-maps-observed",
+        "googleMapsUrl": "https://www.google.com/maps/place/Central+Barber+Shop/@42.037392,-88.283033,17z/data=!3m1!4b1!4m6!3m5!1s0x880f05a7b3791e51:0x30d9c1788b88b4e7!8m2!3d42.037392!4d-88.283033!16s%2Fg%2F1vqthckj",
+        "placeId": "",
+        "placeIdCheckedAt": "",
+        "websiteGap": 2,
+        "ticketValue": 1,
+        "visualFit": 3,
+        "websiteStatus": "The Maps website field shows only a Facebook page, which in turn links a hub.biz builder page; no owned domain surfaced in search or the domain probe.",
+        "presence": {
+          "facebook": "https://www.facebook.com/centralbarbershopelgin",
+          "instagram": "",
+          "yelp": "https://www.yelp.com/biz/central-barber-shop-elgin",
+          "booking": "",
+          "other": [
+            "https://central-barber-shop-il-1.hub.biz"
+          ]
+        },
+        "confidence": "Medium",
+        "whyKija": "A classic one-chair downtown Elgin barbershop with 78 Google reviews at 4.8 and a Yelp page at 4.9, whose only web presence is a Facebook page and a builder page. Haircuts are low ticket, but the old-school character is easy to show.",
+        "pitchAngle": "Years of Google and Yelp reviews already vouch for this chair; an owned page with hours, prices and a direct line turns walk-by trust into regular visits.",
+        "demoConcept": "Classic one-chair barbershop page with a warm paper-and-ink look that leads with review proof, hours, a price list and a tap to call or text, plus downtown Elgin directions.",
+        "services": [
+          "Haircut",
+          "Haircut and shave",
+          "Shave only"
+        ],
+        "reviewThemes": [
+          "Old school one chair shop",
+          "Fair prices",
+          "Friendly, takes time with each cut",
+          "Neighborhood regulars"
+        ],
+        "languages": [],
+        "established": null,
+        "hours": "",
+        "sources": [
+          {
+            "url": "https://www.google.com/maps/place/Central+Barber+Shop/@42.037392,-88.283033,17z/data=!3m1!4b1!4m6!3m5!1s0x880f05a7b3791e51:0x30d9c1788b88b4e7!8m2!3d42.037392!4d-88.283033!16s%2Fg%2F1vqthckj",
+            "label": "google.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.facebook.com/centralbarbershopelgin",
+            "label": "facebook.com",
+            "checkedAt": "2026-10-02"
+          },
+          {
+            "url": "https://www.yelp.com/biz/central-barber-shop-elgin",
+            "label": "yelp.com",
+            "checkedAt": "2026-10-02"
+          }
+        ],
+        "verification": {
+          "status": "needs-recheck",
+          "checkedAt": "2026-10-02",
+          "checks": [
+            {
+              "check": "exact-name search",
+              "result": "Searched the name with Elgin IL and the street address, and the phone in quotes; results showed only other Elgin and Chicago barber listings and directories, with no domain belonging to this shop.",
+              "url": ""
+            },
+            {
+              "check": "maps listing",
+              "result": "Read on 2026-10-02: 4.8 from 78 reviews (72 five star, 4 four star, 2 one star), Barber shop, 172 E Chicago St Elgin IL 60120, (847) 741-2485, website field facebook.com only, Claim this business shown.",
+              "url": "https://www.google.com/maps/place/Central+Barber+Shop/@42.037392,-88.283033,17z/data=!3m1!4b1!4m6!3m5!1s0x880f05a7b3791e51:0x30d9c1788b88b4e7!8m2!3d42.037392!4d-88.283033!16s%2Fg%2F1vqthckj"
+            },
+            {
+              "check": "domain probe",
+              "result": "Domain probe found centralbarber.com live with a Central Barbershop greeting; I opened it and it is a Phoenix AZ shop with a different phone, so it is unrelated. centralbarbershop.com is a parked GoDaddy page and the other guesses were unrelated or did not resolve.",
+              "url": "https://centralbarber.com/"
+            },
+            {
+              "check": "social and third party",
+              "result": "Facebook page shows 172 East Chicago Street, the same phone, 60 followers and a visible post from 2017, and lists central-barber-shop-il-1.hub.biz as its website; that page returned a Cloudflare bot check and was not read. Yelp page is unclaimed with 16 reviews.",
+              "url": "https://www.facebook.com/centralbarbershopelgin"
+            },
+            {
+              "check": "status, chain and sanity",
+              "result": "Operating: a Yelp review from August 2026 and Maps reviews from 2 and 4 months ago, one-chair independent, not on chains.json. The phone (847) 741-2485 matches on Maps, Facebook and Yelp, but a recent Yelp review says that number belongs to the previous operator and a different current number is posted on the shop window, so the published line may be stale.",
+              "url": "https://www.yelp.com/biz/central-barber-shop-elgin"
+            },
+            {
+              "check": "review integrity",
+              "result": "No hard stops or signals: 78 Maps reviews spread over about 13 years with local guide reviewers, Yelp 4.9 from 16 reviews agreeing, and varied detailed Yelp reviews from 2017 to 2026.",
+              "url": "https://www.yelp.com/biz/central-barber-shop-elgin"
+            }
+          ],
+          "notes": "websiteGap 2: Facebook and a hub.biz builder page are the only web presence, and the builder page was blocked by a bot check so it could not be judged. ticketValue 1: category default. visualFit 3: category default. Ownership changed hands per Yelp reviews, so some of the older review history belongs to the earlier operator. About 11 reviews were readable across Maps (3) and Yelp (8); reviewThemes paraphrase those. Hours not recorded because Maps and Yelp close times differ."
+        }
+      }
+    },
+    {
+      "candidate": "Boss Fred Auto Repair and Sales",
+      "category": "Auto repair",
+      "categoryKey": "auto-repair",
+      "city": "Fort Worth",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "whyItMayFit": "4.8 stars from 74 reviews and the Maps listing shows no website at all (Add website prompt), with a Facebook page also found.",
+      "websiteStatus": "Not verified yet.",
+      "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+      "ownerContact": "",
+      "phone": "817-420-9393",
+      "googleRating": 4.8,
+      "googleReviews": 74,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/search/Boss+Fred+Auto+Repair+Fort+Worth",
+          "label": "google.com",
+          "checkedAt": "2026-09-28"
+        },
+        {
+          "url": "https://www.facebook.com/BossFredAuto/",
+          "label": "facebook.com",
+          "checkedAt": "2026-09-28"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Unverified overflow: verification capacity reached this run",
+      "lead": null
+    },
+    {
+      "candidate": "SAMS CUTS & SYLES BARBER SHOP",
+      "category": "Barber shop",
+      "categoryKey": "barber",
+      "city": "Bronx",
+      "state": "NY",
+      "metro": "new-york",
+      "whyItMayFit": "4.9 stars with 64 reviews at 2095 Grand Concourse and no website on the Maps listing.",
+      "websiteStatus": "Not verified yet.",
+      "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+      "ownerContact": "",
+      "phone": "(347) 431-2220",
+      "googleRating": 4.9,
+      "googleReviews": 64,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/search/barbershop+in+The+Bronx+NY",
+          "label": "google.com",
+          "checkedAt": "2026-09-28"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Unverified overflow: verification capacity reached this run",
+      "lead": null
+    },
+    {
+      "candidate": "F&C BODY SHOP AND AUTO REPAIR",
+      "category": "Auto body and collision",
+      "categoryKey": "auto-body-collision",
+      "city": "Bronx",
+      "state": "NY",
+      "metro": "new-york",
+      "whyItMayFit": "4.8 stars with 52 reviews at 1271 Jerome Avenue, collision and repair, no website on the Maps listing.",
+      "websiteStatus": "Not verified yet.",
+      "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+      "ownerContact": "",
+      "phone": "(718) 992-4001",
+      "googleRating": 4.8,
+      "googleReviews": 52,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/search/auto+body+shop+in+The+Bronx+NY",
+          "label": "google.com",
+          "checkedAt": "2026-09-28"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Unverified overflow: verification capacity reached this run",
+      "lead": null
+    },
+    {
+      "candidate": "Cliff's Auto Repair",
+      "category": "Auto repair",
+      "categoryKey": "auto-repair",
+      "city": "Arlington",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "whyItMayFit": "4.9 stars from 41 reviews and a Facebook page as the only web presence for an independent shop at 1206 Colorado Ln; review count is modest but above the floor.",
+      "websiteStatus": "Listing shows Maps Website field lists m.facebook.com only.",
+      "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+      "ownerContact": "",
+      "phone": "817-459-3110",
+      "googleRating": 4.9,
+      "googleReviews": 41,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/search/Cliff%27s+Auto+Repair+1206+Colorado+Ln+Arlington+TX",
+          "label": "google.com",
+          "checkedAt": "2026-09-28"
+        },
+        {
+          "url": "https://www.facebook.com/cliffsautorepair/",
+          "label": "facebook.com",
+          "checkedAt": "2026-09-28"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Unverified overflow: verification capacity reached this run",
+      "lead": null
+    },
+    {
+      "candidate": "Farias Collision Repair",
+      "category": "Auto body and collision",
+      "categoryKey": "auto-body-collision",
+      "city": "Arlington",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "whyItMayFit": "4.8 stars from 29 reviews and only a Facebook page; collision work is visual, though review count is near the 30 preference.",
+      "websiteStatus": "Listing shows Maps Website field lists facebook.com only.",
+      "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+      "ownerContact": "",
+      "phone": "817-495-6901",
+      "googleRating": 4.8,
+      "googleReviews": 29,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/search/Farias+Collision+Repair+1208+Colorado+Ln+Arlington",
+          "label": "google.com",
+          "checkedAt": "2026-09-28"
+        },
+        {
+          "url": "https://www.facebook.com/fariascollisionrepair/",
+          "label": "facebook.com",
+          "checkedAt": "2026-09-28"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Unverified overflow: verification capacity reached this run",
+      "lead": null
+    },
+    {
+      "candidate": "Kavin Collision",
+      "category": "Auto body and collision",
+      "categoryKey": "auto-body-collision",
+      "city": "Gary",
+      "state": "IN",
+      "metro": "chicago",
+      "whyItMayFit": "Independent collision shop at the 4.5 floor with 33 reviews, 18 photos and no website, a borderline but plausible before/after demo candidate.",
+      "websiteStatus": "Not verified yet.",
+      "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+      "ownerContact": "",
+      "phone": "(219) 427-0929",
+      "googleRating": 4.5,
+      "googleReviews": 33,
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Kavin+Collision/@41.5532404,-87.3361055,17z",
+          "label": "google.com",
+          "checkedAt": "2026-09-28"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Unverified overflow: verification capacity reached this run",
+      "lead": null
+    },
+    {
+      "candidate": "Stella Link Mobile Complete Auto Repair",
+      "category": "Auto repair",
+      "categoryKey": "auto-repair",
+      "city": "Houston",
+      "state": "TX",
+      "metro": "houston",
+      "whyItMayFit": "Independent suspension and general repair shop at 9403 Stella Link Rd with a 4.9 rating on aggregators and no owned domain surfaced in search. Review count conflicts between sources (147 vs 673) so the verifier must read Maps; website status unconfirmed.",
+      "websiteStatus": "Not verified yet.",
+      "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+      "ownerContact": "",
+      "phone": "",
+      "googleRating": 4.9,
+      "googleReviews": null,
+      "sources": [
+        {
+          "url": "https://magicpin.com/usa/Houston/Braeswood/Autocare/Stella-Link-Mobile-Complete-Auto-Repair/store/258c637/reviews",
+          "label": "magicpin.com",
+          "checkedAt": "2026-09-28"
+        },
+        {
+          "url": "https://www.giftly.com/gift-card/stella-link-mobile-complete-auto-repair-houston",
+          "label": "giftly.com",
+          "checkedAt": "2026-09-28"
+        }
+      ],
+      "decision": "Research",
+      "reason": "Unverified overflow: verification capacity reached this run",
+      "lead": null
+    }
+  ],
+  "rejected": [
+    {
+      "business": "AA Auto Body Shop",
+      "city": "Dallas",
+      "state": "TX",
+      "phone": "(214) 541-2788",
+      "reason": "Owns a working website, aaautobodytx.com, with services, address, phone and a contact option, which fails the website gap threshold.",
+      "evidenceUrl": "https://aaautobodytx.com/"
+    },
+    {
+      "business": "Emory Haircutters Barber Shop",
+      "city": "Decatur",
+      "state": "GA",
+      "phone": "(404) 835-2419",
+      "reason": "Owns a working website (emoryhaircutters.com) with the shop's address, phone and per barber appointment booking, and the Maps website field points to it.",
+      "evidenceUrl": "https://www.emoryhaircutters.com/"
+    },
+    {
+      "business": "Texas Brother’s Roofing & Construction LLC",
+      "city": "Houston",
+      "state": "TX",
+      "phone": "832-782-8553",
+      "reason": "Owns a working website with services pages, a contact page, phone and a free estimate path, listed in the Google Maps website field.",
+      "evidenceUrl": "https://txbrothersroofingandconstruction.com/"
+    },
+    {
+      "business": "H Town Roof & Constructions LLC.",
+      "city": "Houston",
+      "state": "TX",
+      "phone": "346-667-7118",
+      "reason": "Owns a working website with services, FAQs, contact forms, phone and address, listed in the Google Maps website field.",
+      "evidenceUrl": "https://htownroofco.com/"
+    }
+  ],
+  "reverify": [
+    {
+      "id": "als-auto-repair-shop-dallas-tx",
+      "googleRating": 4.8,
+      "googleReviews": 309,
+      "ratingSource": "google-maps-observed",
+      "websiteGap": 3,
+      "websiteStatus": "No credible standalone website found; Maps listing shows no website field and the domain probe found no owned domain",
+      "confidence": "High",
+      "verification": {
+        "status": "verified",
+        "checkedAt": "2026-10-02",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched \"Al's Auto Repair Shop\" Dallas TX and the phone 214-946-4100 on 2026-10-02. Results showed no site belonging to this shop; the only owned-looking domains were other businesses (see domain probe).",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Read on 2026-10-02: 4.8 from 309 reviews, Auto repair shop, 2111 Fort Worth Ave #1812, Dallas TX 75211, (214) 946-4100, open today and closing 6 PM, no website field (Maps shows an Add website prompt).",
+            "url": "https://www.google.com/maps/place/Al's+Auto+Repair+Shop/@32.762193,-96.8572955,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9bb608d13b13:0x4aa367de22d8d18b!8m2!3d32.762193!4d-96.8572955!16s%2Fg%2F1tht1w5g"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 56 guessed domains for \"Al's Auto Repair Shop\": 6 resolve, 5 serve a page, 2 look parked or for sale, and none shows the business phone or name. I opened alsautorepair.us (a Hawthorne, CA shop) and alsautorepair.net (a Wappinger Falls, NY shop) and both belong to unrelated businesses.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "On 2026-10-02 Yelp returned HTTP 403 so it was not read and that source was dropped; searches for a Facebook or Instagram page for the shop turned up nothing. BBB lists the business at 2111 Fort Worth Ave with no website, not accredited, 0 reviews and 0 complaints. txinspectors.net lists it with no website.",
+            "url": "https://www.bbb.org/us/tx/dallas/profile/auto-repair/als-auto-repair-shop-0875-90014396"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Maps shows the shop open today with recent reviews (newest 3 months ago), single location, not a chain or franchise. The phone (214) 946-4100 appears consistently on the Maps listing, BBB and txinspectors.net. BBB lists a founding date of March 31, 1965. The Maps address carries a unit number (#1812) that BBB omits; I could not check street level imagery, so the address type is not independently confirmed. phoneLineType stays unknown.",
+            "url": "https://txinspectors.net/business/tx/dallas/als-auto-repair-shop/"
+          },
+          {
+            "check": "review integrity",
+            "result": "Read 2026-10-02: no fake review banner or review freeze, no incentive wording, no keyword stuffed name. Spread 281/12/2/2/12 so 2 to 4 star reviews are only about 5 percent (one soft signal). Visible reviews are specific and varied and one reviewer cites 10+ years as a customer. One signal total, confidence not lowered.",
+            "url": "https://www.google.com/maps/place/Al's+Auto+Repair+Shop/@32.762193,-96.8572955,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9bb608d13b13:0x4aa367de22d8d18b!8m2!3d32.762193!4d-96.8572955!16s%2Fg%2F1tht1w5g"
+          }
+        ],
+        "notes": "Yelp 403 and no Facebook or Instagram found, so social check relied on BBB and directories. Address unit number #1812 not independently explained. Ratings: txinspectors.net showed 291 reviews, Maps showed 309 on 2026-10-02 (mirror lag)."
+      },
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Al's+Auto+Repair+Shop/@32.762193,-96.8572955,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9bb608d13b13:0x4aa367de22d8d18b!8m2!3d32.762193!4d-96.8572955!16s%2Fg%2F1tht1w5g",
+          "label": "Google Maps listing",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.bbb.org/us/tx/dallas/profile/auto-repair/als-auto-repair-shop-0875-90014396",
+          "label": "bbb.org",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://txinspectors.net/business/tx/dallas/als-auto-repair-shop/",
+          "label": "txinspectors.net",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "keep",
+      "reason": "Still no owned website, listing is open and independent, and the rating was re-read on the public Maps listing (4.8 from 309 reviews, up from 308). No review integrity hard stop and one soft signal."
+    },
+    {
+      "id": "auto-shop-near-me-dallas-tx",
+      "googleRating": 5,
+      "googleReviews": 50,
+      "ratingSource": "google-maps-observed",
+      "websiteGap": 3,
+      "websiteStatus": "No owned website found; Maps shows no website field and only a Book online link to a third party booking page",
+      "confidence": "Low",
+      "verification": {
+        "status": "verified",
+        "checkedAt": "2026-10-02",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched \"Auto Shop Near Me\" 410 Upton St Dallas TX 75203 and the phone 214-605-6471 on 2026-10-02. No result belonged to the shop; general search results are swamped by the generic phrase.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Read on 2026-10-02: 5.0 from 50 reviews, Auto body shop, 410 Upton St, Dallas TX 75203, (214) 605-6471, open today and closing 6 PM, no website field, a Book online button. The listing only surfaced when searching by the phone number; a name search alone did not return it.",
+            "url": "https://www.google.com/maps/place/Auto+Shop+Near+Me/@32.7436392,-96.8113219,17z/data=!3m1!4b1!4m6!3m5!1s0x864e991a3c5e6265:0x9f122be3c1957ff3!8m2!3d32.7436392!4d-96.8113219!16s%2Fg%2F11w4s84b3g"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 40 guessed domains for \"Auto Shop Near Me\": 4 resolve, 3 serve a page, 3 look parked or for sale, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "The Maps Book online button points to a carwise.com booking page for an Auto Shop Near Me LLC at the Dallas 75203 location; carwise returned HTTP 403 so I did not read it. Yelp returned HTTP 403 and was dropped. No Facebook or Instagram page found in search. autorepairestimate.ai lists it with no website.",
+            "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/auto-shop-near-me"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Listing shows open hours today with a review 4 weeks ago, so it appears operating, and it is a single independent location, not a chain. The phone (214) 605-6471 appears on the Maps listing and on autorepairestimate.ai (410 Upton St, listed as 41 reviews there versus 50 on Maps). Only two sources, one is a directory. phoneLineType unknown.",
+            "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/auto-shop-near-me"
+          },
+          {
+            "check": "review integrity",
+            "result": "Read 2026-10-02: HARD STOP, keyword style business name (\"near me\") on the listing. Spread 49/0/1/0/0 so almost no 2 to 4 star reviews, and a staff member is named in a detailed review. 2 signals plus the hard stop. No review warning banner or incentive wording seen. Risk flags only, not a finding about the business.",
+            "url": "https://www.google.com/maps/place/Auto+Shop+Near+Me/@32.7436392,-96.8113219,17z/data=!3m1!4b1!4m6!3m5!1s0x864e991a3c5e6265:0x9f122be3c1957ff3!8m2!3d32.7436392!4d-96.8113219!16s%2Fg%2F11w4s84b3g"
+          }
+        ],
+        "notes": "Rejected on the keyword name hard stop. Booking is through a third party platform (carwise.com), not an owned site. If Jamey knows the legal name is the same and wants it reconsidered, the facts above are still current as of 2026-10-02."
+      },
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Auto+Shop+Near+Me/@32.7436392,-96.8113219,17z/data=!3m1!4b1!4m6!3m5!1s0x864e991a3c5e6265:0x9f122be3c1957ff3!8m2!3d32.7436392!4d-96.8113219!16s%2Fg%2F11w4s84b3g",
+          "label": "Google Maps listing",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/auto-shop-near-me",
+          "label": "autorepairestimate.ai",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "reject",
+      "reason": "Listing is real and the rating was re-read on Maps (5.0 from 50 reviews, no website field), but the business name is a search phrase (keyword style name), which the review integrity rules treat as a hard stop, and 49 of 50 reviews are 5 star. Not eligible as a lead; the legal name may genuinely match, so Jamey can override."
+    },
+    {
+      "id": "bees-auto-body-dallas-tx",
+      "googleRating": 4.6,
+      "googleReviews": 100,
+      "ratingSource": "google-maps-observed",
+      "websiteGap": 3,
+      "websiteStatus": "No credible standalone website found; Maps listing shows no website field and the domain probe found no owned domain",
+      "confidence": "High",
+      "verification": {
+        "status": "verified",
+        "checkedAt": "2026-10-02",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched \"Bee's Auto Body\" Dallas TX and 5301 Forney Rd, and the phone 214-388-3888, on 2026-10-02. No owned site for this shop appeared in results.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Read on 2026-10-02: 4.6 from 100 reviews, Auto repair shop, 5301 Forney Rd, Dallas TX 75227, (214) 388-3888, open today and closing 5:30 PM, updated by the business 11 weeks ago, no website field (Add website prompt shown).",
+            "url": "https://www.google.com/maps/place/Bee%27s+Auto+Body/@32.7836262,-96.7277581,18z/data=!4m6!3m5!1s0x864ea2404df4120f:0x6d63aadb0350d3da!8m2!3d32.7836262!4d-96.7264706"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 56 guessed domains for \"Bee's Auto Body\": 6 resolve, 4 serve a page, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "On 2026-10-02 Yelp returned HTTP 403 and was dropped; searches found no Facebook or Instagram page for the shop. autorepairestimate.ai lists it with no website. A separate listing, Bee's Paintless Dent Repair at 4611 Lawnview Ave with a different phone, appears beside it on Maps and is a different business.",
+            "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/bee-s-auto-body"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Maps shows open hours today, recent reviews (newest 3 months ago) and a business update 11 weeks ago; single location, not a chain. The phone (214) 388-3888 appears on the Maps listing and on autorepairestimate.ai (which showed 4.5 from 98 reviews, a lagging mirror). phoneLineType unknown.",
+            "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/bee-s-auto-body"
+          },
+          {
+            "check": "review integrity",
+            "result": "Read 2026-10-02: no warning banner, freeze, incentive wording or keyword stuffed name. Spread 82/7/4/1/6 is varied, newest reviewers are established Local Guides with photos, wording is specific. Zero signals.",
+            "url": "https://www.google.com/maps/place/Bee%27s+Auto+Body/@32.7836262,-96.7277581,18z/data=!4m6!3m5!1s0x864ea2404df4120f:0x6d63aadb0350d3da!8m2!3d32.7836262!4d-96.7264706"
+          }
+        ],
+        "notes": "Yelp 403 and no social page located, so the social check rests on directories. Maps URL above trimmed to the place feature id."
+      },
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Bee%27s+Auto+Body/@32.7836262,-96.7277581,18z/data=!4m6!3m5!1s0x864ea2404df4120f:0x6d63aadb0350d3da!8m2!3d32.7836262!4d-96.7264706",
+          "label": "Google Maps listing",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/bee-s-auto-body",
+          "label": "autorepairestimate.ai",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "keep",
+      "reason": "Still no owned website, operating and independent. Rating re-read on the public Maps listing: 4.6 from 100 reviews, unchanged. Review spread and reviewer profiles look healthy, no hard stop."
+    },
+    {
+      "id": "brownies-dallas-tx",
+      "googleRating": 4.7,
+      "googleReviews": 169,
+      "ratingSource": "google-maps-observed",
+      "websiteGap": 3,
+      "websiteStatus": "No credible owned website found; Maps listing shows no website field and the only name matching domain (brownies.com) is an unrelated gourmet brownie gift business",
+      "confidence": "High",
+      "verification": {
+        "status": "verified",
+        "checkedAt": "2026-10-02",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched \"Brownie's\" barber shop 4317 Lemmon Ave Dallas and the phone 214-526-9207 on 2026-10-02. Results surfaced only directory and gift card pages for the shop and no owned website.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Read on 2026-10-02: 4.7 from 169 reviews, Barber shop, 4317 Lemmon Ave A, Dallas TX 75219, (214) 526-9207, open today and closing 6 PM, identifies as Latino-owned, no website field (Add website prompt shown).",
+            "url": "https://www.google.com/maps/place/Brownie's/@32.81696,-96.812275,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9ec7a4f6a877:0xa9dd7e95e2dc25e8!8m2!3d32.81696!4d-96.812275!16s%2Fg%2F1vljgr8q"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe found brownies.com live and naming \"Brownie's\" but not showing the phone, and the page does not mention Dallas. Judged on 2026-10-02: its title is Fairytale Brownies, a gourmet brownie and cookie gift basket business, so it is unrelated to the barber shop. brownies.biz redirects to bettycrocker.com, also unrelated.",
+            "url": "https://www.brownies.com/"
+          },
+          {
+            "check": "social and third party",
+            "result": "Yelp returned HTTP 403 and was dropped. A Giftly gift card page for the shop shows Yelp 4.5 from 156 reviews and no website. barbershopdirectories.com lists it with no website. No Facebook, Instagram or booking page of the shop located in search.",
+            "url": "https://www.giftly.com/gift-card/brownies-barber-shop-dallas-2"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Maps shows open hours today with reviews as recent as a year ago, single location, not a chain. The phone (214) 526-9207 appears on the Maps listing, Giftly and barbershopdirectories.com. Giftly describes it as family owned since 1963, with roots to 1929. phoneLineType unknown (published shop number).",
+            "url": "https://www.barbershopdirectories.com/texas/dallas"
+          },
+          {
+            "check": "review integrity",
+            "result": "Read 2026-10-02: no warning banner, freeze, incentive wording or keyword stuffed name. Spread 147/7/6/5/4 with a real 2 to 4 star tail, reviews span years, reviewers are established Local Guides, and Google 4.7 roughly agrees with Yelp 4.5 as quoted on Giftly. Zero signals.",
+            "url": "https://www.google.com/maps/place/Brownie's/@32.81696,-96.812275,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9ec7a4f6a877:0xa9dd7e95e2dc25e8!8m2!3d32.81696!4d-96.812275!16s%2Fg%2F1vljgr8q"
+          }
+        ],
+        "notes": "Yelp 403 so the Yelp figure is second hand via Giftly. No shop social page found; the lead record already notes the shop is reachable only by phone."
+      },
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/place/Brownie's/@32.81696,-96.812275,17z/data=!3m1!4b1!4m6!3m5!1s0x864e9ec7a4f6a877:0xa9dd7e95e2dc25e8!8m2!3d32.81696!4d-96.812275!16s%2Fg%2F1vljgr8q",
+          "label": "Google Maps listing",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.giftly.com/gift-card/brownies-barber-shop-dallas-2",
+          "label": "giftly.com",
+          "checkedAt": "2026-10-02"
+        },
+        {
+          "url": "https://www.barbershopdirectories.com/texas/dallas",
+          "label": "barbershopdirectories.com",
+          "checkedAt": "2026-10-02"
+        }
+      ],
+      "decision": "keep",
+      "reason": "Still no owned website, operating and independent (family run since 1963 per a directory page). Rating re-read on the public Maps listing: 4.7 from 169 reviews, up from 168. Healthy review spread and a close Yelp figure via a secondary page, no hard stop."
+    }
+  ],
+  "notes": "Weekly workflow run. 27 candidates found, 27 unique and new, 20 verified by skeptic agents. Caps and drops: Verification cap: 7 of 27 candidates not verified this run (cap 20 = 5 agents x 4, set by the 14 agent cap); they go to the research queue as unverified overflow: Boss Fred Auto Repair and Sales; SAMS CUTS & SYLES BARBER SHOP; F&C BODY SHOP AND AUTO REPAIR; Cliff's Auto Repair; Farias Collision Repair; Kavin Collision; and 1 more. Agent cap: 4 of 8 stale items not rechecked this run (1 recheck agents): J & N Auto Service; L & R Paint & Body Shop; Most Famous Cutz; Papas and Ninos Bodyshop. Plan ran for 2026-09-28 (2026-W40, rotation week 0): 5 metros including home metro, 6 categories, quota 10, 25 known businesses excluded. No data/runs/2026-09-28.json exists, so alreadyRan is false. data/suppression.json exists and is empty. No Places key, so discover was skipped and the candidates list is empty; purge-places found nothing to delete. 20 leads exist; 10 are stale (all sheet imports with needs-recheck, verified 2026-09-26), 8 returned, 2 left out by the cap. All stale leads have empty ratingSource and empty placeId. No stale queue items (none with decision Research older than 14 days). Today per the system date is 2026-10-02, but the run uses the Monday runId 2026-09-28 as instructed. Only files written: data/inbox/2026-09-28.plan.json by npm run plan; a scratch script was written to the OS temp folder, outside the project."
+}

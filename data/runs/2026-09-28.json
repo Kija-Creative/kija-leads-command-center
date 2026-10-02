@@ -1,0 +1,339 @@
+{
+  "runId": "2026-09-28",
+  "ingestedAt": "2026-10-02T20:15:54.007Z",
+  "mode": "weekly",
+  "plan": {
+    "metros": [
+      "dallas-fort-worth",
+      "new-york",
+      "atlanta",
+      "chicago",
+      "houston"
+    ],
+    "categories": [
+      "auto-repair",
+      "hvac",
+      "roofing",
+      "barber",
+      "auto-body-collision",
+      "plumbing"
+    ]
+  },
+  "counts": {
+    "candidates": 27,
+    "accepted": 6,
+    "queued": 17,
+    "rejected": 4,
+    "duplicates": 0,
+    "reverified": 4,
+    "errors": 0
+  },
+  "accepted": [
+    "victoria-and-sons-auto-repair-newark-nj",
+    "gregs-body-shop-joliet-il",
+    "triple-m-auto-body-inc-dba-grand-prix-auto-bronx-ny",
+    "elvis-auto-repair-newark-nj",
+    "the-big-boss-barber-shop-aurora-il",
+    "lincoln-avenue-barber-shop-elgin-il"
+  ],
+  "queued": [
+    "ivans-barbershop-arlington-tx",
+    "a-m-barber-studio-grand-prairie-tx",
+    "thee-brooklyn-barber-brooklyn-ny",
+    "good-fellas-barber-shop-bronx-ny",
+    "old-tyme-barber-shop-arlington-tx",
+    "joliet-auto-repair-shop-inc-joliet-il",
+    "prestige-plumbing-heating-cooling-north-aurora-il",
+    "ricky-auto-service-newark-nj",
+    "in-out-auto-mechanic-wrecker-service-fort-worth-tx",
+    "central-barber-shop-elgin-il",
+    "boss-fred-auto-repair-and-sales-fort-worth-tx",
+    "sams-cuts-syles-barber-shop-bronx-ny",
+    "f-c-body-shop-and-auto-repair-bronx-ny",
+    "cliffs-auto-repair-arlington-tx",
+    "farias-collision-repair-arlington-tx",
+    "kavin-collision-gary-in",
+    "stella-link-mobile-complete-auto-repair-houston-tx"
+  ],
+  "rejected": [
+    "2145412788",
+    "4048352419",
+    "8327828553",
+    "3466677118"
+  ],
+  "reverified": [
+    "als-auto-repair-shop-dallas-tx",
+    "auto-shop-near-me-dallas-tx",
+    "bees-auto-body-dallas-tx",
+    "brownies-dallas-tx"
+  ],
+  "duplicates": [],
+  "errors": [],
+  "warnings": [
+    {
+      "business": "The Big Boss Barber Shop",
+      "warnings": [
+        "The Big Boss Barber Shop rating 4.6 is below the preferred 4.7."
+      ]
+    }
+  ],
+  "searched": [
+    {
+      "query": "google.com/maps/search/barber shop in Fort Worth TX",
+      "source": "google-maps",
+      "notes": "Browser pane shows a limited Maps view: only sponsored results listed, so category browsing is not usable. Switched to name lookups."
+    },
+    {
+      "query": "google.com/maps/search/auto repair in Plano TX",
+      "source": "google-maps",
+      "notes": "Same limited view, one sponsored result with a website. No candidates."
+    },
+    {
+      "query": "auto repair, plumbing, roofing, hvac, barbershop, collision (Dallas, Fort Worth, Arlington, Plano, Irving, Grand Prairie) restricted to facebook.com",
+      "source": "websearch",
+      "notes": "About 14 searches across all six categories to surface businesses with a Facebook page; roughly 110 names then looked up one at a time on public Google Maps listings to read the website field, rating, review count and phone."
+    },
+    {
+      "query": "auto body collision repair Dallas TX 5.0 stars facebook.com; paintless dent repair Fort Worth; hvac Grand Prairie; roofing contractor Irving; independent plumber Arlington",
+      "source": "websearch",
+      "notes": "Aggregator and directory results (lantern.llc, serviceforge, expertise.com). Used only for names. Nearly all named HVAC, plumbing, roofing, PDR and collision shops showed an owned domain on Maps and were dropped."
+    },
+    {
+      "query": "Maps listing reads for HVAC (North Star, Air Clinic, Ally, Stay Kool, R&R, Texas Air & Heat, Texas Ace), plumbing (Logic, Royal Flush, Westside, Fischer & Boone, Service Company, The Plumbing House, Anytime 365, McKinzie), roofing (Rosehill, Dane, Medrano, Nailed It, Jenkins, Joe Hall)",
+      "source": "google-maps",
+      "notes": "All showed an owned website on the listing. No qualifying HVAC, plumbing or roofing candidate found this run; Jason's Plumbing (4.1, 14) and Air Temp of Texas (4.2, 5) have no site but miss the rating and review floors."
+    },
+    {
+      "query": "Maps listing reads for auto and body shops (Love Field, All Star, Dallas Auto Body Repair, Prestige Collision, Silver Lining, Beltline, Kayex, JC's, Prime Auto Collision, Budget Collision, Master's Touch, Thornhill, Marlow, Destin and others)",
+      "source": "google-maps",
+      "notes": "All had owned domains. Bruton Auto Repair has no site but is 4.1. Kairos Customs & Auto Body (Irving) 4.6 from 22 with no website field, borderline, not returned. Dragon Body Shop 5.0 from 14 fails review floor."
+    },
+    {
+      "query": "Maps listing reads for barbers (Alton's, Arochi's, Dream Cut, Founders, Hudson's, Lion's Legacy, Legacy Barber Lounge, Cut and Shave, Razor's Edge, House of Fades, Race Street, Authentic Gentleman)",
+      "source": "google-maps",
+      "notes": "Most have owned domains; Race Street and Authentic Gentleman show as closed. Adam's Barber Shop (13 reviews) and Suave House (14 reviews) have no site but fail the review floor."
+    },
+    {
+      "query": "barber shop Queens NY \"no website\" reviews",
+      "source": "WebSearch",
+      "notes": "Directory results only; no usable no-website leads. Hugo Ace and Hustle Barbershop surfaced but not checked."
+    },
+    {
+      "query": "plumber Brooklyn NY facebook only 5 star reviews independent",
+      "source": "WebSearch",
+      "notes": "Thumbtack and review mirrors only; nothing usable."
+    },
+    {
+      "query": "auto body shop Bronx NY collision repair reviews facebook",
+      "source": "WebSearch",
+      "notes": "Surfaced AAJ Auto Collision, Complete Auto Body (wix site), Bruckner Collision; not checked further."
+    },
+    {
+      "query": "google.com/maps/search/barber shop in Queens NY (run twice)",
+      "source": "Google Maps in browser",
+      "notes": "6 listings at 4.5+ and 20+ reviews; all had an owned website or none passed. Prestige Cuts has barbershopinqueensny.com."
+    },
+    {
+      "query": "google.com/maps/search/barber shop in Brooklyn NY",
+      "source": "Google Maps in browser",
+      "notes": "12 listings checked. All have owned sites except Thee Brooklyn Barber (Instagram only); Smith Street Barbershop has only a square.site page."
+    },
+    {
+      "query": "google.com/maps/search/plumber in Queens NY",
+      "source": "Google Maps in browser",
+      "notes": "8 listings checked, all have websites."
+    },
+    {
+      "query": "google.com/maps/search/barbershop in The Bronx NY",
+      "source": "Google Maps in browser",
+      "notes": "6 checked, 2 with no website field."
+    },
+    {
+      "query": "google.com/maps/search/auto body shop in The Bronx NY",
+      "source": "Google Maps in browser",
+      "notes": "6 checked, 2 with no website field."
+    },
+    {
+      "query": "google.com/maps/search/auto repair shop in Newark NJ",
+      "source": "Google Maps in browser",
+      "notes": "4 checked, 3 with no website field."
+    },
+    {
+      "query": "google.com/maps/search/roofing contractor in Queens NY",
+      "source": "Google Maps in browser",
+      "notes": "7 checked, all have websites."
+    },
+    {
+      "query": "auto repair Marietta GA no website facebook 4.9 reviews",
+      "source": "WebSearch",
+      "notes": "Directory results only (lantern.llc, magicpin). Max Auto Repair has an owned site. BAM Auto Repair lists bamcollision.com/bamautorepair, so likely owned site; not pursued."
+    },
+    {
+      "query": "barber shop Decatur GA facebook only booking reviews",
+      "source": "WebSearch",
+      "notes": "Fresha and Genbook booking pages, nothing confirming a missing site."
+    },
+    {
+      "query": "plumber Lawrenceville GA facebook page 5 star reviews independent",
+      "source": "WebSearch",
+      "notes": "Only Benjamin Franklin (franchise) and Thumbtack listings; no usable candidate."
+    },
+    {
+      "query": "auto body shop in Marietta GA",
+      "source": "google-maps",
+      "notes": "Limited signed-out view showed one result (RJ's Auto Body Plus, 4.6, shows a Website button); dropped."
+    },
+    {
+      "query": "BAM Auto Repair 598 Powder Springs St Marietta GA",
+      "source": "WebSearch/WebFetch",
+      "notes": "Directory page lists an owned site and only 21 reviews; dropped."
+    },
+    {
+      "query": "hvac Alpharetta GA heating and air independent facebook page reviews 4.9",
+      "source": "WebSearch",
+      "notes": "Results (Gagne, Staton, ClimateSmith) are established companies likely with sites; not pursued."
+    },
+    {
+      "query": "roofing contractor Sandy Springs GA facebook page reviews 5.0 small family",
+      "source": "WebSearch",
+      "notes": "Directory results; Fowler Exteriors has a site; others under 20 reviews."
+    },
+    {
+      "query": "barber shop in Decatur GA",
+      "source": "google-maps",
+      "notes": "Read the first results page by hand (6 listings). The limited signed-out view did not show Website buttons or a detail panel, so the website field could not be read for any of them."
+    },
+    {
+      "query": "paintless dent repair Atlanta GA mobile facebook page 5 star reviews",
+      "source": "WebSearch",
+      "notes": "Dent Vanish, Five Star Dent Removal, Dent Repair Guys all appear to have sites; not pursued."
+    },
+    {
+      "query": "Emory Haircutters Clairmont Rd Decatur; Maxim Barbers Decatur",
+      "source": "WebSearch/WebFetch",
+      "notes": "Only Fresha pages found for Emory Haircutters; Fresha pages disagree on phone. Maxim Barbers only has reviews and news mentions, no website evidence either way."
+    },
+    {
+      "query": "independent barber shop Joliet IL facebook page reviews no website",
+      "source": "WebSearch",
+      "notes": "Returned Booksy pages only; used for names, no ratings relied on."
+    },
+    {
+      "query": "auto body collision repair Gary IN no website 5.0 reviews",
+      "source": "WebSearch",
+      "notes": "Only Gerber Collision (chain). Not useful."
+    },
+    {
+      "query": "plumber Elgin IL facebook only plumbing emergency reviews",
+      "source": "WebSearch",
+      "notes": "Directory results, all with owned sites or chains. No leads."
+    },
+    {
+      "query": "roofing contractor Aurora IL facebook page 5 star reviews",
+      "source": "WebSearch",
+      "notes": "Directory results with tiny review counts. No leads."
+    },
+    {
+      "query": "Google Maps: barber shop in Joliet IL",
+      "source": "google.com/maps (browser)",
+      "notes": "Limited view, 2 results. Original Barber Company has a square.site site, dropped."
+    },
+    {
+      "query": "Google Maps: plumber in Elgin IL; plumber in Joliet IL; plumber in Aurora IL",
+      "source": "google.com/maps (browser)",
+      "notes": "All top results show a Website button. Only Prestige Plumbing (North Aurora) lacked one."
+    },
+    {
+      "query": "Google Maps: roofing contractor in Aurora IL; Joliet IL; Elgin IL; Gary IN",
+      "source": "google.com/maps (browser)",
+      "notes": "Nothing qualifying: no-website roofers had under 20 reviews or under 4.5."
+    },
+    {
+      "query": "Google Maps: auto body shop in Gary IN; Joliet IL; Elgin IL",
+      "source": "google.com/maps (browser)",
+      "notes": "Greg's Body Shop (Joliet) and Kavin Collision (Gary) have no website. Others have sites or low ratings."
+    },
+    {
+      "query": "Google Maps: auto repair shop in Joliet IL; mechanic in Elgin IL; auto repair in Naperville IL",
+      "source": "google.com/maps (browser)",
+      "notes": "Joliet Auto Repair Shop Inc and Mike More Miles lacked a website. Elgin results all had sites. Naperville page did not load text."
+    },
+    {
+      "query": "Google Maps: hvac in Gary IN; hvac contractor in Joliet IL and Elgin IL; heating and air in Aurora IL; furnace repair in Naperville IL",
+      "source": "google.com/maps (browser)",
+      "notes": "Every 4.5+/20+ result showed a Website button. No HVAC candidates."
+    },
+    {
+      "query": "Google Maps: barber shop in Gary IN, Elgin IL, Aurora IL, then opened 11 listings",
+      "source": "google.com/maps (browser)",
+      "notes": "Result lists hide the Website button for barbers, so each listing was opened. Billco, Knock Out Cuts, Dapper Looks, Scum Lounge, Made Men have own domains or app pages; Central Barber Shop and Big Boss list facebook.com only; Lincoln Avenue lists a Booksy page only."
+    },
+    {
+      "query": "Web checks for owned sites: Greg's Body Shop, Joliet Auto Repair Shop, Mike More Miles, Prestige Plumbing, Central Barber Shop",
+      "source": "WebSearch",
+      "notes": "No owned site surfaced for Greg's, Joliet Auto Repair Shop, Prestige or Central Barber. Mike More Miles appears in a repair-shop website vendor blog, so a site may exist; dropped."
+    },
+    {
+      "query": "barber shop Pasadena TX facebook only no website reviews",
+      "source": "WebSearch",
+      "notes": "Only directories and Floyd's (owned site) surfaced; no qualifying independent found."
+    },
+    {
+      "query": "auto repair shop Pearland TX facebook page 5 star reviews",
+      "source": "WebSearch",
+      "notes": "Results were Christian Brothers (chain), Pearland Auto Pro, Collision Motor Specialist; none confirmed as site-less; none carried."
+    },
+    {
+      "query": "plumber Katy TX \"no website\" reviews",
+      "source": "WebSearch",
+      "notes": "Directory results only (homeguide, lantern); 1st Plumber Katy TX 4.9 from 31 mentioned but site status unverified; not carried."
+    },
+    {
+      "query": "Houston TX mobile mechanic OR auto repair facebook.com call or text 4.9 stars Google reviews",
+      "source": "WebSearch",
+      "notes": "Directory mirrors listed Stella Link Mobile Complete Auto Repair, Houston Mobile Mechanic & Diesel Repair and others; site status unverified."
+    },
+    {
+      "query": "roofing contractor Houston TX facebook page only reviews 5.0 Google Pasadena Katy",
+      "source": "WebSearch",
+      "notes": "RoofVista directory listed several 5.0 Houston roofers; 2 carried, others have owned sites or unclear."
+    },
+    {
+      "query": "reviews.birdeye.com HVAC Houston TX \"no website\"",
+      "source": "WebSearch",
+      "notes": "Only tiny-review-count HVAC listings (18 and 9 reviews); none met floors."
+    },
+    {
+      "query": "auto body collision repair Houston TX facebook \"paintless dent repair\" 5 star",
+      "source": "WebSearch",
+      "notes": "Lantern directory pages returned 404 on fetch; Dents R Us and Dent Sharks not verified for website status; not carried."
+    },
+    {
+      "query": "Texas Brother's Roofing & Construction Houston TX (plus phone/facebook variant)",
+      "source": "WebSearch and WebFetch roofvista.com",
+      "notes": "RoofVista shows 5.0 from 76 Google reviews and no website or phone listed; no owned domain surfaced."
+    },
+    {
+      "query": "H Town Roof & Constructions Houston (plus phone variant)",
+      "source": "WebSearch and WebFetch roofvista.com",
+      "notes": "RoofVista shows 5.0 from 75 reviews, no website listed; no owned domain surfaced in search."
+    },
+    {
+      "query": "Top Roofing LLC / Bustamante Roofing and Construction Houston website",
+      "source": "WebSearch",
+      "notes": "Bustamante has an owned domain (bustamanteroofing.com) and a GAF page; rejected as likely owning a site. Top Roofing not carried, site status unclear."
+    },
+    {
+      "query": "Stella Link Mobile Complete Auto Repair 9403 Stella Link Rd Houston",
+      "source": "WebSearch",
+      "notes": "Aggregators show 4.9 stars; review count conflicts across sources (147 vs 673); no owned domain surfaced but unverified."
+    },
+    {
+      "query": "https://www.google.com/maps/search/barber+shop+in+Pasadena+TX",
+      "source": "browser pane",
+      "notes": "Navigation to google.com was denied. Claude in Chrome extension was not connected. No Google Maps listing could be read this run."
+    }
+  ],
+  "notes": "Weekly workflow run. 27 candidates found, 27 unique and new, 20 verified by skeptic agents. Caps and drops: Verification cap: 7 of 27 candidates not verified this run (cap 20 = 5 agents x 4, set by the 14 agent cap); they go to the research queue as unverified overflow: Boss Fred Auto Repair and Sales; SAMS CUTS & SYLES BARBER SHOP; F&C BODY SHOP AND AUTO REPAIR; Cliff's Auto Repair; Farias Collision Repair; Kavin Collision; and 1 more. Agent cap: 4 of 8 stale items not rechecked this run (1 recheck agents): J & N Auto Service; L & R Paint & Body Shop; Most Famous Cutz; Papas and Ninos Bodyshop. Plan ran for 2026-09-28 (2026-W40, rotation week 0): 5 metros including home metro, 6 categories, quota 10, 25 known businesses excluded. No data/runs/2026-09-28.json exists, so alreadyRan is false. data/suppression.json exists and is empty. No Places key, so discover was skipped and the candidates list is empty; purge-places found nothing to delete. 20 leads exist; 10 are stale (all sheet imports with needs-recheck, verified 2026-09-26), 8 returned, 2 left out by the cap. All stale leads have empty ratingSource and empty placeId. No stale queue items (none with decision Research older than 14 days). Today per the system date is 2026-10-02, but the run uses the Monday runId 2026-09-28 as instructed. Only files written: data/inbox/2026-09-28.plan.json by npm run plan; a scratch script was written to the OS temp folder, outside the project.",
+  "changed": true
+}
