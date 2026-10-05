@@ -12,3 +12,8 @@ data/inbox/*.candidates.json
 
 # Third-party design reference repos, cloned locally, never committed
 .design-references/
+
+# Team logins: password hashes and temporary passwords stay on this machine
+data/users.json
+data/users.json.tmp
+data/initial-passwords.txt

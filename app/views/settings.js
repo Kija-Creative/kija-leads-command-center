@@ -6,7 +6,8 @@ import { feedbackSlot, showFeedback, toast, withBusy } from "../components/feedb
 import { api } from "../lib/api.js";
 import { h, nextId } from "../lib/dom.js";
 import { formatDay } from "../lib/format.js";
-import { loadState, setSettings, store } from "../lib/state.js";
+import { loadState, session, setSettings, store } from "../lib/state.js";
+import { teamPanel } from "./team.js";
 
 function field(label, input, { hint = "", span = false } = {}) {
   const id = input.id || nextId("st");
@@ -346,7 +347,7 @@ export function render({ query } = {}) {
     "div",
     null,
     h("header", { class: "page-head" }, h("div", null, h("h1", { class: "page-title", tabindex: "-1" }, "Settings"), h("p", { class: "page-sub" }, "Saved to config/settings.json. The weekly run reads these each Monday."))),
-    h("div", { class: "settings" }, offerForm, contactForm, complianceForm, researchForm, geoForm, status, about),
+    h("div", { class: "settings" }, offerForm, contactForm, complianceForm, researchForm, geoForm, session.authEnabled ? teamPanel(session.user) : null, status, about),
   );
   // Deep links from the lead page: #/settings?focus=address or ?focus=compliance. Runs after the
   // router's own heading focus.

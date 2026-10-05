@@ -3312,3 +3312,11 @@ a.note-lead:hover {
     grid-column: 1 / -1;
   }
 }
+
+/* Sign in and team logins */
+.login { display: grid; place-items: center; min-height: 60vh; padding: 24px 16px; }
+.login-card { width: min(420px, 100%); }
+.topbar-user { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85rem; color: var(--muted, #aaa); }
+.team-row, .team-add { gap: 12px; flex-wrap: wrap; align-items: center; padding: 8px 0; }
+.team-add input, .team-add select { min-width: 140px; }
+[hidden] { display: none !important; }

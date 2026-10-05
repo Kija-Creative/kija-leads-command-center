@@ -24,12 +24,21 @@ async function call(method, url, body) {
   data.errors = Array.isArray(data.errors) ? data.errors : [];
   data.warnings = Array.isArray(data.warnings) ? data.warnings : [];
   data.status = res.status;
+  // A lapsed session sends the person back to the sign in screen.
+  if (res.status === 401 && url !== "/api/login" && url !== "/api/me") window.dispatchEvent(new Event("kija:signed-out"));
   return data;
 }
 
 const enc = encodeURIComponent;
 
 export const api = {
+  me: () => call("GET", "/api/me"),
+  login: (body) => call("POST", "/api/login", body),
+  logout: () => call("POST", "/api/logout"),
+  changePassword: (body) => call("POST", "/api/password", body),
+  users: () => call("GET", "/api/users"),
+  addUser: (body) => call("POST", "/api/users", body),
+  patchUser: (key, body) => call("PATCH", `/api/users/${enc(key)}`, body),
   state: () => call("GET", "/api/state"),
   patchLead: (id, body) => call("PATCH", `/api/leads/${enc(id)}`, body),
   addHistory: (id, body) => call("POST", `/api/leads/${enc(id)}/history`, body),

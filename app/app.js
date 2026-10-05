@@ -4,7 +4,9 @@
 import { toast } from "./components/feedback.js";
 import { fill, h, isTyping } from "./lib/dom.js";
 import { formatDay, formatTime } from "./lib/format.js";
-import { latestRun, loadState, onChange, SHEET_STAGES, stageCounts, store } from "./lib/state.js";
+import { api } from "./lib/api.js";
+import { isAdmin, latestRun, loadState, onChange, session, SHEET_STAGES, stageCounts, store } from "./lib/state.js";
+import { showChangePassword, showLogin } from "./views/login.js";
 import * as coverage from "./views/coverage.js";
 import * as lead from "./views/lead.js";
 import * as pipeline from "./views/pipeline.js";
@@ -98,6 +100,12 @@ function renderRoute({ preserve = false } = {}) {
     params = match ? match.slice(1).map((p) => decodeURIComponent(p)) : [];
   } catch {
     route = null;
+  }
+  if (route?.name === "settings" && !isAdmin()) {
+    view = { title: "Settings", el: h("div", { class: "empty" }, h("h1", { class: "page-title", tabindex: "-1" }, "Admins only"), h("p", null, "Settings are managed by Jamey and Kiel.")) };
+    fill(main, view.el);
+    current = { name: "settings", view };
+    return;
   }
   const ctx = { params, query, navigate, setQuery, rerender: () => renderRoute({ preserve: true }) };
   let view;
@@ -208,4 +216,49 @@ document.getElementById("help-close").addEventListener("click", () => document.g
 document.getElementById("reload").addEventListener("click", () => reload());
 window.addEventListener("hashchange", () => renderRoute());
 
-loadState();
+// Sign in first when logins are on; the data only loads once there is a session.
+function showUser() {
+  const box = document.getElementById("topbar-user");
+  box.hidden = !session.authEnabled || !session.user;
+  document.getElementById("user-name").textContent = session.user ? `${session.user.name}${session.user.role === "admin" ? " (admin)" : ""}` : "";
+  const nav = document.querySelector('[data-nav="settings"]');
+  if (nav) nav.hidden = !isAdmin();
+}
+
+function enter(user) {
+  session.user = user;
+  showUser();
+  if (user?.mustChange) {
+    showChangePassword(main, { forced: true, onDone: (u) => enter(u) });
+    return;
+  }
+  store.data = null;
+  loadState();
+}
+
+function signedOut() {
+  session.user = null;
+  store.data = null;
+  showUser();
+  showLogin(main, enter);
+}
+
+async function boot() {
+  const me = await api.me();
+  session.authEnabled = me.authEnabled === true;
+  if (!session.authEnabled) {
+    loadState();
+    return;
+  }
+  if (me.ok && me.user) enter(me.user);
+  else signedOut();
+}
+
+window.addEventListener("kija:signed-out", signedOut);
+document.getElementById("signout").addEventListener("click", async () => {
+  await api.logout();
+  signedOut();
+});
+document.getElementById("pw-open").addEventListener("click", () => showChangePassword(main, { onDone: (u) => { session.user = u; showUser(); location.hash = "#/week"; renderRoute(); } }));
+
+boot();

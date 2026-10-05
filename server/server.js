@@ -10,7 +10,8 @@ import http from "node:http";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { resolveSecret } from "../src/discovery/env.js";
-import { createApi } from "./api.js";
+import { createApi, runAs } from "./api.js";
+import { COOKIE, createAuth } from "./auth.js";
 import { HttpError, isLocalHost, isLocalOrigin, readJsonBody, sendError, sendJson, sendText } from "./http.js";
 import { DEFAULT_LOADERS } from "./modules.js";
 import { safeSegments, serveStatic } from "./static.js";
@@ -42,6 +43,13 @@ const ROUTES = [
   ["POST", ["api", "leads", ":id", "export"], "exportShare"],
   ["POST", ["api", "queue", ":id", "decision"], "queueDecision"],
   ["PUT", ["api", "settings"], "putSettings"],
+  ["POST", ["api", "login"], "login"],
+  ["POST", ["api", "logout"], "logout"],
+  ["GET", ["api", "me"], "me"],
+  ["POST", ["api", "password"], "password"],
+  ["GET", ["api", "users"], "users"],
+  ["POST", ["api", "users"], "addUser"],
+  ["PATCH", ["api", "users", ":id"], "patchUser"],
   ["POST", ["api", "notes"], "addNote"],
   ["PATCH", ["api", "notes", ":id"], "patchNote"],
   ["DELETE", ["api", "notes", ":id"], "deleteNote"],
@@ -74,8 +82,17 @@ export function createServer({
   log = (line) => process.stderr.write(`${line}\n`),
 } = {}) {
   const api = createApi({ root, now, loaders, env: { placesKey } });
+  const auth = createAuth({ root, now });
+  const cookie = (token, maxAge) => `${COOKIE}=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${maxAge}`;
+  const ADMIN_ONLY = new Set(["putSettings", "users", "addUser", "patchUser"]);
 
-  async function handleApi(req, res, segs) {
+  // The app shell, its scripts and the pure lib modules hold no data, so they load before sign in.
+  function isPublic(rawPath, method) {
+    if (rawPath === "/" || rawPath === "/index.html" || rawPath === "/app" || rawPath.startsWith("/app/") || rawPath.startsWith("/src/lib/")) return method === "GET" || method === "HEAD";
+    return rawPath === "/api/login" || rawPath === "/api/me";
+  }
+
+  async function handleApi(req, res, segs, user) {
     const hits = matchRoute(segs);
     if (hits.length === 0) throw new HttpError(404, `There is no API route ${req.method} /${segs.join("/")}.`);
     const hit = hits.find((h) => h.method === req.method);
@@ -87,7 +104,37 @@ export function createServer({
       throw new HttpError(403, "Changes are only accepted from the app on this machine.");
     }
     const id = hit.params.id;
+    if (ADMIN_ONLY.has(hit.name) && auth.enabled() && user?.role !== "admin") {
+      throw new HttpError(403, "Only an admin can do that.");
+    }
     switch (hit.name) {
+      case "login": {
+        const body = await readJsonBody(req);
+        const { token, user: u } = auth.login(body.name, body.password);
+        return sendJson(res, 200, { ok: true, errors: [], warnings: [], authEnabled: true, user: u }, { "Set-Cookie": cookie(token, 43200) });
+      }
+      case "logout":
+        await readJsonBody(req);
+        auth.logout(req);
+        return sendJson(res, 200, { ok: true, errors: [], warnings: [] }, { "Set-Cookie": cookie("", 0) });
+      case "me": {
+        if (!auth.enabled()) return sendJson(res, 200, { ok: true, errors: [], warnings: [], authEnabled: false, user: null });
+        if (!user) throw new HttpError(401, "Sign in to continue.");
+        const u = auth.list().find((x) => x.key === user.key);
+        return sendJson(res, 200, { ok: true, errors: [], warnings: [], authEnabled: true, user: u });
+      }
+      case "password": {
+        if (!user) throw new HttpError(401, "Sign in to continue.");
+        const body = await readJsonBody(req);
+        const { token, user: u } = auth.changePassword(user, body.current, body.next);
+        return sendJson(res, 200, { ok: true, errors: [], warnings: [], user: u }, { "Set-Cookie": cookie(token, 43200) });
+      }
+      case "users":
+        return sendJson(res, 200, { ok: true, errors: [], warnings: [], users: auth.list() });
+      case "addUser":
+        return sendJson(res, 200, { ok: true, errors: [], warnings: [], users: auth.add(await readJsonBody(req)) });
+      case "patchUser":
+        return sendJson(res, 200, { ok: true, errors: [], warnings: [], users: auth.update(id, await readJsonBody(req)) });
       case "state":
         return sendJson(res, 200, await api.getState());
       case "csv": {
@@ -143,9 +190,17 @@ export function createServer({
       if (!isLocalHost(req.headers.host)) {
         throw new HttpError(403, "This server only answers requests addressed to 127.0.0.1 or localhost.");
       }
+      const user = auth.enabled() ? auth.userFor(req) : null;
+      if (auth.enabled() && !user && !isPublic(rawPath, req.method)) {
+        throw new HttpError(401, "Sign in to continue.");
+      }
+      // A forced password change locks everything except changing it (and signing out).
+      if (user?.mustChange && isApi && !["/api/me", "/api/password", "/api/logout"].includes(rawPath)) {
+        throw new HttpError(403, "Choose your own password first.");
+      }
       // Decoded, traversal checked segments; the raw path is used so no normalisation hides "..".
       const segs = safeSegments(rawPath).filter((s, i, all) => s !== "" || i < all.length - 1);
-      if (isApi) return await handleApi(req, res, segs.slice(0));
+      if (isApi) return await runAs(user?.key, () => handleApi(req, res, segs.slice(0), user));
       if (req.method !== "GET" && req.method !== "HEAD") {
         throw new HttpError(405, "Static files are read only.", { headers: { Allow: "GET, HEAD" } });
       }

@@ -5,6 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { createStore } from "../src/lib/store.js";
 import { scoreLead } from "../src/lib/score.js";
 import { leadsToCsv } from "../src/lib/csv.js";
@@ -44,7 +45,11 @@ const LEAD_SYSTEM_FIELDS = ["id", "outreach", "demo", "addedAt", "origin", "runI
 const CONTACT_STAGES = ["Contacted", "Replied", "Meeting"];
 // Built from char codes so this file itself never contains the characters it rejects.
 const DASH_RE = new RegExp(`[${String.fromCharCode(0x2013)}${String.fromCharCode(0x2014)}]`);
-const ACTOR = "Jamey";
+// The signed in person for the request being handled; Jamey when logins are off.
+const actorStore = new AsyncLocalStorage();
+export const runAs = (key, fn) => actorStore.run(key, fn);
+const forcedActor = () => actorStore.getStore();
+const actor = () => forcedActor() ?? "Jamey";
 const NOTE_INPUT_FIELDS = ["text", "author", "leadId"];
 const NOTES_FILE = "data/notes.json";
 
@@ -176,7 +181,7 @@ export function createApi({ root, now, loaders, env }) {
   function appendHistory(lead, entry) {
     lead.outreach = lead.outreach ?? { status: "New", nextAction: "", nextDate: "", owner: "", notes: "", history: [] };
     if (!Array.isArray(lead.outreach.history)) lead.outreach.history = [];
-    lead.outreach.history.push({ at: clock().toISOString(), by: ACTOR, ...entry });
+    lead.outreach.history.push({ at: clock().toISOString(), by: actor(), ...entry });
   }
 
   async function getState() {
@@ -327,7 +332,7 @@ export function createApi({ root, now, loaders, env }) {
       type: body.type,
       // Typed by a person, so dashes are normalized rather than refused.
       text: typeof body.text === "string" ? normalizeFreeText(body.text).trim() : body.text,
-      by: typeof body.by === "string" && body.by.trim() ? body.by.trim() : ACTOR,
+      by: forcedActor() ?? (typeof body.by === "string" && body.by.trim() ? body.by.trim() : actor()),
     };
     const errors = [...validateHistoryEntry(entry).errors];
     const warnings = [];
@@ -382,7 +387,7 @@ export function createApi({ root, now, loaders, env }) {
     let suppression = state.suppression;
     let entry = existing;
     if (!existing) {
-      entry = suppressionEntry(current, { reason, by: ACTOR, now: clock() });
+      entry = suppressionEntry(current, { reason, by: actor(), now: clock() });
       suppression = [...state.suppression, entry];
       saveSuppression(store, suppression);
     } else {
@@ -652,7 +657,7 @@ export function createApi({ root, now, loaders, env }) {
     const total = scoreLead(candidate, { thresholds: state.settings?.thresholds }).total;
     candidate.outreach.history.push({
       at: now.toISOString(),
-      by: ACTOR,
+      by: actor(),
       type: "created",
       text: `Promoted from the research queue with score ${total}.${reason ? ` ${reason}` : ""}`,
     });
@@ -730,7 +735,7 @@ export function createApi({ root, now, loaders, env }) {
     const note = createNote({
       id,
       text: body.text,
-      author: body.author ?? "",
+      author: forcedActor() ?? body.author ?? "",
       leadId: body.leadId ?? "",
       runId: latestRunId(store.listRuns()),
       now,

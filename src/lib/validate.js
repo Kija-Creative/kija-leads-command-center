@@ -12,13 +12,14 @@ export const HISTORY_TYPES = ["created", "status", "note", "call", "email", "mee
 export const CONFIDENCE_LEVELS = ["High", "Medium-High", "Medium", "Low"];
 export const VERIFICATION_STATUSES = ["verified", "needs-recheck", "unverified"];
 export const LEAD_ORIGINS = ["sheet-import", "weekly-run", "manual", "queue-promotion"];
-export const OWNERS = ["", "Jamey", "Kiel", "Max"];
+export const OWNERS = ["", "Jamey", "Kiel", "Max", "Kyia"];
 
 // The Kija team. Keys are what records store; names are what people see.
 export const TEAM = [
   { key: "Jamey", name: "Jamey White", role: "Partner" },
   { key: "Kiel", name: "Kiel Jared", role: "Partner" },
   { key: "Max", name: "Max Miller", role: "" },
+  { key: "Kyia", name: "Kyia Brocken", role: "" },
 ];
 // Where the stored rating and review count were read. "places-api" is never valid on a stored
 // record: Google's terms let us keep only place IDs from Places (research/places-api.md).

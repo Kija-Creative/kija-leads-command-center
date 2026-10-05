@@ -6,10 +6,10 @@ import { api } from "./api.js";
 export const OUTREACH_STATUSES = ["New", "Research", "Demo Built", "Contacted", "Replied", "Meeting", "Won", "Lost", "Not a fit"];
 // The sheet dashboard's seven stages; the last two are closed outcomes.
 export const SHEET_STAGES = OUTREACH_STATUSES.slice(0, 7);
-export const OWNERS = ["", "Jamey", "Kiel", "Max"];
+export const OWNERS = ["", "Jamey", "Kiel", "Max", "Kyia"];
 
 // Display names for the stored keys above.
-export const TEAM_NAMES = { Jamey: "Jamey White", Kiel: "Kiel Jared", Max: "Max Miller" };
+export const TEAM_NAMES = { Jamey: "Jamey White", Kiel: "Kiel Jared", Max: "Max Miller", Kyia: "Kyia Brocken" };
 export const teamName = (key) => TEAM_NAMES[key] || key || "";
 export const CONFIDENCE_LEVELS = ["High", "Medium-High", "Medium", "Low"];
 export const MANUAL_HISTORY_TYPES = ["note", "call", "email", "meeting", "research", "demo", "consent"];
@@ -20,6 +20,10 @@ export const PHONE_LINE_TYPES = [
   ["mobile", "Mobile"],
   ["voip", "VoIP"],
 ];
+
+// Who is signed in; null while logins are off.
+export const session = { user: null, authEnabled: false };
+export const isAdmin = () => !session.authEnabled || session.user?.role === "admin";
 
 export const store = {
   data: null,

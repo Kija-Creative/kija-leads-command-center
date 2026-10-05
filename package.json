@@ -11,6 +11,7 @@
     "start": "node server/server.js",
     "test": "node --test \"test/**/*.test.js\" \"test/**/*.test.ts\"",
     "check": "node src/cli/check.js",
+    "users": "node src/cli/users.js",
     "seed": "node src/cli/import-seed.js",
     "plan": "node src/cli/plan.js",
     "ingest": "node src/cli/ingest.js",
