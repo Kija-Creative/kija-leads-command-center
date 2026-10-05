@@ -534,6 +534,23 @@ Run it at the end of **every** run: after a full run, a run with no Places key, 
 stopped early, a week that already ran, or a failed step. Then confirm no `*.candidates.json` is
 left in `data/inbox/`. If the purge fails, say so in the final summary.
 
+## Step 12: push to GitHub
+
+James authorized pushing the project to https://github.com/Kija-Creative/kija-leads-command-center
+after every run that sources new leads. After step 11 passes, run:
+
+```
+git add -A
+git status --short
+git commit -m "Weekly run <runId>: <n> new leads"
+git push origin main
+```
+
+Before committing, confirm `git status` shows no files under `demos/` or `pitches/` and no
+`*.candidates.json` (all are gitignored; if one appears, stop and do not push). Never use
+`--force`. If the push fails (auth, network, rejected), report it under "Blocked or incomplete"
+and do not retry with other methods. Demos and pitches stay local; only code and lead data are pushed.
+
 ## Final summary
 
 End the run with this summary, plain text, no dashes. It is what Jamey reads first.
