@@ -1745,5 +1745,2224 @@
     "addedAt": "2026-10-02",
     "updatedAt": "2026-10-02",
     "runId": "2026-09-28"
+  },
+  {
+    "id": "aras-tire-shop-fort-worth-tx",
+    "candidate": "Aras Tire Shop",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Fort Worth",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "Independent used tire and oil change shop on E Berry St, 4.7 stars on 80 reviews, unclaimed listing, no website shown.",
+    "websiteStatus": "Not verified yet.",
+    "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+    "ownerContact": "",
+    "phone": "817-386-0348",
+    "googleRating": 4.7,
+    "googleReviews": 80,
+    "sources": [
+      {
+        "url": "https://www.google.com/maps/search/Aras+Tire+Shop+2320+E+Berry+St+Fort+Worth",
+        "label": "google.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Unverified overflow: verification capacity reached this run",
+    "lead": null,
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "arco-tire-shop-long-beach-ca",
+    "candidate": "Arco Tire Shop",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Long Beach",
+    "state": "CA",
+    "metro": "los-angeles",
+    "whyItMayFit": "Independent used tire shop on Anaheim St with a consistent phone and address on BBB and Yelp and no owned domain found; discovery reported a strong Google reputation that has not been confirmed.",
+    "websiteStatus": "No owned website surfaced in search or the domain probe; the business is listed as Arco Tire Service on Yelp and BBB, and the Maps website field was not read.",
+    "verificationNeeded": "Read the public Google Maps listing by hand: rating, review count, website field and recent reviews. Reconcile 42 Yelp reviews against about 175 on a mirror and the 216 discovery figure. Look for a Facebook page.",
+    "ownerContact": "",
+    "phone": "562-437-1035",
+    "googleRating": 0,
+    "googleReviews": 0,
+    "sources": [
+      {
+        "url": "https://www.bbb.org/us/ca/long-beach/profile/tire-dealers/arco-tire-service-1216-630481",
+        "label": "bbb.org",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.yelp.com/biz/arco-tire-service-long-beach",
+        "label": "yelp.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Google Maps bot check blocked the listing read and review volume differs widely between platforms, confidence Medium.",
+    "lead": {
+      "business": "Arco Tire Shop",
+      "category": "Tire shop",
+      "categoryKey": "tire-shop",
+      "city": "Long Beach",
+      "state": "CA",
+      "metro": "los-angeles",
+      "phone": "562-437-1035",
+      "phoneLineType": "unknown",
+      "googleRating": 0,
+      "googleReviews": 0,
+      "ratingSource": "",
+      "googleMapsUrl": "",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "address": "532 W Anaheim St, Long Beach, CA 90813",
+      "websiteGap": 3,
+      "ticketValue": 2,
+      "visualFit": 2,
+      "confidence": "Medium",
+      "websiteStatus": "No owned website surfaced in search or the domain probe; the business is listed as Arco Tire Service on Yelp and BBB, and the Maps website field was not read.",
+      "presence": {
+        "facebook": "",
+        "instagram": "",
+        "yelp": "https://www.yelp.com/biz/arco-tire-service-long-beach",
+        "booking": "",
+        "other": [
+          "https://www.bbb.org/us/ca/long-beach/profile/tire-dealers/arco-tire-service-1216-630481"
+        ]
+      },
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "whyKija": "",
+      "pitchAngle": "",
+      "demoConcept": "",
+      "sources": [
+        {
+          "url": "https://www.bbb.org/us/ca/long-beach/profile/tire-dealers/arco-tire-service-1216-630481",
+          "label": "bbb.org",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.yelp.com/biz/arco-tire-service-long-beach",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "needs-recheck",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the name with Long Beach CA and the phone number on 2026-10-05; results showed Yelp, BBB, Roadtrippers, Yellow Pages, Manta and several directories, plus an edan.io directory style page, and no domain that looks owned by the business. The search tool returned result summaries, so full result pages were not opened.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not completed on 2026-10-05: the Google Maps request returned a Google unusual traffic bot check on the first listing request this run, so Maps was dropped. Rating, review count and website field are unconfirmed.",
+            "url": ""
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 52 guessed domains for \"Arco Tire Shop\": 6 resolve, 4 serve a page, and none shows the business phone or name; arcotire.com is a Massachusetts shop and arco.com is the fuel brand, both unrelated.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "Yelp lists Arco Tire Service at 532 W Anaheim St (4.5 stars from 42 reviews in a search result title) and BBB lists it as not accredited with no reviews; no Facebook or Instagram page was found. The Yelp page could not be opened because of a device verification screen, so its website field was not read.",
+            "url": "https://www.bbb.org/us/ca/long-beach/profile/tire-dealers/arco-tire-service-1216-630481"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Not a match for config/chains.json (the name is unrelated to the ARCO fuel brand) and not on the empty suppression list. BBB shows the same address and phone (562) 437-1035 that search results show elsewhere, so the phone has two sources; recent activity was not confirmed.",
+            "url": "https://www.bbb.org/us/ca/long-beach/profile/tire-dealers/arco-tire-service-1216-630481"
+          },
+          {
+            "check": "review integrity",
+            "result": "Reviews could not be read. Yelp shows 42 reviews at 4.5 while a mirror shows about 175 at 4.8, a difference in volume but not in rating. No hard stop or signal evidence seen; the check is incomplete until Maps reviews are read.",
+            "url": ""
+          }
+        ],
+        "notes": "websiteGap 3 provisional: nothing owned found in search or the probe, but the Maps website field was not read. ticketValue 2: category default. visualFit 2: category default. Not qualified: Maps blocked and review volume differs a lot between platforms. whyKija, pitchAngle and demoConcept left empty until the rating and review count are confirmed."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "arnold-electric-contractor-livonia-mi",
+    "candidate": "Arnold Electric Contractor",
+    "category": "Electrical",
+    "categoryKey": "electrical",
+    "city": "Livonia",
+    "state": "MI",
+    "metro": "detroit",
+    "whyItMayFit": "4.8 stars from 35 reviews over several years in a high trust electrical trade, with no website field on the Maps listing.",
+    "websiteStatus": "Not verified yet.",
+    "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+    "ownerContact": "",
+    "phone": "734-421-0545",
+    "googleRating": 4.8,
+    "googleReviews": 35,
+    "sources": [
+      {
+        "url": "https://www.google.com/maps/search/Arnold+Electric+Contractor+29211+Five+Mile+Rd+Livonia+MI",
+        "label": "google.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Unverified overflow: verification capacity reached this run",
+    "lead": null,
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "berger-brothers-electrical-service-fort-lauderdale-fl",
+    "candidate": "Berger Brothers Electrical Service",
+    "category": "Electrical",
+    "categoryKey": "electrical",
+    "city": "Fort Lauderdale",
+    "state": "FL",
+    "metro": "miami",
+    "whyItMayFit": "Crew run electrical firm with about 150 Google reviews in a high ticket trade and no website found, a reputation stronger than its web presence.",
+    "websiteStatus": "No owned website surfaced in search or the domain probe; the business appears only on contractor and review directories.",
+    "verificationNeeded": "Read the public Google Maps listing by hand to confirm rating, review count, website field and hours; confirm whether #93C at 3847 N Andrews Ave is a real storefront or a private mailbox; find a Facebook, Yelp or BBB page to confirm the phone on a second independent source.",
+    "ownerContact": "",
+    "phone": "754-465-7153",
+    "googleRating": 4.8,
+    "googleReviews": 148,
+    "sources": [
+      {
+        "url": "https://prosgrade.com/electricians/fort-lauderdale/berger-brothers-electrical-service",
+        "label": "prosgrade.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.southfloridacontractors.com/contractors/berger-brothers-electrical-service/",
+        "label": "southfloridacontractors.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps hit a bot check this run, the phone is published only on directory pages, and the address and hours are unresolved, so confidence is Medium.",
+    "lead": {
+      "business": "Berger Brothers Electrical Service",
+      "category": "Electrical",
+      "categoryKey": "electrical",
+      "city": "Fort Lauderdale",
+      "area": "",
+      "state": "FL",
+      "metro": "miami",
+      "address": "3847 N Andrews Ave #93C, Fort Lauderdale, FL 33309",
+      "phone": "754-465-7153",
+      "phoneLineType": "unknown",
+      "googleRating": 4.8,
+      "googleReviews": 148,
+      "ratingSource": "secondary",
+      "googleMapsUrl": "https://www.google.com/maps/search/Berger+Brothers+Electrical+Service+Fort+Lauderdale+FL",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 3,
+      "ticketValue": 3,
+      "visualFit": 2,
+      "websiteStatus": "No owned website surfaced in search or the domain probe; the business appears only on contractor and review directories.",
+      "presence": {
+        "facebook": "",
+        "instagram": "",
+        "yelp": "",
+        "booking": "",
+        "other": [
+          "https://prosgrade.com/electricians/fort-lauderdale/berger-brothers-electrical-service",
+          "https://www.southfloridacontractors.com/contractors/berger-brothers-electrical-service/"
+        ]
+      },
+      "confidence": "Medium",
+      "whyKija": "Around 150 Google reviews in a high ticket trade (panels, EV chargers, emergency repair) with no site of its own means homeowners searching in an emergency have nothing to confirm services or reach the crew.",
+      "pitchAngle": "Your reviews already show homeowners trust the crew; a site of your own for services, emergency calls and estimate requests would turn that trust into booked jobs.",
+      "demoConcept": "Trustworthy, high contrast electrician site with a tap to call emergency button, a services grid covering panels, EV chargers and fans, review proof and a simple estimate request form.",
+      "services": [
+        "Emergency electrical repair",
+        "Panel upgrades and replacement",
+        "Outlet and switch repair",
+        "Lighting installation",
+        "Ceiling fan installation",
+        "EV charger installation",
+        "Surge protection",
+        "GFCI installation"
+      ],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "sources": [
+        {
+          "url": "https://prosgrade.com/electricians/fort-lauderdale/berger-brothers-electrical-service",
+          "label": "prosgrade.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.southfloridacontractors.com/contractors/berger-brothers-electrical-service/",
+          "label": "southfloridacontractors.com",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "needs-recheck",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the name with Fort Lauderdale FL, the address plus phone, and a likely domain; no owned website appeared, only contractor directories and aggregators.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Could not complete on 2026-10-05: the Google Maps listing was not opened because Google returned a bot check on the first Maps page in this run, so Maps was dropped; the rating was read on the ProsGrade mirror instead (4.80 from 148 reviews, attributed to Google).",
+            "url": "https://prosgrade.com/electricians/fort-lauderdale/berger-brothers-electrical-service"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 52 guessed domains: only bergerbrothers.com resolves and it redirects to an unrelated camera retailer, and nothing shows the business name or phone.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "Searches for a Facebook, Instagram, Yelp, BBB, Angi or Thumbtack page found none for this business; it appears only on directory pages.",
+            "url": ""
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Directories list the same phone 754-465-7153 and the same unit address, but they are aggregators, not independent first party pages; hours conflict (24 hours on one mirror, weekday hours elsewhere); it is an independent name with no chain match; the #93C unit may be a private mailbox, which is unconfirmed.",
+            "url": "https://www.southfloridacontractors.com/contractors/berger-brothers-electrical-service/"
+          },
+          {
+            "check": "review integrity",
+            "result": "Reviews could not be read on Google; the mirror shows 4.8 from 148 attributed to Google and the screen showed 155, a small difference; there is no Yelp, Facebook or BBB page to compare, so cross platform agreement cannot be checked; one soft signal from the unit style address.",
+            "url": "https://prosgrade.com/electricians/fort-lauderdale/berger-brothers-electrical-service"
+          }
+        ],
+        "notes": "websiteGap 3: no owned site found. ticketValue 3: category default. visualFit 2: category default. Open questions: confirm on the public Maps listing that the business has a real storefront or service area and not a mailbox address, the hours, and a second independent source for the phone."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "bluestone-concrete-investment-llc-hialeah-fl",
+    "candidate": "Bluestone concrete & investment llc",
+    "category": "Concrete",
+    "categoryKey": "concrete",
+    "city": "Hialeah",
+    "state": "FL",
+    "metro": "miami",
+    "whyItMayFit": "Active decorative concrete business (stamped concrete, travertine, pavers) posting owner updates on Maps, 5.0 stars over 24 reviews, no website on listing.",
+    "websiteStatus": "Not verified yet.",
+    "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+    "ownerContact": "",
+    "phone": "645-221-5952",
+    "googleRating": 5,
+    "googleReviews": 24,
+    "sources": [
+      {
+        "url": "https://www.google.com/maps/place/Bluestone+concrete+%26+investment+llc/@25.8888538,-80.3155655,17z/data=!3m1!4b1!4m6!3m5!1s0x88d9bb7b78d86347:0x3a099cb998e50078!8m2!3d25.8888538!4d-80.3155655!16s%2Fg%2F11nr5wnkw5",
+        "label": "google.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Unverified overflow: verification capacity reached this run",
+    "lead": null,
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "castro-fence-inc-pompano-beach-fl",
+    "candidate": "Castro fence inc",
+    "category": "Fencing",
+    "categoryKey": "fencing",
+    "city": "Pompano Beach",
+    "state": "FL",
+    "metro": "miami",
+    "whyItMayFit": "Aluminum fence, gate and balcony railing installer with 5.0 stars over exactly 20 reviews (at the minimum), turnkey projects with automatic gate operators, no website on listing.",
+    "websiteStatus": "Not verified yet.",
+    "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+    "ownerContact": "",
+    "phone": "561-666-0522",
+    "googleRating": 5,
+    "googleReviews": 20,
+    "sources": [
+      {
+        "url": "https://www.google.com/maps/place/Castro+fence+inc/@26.2587565,-80.1451304,17z/data=!3m1!4b1!4m6!3m5!1s0x2efc6050aa55fc39:0x47edd017810f606b!8m2!3d26.2587565!4d-80.1451304!16s%2Fg%2F11nb2tpq7k",
+        "label": "google.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Unverified overflow: verification capacity reached this run",
+    "lead": null,
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "d-a-tires-rims-alexandria-va",
+    "candidate": "D-A Tires & Rims",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Alexandria",
+    "state": "VA",
+    "metro": "washington-dc",
+    "whyItMayFit": "Used and new tire shop on Colvin St whose only listed web address is an edan.io subdomain under a different name, with a Facebook page and Yelp page; directory mirrors report about 4.5 stars from over 200 reviews.",
+    "websiteStatus": "The only web address found is a joses-new-used-tires.edan.io page under a different business name; no owned domain surfaced in search or the domain probe, and a Facebook page and Yelp page exist.",
+    "verificationNeeded": "Read the Google Maps listing by hand for the rating, review count and website field. Open the edan.io page and decide whether it is an owned site or an auto generated listing. Clarify why the shop appears as both D-A Tires & Rims and Jose's New Used Tires, and confirm the phone on a second source.",
+    "ownerContact": "",
+    "phone": "703-751-2956",
+    "googleRating": 0,
+    "googleReviews": 0,
+    "sources": [
+      {
+        "url": "https://www.yelp.com/biz/d-a-tires-alexandria",
+        "label": "yelp.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.facebook.com/da.tires/",
+        "label": "facebook.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://joses-new-used-tires.edan.io/",
+        "label": "joses-new-used-tires.edan.io",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://lantern.llc/b/d-a-tires-rims-alexandria",
+        "label": "lantern.llc",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps blocked by bot check, rating only at the floor and unconfirmed, edan.io page and name mismatch unresolved, confidence Medium.",
+    "lead": {
+      "business": "D-A Tires & Rims",
+      "category": "Tire shop",
+      "categoryKey": "tire-shop",
+      "city": "Alexandria",
+      "state": "VA",
+      "metro": "washington-dc",
+      "phone": "703-751-2956",
+      "phoneLineType": "unknown",
+      "googleRating": 0,
+      "googleReviews": 0,
+      "ratingSource": "",
+      "googleMapsUrl": "",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "address": "3139 Colvin St, Alexandria, VA 22314",
+      "websiteGap": 2,
+      "ticketValue": 2,
+      "visualFit": 2,
+      "confidence": "Medium",
+      "websiteStatus": "The only web address found is a joses-new-used-tires.edan.io page under a different business name; no owned domain surfaced in search or the domain probe, and a Facebook page and Yelp page exist.",
+      "presence": {
+        "facebook": "https://www.facebook.com/da.tires/",
+        "instagram": "",
+        "yelp": "https://www.yelp.com/biz/d-a-tires-alexandria",
+        "booking": "",
+        "other": [
+          "https://joses-new-used-tires.edan.io/"
+        ]
+      },
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "whyKija": "",
+      "pitchAngle": "",
+      "demoConcept": "",
+      "sources": [
+        {
+          "url": "https://www.yelp.com/biz/d-a-tires-alexandria",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.facebook.com/da.tires/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://joses-new-used-tires.edan.io/",
+          "label": "joses-new-used-tires.edan.io",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://lantern.llc/b/d-a-tires-rims-alexandria",
+          "label": "lantern.llc",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "needs-recheck",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the name with Alexandria VA and the Jose's New Used Tires name on 2026-10-05; results showed Yelp, a Facebook page named DA Tires, several directories and the edan.io page, and no domain that looks owned by the business. The search tool returned result summaries, so full result pages were not opened.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not completed on 2026-10-05: the Google Maps request returned a Google unusual traffic bot check on the first listing request this run, so Maps was dropped. A directory mirror (lantern.llc) reports 4.5 from 221 reviews and another summary 4.5 from 211, which cannot be used as an observed Maps reading.",
+            "url": ""
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 57 guessed domains for \"D-A Tires & Rims\" plus the extra domain joses-new-used-tires.edan.io: 1 resolves, 0 serve a page, and none shows the business phone or name; the edan.io page returned a Just a moment check page to the probe.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "A Facebook page named DA Tires and a Yelp page named D-A Tires (4.2 stars from 33 reviews in a search result) exist; neither could be opened in full, so their website fields were not read. The edan.io page is titled D-A Tires & Rims in search results but its address carries the name Jose's New Used Tires, which looks like a builder or directory subdomain.",
+            "url": "https://www.yelp.com/biz/d-a-tires-alexandria"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Not a match for config/chains.json and not on the empty suppression list. Directories list the phone (703) 751-2956 and the Colvin St address consistently, but the second independent source was not opened in full. Recent activity was not confirmed.",
+            "url": ""
+          },
+          {
+            "check": "review integrity",
+            "result": "Reviews could not be read. Directory and Yelp figures roughly agree on 4.2 to 4.5 stars. No hard stop or signal evidence seen; the check is incomplete until Maps reviews are read.",
+            "url": ""
+          }
+        ],
+        "notes": "websiteGap 2 provisional: builder style edan.io subdomain under a different business name plus Facebook and Yelp. ticketValue 2: category default. visualFit 2: category default. Not qualified: Maps blocked, rating at the 4.5 floor with an unconfirmed review count, and the name mismatch between D-A Tires & Rims and Jose's New Used Tires leaves identity partly unclear. whyKija, pitchAngle and demoConcept left empty until confirmed."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "dama-hair-braiding-detroit-mi",
+    "candidate": "Dama Hair Braiding",
+    "category": "Hair salon",
+    "categoryKey": "hair-salon",
+    "city": "Detroit",
+    "state": "MI",
+    "metro": "detroit",
+    "whyItMayFit": "Braiding studio with a strong visual product and only a one line Canva page as a site; the discovery screen suggested 4.9 stars from 178 reviews, which has not been confirmed.",
+    "websiteStatus": "The only site found is a free Canva builder page that shows one greeting line, with no services, address or booking path; the Instagram profile carries the phone and address.",
+    "verificationNeeded": "Read the public Google Maps listing by hand to confirm the rating, review count and website field, and reconcile the large gap with mirrors that show about 23 reviews, 3 on Yelp and 2 ratings on a scraped page.",
+    "ownerContact": "",
+    "phone": "313-412-8096",
+    "googleRating": 0,
+    "googleReviews": 0,
+    "sources": [
+      {
+        "url": "https://damahairbraiding.my.canva.site/",
+        "label": "damahairbraiding.my.canva.site",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.instagram.com/damahairbraiding/",
+        "label": "instagram.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.atly.com/location/DamaHairBraiding",
+        "label": "atly.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.bestprosintown.com/mi/detroit/hair-salons/",
+        "label": "bestprosintown.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://dama-hair-braiding.wsite.top/",
+        "label": "wsite.top",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps hit a bot check this run and independent mirrors disagree with the discovery screen, so confidence is Medium.",
+    "lead": {
+      "business": "Dama Hair Braiding",
+      "category": "Hair salon",
+      "categoryKey": "hair-salon",
+      "city": "Detroit",
+      "area": "",
+      "state": "MI",
+      "metro": "detroit",
+      "address": "10301 W McNichols Rd suite 1B, Detroit",
+      "phone": "313-412-8096",
+      "phoneLineType": "unknown",
+      "googleRating": 0,
+      "googleReviews": 0,
+      "ratingSource": "",
+      "googleMapsUrl": "https://www.google.com/maps/place/Dama+Hair+Braiding/@42.4166223,-83.1637067,17z",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 2,
+      "visualFit": 3,
+      "websiteStatus": "The only site found is a free Canva builder page that shows one greeting line, with no services, address or booking path; the Instagram profile carries the phone and address.",
+      "presence": {
+        "facebook": "https://www.facebook.com/100083366019580",
+        "instagram": "https://www.instagram.com/damahairbraiding/",
+        "yelp": "https://www.yelp.com/biz/dama-hair-braiding-detroit",
+        "booking": "",
+        "other": [
+          "https://damahairbraiding.my.canva.site/"
+        ]
+      },
+      "confidence": "Medium",
+      "whyKija": "A braiding studio with a steady Instagram feed of finished work and a one line placeholder page has strong visual material but nowhere for a searcher to see styles or book.",
+      "pitchAngle": "Your braiding work already speaks for itself on Instagram; a home of your own for styles, pricing and booking would let new clients see it before they call.",
+      "demoConcept": "Warm, photo led braiding portfolio with a style gallery, a clear price guide and a mobile first booking request, leading with finished work photos.",
+      "services": [
+        "Hair braiding"
+      ],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "sources": [
+        {
+          "url": "https://damahairbraiding.my.canva.site/",
+          "label": "damahairbraiding.my.canva.site",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.instagram.com/damahairbraiding/",
+          "label": "instagram.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.atly.com/location/DamaHairBraiding",
+          "label": "atly.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.bestprosintown.com/mi/detroit/hair-salons/",
+          "label": "bestprosintown.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://dama-hair-braiding.wsite.top/",
+          "label": "wsite.top",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "needs-recheck",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the business name with Detroit MI and again with the street address; no owned domain appeared, only directories, an Instagram profile, a Facebook page, a Yelp page and a scraped directory page.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Could not complete on 2026-10-05: opening the public Google Maps listing returned a Google bot check page, so Maps was dropped for this run and no rating, review count or website field was read by this verifier; the discovery screen's own reading is not treated as a fact.",
+            "url": "https://www.google.com/maps/place/Dama+Hair+Braiding/@42.4166223,-83.1637067,17z"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 25 guessed domains plus the Canva subdomain: only damahairbraiding.my.canva.site resolves and serves a page with about 26 characters of text, a single greeting line and nothing else; no .com, .net, .biz or .us domain resolves.",
+            "url": "https://damahairbraiding.my.canva.site/"
+          },
+          {
+            "check": "social and third party",
+            "result": "Instagram bio lists the phone and street address with no website link; a Facebook page and a Yelp page exist; no booking platform page was found; the Canva page is the only web link seen.",
+            "url": "https://www.instagram.com/damahairbraiding/"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Instagram shows posts dated October 2026 so the business looks active; it is an independent single name business with no chain match; the phone 313-412-8096 appears on its Instagram bio and on two directories, but the Yelp phone was not readable.",
+            "url": "https://www.instagram.com/damahairbraiding/"
+          },
+          {
+            "check": "review integrity",
+            "result": "Unresolved: reviews could not be read on Google. Directories show far fewer reviews (about 23 on one, 3 on Yelp, 2 ratings on a scraped page) than the 178 in the discovery screen, one mismatch signal; no hard stop was seen in the readable material.",
+            "url": "https://www.atly.com/location/DamaHairBraiding"
+          }
+        ],
+        "notes": "websiteGap 2: a Canva builder subdomain with one line of text is the only site. ticketValue 2: category default. visualFit 3: category default, braiding is photo led. Open question: the true Google rating and review count, since the mirrors read this week conflict with the discovery screen."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "dfw-tire-shop-grand-prairie-tx",
+    "candidate": "DFW Tire Shop",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Grand Prairie",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "Independent Grand Prairie tire shop with a Facebook page and Yelp page and no owned domain found; discovery reported a strong Google reputation that has not been confirmed.",
+    "websiteStatus": "No owned website surfaced in search or the domain probe; a Facebook page and a Yelp page are the web presence found.",
+    "verificationNeeded": "Read the Google Maps listing by hand (rating, review count, website field, open status). Decide which phone is current, (214) 235-0903 or (214) 500-4898. Confirm the shop still operates at 2020 Dalworth St given the for sale listing for that building. Reconcile the 2.6 Yelp rating with the Maps rating.",
+    "ownerContact": "",
+    "phone": "214-235-0903",
+    "googleRating": 0,
+    "googleReviews": 0,
+    "sources": [
+      {
+        "url": "https://www.yelp.com/biz/dfw-tire-shop-grand-prairie",
+        "label": "yelp.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.facebook.com/p/DFW-TIRE-SHOP-61567257787496/",
+        "label": "facebook.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps blocked by bot check, conflicting phones, operating status unclear, Yelp disagrees sharply with discovery, confidence Low.",
+    "lead": {
+      "business": "DFW Tire Shop",
+      "category": "Tire shop",
+      "categoryKey": "tire-shop",
+      "city": "Grand Prairie",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "phone": "214-235-0903",
+      "phoneLineType": "unknown",
+      "googleRating": 0,
+      "googleReviews": 0,
+      "ratingSource": "",
+      "googleMapsUrl": "",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "address": "2020 Dalworth St, Grand Prairie, TX 75050",
+      "websiteGap": 2,
+      "ticketValue": 2,
+      "visualFit": 2,
+      "confidence": "Low",
+      "websiteStatus": "No owned website surfaced in search or the domain probe; a Facebook page and a Yelp page are the web presence found.",
+      "presence": {
+        "facebook": "https://www.facebook.com/p/DFW-TIRE-SHOP-61567257787496/",
+        "instagram": "",
+        "yelp": "https://www.yelp.com/biz/dfw-tire-shop-grand-prairie",
+        "booking": "",
+        "other": []
+      },
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "whyKija": "",
+      "pitchAngle": "",
+      "demoConcept": "",
+      "sources": [
+        {
+          "url": "https://www.yelp.com/biz/dfw-tire-shop-grand-prairie",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.facebook.com/p/DFW-TIRE-SHOP-61567257787496/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "needs-recheck",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the name with Grand Prairie TX and the phone number in quotes on 2026-10-05; no owned domain surfaced, only Yelp, a Facebook page and tire directories. The search tool returned result summaries, so full result pages were not opened.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not completed on 2026-10-05: the Google Maps request returned a Google unusual traffic bot check on the first listing request this run, so Maps was dropped. Rating, review count and website field are unconfirmed.",
+            "url": ""
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 40 guessed domains for \"DFW Tire Shop\": 2 resolve, 2 serve a page, 1 look parked or for sale, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "A Facebook page named DFW TIRE SHOP at 2020 Dalworth St and a Yelp page at the same address exist. Yelp showed 2.6 stars from 5 reviews in its result title; neither page could be opened in full (Yelp returned HTTP 403, the Facebook fetch returned only the page name), so the website field on each was not read.",
+            "url": "https://www.yelp.com/biz/dfw-tire-shop-grand-prairie"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Not a match for config/chains.json and not on the empty suppression list. Phone is inconsistent: Yelp shows (214) 235-0903 and the Facebook page shows (214) 500-4898. A property listing for the building at 2020 Dalworth St describes it as an automotive shop space for sale, so whether the shop is still operating there is unresolved.",
+            "url": "https://www.facebook.com/p/DFW-TIRE-SHOP-61567257787496/"
+          },
+          {
+            "check": "review integrity",
+            "result": "Reviews could not be read. Noted as a soft signal only: the Yelp result shows 2.6 stars from 5 reviews, far from the 4.8 from 225 the discovery screen reported. No hard stop evidence seen; needs a proper read of the Maps reviews.",
+            "url": ""
+          }
+        ],
+        "notes": "websiteGap 2 provisional: Facebook and Yelp presence only and no owned domain found, Maps website field unread. ticketValue 2: category default. visualFit 2: category default. Not qualified: Maps blocked, two different published phone numbers, thin Yelp history that disagrees with discovery, and an unresolved operating status. whyKija, pitchAngle and demoConcept left empty because no rating or review figure is confirmed."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "east-dallas-tires-dallas-tx",
+    "candidate": "East Dallas Tires",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Dallas",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "Just meets the 20 review minimum at 4.6, no website, owner-run per reviews. Weakest of the set, likely queue only.",
+    "websiteStatus": "Not verified yet.",
+    "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+    "ownerContact": "",
+    "phone": "469-470-9330",
+    "googleRating": 4.6,
+    "googleReviews": 20,
+    "sources": [
+      {
+        "url": "https://www.google.com/maps/search/East+Dallas+Tires+112+N+Beacon+St+Dallas",
+        "label": "google.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Unverified overflow: verification capacity reached this run",
+    "lead": null,
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "european-hair-design-by-hanan-dearborn-mi",
+    "candidate": "European Hair Design by Hanan",
+    "category": "Hair salon",
+    "categoryKey": "hair-salon",
+    "city": "Dearborn",
+    "state": "MI",
+    "metro": "detroit",
+    "whyItMayFit": "A busy Dearborn salon for hair color, extensions, makeup and brows with a large Instagram following and no salon website or booking page found, only an Instagram profile and a separate beauty product shop.",
+    "websiteStatus": "No salon website or booking page surfaced in search or the domain probe; the Instagram profile is the main web presence and its link in bio goes to a separate beauty product shop.",
+    "verificationNeeded": "Open the public Google Maps listing by hand (https://www.google.com/maps/search/European+Hair+Design+by+Hanan+15218+Warren+Ave+Dearborn) and read the rating, review count, website field and newest reviews. Decide whether hananbeauty.shop (a contact lens and beauty product store at the same address with phone 313-788-0085) counts as a credible owned site for the salon; it does not mention the salon. Confirm the salon phone on a second source.",
+    "ownerContact": "",
+    "phone": "313-632-5350",
+    "googleRating": 0,
+    "googleReviews": 0,
+    "sources": [
+      {
+        "url": "https://www.instagram.com/europeanhairdesignbyhanan/",
+        "label": "instagram.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.hananbeauty.shop",
+        "label": "hananbeauty.shop",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.rakwa.com/listting/european-hair-design-by-hanan",
+        "label": "rakwa.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.atly.com/location/EuropeanHairDesignByHanan",
+        "label": "atly.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps listing blocked by CAPTCHA this run and an owned product shop domain needs a judgment call.",
+    "lead": {
+      "business": "European Hair Design by Hanan",
+      "category": "Hair salon",
+      "categoryKey": "hair-salon",
+      "city": "Dearborn",
+      "state": "MI",
+      "metro": "detroit",
+      "address": "15218 Warren Ave, Dearborn, MI 48126",
+      "phone": "313-632-5350",
+      "phoneLineType": "unknown",
+      "googleRating": 0,
+      "googleReviews": 0,
+      "ratingSource": "",
+      "googleMapsUrl": "",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 2,
+      "visualFit": 3,
+      "websiteStatus": "No salon website or booking page surfaced in search or the domain probe; the Instagram profile is the main web presence and its link in bio goes to a separate beauty product shop.",
+      "presence": {
+        "facebook": "",
+        "instagram": "https://www.instagram.com/europeanhairdesignbyhanan/",
+        "yelp": "",
+        "booking": "",
+        "other": [
+          "https://www.rakwa.com/listting/european-hair-design-by-hanan",
+          "https://www.atly.com/location/EuropeanHairDesignByHanan"
+        ]
+      },
+      "confidence": "Medium",
+      "whyKija": "The Instagram feed shows a high volume of before and after hair, makeup and brow work, which suits a visual homepage with services and booking built around real work.",
+      "pitchAngle": "Your Instagram already shows the craft to a large audience; a home for the salon itself turns that attention into booked appointments.",
+      "demoConcept": "Editorial, photo led salon site with a before and after gallery up top, a services grid for color, extensions, makeup and brows, and a mobile first booking request.",
+      "services": [
+        "Hair coloring",
+        "Hair styling",
+        "Blowout",
+        "Facial treatments",
+        "Makeup",
+        "Eyebrow care",
+        "Hair extensions"
+      ],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "Mon 10:00-18:00; Tue to Sat 10:00-19:00; Sun 11:00-17:00",
+      "sources": [
+        {
+          "url": "https://www.instagram.com/europeanhairdesignbyhanan/",
+          "label": "instagram.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.hananbeauty.shop",
+          "label": "hananbeauty.shop",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.rakwa.com/listting/european-hair-design-by-hanan",
+          "label": "rakwa.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.atly.com/location/EuropeanHairDesignByHanan",
+          "label": "atly.com",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the business name with Dearborn MI and the phone in quotes; no domain for the salon surfaced, only directories (Rakwa, atly, Birdeye, wheree, pro.makeup) and the Instagram profile; the phone search returned nothing about this business.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not read on 2026-10-05: Google showed a bot check (CAPTCHA) on the Maps search page and it was not bypassed, so the website field, rating, review count and hours are unconfirmed.",
+            "url": ""
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 25 guessed domains for \"European Hair Design by Hanan\": 1 resolve, 1 serve a page, and none shows the business phone or name. The one live page is hananbeauty.shop, added from the Instagram bio, which sells contact lenses and beauty products.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "The Instagram bio for the salon links to hananbeauty.shop, an online store for contact lenses, hair care products and lens solution that lists the same street address, a different phone (313-788-0085) and no mention of the salon or its services; a Facebook page for the salon exists but its About section could not be read; Rakwa lists the salon with no website.",
+            "url": "https://www.instagram.com/europeanhairdesignbyhanan/"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Rakwa and atly list the salon at 15218 Warren Ave with hours and services and the Instagram feed is active; the name is not on the chain list; the phone 313-632-5350 was read on Rakwa only and was not confirmed on a second source; no recent reviews or posts dates could be read, so operating status is probable but not confirmed.",
+            "url": "https://www.rakwa.com/listting/european-hair-design-by-hanan"
+          },
+          {
+            "check": "review integrity",
+            "result": "Could not be completed: no review text was readable because Google Maps showed a CAPTCHA and the Birdeye and Yelp pages were not retrievable; no signals or hard stops were observed.",
+            "url": ""
+          }
+        ],
+        "notes": "Unresolved: Maps listing unread (CAPTCHA), review integrity not assessed, second phone source missing. websiteGap 2: owned domain hananbeauty.shop exists but is a product shop that does not present the salon, so a judgment call. ticketValue 2: category default. visualFit 3: category default, and the Instagram feed shows strong before and after work. Rating and review count left at 0 because none was read this run; the screen value of 4.7 from 666 reviews is unconfirmed and a Birdeye result title in search showed 670 reviews."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "friendly-tires-brakes-irving-tx",
+    "candidate": "Friendly Tires & Brakes",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Irving",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "Independent tire and brake shop on E Irving Blvd with a strong screened rating, no owned domain found in search or the probe, and a generic name that does not match the chain list.",
+    "websiteStatus": "No owned website surfaced in search or the domain probe; the only pages found are third party directory listings.",
+    "verificationNeeded": "Open the public Google Maps listing in a browser and read the website field, rating, review count, hours and recent reviews; confirm the phone on a second independent source such as a Facebook, Yelp or BBB page; then rerun the six checks.",
+    "ownerContact": "",
+    "phone": "972-750-0031",
+    "googleRating": 0,
+    "googleReviews": 0,
+    "sources": [
+      {
+        "url": "https://lantern.llc/b/friendly-tires-brakes-irving",
+        "label": "lantern.llc",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps listing could not be read this run (browser not connected), so rating, review count, website field and review integrity are unconfirmed and the directory count differs from the screen.",
+    "lead": {
+      "business": "Friendly Tires & Brakes",
+      "category": "Tire shop",
+      "categoryKey": "tire-shop",
+      "city": "Irving",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "phone": "(972) 750-0031",
+      "phoneLineType": "unknown",
+      "googleRating": 0,
+      "googleReviews": 0,
+      "ratingSource": "",
+      "googleMapsUrl": "https://www.google.com/maps/search/Friendly+Tires+%26+Brakes+400+E+Irving+Blvd+Irving",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "confidence": "Medium",
+      "websiteGap": 3,
+      "ticketValue": 2,
+      "visualFit": 2,
+      "websiteStatus": "No owned website surfaced in search or the domain probe; the only pages found are third party directory listings.",
+      "presence": {
+        "facebook": "",
+        "instagram": "",
+        "yelp": "",
+        "booking": "",
+        "other": [
+          "https://lantern.llc/b/friendly-tires-brakes-irving"
+        ]
+      },
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "whyKija": "A tire and brake shop with a strong screened rating and a Maps listing that appeared to offer no website could turn local search trust into booked tire and brake calls, but the facts need a first hand read before it is a lead.",
+      "pitchAngle": "Customers already vouch for the shop; an owned site would turn that trust into tire and brake calls once the listing is confirmed.",
+      "demoConcept": "Plain neighborhood tire and brake shop site with a tap to call button, a tire size lookup request and the shop's own review proof, to be built only after the listing is confirmed.",
+      "sources": [
+        {
+          "url": "https://lantern.llc/b/friendly-tires-brakes-irving",
+          "label": "lantern.llc",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searches for the exact name with Irving TX, with Facebook or Yelp, and for the phone number returned no owned domain; only a third party directory (lantern.llc) and unrelated chains appeared in the first results.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not completed on 2026-10-05: the browser tool was not connected so the public Google Maps listing could not be opened; the website field, rating, review count, category and hours are unread. The discovery screen (4.7 from 148) is not a reading.",
+            "url": "https://www.google.com/maps/search/Friendly+Tires+%26+Brakes+400+E+Irving+Blvd+Irving"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 56 guessed domains for \"Friendly Tires & Brakes\": 0 resolve, 0 serve a page, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "Searches for a Facebook, Instagram, Yelp or booking page returned none; only the lantern.llc directory page exists, and it is not a website owned by the business.",
+            "url": "https://lantern.llc/b/friendly-tires-brakes-irving"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Name does not match any entry in config/chains.json and is not a suppressed business; operating status could not be confirmed from reviews or posts, and the phone appears only on the directory page and the discovery screen, not on two independent business listings.",
+            "url": ""
+          },
+          {
+            "check": "review integrity",
+            "result": "Not completed: reviews could not be read because the Maps listing was unreachable this run; the directory shows 143 reviews against 148 screened, a small gap that needs a first hand count.",
+            "url": ""
+          }
+        ],
+        "notes": "websiteGap 3 provisional: nothing owned found, Maps website field unread. ticketValue 2: category default. visualFit 2: category default. Confidence Medium because the Maps listing check was not completed."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "golden-star-tire-and-alignments-llc-warren-mi",
+    "candidate": "Golden Star Tire and Alignments LLC",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Warren",
+    "state": "MI",
+    "metro": "detroit",
+    "whyItMayFit": "A 4.8 star average on roughly 437 or more reviews for new and used tires and alignments, with no live owned website found and only a Facebook page and a dead business.site page online.",
+    "websiteStatus": "No live owned website surfaced in search or the domain probe; a Facebook page is the only web presence and an old business.site page no longer loads.",
+    "verificationNeeded": "Open the public Maps listing by hand and read the website field, rating, review count, hours and newest reviews; confirm which phone is current (586-510-4838 on directories versus 586-303-5298 from discovery) on two independent sources; run the review integrity check on Maps.",
+    "ownerContact": "",
+    "phone": "586-510-4838",
+    "googleRating": 4.8,
+    "googleReviews": 437,
+    "sources": [
+      {
+        "url": "https://reviews.birdeye.com/golden-star-tire-156071145643595",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.atly.com/location/GoldenStarTireAndAlignmentsLlc",
+        "label": "atly.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://ezlocal.com/mi/warren/automobile---repairs-and-services/0914572464",
+        "label": "ezlocal.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.facebook.com/GoldenStarTires/",
+        "label": "facebook.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps listing unreadable (bot check) and review count and phone disagree across sources; Medium confidence.",
+    "lead": {
+      "business": "Golden Star Tire and Alignments LLC",
+      "category": "Tire shop",
+      "categoryKey": "tire-shop",
+      "city": "Warren",
+      "area": "",
+      "state": "MI",
+      "metro": "detroit",
+      "address": "8250 E 9 Mile Rd, Warren, MI 48089",
+      "phone": "586-510-4838",
+      "phoneLineType": "unknown",
+      "googleRating": 4.8,
+      "googleReviews": 437,
+      "ratingSource": "secondary",
+      "googleMapsUrl": "https://www.google.com/maps/place/Golden+star+tire+and+alignments+llc/@42.4628901,-83.0225936,17z",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 2,
+      "visualFit": 2,
+      "websiteStatus": "No live owned website surfaced in search or the domain probe; a Facebook page is the only web presence and an old business.site page no longer loads.",
+      "presence": {
+        "facebook": "https://www.facebook.com/GoldenStarTires/",
+        "instagram": "",
+        "yelp": "",
+        "booking": "",
+        "other": []
+      },
+      "confidence": "Medium",
+      "whyKija": "Hundreds of Google style reviews on a shop that sells new and used tires and alignments suggest steady local trust, but a searcher finds only directory listings and a Facebook page.",
+      "pitchAngle": "Your 4.8 star reputation already tells drivers you are fair on price; an owned site could turn that trust into calls for tires and alignments.",
+      "demoConcept": "Straightforward neighborhood tire shop site with a tire size lookup and call button, new and used tire pricing prompts, alignment info and review proof leading the page.",
+      "services": [
+        "New tires",
+        "Used tires",
+        "Wheel alignment"
+      ],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "sources": [
+        {
+          "url": "https://reviews.birdeye.com/golden-star-tire-156071145643595",
+          "label": "reviews.birdeye.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.atly.com/location/GoldenStarTireAndAlignmentsLlc",
+          "label": "atly.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://ezlocal.com/mi/warren/automobile---repairs-and-services/0914572464",
+          "label": "ezlocal.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.facebook.com/GoldenStarTires/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "needs-recheck",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searches for the name with Warren MI and for both phone numbers surfaced only directories (Birdeye, Yellow Pages, Superpages, Manta, ezlocal, atly), a Facebook page and a business.site page; one directory lists warrengoldenstar.com as a website but that domain does not resolve.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not read on 2026-10-05: Google showed a bot check page for the Maps listing, so that source was dropped without any attempt to get past it; rating and count come from the Birdeye mirror (4.8 from 437 reviews), while discovery recorded 4.8 from 490.",
+            "url": "https://www.google.com/maps/place/Golden+star+tire+and+alignments+llc/@42.4628901,-83.0225936,17z"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 61 guessed domains for \"Golden Star Tire and Alignments LLC\": 0 resolve, 0 serve a page, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "A Facebook page named Golden Star New And Used Tires exists but its About details did not render when read; Birdeye lists a golden-star-tire.business.site page which now returns not found; no Instagram or booking page was found.",
+            "url": "https://www.facebook.com/GoldenStarTires/"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Appears to be a single independent shop at 8250 E 9 Mile Rd with a current Birdeye listing, not on the chains list; the phone is 586-510-4838 on ezlocal and a directory snippet while discovery recorded 586-303-5298, so the phone is not confirmed on two independent sources.",
+            "url": "https://ezlocal.com/mi/warren/automobile---repairs-and-services/0914572464"
+          },
+          {
+            "check": "review integrity",
+            "result": "Maps reviews were not read this run, so this check is incomplete; the Birdeye mirror shows a 4.8 average and reviewer comments about affordability with no warning visible.",
+            "url": "https://reviews.birdeye.com/golden-star-tire-156071145643595"
+          }
+        ],
+        "notes": "websiteGap 2: Facebook page only plus a dead business.site page. ticketValue 2: category default, no sourced reason to change. visualFit 2: category default. Open items: read the Maps listing, resolve the phone, rerun review integrity on Maps. Hours differ between Birdeye and directories so hours are left empty."
+      },
+      "demoCopy": {}
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "guadalajara-tires-long-beach-ca",
+    "candidate": "Guadalajara Tires",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Long Beach",
+    "state": "CA",
+    "metro": "los-angeles",
+    "whyItMayFit": "A long running, high volume tire shop (hundreds of reviews around 4.4 to 4.6 depending on the source) with no owned website found and only a parked name domain and a Facebook page.",
+    "websiteStatus": "No owned website surfaced in search or the domain probe; the name domain guadalajaratires.com is parked and a Facebook page is the only profile of its own.",
+    "verificationNeeded": "Open the Google Maps listing by hand (https://www.google.com/maps/search/Guadalajara+Tires+1815+Cherry+Ave+Long+Beach) and read the current rating, review count and website field; Birdeye shows 4.4 so it may fall under the 4.5 floor. Confirm whether the other Guadalajara Tires listings in Los Angeles, Santa Ana and San Bernardino are the same owner or a small chain. Confirm the phone 562-612-1251 on a second page.",
+    "ownerContact": "",
+    "phone": "562-612-1251",
+    "googleRating": 4.4,
+    "googleReviews": 347,
+    "sources": [
+      {
+        "url": "https://reviews.birdeye.com/guadalajara-tires-156070771273571",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://local.yahoo.com/info-99404041-guadalajara-tires-long-beach",
+        "label": "local.yahoo.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.facebook.com/pages/Guadalajara-Tires/413543001989084",
+        "label": "facebook.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps blocked by CAPTCHA, rating at or under the floor depending on source, review integrity not assessable, possible multi location brand.",
+    "lead": {
+      "business": "Guadalajara Tires",
+      "category": "Tire shop",
+      "categoryKey": "tire-shop",
+      "city": "Long Beach",
+      "state": "CA",
+      "metro": "los-angeles",
+      "address": "1815 Cherry Ave, Long Beach, CA 90806",
+      "phone": "562-612-1251",
+      "phoneLineType": "unknown",
+      "googleRating": 4.4,
+      "googleReviews": 347,
+      "ratingSource": "secondary",
+      "googleMapsUrl": "",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 2,
+      "visualFit": 2,
+      "websiteStatus": "No owned website surfaced in search or the domain probe; the name domain guadalajaratires.com is parked and a Facebook page is the only profile of its own.",
+      "presence": {
+        "facebook": "https://www.facebook.com/pages/Guadalajara-Tires/413543001989084",
+        "instagram": "",
+        "yelp": "https://www.yelp.com/biz/guadalajara-tires-long-beach",
+        "booking": "",
+        "other": [
+          "https://reviews.birdeye.com/guadalajara-tires-156070771273571"
+        ]
+      },
+      "confidence": "Medium",
+      "whyKija": "Hundreds of reviews and a long operating history show a trusted neighborhood shop for new and used tires, and searchers have no site of the shop's own to see services or hours.",
+      "pitchAngle": "Hundreds of drivers already vouch for the shop; a site of your own turns that trust into calls and tire quote requests.",
+      "demoConcept": "Bold neighborhood tire shop site in Spanish and English with a click to call button, a tire size quote request, new and used tire sections and review proof.",
+      "services": [
+        "Used tire sales",
+        "New tire sales",
+        "Tire repair",
+        "Brake jobs",
+        "TPMS service"
+      ],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "sources": [
+        {
+          "url": "https://reviews.birdeye.com/guadalajara-tires-156070771273571",
+          "label": "reviews.birdeye.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://local.yahoo.com/info-99404041-guadalajara-tires-long-beach",
+          "label": "local.yahoo.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.facebook.com/pages/Guadalajara-Tires/413543001989084",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the business name with Long Beach CA and the phone in quotes; no owned domain surfaced, results were Yelp, Birdeye, Yahoo Local, Yellow Pages and similar directories and the phone search returned no page for this business.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not read on 2026-10-05: Google showed a bot check (CAPTCHA) and it was not bypassed. Read the Birdeye mirror instead on 2026-10-05: 4.4 from 347 reviews (344 Google plus 3 Facebook), no website, unclaimed profile; Yahoo Local read the same day shows 4.5 from 433 reviews and no website.",
+            "url": "https://reviews.birdeye.com/guadalajara-tires-156070771273571"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 40 guessed domains for \"Guadalajara Tires\": 5 resolve, 4 serve a page, 2 look parked or for sale, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "A Facebook page exists (only its title could be read, so its website field is unknown), and the Yelp listing could not be read (403); Birdeye and Yahoo Local show no website; no booking page was found.",
+            "url": "https://www.facebook.com/pages/Guadalajara-Tires/413543001989084"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Yahoo Local lists hours and the address at 1815 Cherry Ave and Yelp search titles show review counts rising through July 2026, so the shop appears to be operating; the name is not on the chain list but similarly named Guadalajara Tires listings exist in other cities and ownership was not confirmed; the phone 562-612-1251 was read on Yahoo Local only.",
+            "url": "https://local.yahoo.com/info-99404041-guadalajara-tires-long-beach"
+          },
+          {
+            "check": "review integrity",
+            "result": "Could not be completed: no recent review text was readable; the Birdeye page showed only old Facebook reviews with no incentive mentions and Yelp search titles show a steady rise in review count across 2025 and 2026; no hard stop was observed.",
+            "url": "https://reviews.birdeye.com/guadalajara-tires-156070771273571"
+          }
+        ],
+        "notes": "Unresolved: Maps listing unread (CAPTCHA), rating sources disagree (4.4, 4.5 and 4.6) around the 4.5 floor, review integrity not assessed, multi location ownership question, second phone source missing. websiteGap 2: only a Facebook page and a parked name domain were found, so no credible owned site (3 would need the Maps website field read). ticketValue 2: category default. visualFit 2: category default. Hours left blank because Yahoo Local and Birdeye disagree on Sunday."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "hollywood-topline-concrete-hollywood-fl",
+    "candidate": "Hollywood Topline Concrete",
+    "category": "Concrete",
+    "categoryKey": "concrete",
+    "city": "Hollywood",
+    "state": "FL",
+    "metro": "miami",
+    "whyItMayFit": "Owner-operated driveway repair and concrete crew, 5.0 stars over 29 reviews with reviews praising honesty and fair pricing; no website on listing.",
+    "websiteStatus": "Not verified yet.",
+    "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+    "ownerContact": "",
+    "phone": "754-253-2715",
+    "googleRating": 5,
+    "googleReviews": 29,
+    "sources": [
+      {
+        "url": "https://www.google.com/maps/place/Hollywood+Topline+Concrete/@25.960485,-80.2327044,10z/data=!3m1!4b1!4m6!3m5!1s0x88d9a9a6fcedca89:0xaec18da328199cf7!8m2!3d25.960485!4d-80.2327044!16s%2Fg%2F11sx716s3z",
+        "label": "google.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Unverified overflow: verification capacity reached this run",
+    "lead": null,
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "leonardos-tires-shop-grand-prairie-tx",
+    "candidate": "Leonardo's Tires Shop",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Grand Prairie",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "Latino-owned independent in Grand Prairie, 4.8 on 61 reviews, no website, recent owner photos show an active listing.",
+    "websiteStatus": "Not verified yet.",
+    "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+    "ownerContact": "",
+    "phone": "214-605-6453",
+    "googleRating": 4.8,
+    "googleReviews": 61,
+    "sources": [
+      {
+        "url": "https://www.google.com/maps/search/Leonardo%27s+Tires+Shop+3217+E+Jefferson+St+Grand+Prairie",
+        "label": "google.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Unverified overflow: verification capacity reached this run",
+    "lead": null,
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "los-amigos-tire-services-santa-ana-ca",
+    "candidate": "Los Amigos Tire Services",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Santa Ana",
+    "state": "CA",
+    "metro": "los-angeles",
+    "whyItMayFit": "A high volume neighborhood tire shop with hundreds of Google reviews at about 4.5 stars, a Facebook page and an abandoned Wix template as its only web presence.",
+    "websiteStatus": "No owned domain surfaced in search or the domain probe; the only page is an unfinished Wix template with a placeholder phone and a Facebook page with little content.",
+    "verificationNeeded": "Open the Google Maps listing by hand (https://www.google.com/maps/search/Los+Amigos+Tire+Services+2910+W+1st+St+Santa+Ana) and read the current rating, review count, website field and newest reviews; the Birdeye mirror says 4.5 from 432 and the screen said 4.6 from 388. Confirm the phone 714-835-3667 on a second page I could read.",
+    "ownerContact": "",
+    "phone": "714-835-3667",
+    "googleRating": 4.5,
+    "googleReviews": 432,
+    "sources": [
+      {
+        "url": "https://reviews.birdeye.com/los-amigos-tire-services-156070835455332",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://losamigostireservice.wixsite.com/losamigostireservice",
+        "label": "wixsite.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.facebook.com/p/Los-Amigos-Tire-Service-100076831700250/",
+        "label": "facebook.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps blocked by CAPTCHA, rating sources disagree at the floor, review integrity not assessable, only a weak Wix page exists.",
+    "lead": {
+      "business": "Los Amigos Tire Services",
+      "category": "Tire shop",
+      "categoryKey": "tire-shop",
+      "city": "Santa Ana",
+      "state": "CA",
+      "metro": "los-angeles",
+      "address": "2910 W 1st St, Santa Ana, CA 92703",
+      "phone": "714-835-3667",
+      "phoneLineType": "unknown",
+      "googleRating": 4.5,
+      "googleReviews": 432,
+      "ratingSource": "secondary",
+      "googleMapsUrl": "",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 2,
+      "visualFit": 2,
+      "websiteStatus": "No owned domain surfaced in search or the domain probe; the only page is an unfinished Wix template with a placeholder phone and a Facebook page with little content.",
+      "presence": {
+        "facebook": "https://www.facebook.com/p/Los-Amigos-Tire-Service-100076831700250/",
+        "instagram": "",
+        "yelp": "https://www.yelp.ca/biz/los-amigos-tire-service-santa-ana",
+        "booking": "",
+        "other": [
+          "https://losamigostireservice.wixsite.com/losamigostireservice",
+          "https://reviews.birdeye.com/los-amigos-tire-services-156070835455332"
+        ]
+      },
+      "confidence": "Medium",
+      "whyKija": "Hundreds of reviews show a busy neighborhood shop, and the only web page is a half finished template, so searchers have no real place to see services, hours or request a tire quote.",
+      "pitchAngle": "Hundreds of drivers already vouch for your shop; a site of your own turns that trust into tire quote requests and calls.",
+      "demoConcept": "Straightforward neighborhood tire shop site with a call button, tire size quote request, hours and review proof, built mobile first.",
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "sources": [
+        {
+          "url": "https://reviews.birdeye.com/los-amigos-tire-services-156070835455332",
+          "label": "reviews.birdeye.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://losamigostireservice.wixsite.com/losamigostireservice",
+          "label": "wixsite.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.facebook.com/p/Los-Amigos-Tire-Service-100076831700250/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the business name with Santa Ana CA and the phone in quotes; no owned domain surfaced, results were Yelp, Facebook, Birdeye, Yellow Pages and other directories; the phone search returned no page for this business.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not read on 2026-10-05: Google showed a bot check (CAPTCHA) and it was not bypassed. Read the Birdeye mirror instead on 2026-10-05: 4.5 from 432 reviews (426 Google plus 6 Facebook), address 2910 W 1st St, tire sales and service, unclaimed profile, website field points to a Wix page.",
+            "url": "https://reviews.birdeye.com/los-amigos-tire-services-156070835455332"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 53 guessed domains for \"Los Amigos Tire Services\": 5 resolve, 2 serve a page, 1 forward to a third party profile (losamigostireservice.wixsite.com to wixsite.com), and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "Birdeye lists a Wix page whose content is placeholder template text with a placeholder phone and no booking or contact form, so it is a very weak third party page; a Facebook page exists but only its title could be read; Yelp could not be read (403).",
+            "url": "https://losamigostireservice.wixsite.com/losamigostireservice"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Search results show recent listings and hours for 2910 W 1st St, the name is not on the chain list, and the phone 714-835-3667 appears in one directory title I saw but could not be confirmed on a second page I could read; operating status is probable, not confirmed on a dated source.",
+            "url": ""
+          },
+          {
+            "check": "review integrity",
+            "result": "Could not be completed: the Birdeye page showed only old Facebook reviews and no recent Google review text, and Google Maps was blocked; no incentive mentions, warning banners or canned owner replies were seen.",
+            "url": "https://reviews.birdeye.com/los-amigos-tire-services-156070835455332"
+          }
+        ],
+        "notes": "Unresolved: Maps listing unread (CAPTCHA), review integrity not assessed, second phone source missing, rating 4.5 from a mirror disagrees with the screen value of 4.6 from 388. websiteGap 2: only an unfinished Wix builder page and a Facebook page. ticketValue 2: category default. visualFit 2: category default."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "rey-finish-concrete-corp-miami-fl",
+    "candidate": "Rey Finish Concrete Corp",
+    "category": "Concrete",
+    "categoryKey": "concrete",
+    "city": "Miami",
+    "state": "FL",
+    "metro": "miami",
+    "whyItMayFit": "Owner-led concrete crew with 4.9 stars over 59 reviews (driveway and patio work) and an 'Add website' prompt on the Maps listing; no web footprint found elsewhere.",
+    "websiteStatus": "Not verified yet.",
+    "verificationNeeded": "Run the verification checks in WEEKLY_RUN.md.",
+    "ownerContact": "",
+    "phone": "786-930-3526",
+    "googleRating": 4.9,
+    "googleReviews": 59,
+    "sources": [
+      {
+        "url": "https://www.google.com/maps/search/concrete+contractor+in+Hialeah+FL",
+        "label": "google.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.google.com/maps/place/Rey+Finish+Concrete+Corp/@27.9278975,-83.2466325,7z/data=!3m1!4b1!4m6!3m5!1s0x88d9b16c4837e959:0x4ec0ab74dcc8b7d7!8m2!3d27.9278975!4d-83.2466325!16s%2Fg%2F11h27x9tnx",
+        "label": "google.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Unverified overflow: verification capacity reached this run",
+    "lead": null,
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "rubens-tire-anaheim-ca",
+    "candidate": "Ruben's Tire",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Anaheim",
+    "state": "CA",
+    "metro": "los-angeles",
+    "whyItMayFit": "Independent used and new tire shop on Katella Ave with a Yelp page and no owned domain found in search or the probe; discovery reported a strong Google reputation that has not been confirmed.",
+    "websiteStatus": "No owned website surfaced in search or the domain probe; the Maps website field could not be read this run.",
+    "verificationNeeded": "Read the public Google Maps listing by hand: rating, review count, website field and recent reviews. Resolve the gap between Yelp (4.0 from 106) and the discovery screen. Confirm the phone on a second source and look for a Facebook page of the Anaheim shop.",
+    "ownerContact": "",
+    "phone": "714-499-4779",
+    "googleRating": 0,
+    "googleReviews": 0,
+    "sources": [
+      {
+        "url": "https://www.yelp.com/biz/rubens-tires-anaheim",
+        "label": "yelp.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://local.yahoo.com/info-204910586-ruben-s-tires-anaheim/",
+        "label": "local.yahoo.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Google Maps bot check blocked the listing read, sources disagree on rating and review volume, confidence Medium.",
+    "lead": {
+      "business": "Ruben's Tire",
+      "category": "Tire shop",
+      "categoryKey": "tire-shop",
+      "city": "Anaheim",
+      "state": "CA",
+      "metro": "los-angeles",
+      "phone": "714-499-4779",
+      "phoneLineType": "unknown",
+      "googleRating": 0,
+      "googleReviews": 0,
+      "ratingSource": "",
+      "googleMapsUrl": "",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "address": "9041 Katella Ave, Unit E, Anaheim, CA 92804",
+      "websiteGap": 3,
+      "ticketValue": 2,
+      "visualFit": 2,
+      "confidence": "Medium",
+      "websiteStatus": "No owned website surfaced in search or the domain probe; the Maps website field could not be read this run.",
+      "presence": {
+        "facebook": "",
+        "instagram": "",
+        "yelp": "https://www.yelp.com/biz/rubens-tires-anaheim",
+        "booking": "",
+        "other": []
+      },
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "whyKija": "",
+      "pitchAngle": "",
+      "demoConcept": "",
+      "sources": [
+        {
+          "url": "https://www.yelp.com/biz/rubens-tires-anaheim",
+          "label": "yelp.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://local.yahoo.com/info-204910586-ruben-s-tires-anaheim/",
+          "label": "local.yahoo.com",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "needs-recheck",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the name with Anaheim CA and the phone number in quotes on 2026-10-05; no domain that looks owned by the business surfaced, only Yelp, Yahoo Local, Roadtrippers and Apple Maps listings. The search tool returned result summaries, so full result pages were not opened.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not completed on 2026-10-05: the Google Maps request returned a Google unusual traffic bot check, so the listing was not read and Maps was dropped for this run per the safety rules. Rating, review count and website field are unconfirmed.",
+            "url": ""
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 52 guessed domains for \"Ruben's Tire\": 3 resolve, 2 serve a page, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "A Yelp page for Ruben's Tires at 9041 W Katella shows the same phone and about 106 reviews at 4.0 stars in its search result title. A Facebook page called Ruben's Tire Shop #1 belongs to a different shop in Indio, so no Facebook page was confirmed for this business. The Yelp page itself could not be opened because of a device verification screen.",
+            "url": "https://www.yelp.com/biz/rubens-tires-anaheim"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Not a match for config/chains.json and not on the empty suppression list. The shop appears independent and recently active on Yelp (updated June 2026 in the result title). The phone 714-499-4779 appears on the Yelp listing, but a second independent source was not read, so the phone has one source.",
+            "url": "https://www.yelp.com/biz/rubens-tires-anaheim"
+          },
+          {
+            "check": "review integrity",
+            "result": "Reviews could not be read because Google Maps and Yelp both showed bot checks; one soft signal noted, the Yelp rating of 4.0 is below the 4.6 the discovery screen reported. No hard stop evidence seen. Needs a proper read of the Maps reviews.",
+            "url": ""
+          }
+        ],
+        "notes": "websiteGap 3 provisional: nothing owned found in search or the probe, but the Maps website field was not read. ticketValue 2: category default. visualFit 2: category default. Not qualified: Maps blocked, so ratingSource cannot be google-maps-observed and the rating and review count disagree between discovery and Yelp. whyKija, pitchAngle and demoConcept left empty until the rating and review count are confirmed."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "sister-beauty-salon-dearborn-mi",
+    "candidate": "Sister Beauty Salon",
+    "category": "Hair salon",
+    "categoryKey": "hair-salon",
+    "city": "Dearborn",
+    "state": "MI",
+    "metro": "detroit",
+    "whyItMayFit": "A 4.8 star average on roughly 243 or more reviews for threading, color, blowouts and kid friendly cuts, with only a Square booking page and Instagram as web presence.",
+    "websiteStatus": "No owned domain surfaced in search or the domain probe; the Instagram bio links to a Square Online booking page and Instagram is the main web presence.",
+    "verificationNeeded": "Open the public Maps listing by hand and read the website field, rating, review count, hours and newest reviews; confirm the phone 313-406-2700 on a second independent source; run the review integrity check on Maps; open the Square booking page in a browser to judge whether it is a credible site (it did not render through fetch).",
+    "ownerContact": "",
+    "phone": "313-406-2700",
+    "googleRating": 4.8,
+    "googleReviews": 243,
+    "sources": [
+      {
+        "url": "https://reviews.birdeye.com/sister-beauty-salon-170102312847630",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.instagram.com/sisterbeautyyyy/",
+        "label": "instagram.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.atly.com/location/SisterBeautySalon",
+        "label": "atly.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://local-hairsalons.com/salons/MI/dearborn/sister-beauty.htm",
+        "label": "local-hairsalons.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps listing unreadable (bot check), review count differs between sources and the phone has one source; Medium confidence.",
+    "lead": {
+      "business": "Sister Beauty Salon",
+      "category": "Hair salon",
+      "categoryKey": "hair-salon",
+      "city": "Dearborn",
+      "area": "",
+      "state": "MI",
+      "metro": "detroit",
+      "address": "13233 W Warren Ave, Dearborn, MI 48126",
+      "phone": "313-406-2700",
+      "phoneLineType": "unknown",
+      "googleRating": 4.8,
+      "googleReviews": 243,
+      "ratingSource": "secondary",
+      "googleMapsUrl": "https://www.google.com/maps/place/Sister+Beauty+Salon/@42.3438368,-83.1738411,17z",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 2,
+      "visualFit": 3,
+      "websiteStatus": "No owned domain surfaced in search or the domain probe; the Instagram bio links to a Square Online booking page and Instagram is the main web presence.",
+      "presence": {
+        "facebook": "https://www.facebook.com/sisterbeautyyyy/",
+        "instagram": "https://www.instagram.com/sisterbeautyyyy/",
+        "yelp": "",
+        "booking": "https://sisterbeautysalon.square.site/",
+        "other": []
+      },
+      "confidence": "Medium",
+      "whyKija": "A salon with a strong review base, a video heavy Instagram feed and services like threading, color and blowouts has a lot of visual proof but sends bookings through a Square page and social links.",
+      "pitchAngle": "Your 4.8 star reviews already show clients trust your work; an owned site could give that trust a home that also shows your threading, color and blowout results.",
+      "demoConcept": "Warm, elegant salon site led by threading, color and blowout results from the Instagram feed, with a service menu, review proof and a book now path.",
+      "services": [
+        "Eyebrow threading",
+        "Hair coloring",
+        "Blowouts",
+        "Kid friendly haircuts",
+        "Waxing"
+      ],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "Monday to Saturday 10am to 6pm, closed Sunday",
+      "sources": [
+        {
+          "url": "https://reviews.birdeye.com/sister-beauty-salon-170102312847630",
+          "label": "reviews.birdeye.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.instagram.com/sisterbeautyyyy/",
+          "label": "instagram.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.atly.com/location/SisterBeautySalon",
+          "label": "atly.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://local-hairsalons.com/salons/MI/dearborn/sister-beauty.htm",
+          "label": "local-hairsalons.com",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "needs-recheck",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searches for the name with Dearborn MI and for the phone surfaced Instagram and Facebook pages, a Square booking page, Birdeye, atly and directory listings, with no owned domain on the first results.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not read on 2026-10-05: Google showed a bot check page for the Maps listing, so that source was dropped without any attempt to get past it; rating and count come from the Birdeye mirror (4.8 from 243 reviews, website field shows Instagram), while discovery recorded 4.8 from 293.",
+            "url": "https://www.google.com/maps/place/Sister+Beauty+Salon/@42.3438368,-83.1738411,17z"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 40 guessed domains for \"Sister Beauty Salon\": 2 resolve, 2 serve a page, 2 look parked or for sale, and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "The Instagram bio website field is sisterbeautysalon.square.site, a Square Online booking page, and a Facebook page exists; no custom domain was found on either.",
+            "url": "https://www.instagram.com/sisterbeautyyyy/"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Appears to be a single independent salon at 13233 W Warren Ave with Instagram posts from September 2025 and a current Birdeye listing, not on the chains list; the phone 313-406-2700 appears on one directory page I read, so it is not yet confirmed on two independent sources.",
+            "url": "https://local-hairsalons.com/salons/MI/dearborn/sister-beauty.htm"
+          },
+          {
+            "check": "review integrity",
+            "result": "Maps reviews were not read this run, so this check is incomplete; the Birdeye mirror shows a 4.8 average with varied comments about threading, color and pricing and no warning visible.",
+            "url": "https://reviews.birdeye.com/sister-beauty-salon-170102312847630"
+          }
+        ],
+        "notes": "websiteGap 2: Square Online booking page and Instagram only. ticketValue 2: category default. visualFit 3: category default, with a video heavy Instagram feed of services. Open items: read the Maps listing, confirm the phone on a second source, judge the Square page in a browser, rerun review integrity on Maps."
+      },
+      "demoCopy": {}
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "teres-tires-dallas-tx",
+    "candidate": "Tere's Tires",
+    "category": "Tire shop",
+    "categoryKey": "tire-shop",
+    "city": "Dallas",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "Independent tire shop on R L Thornton Freeway in Dallas with well over 100 reviews, no owned domain found in search or the probe, and a name that does not match the chain list.",
+    "websiteStatus": "No owned website surfaced in search or the domain probe; the only pages found are third party directory listings.",
+    "verificationNeeded": "Open the public Google Maps listing in a browser and read the website field, exact rating (4.5 floor), review count, hours and recent reviews; confirm the phone on a second independent source such as a Facebook, Yelp or BBB page; then rerun the six checks.",
+    "ownerContact": "",
+    "phone": "214-370-9511",
+    "googleRating": 0,
+    "googleReviews": 0,
+    "sources": [
+      {
+        "url": "https://lantern.llc/b/teres-tires-dallas",
+        "label": "lantern.llc",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps listing could not be read this run (browser not connected); the directory rating (4.6) and the screen (4.5) disagree, and review integrity is unchecked.",
+    "lead": {
+      "business": "Tere's Tires",
+      "category": "Tire shop",
+      "categoryKey": "tire-shop",
+      "city": "Dallas",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "phone": "(214) 370-9511",
+      "phoneLineType": "unknown",
+      "googleRating": 0,
+      "googleReviews": 0,
+      "ratingSource": "",
+      "googleMapsUrl": "https://www.google.com/maps/place/Tere%27s+Tires/@32.790623,-96.749493,17z",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "confidence": "Medium",
+      "websiteGap": 3,
+      "ticketValue": 2,
+      "visualFit": 2,
+      "websiteStatus": "No owned website surfaced in search or the domain probe; the only pages found are third party directory listings.",
+      "presence": {
+        "facebook": "",
+        "instagram": "",
+        "yelp": "",
+        "booking": "",
+        "other": [
+          "https://lantern.llc/b/teres-tires-dallas"
+        ]
+      },
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "",
+      "whyKija": "An independent East Dallas tire shop with well over 100 reviews on its listing and no owned site found could turn local trust into more calls, but the rating and website field need a first hand read before it is a lead.",
+      "pitchAngle": "Customers already vouch for the shop; an owned site would turn that trust into tire and repair calls once the listing is confirmed.",
+      "demoConcept": "Plain neighborhood tire shop site with a tap to call button, a tire size request and the shop's own review proof, to be built only after the listing is confirmed.",
+      "sources": [
+        {
+          "url": "https://lantern.llc/b/teres-tires-dallas",
+          "label": "lantern.llc",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searches for the exact name with Dallas TX, with the street name, and for the phone number returned no owned domain; only a third party directory (lantern.llc) and unrelated pages appeared.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not completed on 2026-10-05: the browser tool was not connected so the public Google Maps listing could not be opened; the website field, rating, review count, category and hours are unread. The discovery screen (4.5 from 154) is not a reading.",
+            "url": "https://www.google.com/maps/place/Tere%27s+Tires/@32.790623,-96.749493,17z"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 52 guessed domains for \"Tere's Tires\": 3 resolve, 2 serve a page, 1 look parked or for sale, 1 forward to a third party profile (teres.com to linkedin.com), and none shows the business phone or name.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "Searches for a Facebook, Instagram, Yelp or booking page returned none; only the lantern.llc directory page exists, and it is not a website owned by the business.",
+            "url": "https://lantern.llc/b/teres-tires-dallas"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "Name does not match any entry in config/chains.json and is not a suppressed business; operating status could not be confirmed from reviews or posts, and the phone appears only on the directory page and the discovery screen, not on two independent business listings.",
+            "url": ""
+          },
+          {
+            "check": "review integrity",
+            "result": "Not completed: reviews could not be read because the Maps listing was unreachable this run; the directory shows 4.6 from 150 against 4.5 from 154 screened, which needs a first hand reading.",
+            "url": ""
+          }
+        ],
+        "notes": "websiteGap 3 provisional: nothing owned found, Maps website field unread. ticketValue 2 kept at category default; a used tire shop may have smaller tickets, to be judged after the listing is read. visualFit 2: category default. Confidence Medium because the Maps listing check was not completed and sources disagree on the rating."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "the-r90m-nail-bar-grand-prairie-tx",
+    "candidate": "The R90M Nail Bar",
+    "category": "Nail salon",
+    "categoryKey": "nail-salon",
+    "city": "Grand Prairie",
+    "state": "TX",
+    "metro": "dallas-fort-worth",
+    "whyItMayFit": "A visually strong, modern nail bar with brow and head spa services, a Facebook page and an Instagram profile with no website link, and a high review count on the screen.",
+    "websiteStatus": "No owned website surfaced in search or the domain probe; an Instagram profile and a Facebook page are the web presence and the Instagram bio has no website link.",
+    "verificationNeeded": "Open the Google Maps listing by hand and confirm the name, address (3172 S SH 161 Frontage Rd Suite 330, Grand Prairie TX 75052), rating, review count, website field and phone. Check how old the profile is against the review count and confirm which of the Yelp listings is the live one. Find the phone on at least two independent public pages.",
+    "ownerContact": "",
+    "phone": "",
+    "googleRating": 0,
+    "googleReviews": 0,
+    "sources": [
+      {
+        "url": "https://www.instagram.com/theroomnailbar/",
+        "label": "instagram.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.facebook.com/ther90mnaibar/",
+        "label": "facebook.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/TABS/Search/Print/TABS2026001657",
+        "label": "tdlr.texas.gov",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps blocked by CAPTCHA, phone unconfirmed, identity and listing age unclear.",
+    "lead": {
+      "business": "The R90M Nail Bar",
+      "category": "Nail salon",
+      "categoryKey": "nail-salon",
+      "city": "Grand Prairie",
+      "state": "TX",
+      "metro": "dallas-fort-worth",
+      "address": "3172 S SH 161 Frontage Rd Suite 330, Grand Prairie, TX 75052",
+      "phone": "",
+      "phoneLineType": "unknown",
+      "googleRating": 0,
+      "googleReviews": 0,
+      "ratingSource": "",
+      "googleMapsUrl": "",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 2,
+      "ticketValue": 1,
+      "visualFit": 3,
+      "websiteStatus": "No owned website surfaced in search or the domain probe; an Instagram profile and a Facebook page are the web presence and the Instagram bio has no website link.",
+      "presence": {
+        "facebook": "https://www.facebook.com/ther90mnaibar/",
+        "instagram": "https://www.instagram.com/theroomnailbar/",
+        "yelp": "https://www.yelp.com/biz/the-r90m-nail-bar-grand-prairie-2",
+        "booking": "",
+        "other": []
+      },
+      "confidence": "Low",
+      "whyKija": "A new, design forward nail bar with luxury nails, brows and head spa services is the kind of visual business where a branded site with a services menu and booking can carry the look people see on Instagram.",
+      "pitchAngle": "Your Instagram already shows the quality of the work; a site of your own gives new customers one place to see the menu and book.",
+      "demoConcept": "Clean, modern nail bar site with a nail design gallery, a menu for nails, brows and head spa, and a mobile first booking request.",
+      "services": [
+        "Nails",
+        "Brows",
+        "Head spa"
+      ],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "Mon to Fri 9:30-20:30; Sat from 9:00",
+      "sources": [
+        {
+          "url": "https://www.instagram.com/theroomnailbar/",
+          "label": "instagram.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.facebook.com/ther90mnaibar/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.tdlr.texas.gov/TABS/Search/Print/TABS2026001657",
+          "label": "tdlr.texas.gov",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "unverified",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the business name with Grand Prairie TX and with its address; no owned domain surfaced, only Yelp (two listings), a Facebook page, the Instagram profile (handle theroomnailbar) and a TDLR project record; no phone number was available to search.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Not read on 2026-10-05: Google showed a bot check (CAPTCHA) and it was not bypassed, so the website field, rating, review count and phone are unconfirmed.",
+            "url": ""
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 40 guessed domains for \"The R90M Nail Bar\": 0 resolve, 0 serve a page, and none shows the business phone or name. A second probe under the earlier name \"The Room Nails Bar\" checked 40 domains with 0 resolving.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "Instagram profile (about 2,450 followers) lists the Suite 330 address and hours with no website or booking link in the bio; the Facebook page is a bare listing; two Yelp listings exist for the same location and neither could be read (403).",
+            "url": "https://www.instagram.com/theroomnailbar/"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "The Instagram feed shows recent seasonal posts so the business appears to be operating; it is not on the chain list; the phone could not be confirmed (none was sourced from a public page) and the earlier unverified discovery number is not recorded here.",
+            "url": ""
+          },
+          {
+            "check": "review integrity",
+            "result": "Could not be completed: no reviews were readable. One tentative signal is a high review count for a profile that looks only months old (TDLR shows the suite finish out planned for completion on 2026-01-01); no hard stop was observed.",
+            "url": ""
+          }
+        ],
+        "notes": "Unresolved: Maps listing, phone, rating and review count all unconfirmed; identity partly unclear (two Yelp listings, rename from The Room, address mismatch with the discovery search). websiteGap 2: third party presence only per Instagram and Facebook, Maps website field unread. ticketValue 1: category default. visualFit 3: category default. Rating and review count left at 0 because none was read this run."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "id": "top-line-nails-warren-mi",
+    "candidate": "Top Line Nails",
+    "category": "Nail salon",
+    "categoryKey": "nail-salon",
+    "city": "Warren",
+    "state": "MI",
+    "metro": "detroit",
+    "whyItMayFit": "Established nail salon with seven day hours and visual work, and no live owned site found; the discovery screen suggested 4.9 stars from 153 reviews but other platforms disagree.",
+    "websiteStatus": "No working owned website surfaced in search or the domain probe; a domain listed on a mirror does not resolve, and the business appears only on directories and a Facebook page.",
+    "verificationNeeded": "Read the public Google Maps listing by hand to confirm the current rating, review count and website field, and reconcile the Yelp (about 2.7 from 72) and Birdeye (4.1 from 589) readings; confirm the phone on a second source.",
+    "ownerContact": "",
+    "phone": "586-558-4453",
+    "googleRating": 0,
+    "googleReviews": 0,
+    "sources": [
+      {
+        "url": "https://reviews.birdeye.com/top-line-nails-170124571435816",
+        "label": "reviews.birdeye.com",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.bbb.org/us/mi/warren/profile/nail-salon/top-line-nails-0372-45002490",
+        "label": "bbb.org",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.facebook.com/p/Top-Line-Nails-100064169491631/",
+        "label": "facebook.com",
+        "checkedAt": "2026-10-05"
+      }
+    ],
+    "decision": "Research",
+    "reason": "Maps hit a bot check this run and independent platforms conflict sharply on the rating, so confidence is Medium.",
+    "lead": {
+      "business": "Top Line Nails",
+      "category": "Nail salon",
+      "categoryKey": "nail-salon",
+      "city": "Warren",
+      "area": "",
+      "state": "MI",
+      "metro": "detroit",
+      "address": "27114 Dequindre Rd, Warren, MI 48092",
+      "phone": "586-558-4453",
+      "phoneLineType": "unknown",
+      "googleRating": 0,
+      "googleReviews": 0,
+      "ratingSource": "",
+      "googleMapsUrl": "https://www.google.com/maps/place/Top+Line+Nails/@42.492022,-83.0841388,17z",
+      "placeId": "",
+      "placeIdCheckedAt": "",
+      "websiteGap": 3,
+      "ticketValue": 1,
+      "visualFit": 3,
+      "websiteStatus": "No working owned website surfaced in search or the domain probe; a domain listed on a mirror does not resolve, and the business appears only on directories and a Facebook page.",
+      "presence": {
+        "facebook": "https://www.facebook.com/p/Top-Line-Nails-100064169491631/",
+        "instagram": "",
+        "yelp": "https://www.yelp.com/biz/top-line-nails-warren",
+        "booking": "",
+        "other": [
+          "https://www.bbb.org/us/mi/warren/profile/nail-salon/top-line-nails-0372-45002490"
+        ]
+      },
+      "confidence": "Medium",
+      "whyKija": "A long running neighborhood nail salon with open hours seven days a week and visual nail art, but no site to show the work, hours or prices.",
+      "pitchAngle": "Your regulars already trust the salon; a home of its own for nail art, prices and Sunday hours would help new clients choose you before they walk in.",
+      "demoConcept": "Clean, photo led nail salon site with a nail art gallery, a service and price menu, hours including Sunday, and a mobile first tap to call and directions.",
+      "services": [],
+      "reviewThemes": [],
+      "languages": [],
+      "established": null,
+      "hours": "Monday to Saturday 9:30 am to 7:30 pm, Sunday 11 am to 5 pm",
+      "sources": [
+        {
+          "url": "https://reviews.birdeye.com/top-line-nails-170124571435816",
+          "label": "reviews.birdeye.com",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.bbb.org/us/mi/warren/profile/nail-salon/top-line-nails-0372-45002490",
+          "label": "bbb.org",
+          "checkedAt": "2026-10-05"
+        },
+        {
+          "url": "https://www.facebook.com/p/Top-Line-Nails-100064169491631/",
+          "label": "facebook.com",
+          "checkedAt": "2026-10-05"
+        }
+      ],
+      "verification": {
+        "status": "needs-recheck",
+        "checkedAt": "2026-10-05",
+        "checks": [
+          {
+            "check": "exact-name search",
+            "result": "Searched the name with Warren MI and with the street address; no owned domain appeared, only BBB, Facebook, Yelp, Birdeye, Nextdoor, Yellow Pages and a directory page.",
+            "url": ""
+          },
+          {
+            "check": "maps listing",
+            "result": "Could not complete on 2026-10-05: the public Google Maps listing returned a Google bot check page, so Maps was dropped for this run and no rating, review count or website field was read by this verifier.",
+            "url": "https://www.google.com/maps/place/Top+Line+Nails/@42.492022,-83.0841388,17z"
+          },
+          {
+            "check": "domain probe",
+            "result": "Domain probe checked 24 guessed domains plus toplinenailswarren.com: toplinenails.com serves only a 28 character redirect page unrelated to the business and nothing shows the phone or name; toplinenailswarren.com, listed on a mirror, does not exist in DNS.",
+            "url": ""
+          },
+          {
+            "check": "social and third party",
+            "result": "A Facebook page, a BBB profile, a Yelp page, a Nextdoor page and Yellow Pages listings exist; the Facebook page text could not be read and no booking platform or Instagram profile was found.",
+            "url": "https://www.facebook.com/p/Top-Line-Nails-100064169491631/"
+          },
+          {
+            "check": "status, chain and sanity",
+            "result": "The BBB profile shows the salon at 27114 Dequindre Rd with phone 586-558-4453 and an A+ rating, not accredited; the same address and hours appear on Birdeye; it is an independent name with no chain match; the phone was read on BBB only, and recent activity could not be confirmed this run.",
+            "url": "https://www.bbb.org/us/mi/warren/profile/nail-salon/top-line-nails-0372-45002490"
+          },
+          {
+            "check": "review integrity",
+            "result": "Unresolved: Birdeye shows 4.1 from 589 reviews with Google counted as 567 and mostly old displayed reviews, a Yelp search summary shows 2.7 from 72, and the discovery screen read 4.9 from 153; these disagree sharply, one mismatch signal, no hard stop seen.",
+            "url": "https://reviews.birdeye.com/top-line-nails-170124571435816"
+          }
+        ],
+        "notes": "websiteGap 3: no live owned site; the only domain listed on a mirror does not resolve. ticketValue 1: category default. visualFit 3: category default, nail art is visual. Open question: the true current Google rating and review count, given the conflicts across platforms."
+      }
+    },
+    "addedAt": "2026-10-05",
+    "updatedAt": "2026-10-05",
+    "runId": "2026-10-05"
   }
 ]

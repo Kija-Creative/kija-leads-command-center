@@ -42,5 +42,60 @@
     "evidenceUrl": "https://txbrothersroofingandconstruction.com/",
     "rejectedAt": "2026-10-02",
     "runId": "2026-09-28"
+  },
+  {
+    "key": "2408481478",
+    "business": "District Braids by Anna",
+    "city": "Washington",
+    "state": "DC",
+    "phone": "240-848-1478",
+    "reason": "Owns a working multi section site with services, pricing, gallery, about page and online booking.",
+    "evidenceUrl": "https://districtbraidsbyanna.com/",
+    "rejectedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "key": "2487651915",
+    "business": "White Tail Fencing LLC",
+    "city": "Troy",
+    "state": "MI",
+    "phone": "248-765-1915",
+    "reason": "Owns a working multi page site at whitetailfencing.com with services, phone, email and a quote button, so websiteGap is 1.",
+    "evidenceUrl": "https://whitetailfencing.com/",
+    "rejectedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "key": "5612867538",
+    "business": "Global Power & Ac Corp",
+    "city": "West Palm Beach",
+    "state": "FL",
+    "phone": "561-286-7538",
+    "reason": "Owns a working website with services, service areas, a blog and an online quote request form at globalpowerpb.com.",
+    "evidenceUrl": "https://globalpowerpb.com/",
+    "rejectedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "key": "7037258508",
+    "business": "JM & Sons Electrical Services",
+    "city": "Alexandria",
+    "state": "VA",
+    "phone": "703-725-8508",
+    "reason": "Owns a working multi section site with services, an estimate request form, an FAQ and a matching phone number.",
+    "evidenceUrl": "https://jmandsonselectricalservices.net/",
+    "rejectedAt": "2026-10-05",
+    "runId": "2026-10-05"
+  },
+  {
+    "key": "dmz hair salon|MD",
+    "business": "DMZ Hair Salon",
+    "city": "Silver Spring",
+    "state": "MD",
+    "phone": "",
+    "reason": "Owns a working website with a service price list, address, hours, staff profiles, testimonials and a booking button.",
+    "evidenceUrl": "https://dmzhairsalon.com/",
+    "rejectedAt": "2026-10-05",
+    "runId": "2026-10-05"
   }
 ]

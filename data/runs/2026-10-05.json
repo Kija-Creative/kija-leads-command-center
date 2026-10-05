@@ -1,0 +1,457 @@
+{
+  "runId": "2026-10-05",
+  "ingestedAt": "2026-10-05T17:28:53.642Z",
+  "mode": "weekly",
+  "plan": {
+    "metros": [
+      "dallas-fort-worth",
+      "los-angeles",
+      "washington-dc",
+      "miami",
+      "detroit"
+    ],
+    "categories": [
+      "concrete",
+      "hair-salon",
+      "tire-shop",
+      "electrical",
+      "fencing",
+      "nail-salon"
+    ]
+  },
+  "counts": {
+    "candidates": 28,
+    "accepted": 0,
+    "queued": 23,
+    "rejected": 5,
+    "duplicates": 0,
+    "reverified": 4,
+    "errors": 0
+  },
+  "accepted": [],
+  "queued": [
+    "golden-star-tire-and-alignments-llc-warren-mi",
+    "sister-beauty-salon-dearborn-mi",
+    "european-hair-design-by-hanan-dearborn-mi",
+    "the-r90m-nail-bar-grand-prairie-tx",
+    "los-amigos-tire-services-santa-ana-ca",
+    "guadalajara-tires-long-beach-ca",
+    "rubens-tire-anaheim-ca",
+    "dfw-tire-shop-grand-prairie-tx",
+    "d-a-tires-rims-alexandria-va",
+    "arco-tire-shop-long-beach-ca",
+    "dama-hair-braiding-detroit-mi",
+    "top-line-nails-warren-mi",
+    "berger-brothers-electrical-service-fort-lauderdale-fl",
+    "friendly-tires-brakes-irving-tx",
+    "teres-tires-dallas-tx",
+    "aras-tire-shop-fort-worth-tx",
+    "rey-finish-concrete-corp-miami-fl",
+    "leonardos-tires-shop-grand-prairie-tx",
+    "hollywood-topline-concrete-hollywood-fl",
+    "bluestone-concrete-investment-llc-hialeah-fl",
+    "arnold-electric-contractor-livonia-mi",
+    "castro-fence-inc-pompano-beach-fl",
+    "east-dallas-tires-dallas-tx"
+  ],
+  "rejected": [
+    "5612867538",
+    "dmz hair salon|MD",
+    "2487651915",
+    "7037258508",
+    "2408481478"
+  ],
+  "reverified": [
+    "j-n-auto-service-fort-worth-tx",
+    "l-r-paint-body-shop-dallas-tx",
+    "most-famous-cutz-dallas-tx",
+    "papas-and-ninos-bodyshop-dallas-tx"
+  ],
+  "duplicates": [],
+  "errors": [],
+  "warnings": [],
+  "searched": [
+    {
+      "query": "stamped concrete Fort Worth TX; concrete contractor Dallas TX; concrete driveway Plano TX",
+      "source": "Google Maps (browser, own tab)",
+      "notes": "Every listing with 20+ reviews showed a Website button. No no-website concrete candidates."
+    },
+    {
+      "query": "electrician Arlington TX; electrician Fort Worth TX",
+      "source": "Google Maps (browser)",
+      "notes": "All qualifying electricians show websites (Mr. Electric franchises, JSR, DLI, etc.). None."
+    },
+    {
+      "query": "fence contractor Irving TX; fence company Fort Worth TX",
+      "source": "Google Maps (browser)",
+      "notes": "All qualifying fence companies show websites. ProJoe Construction (817-482-0560) had no Website button but only 16 reviews, dropped."
+    },
+    {
+      "query": "tire shop Dallas TX; used tires Fort Worth TX; tire repair Arlington TX; used tires Irving TX; tire shop Grand Prairie TX",
+      "source": "Google Maps (browser)",
+      "notes": "Several independents with no Website button. Opened detail pages for Tere's Tires, East Dallas Tires, Aras Tire Shop, Friendly Tires & Brakes, Leonardo's Tires Shop, DFW Tire Shop, Tire on Time (has site, dropped)."
+    },
+    {
+      "query": "hair salon Plano TX; braiding salon Dallas TX",
+      "source": "Google Maps (browser)",
+      "notes": "Opened Vani's Braids, Ela's Braids, Premaliz Hair Braids, Altruistic Braids: all list a website or booking-site link, dropped. Many other salons show Book online and are likely to have sites."
+    },
+    {
+      "query": "nail salon Grand Prairie TX; Qsky Nails and Best Nail Bar detail",
+      "source": "Google Maps (browser)",
+      "notes": "Qsky Nails has qskynails.com, Best Nail Bar has a Website button. R90M Nail Bar shows no website in list view, not opened in detail."
+    },
+    {
+      "query": "Dallas stamped concrete; Fort Worth fence company; Arlington braiding salon; Pejah Braiding",
+      "source": "WebSearch",
+      "notes": "Only directory pages (HomeAdvisor, Fash, business.google.com). Pejah Braiding (Arlington, 469-434-7776) has no website on an unverified listing but no rating or review count visible, so not returned."
+    },
+    {
+      "query": "fence contractor in Santa Ana CA",
+      "source": "google-maps (browser, one results page)",
+      "notes": "8 results. OC Fence Service 5.0 (51) showed no Website button in the list, but it lists 24 hour hours and I could not open the listing (CAPTCHA later). Others had Website buttons."
+    },
+    {
+      "query": "concrete contractor in Long Beach CA",
+      "source": "google-maps (browser)",
+      "notes": "8 results; nearly all had Website buttons or only 1 to 5 reviews. Nothing qualified."
+    },
+    {
+      "query": "concrete contractor in Anaheim CA",
+      "source": "google-maps (browser)",
+      "notes": "8 results, all with Website buttons and mostly under 20 reviews. Nothing qualified."
+    },
+    {
+      "query": "hair salon in Pasadena CA",
+      "source": "google-maps (browser)",
+      "notes": "6 results. Opened Chignon Hair Salon and Tangles Salon listings: both show an owned domain. Dropped."
+    },
+    {
+      "query": "braiding salon in Los Angeles CA",
+      "source": "google-maps (browser)",
+      "notes": "6 results. Salon Daba listing shows salondabala.com. Others under 4.5 stars. Nothing qualified."
+    },
+    {
+      "query": "electrician in Glendale CA",
+      "source": "google-maps (browser)",
+      "notes": "8 results; mostly 24 hour, apartment or suite addresses and 1 to 2 review listings that look like lead generation; skipped, not verified."
+    },
+    {
+      "query": "electrician in Long Beach CA",
+      "source": "google-maps (browser)",
+      "notes": "8 results; all had Website buttons except Long Beach Electric (24 hours, 4th floor suite address), skipped as a likely lead gen listing."
+    },
+    {
+      "query": "fence contractor in Los Angeles CA",
+      "source": "google-maps (browser)",
+      "notes": "8 results, all with Website buttons or under 4.5. Nothing qualified."
+    },
+    {
+      "query": "nail salon in Glendale CA",
+      "source": "google-maps (browser)",
+      "notes": "6 results (Luxus Nail Spa 4.7/241, Pristine Nail & Spa 4.7/151, H Nails 5.0/25 had no Website button in the list). Could not open listings because Google showed a CAPTCHA, so unverified."
+    },
+    {
+      "query": "tire shop in Santa Ana CA",
+      "source": "google-maps (browser)",
+      "notes": "6 results. Opened Go Used Tires (owned domain gousedtire.com, dropped), A&G Tire Service (ramostireservice.com, dropped), Los Amigos Tire Services (Add website prompt, no website, kept)."
+    },
+    {
+      "query": "tire shop in Anaheim CA",
+      "source": "google-maps (browser)",
+      "notes": "6 results. Anaheim Wheel & Tire has anaheimtire.net (dropped). Ruben's Tire listing opened: no website, kept."
+    },
+    {
+      "query": "tire shop in Long Beach CA",
+      "source": "google-maps (browser)",
+      "notes": "6 results. Arco Tire Shop and Guadalajara Tires listings opened: no website on either, kept. Pacific Tire and Discount Tire are multi-location, skipped."
+    },
+    {
+      "query": "stamped concrete contractor Long Beach CA facebook page reviews",
+      "source": "WebSearch",
+      "notes": "Only HomeAdvisor, Angi and Thumbtack style aggregators; no usable independent leads."
+    },
+    {
+      "query": "fence contractor Santa Ana CA \"no website\" 5 stars",
+      "source": "WebSearch",
+      "notes": "Aggregator pages only (BuildZoom, Yext); review counts too low."
+    },
+    {
+      "query": "electrician Anaheim CA facebook page only owner operated reviews",
+      "source": "WebSearch",
+      "notes": "Aggregators only; no verified lead."
+    },
+    {
+      "query": "Los Amigos, A&G, Go Used Tires, Arco, Guadalajara, Ruben's name and address checks",
+      "source": "WebSearch",
+      "notes": "Directories only; no owned domain surfaced for Los Amigos, Arco, Guadalajara or Ruben's."
+    },
+    {
+      "query": "fence company in Arlington VA",
+      "source": "Google Maps (browser)",
+      "notes": "All 8 listings show a Website button, none viable."
+    },
+    {
+      "query": "fence contractor in Silver Spring MD",
+      "source": "Google Maps (browser)",
+      "notes": "All 8 have owned websites."
+    },
+    {
+      "query": "tire shop in Washington DC",
+      "source": "Google Maps (browser)",
+      "notes": "Nzuimanto has nzuitire.com, Action Al's has actionals.net; others large or sponsored."
+    },
+    {
+      "query": "tire shop in Silver Spring MD",
+      "source": "Google Maps (browser)",
+      "notes": "Mostly large or chain, none taken."
+    },
+    {
+      "query": "used tires in Manassas VA",
+      "source": "Google Maps (browser)",
+      "notes": "MonCar Tire Center detail page shows moncartirecenters.com; dropped."
+    },
+    {
+      "query": "tire repair in Alexandria VA",
+      "source": "Google Maps (browser)",
+      "notes": "D-A Tires & Rims detail page read; only a builder-subdomain site listed."
+    },
+    {
+      "query": "nail salon in Alexandria VA",
+      "source": "Google Maps (browser)",
+      "notes": "N&J Nails and Casabella have own sites; others large."
+    },
+    {
+      "query": "nail salon in Silver Spring MD",
+      "source": "Google Maps (browser)",
+      "notes": "No listing at 4.5+ shortlisted."
+    },
+    {
+      "query": "electrician in Arlington VA",
+      "source": "Google Maps (browser)",
+      "notes": "R&A, Muza, Higher Power, E&A, Creteform-type firms all have owned sites; JM & Sons only a digital card on Maps."
+    },
+    {
+      "query": "concrete contractor in Manassas VA",
+      "source": "Google Maps (browser)",
+      "notes": "Creteform has creteform.com; others under 20 reviews or under 4.5."
+    },
+    {
+      "query": "hair braiding salon in Washington DC",
+      "source": "Google Maps (browser)",
+      "notes": "District Braids by Anna 4.8/110 noted; website not read on Maps before block."
+    },
+    {
+      "query": "hair salon in Silver Spring MD",
+      "source": "Google Maps (browser)",
+      "notes": "DMZ Hair Salon noted; Hairbytig has hairbytig.com so dropped."
+    },
+    {
+      "query": "hair salon in Alexandria VA / hair stylist in Fairfax VA / braiding salon in Silver Spring MD",
+      "source": "Google Maps (browser)",
+      "notes": "Blocked by Google CAPTCHA page; stopped."
+    },
+    {
+      "query": "web searches for DMZ Hair Salon, District Braids by Anna, Hairbytig, Action Al's Tire, JM & Sons Electrical, Nzuimanto, MonCar, Dad of the Roads",
+      "source": "WebSearch/WebFetch",
+      "notes": "Used to check owned sites; several dropped for having websites."
+    },
+    {
+      "query": "facebook-only searches for nail salon, electrician, concrete in NoVA",
+      "source": "WebSearch",
+      "notes": "Returned directories only; nothing usable."
+    },
+    {
+      "query": "fence company Hialeah FL no website Facebook 5 star reviews",
+      "source": "WebSearch",
+      "notes": "Only directory results; no usable no-website leads."
+    },
+    {
+      "query": "Google Maps: electrician in Hialeah FL",
+      "source": "Google Maps (browser)",
+      "notes": "All qualifying listings had Website buttons."
+    },
+    {
+      "query": "Google Maps: fence company in Miami FL",
+      "source": "Google Maps (browser)",
+      "notes": "Qualifying listings all had sites; Henry's Fence 3.9 rejected."
+    },
+    {
+      "query": "Google Maps: concrete contractor in Hialeah FL",
+      "source": "Google Maps (browser)",
+      "notes": "Found Rey Finish Concrete Corp and Bluestone concrete & investment with no Website button."
+    },
+    {
+      "query": "Google Maps: hair salon / tire shop / nail salon in Hialeah FL",
+      "source": "Google Maps (browser)",
+      "notes": "Layout showed no Website buttons at all, so no-website status could not be read from list. Not pursued further this run."
+    },
+    {
+      "query": "Google Maps: concrete contractor in Fort Lauderdale FL",
+      "source": "Google Maps (browser)",
+      "notes": "All qualifying had websites; no-review listings dropped."
+    },
+    {
+      "query": "Google Maps: concrete driveway in Hollywood FL",
+      "source": "Google Maps (browser)",
+      "notes": "Found Hollywood Topline Concrete without website; Hallandale Concrete 4.3 rejected."
+    },
+    {
+      "query": "Google Maps: fence company in Pompano Beach FL",
+      "source": "Google Maps (browser)",
+      "notes": "Found Castro fence inc without website; Hurricane Fence 4.4 rejected."
+    },
+    {
+      "query": "Google Maps: electrician in West Palm Beach FL",
+      "source": "Google Maps (browser)",
+      "notes": "Global Power & Ac Corp has no Website button."
+    },
+    {
+      "query": "Google Maps: electrician in Fort Lauderdale FL",
+      "source": "Google Maps (browser)",
+      "notes": "Berger Brothers Electrical Service has no Website button."
+    },
+    {
+      "query": "Google Maps: electrician in Hollywood FL",
+      "source": "Google Maps (browser)",
+      "notes": "Hot Shot Electric no site but only 14 reviews."
+    },
+    {
+      "query": "Google Maps: fence company in West Palm Beach FL",
+      "source": "Google Maps (browser)",
+      "notes": "Elite Fence & Gate no site but 15 reviews."
+    },
+    {
+      "query": "Google Maps: concrete contractor in West Palm Beach FL",
+      "source": "Google Maps (browser)",
+      "notes": "All qualifying had sites."
+    },
+    {
+      "query": "Rey Finish / Bluestone / Hollywood Topline / Castro Fence / Berger Brothers / Global Power name and phone searches",
+      "source": "WebSearch",
+      "notes": "No independent web presence found for the first five, which supports but does not prove no site. Global Power appears on BuildZoom, ConsumerAffairs and Thumbtack-type directories with a different phone (561) 657-6755, so a real site may exist."
+    },
+    {
+      "query": "fence company Warren MI facebook page reviews 5 stars",
+      "source": "WebSearch",
+      "notes": "Directory results only; named Semper Fi Fencing (Facebook 5.0, 36 reviews) as a lead to check, not verified."
+    },
+    {
+      "query": "stamped concrete contractor Sterling Heights MI facebook",
+      "source": "WebSearch",
+      "notes": "Directory pages only, nothing usable."
+    },
+    {
+      "query": "electrician Dearborn MI no website reviews",
+      "source": "WebSearch",
+      "notes": "Thumbtack/HomeGuide listings, none with enough Google reviews."
+    },
+    {
+      "query": "braiding salon Detroit MI booking facebook instagram 5.0 reviews",
+      "source": "WebSearch",
+      "notes": "StyleSeat/Fresha pages, nothing verified."
+    },
+    {
+      "query": "used tires shop Detroit MI yelp reviews",
+      "source": "WebSearch",
+      "notes": "Directory pages, no strong candidate."
+    },
+    {
+      "query": "fence company in Warren MI",
+      "source": "google-maps",
+      "notes": "First results page read by hand; White Tail Fencing LLC (Troy address) had no Website button."
+    },
+    {
+      "query": "concrete contractor in Sterling Heights MI",
+      "source": "google-maps",
+      "notes": "8 listings read, all show a Website button."
+    },
+    {
+      "query": "stamped concrete in Detroit MI",
+      "source": "google-maps",
+      "notes": "8 listings read, all show a Website button."
+    },
+    {
+      "query": "concrete driveway in Warren MI",
+      "source": "google-maps",
+      "notes": "8 listings read, all show a Website button."
+    },
+    {
+      "query": "concrete contractor in Livonia MI",
+      "source": "google-maps",
+      "notes": "8 listings read; the no-website ones have 1 to 3 reviews, below floor."
+    },
+    {
+      "query": "concrete patio in Dearborn MI",
+      "source": "google-maps",
+      "notes": "8 listings read, all show a Website button."
+    },
+    {
+      "query": "concrete repair in Troy MI",
+      "source": "google-maps",
+      "notes": "8 listings read, all show a Website button."
+    },
+    {
+      "query": "electrician in Dearborn MI",
+      "source": "google-maps",
+      "notes": "8 listings read; no-website ones have 12 to 13 reviews, below floor."
+    },
+    {
+      "query": "electrician in Troy MI",
+      "source": "google-maps",
+      "notes": "8 listings read, all show a Website button."
+    },
+    {
+      "query": "electrician in Warren MI",
+      "source": "google-maps",
+      "notes": "8 listings read; no-website ones have 6 to 18 reviews or low rating."
+    },
+    {
+      "query": "electrical contractor in Detroit MI",
+      "source": "google-maps",
+      "notes": "8 listings read; Sanford & Son Electrical 4.9 with 22 reviews has no Website button, left as a weak pass."
+    },
+    {
+      "query": "electrician in Livonia MI",
+      "source": "google-maps",
+      "notes": "8 listings read; Arnold Electric Contractor 4.8 with 35 reviews, no website field on listing."
+    },
+    {
+      "query": "electrician in Sterling Heights MI",
+      "source": "google-maps",
+      "notes": "Page did not load in the first attempt and was not retried."
+    },
+    {
+      "query": "fence contractor in Dearborn MI",
+      "source": "google-maps",
+      "notes": "8 listings read; no-website ones are below rating or review floors."
+    },
+    {
+      "query": "braiding salon in Detroit MI",
+      "source": "google-maps",
+      "notes": "6 listings read; Dama Hair Braiding opened (canva.site only); Max African Hair Braiding has its own .shop domain, dropped."
+    },
+    {
+      "query": "hair salon in Dearborn MI",
+      "source": "google-maps",
+      "notes": "6 listings read; opened Sister Beauty Salon and European Hair Design by Hanan, both Instagram link only."
+    },
+    {
+      "query": "tire shop in Detroit MI",
+      "source": "google-maps",
+      "notes": "6 listings read; nothing at 4.5 plus without website that was clearly independent and verified."
+    },
+    {
+      "query": "tire shop in Warren MI",
+      "source": "google-maps",
+      "notes": "6 listings read; opened Golden Star Tire and Alignments, no website."
+    },
+    {
+      "query": "nail salon in Warren MI",
+      "source": "google-maps",
+      "notes": "6 listings read; opened Top Line Nails (no website) and Anchor Nails And Spa (nailsites.com builder site)."
+    }
+  ],
+  "notes": "Weekly workflow run. 28 candidates found, 28 unique and new, 20 verified by skeptic agents. Caps and drops: Verification cap: 8 of 28 candidates not verified this run (cap 20 = 5 agents x 4, set by the 14 agent cap); they go to the research queue as unverified overflow: Aras Tire Shop; Rey Finish Concrete Corp; Leonardo's Tires Shop; Hollywood Topline Concrete; Bluestone concrete & investment llc; Arnold Electric Contractor; and 2 more. Agent cap: 4 of 8 stale items not rechecked this run (1 recheck agents): Adams Brothers Roof Repair; Fenix Auto Body Shop; Adams Paint & Body; AJ's Auto Body Shop. Plan written to data/inbox/2026-10-05.plan.json (week 2026-W41, rotation week 1). No data/runs/2026-10-05.json exists, so alreadyRan is false. Home metro is Dallas-Fort Worth, capped at 3 new leads. 215 exclusion keys are in the plan, returned exactly as written. data/suppression.json is an empty list, so nothing is suppressed. No Places key, so discover was skipped and purge-places found nothing to delete. Recheck: 62 leads qualify as stale (all are needs-recheck sheet imports; none are places-api or carry placesFetchedAt, and none have a place ID older than 12 months). The first 8 by oldest checkedAt are returned, with 54 left over by the cap. Note that the ratingSource is empty for all 8, and the two rechecked leads with place IDs (Adams Paint & Body, AJ's Auto Body Shop) were stamped 2026-10-02. AJ's Auto Body Shop is currently websiteGap 1 and may need a reject decision if the weak site is confirmed credible. Queue: 22 items, none with decision Research older than 14 days, so no queue rechecks. Categories hair-salon and nail-salon are salon types where Spanish-only leads are excluded per the team note. No files were changed other than the plan file written by npm run plan.",
+  "changed": true
+}

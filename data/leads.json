@@ -1202,15 +1202,15 @@
     "metro": "dallas-fort-worth",
     "address": "",
     "phone": "817-923-9211",
-    "googleRating": 4.8,
-    "googleReviews": 127,
-    "ratingSource": "",
+    "googleRating": 4.9,
+    "googleReviews": 146,
+    "ratingSource": "secondary",
     "googleMapsUrl": "",
     "placeId": "",
     "websiteGap": 2,
     "ticketValue": 3,
     "visualFit": 2,
-    "websiteStatus": "Facebook is the listed website; no owned domain surfaced for the Fort Worth shop",
+    "websiteStatus": "Facebook page is the listed website on directory mirrors; no owned domain found in search or the domain probe for the Fort Worth shop",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -1218,7 +1218,7 @@
       "booking": "",
       "other": []
     },
-    "confidence": "High",
+    "confidence": "Medium-High",
     "whyKija": "Established neighborhood shop with a strong review base but no owned web presence beyond Facebook.",
     "pitchAngle": "Preserve the mom-and-pop trust while giving common repairs, appointments and shop information a credible home.",
     "demoConcept": "Owner-led neighborhood mechanic site with services, review proof, appointment request, hours/map and trust story.",
@@ -1231,26 +1231,56 @@
     "sources": [
       {
         "url": "https://findaloco.com/en/directory/j-n-auto-service/",
-        "label": "findaloco.com",
-        "checkedAt": "2026-09-26"
+        "label": "findaloco directory",
+        "checkedAt": "2026-10-05"
       },
       {
         "url": "https://reviews.birdeye.com/j-n-auto-service-156043222689243",
-        "label": "reviews.birdeye.com",
-        "checkedAt": "2026-09-26"
+        "label": "Birdeye mirror",
+        "checkedAt": "2026-10-05"
+      },
+      {
+        "url": "https://www.jandnautoservice.com/",
+        "label": "Unrelated Georgia shop of the same name, ruled out by domain probe",
+        "checkedAt": "2026-10-05"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-10-05",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "Facebook is the listed website; no owned domain surfaced for the Fort Worth shop",
+          "check": "exact-name search",
+          "result": "Searched \"J & N Auto Service\" Fort Worth TX and the phone in quotes on 2026-10-05. Results were directory and BBB listings only for 1600 Park Place Ave, Fort Worth; no owned domain surfaced. The phone search returned no page for the number.",
           "url": ""
+        },
+        {
+          "check": "maps listing",
+          "result": "Opening Google Maps on 2026-10-05 returned a Google bot check page, so the listing was not read and that source was dropped for this run. Rating and count were read on the Birdeye mirror instead: 4.9 overall, 159 reviews of which 146 are Google, website field shows the Facebook page, profile unclaimed.",
+          "url": "https://reviews.birdeye.com/j-n-auto-service-156043222689243"
+        },
+        {
+          "check": "domain probe",
+          "result": "Probe checked 64 guessed domains on 2026-10-05. Only possible match was jandnautoservice.com, which I opened: it is an Atlanta area shop in Doraville, Georgia with a different phone and no Fort Worth or Texas mention, so it is a different business. Others were unrelated or parked.",
+          "url": "https://www.jandnautoservice.com/"
+        },
+        {
+          "check": "social and third party",
+          "result": "Directory listing on findaloco.com gives the Facebook page facebook.com/JNAUTOSERVICEFORTWORTHTEXAS/ as the website; Birdeye also links the Facebook page. The Facebook page itself returned too little content to read its About section. No Yelp page or booking platform was found.",
+          "url": "https://findaloco.com/en/directory/j-n-auto-service/"
+        },
+        {
+          "check": "status, chain and sanity",
+          "result": "Shown as open now with weekday hours at 1600 Park Pl Ave, Fort Worth, and a described family owned shop; Birdeye shows reviews across years. BBB category listings mention Benbrook and Kennedale locations for this name, which is a soft question on whether it is a single shop. Phone 817-923-9211 was read on findaloco.com only, so it is not corroborated by a second source this run.",
+          "url": "https://findaloco.com/en/directory/j-n-auto-service/"
+        },
+        {
+          "check": "review integrity",
+          "result": "Read on the Birdeye mirror on 2026-10-05: no warning banner, no incentive wording, no keyword stuffed name, storefront address. Themes are varied (fair pricing, honesty, 15 year customers). Newest reviewer account details and owner replies were not visible, so those signals could not be checked. Zero signals observed.",
+          "url": "https://reviews.birdeye.com/j-n-auto-service-156043222689243"
         }
       ],
-      "notes": ""
+      "notes": "Google Maps blocked by a bot check, so rating source is a mirror and confidence is capped at Medium-High. Open items: second source for the phone, confirm the Facebook About website field, confirm the Benbrook and Kennedale BBB mentions are alternate addresses of the same shop. Google review count used is the Google portion shown on Birdeye (146); the 4.9 rating is the blended figure shown there."
     },
     "outreach": {
       "status": "New",
@@ -1264,6 +1294,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-10-05T17:28:53.642Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-10-05: rating 4.8 to 4.9; reviews 127 to 146; website status \"Facebook is the listed website; no owned domain surfaced for the Fort Worth shop\" to \"Facebook page is the listed website on directory mirrors; no owned domain found in search or the domain probe for the Fort Worth shop\"; confidence \"High\" to \"Medium-High\"; rating source blank to \"secondary\"; verification \"needs-recheck\" to \"verified\"; 1 source added, 2 sources rechecked."
         }
       ]
     },
@@ -1290,14 +1326,14 @@
     "address": "",
     "phone": "972-484-3595",
     "googleRating": 4.7,
-    "googleReviews": 52,
-    "ratingSource": "",
+    "googleReviews": 56,
+    "ratingSource": "secondary",
     "googleMapsUrl": "",
     "placeId": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
-    "websiteStatus": "No owned website listed in researched sources",
+    "websiteStatus": "No website listed on the Birdeye mirror or the directory listing; no owned domain found by search or the domain probe",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -1305,7 +1341,7 @@
       "booking": "",
       "other": []
     },
-    "confidence": "High",
+    "confidence": "Medium-High",
     "whyKija": "Established collision shop with visual proof, insurance work and high-ticket jobs.",
     "pitchAngle": "Put decades of collision experience and insurance capability in one credible home.",
     "demoConcept": "Before/after collision site with hail/frame/insurance service paths.",
@@ -1318,26 +1354,51 @@
     "sources": [
       {
         "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/l-r-paint-body-shop",
-        "label": "autorepairestimate.ai",
-        "checkedAt": "2026-09-26"
+        "label": "autorepairestimate directory",
+        "checkedAt": "2026-10-05"
       },
       {
         "url": "https://reviews.birdeye.com/l-r-paint-body-shop-156052062419420",
-        "label": "reviews.birdeye.com",
-        "checkedAt": "2026-09-26"
+        "label": "Birdeye mirror",
+        "checkedAt": "2026-10-05"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-10-05",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "No owned website listed in researched sources",
+          "check": "exact-name search",
+          "result": "Searched \"L & R Paint & Body Shop\" Dallas TX, the address, and the phone in quotes on 2026-10-05. Search returned only other Dallas body shops and no owned domain for this business.",
           "url": ""
+        },
+        {
+          "check": "maps listing",
+          "result": "Opening Google Maps on 2026-10-05 returned a Google bot check page, so the listing was not read and that source was dropped for this run. Read on the Birdeye mirror instead: 4.7 overall, 57 reviews (56 Google), category body shop, website not provided, profile unclaimed.",
+          "url": "https://reviews.birdeye.com/l-r-paint-body-shop-156052062419420"
+        },
+        {
+          "check": "domain probe",
+          "result": "Probe checked 64 guessed domains on 2026-10-05: one resolved (landr.com, a music platform) with no name or phone match, verdict no-owned-domain-found.",
+          "url": ""
+        },
+        {
+          "check": "social and third party",
+          "result": "No Facebook, Instagram, Yelp or booking page found in search or on the two directory pages read; neither lists a website.",
+          "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/l-r-paint-body-shop"
+        },
+        {
+          "check": "status, chain and sanity",
+          "result": "Directory page shows 12130 Harry Hines Blvd, Dallas, weekday hours, open and operating, 4.7 from 52 reviews at its snapshot. Phone 972-484-3595 appears on autorepairestimate.ai only; Birdeye does not display a phone. Single location, independent. Older reviewer note says the shop takes cash or check only.",
+          "url": "https://autorepairestimate.ai/auto-body-shops/tx/dallas/l-r-paint-body-shop"
+        },
+        {
+          "check": "review integrity",
+          "result": "Read on the Birdeye mirror on 2026-10-05: no warning banner, no incentive wording, a storefront address on a main road, a sub 5 rating. Reviewer account detail and owner replies were not visible. Zero signals observed.",
+          "url": "https://reviews.birdeye.com/l-r-paint-body-shop-156052062419420"
         }
       ],
-      "notes": ""
+      "notes": "Google Maps blocked by a bot check, so confidence is capped at Medium-High. Open item: a second independent source for the phone, and recent review dates, which the mirror did not show."
     },
     "outreach": {
       "status": "New",
@@ -1351,6 +1412,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-10-05T17:28:53.642Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-10-05: reviews 52 to 56; website status \"No owned website listed in researched sources\" to \"No website listed on the Birdeye mirror or the directory listing; no owned domain found by search or the domain probe\"; confidence \"High\" to \"Medium-High\"; rating source blank to \"secondary\"; verification \"needs-recheck\" to \"verified\"; 2 sources rechecked."
         }
       ]
     },
@@ -1377,14 +1444,14 @@
     "address": "",
     "phone": "214-980-4863",
     "googleRating": 4.9,
-    "googleReviews": 165,
-    "ratingSource": "",
+    "googleReviews": 173,
+    "ratingSource": "secondary",
     "googleMapsUrl": "",
     "placeId": "",
     "websiteGap": 2,
     "ticketValue": 1,
     "visualFit": 3,
-    "websiteStatus": "Facebook/Fresha third-party presence; no standalone owned site surfaced",
+    "websiteStatus": "Apple Maps lists a Facebook page as the website and Birdeye shows no website; no standalone owned domain found by search or the probe",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -1392,7 +1459,7 @@
       "booking": "",
       "other": []
     },
-    "confidence": "High",
+    "confidence": "Medium-High",
     "whyKija": "The business already has visual personality and 165 Google reviews, but its brand lives on third-party platforms.",
     "pitchAngle": "Create an owned brand hub that showcases the team and cuts while routing clients cleanly into booking.",
     "demoConcept": "Bold editorial barber site with gallery, barber cards, review wall, Book Now and walk-in hours.",
@@ -1405,26 +1472,51 @@
     "sources": [
       {
         "url": "https://reviews.birdeye.com/most-famous-cutz-170218599248625",
-        "label": "reviews.birdeye.com",
-        "checkedAt": "2026-09-26"
+        "label": "Birdeye mirror",
+        "checkedAt": "2026-10-05"
       },
       {
         "url": "https://maps.apple.com/place?place-id=I4AD2741B435E7D9E",
-        "label": "maps.apple.com",
-        "checkedAt": "2026-09-26"
+        "label": "Apple Maps listing",
+        "checkedAt": "2026-10-05"
       }
     ],
     "verification": {
-      "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "status": "verified",
+      "checkedAt": "2026-10-05",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "Facebook/Fresha third-party presence; no standalone owned site surfaced",
+          "check": "exact-name search",
+          "result": "Searched \"Most Famous Cutz\" Dallas TX and the phone in quotes on 2026-10-05. Results confirmed the shop at 603 Singleton Blvd and showed no owned domain; the phone search returned no matching page.",
           "url": ""
+        },
+        {
+          "check": "maps listing",
+          "result": "Opening Google Maps on 2026-10-05 returned a Google bot check page, so the listing was not read and that source was dropped for this run. Read on the Birdeye mirror instead: 4.9 from 173 reviews all from Google, website not listed, category barbershop, profile unclaimed.",
+          "url": "https://reviews.birdeye.com/most-famous-cutz-170218599248625"
+        },
+        {
+          "check": "domain probe",
+          "result": "Probe checked 24 guessed domains on 2026-10-05: none resolve, verdict no-owned-domain-found.",
+          "url": ""
+        },
+        {
+          "check": "social and third party",
+          "result": "Apple Maps listing shows the website as facebook.com/mostfamouscutz. The Facebook page itself returned too little content to read its About section or booking link. No Yelp, Instagram or booking platform page was identified for this shop.",
+          "url": "https://maps.apple.com/place?place-id=I4AD2741B435E7D9E"
+        },
+        {
+          "check": "status, chain and sanity",
+          "result": "Shop appears open and independent at 603 Singleton Blvd, Dallas, with reviews roughly a month old. Phone 214-980-4863 appears on Apple Maps, and Birdeye shows a call option, so it is consistently published. Hours disagree: Birdeye shows weekdays only while Apple Maps shows weekend hours, so the hours are unresolved.",
+          "url": "https://maps.apple.com/place?place-id=I4AD2741B435E7D9E"
+        },
+        {
+          "check": "review integrity",
+          "result": "Read on the Birdeye mirror on 2026-10-05: no warning banner, no incentive wording, a storefront address. Reviews credit several named barbers with specific detail. Reviewer account detail was not visible. Zero signals observed.",
+          "url": "https://reviews.birdeye.com/most-famous-cutz-170218599248625"
         }
       ],
-      "notes": ""
+      "notes": "Google Maps blocked by a bot check, so confidence is capped at Medium-High. Open items: confirm the Facebook About website field and hours on the next pass."
     },
     "outreach": {
       "status": "New",
@@ -1438,6 +1530,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-10-05T17:28:53.642Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-10-05: reviews 165 to 173; website status \"Facebook/Fresha third-party presence; no standalone owned site surfaced\" to \"Apple Maps lists a Facebook page as the website and Birdeye shows no website; no standalone owned domain found by search or the probe\"; confidence \"High\" to \"Medium-High\"; rating source blank to \"secondary\"; verification \"needs-recheck\" to \"verified\"; 2 sources rechecked."
         }
       ]
     },
@@ -1661,14 +1759,14 @@
     "address": "",
     "phone": "469-231-8776",
     "googleRating": 5,
-    "googleReviews": 60,
-    "ratingSource": "",
+    "googleReviews": 66,
+    "ratingSource": "secondary",
     "googleMapsUrl": "",
     "placeId": "",
     "websiteGap": 3,
     "ticketValue": 3,
     "visualFit": 3,
-    "websiteStatus": "No standalone site found in researched sources",
+    "websiteStatus": "No website listed on the Birdeye mirror; no owned domain found by search or the domain probe",
     "presence": {
       "facebook": "",
       "instagram": "",
@@ -1676,7 +1774,7 @@
       "booking": "",
       "other": []
     },
-    "confidence": "High",
+    "confidence": "Medium",
     "whyKija": "Strong reviews plus visual before/after potential and bilingual opportunity.",
     "pitchAngle": "Make estimates easier and present the family reputation customers already mention.",
     "demoConcept": "Bilingual collision site with before/after gallery, insurance help and photo-estimate form.",
@@ -1692,21 +1790,46 @@
     "sources": [
       {
         "url": "https://reviews.birdeye.com/papas-and-ninos-bodyshop-166619692947680",
-        "label": "reviews.birdeye.com",
-        "checkedAt": "2026-09-26"
+        "label": "Birdeye mirror",
+        "checkedAt": "2026-10-05"
       }
     ],
     "verification": {
       "status": "needs-recheck",
-      "checkedAt": "2026-09-26",
+      "checkedAt": "2026-10-05",
       "checks": [
         {
-          "check": "sheet import",
-          "result": "No standalone site found in researched sources",
+          "check": "exact-name search",
+          "result": "Searched \"Papas and Ninos Bodyshop\" Dallas TX and the phone in quotes on 2026-10-05. Only directory profiles surfaced (Lantern listing for a Dallas auto body shop); no owned domain; the phone search returned no page for the number.",
+          "url": "https://lantern.llc/b/papas-and-ninos-bodyshop-dallas"
+        },
+        {
+          "check": "maps listing",
+          "result": "Opening Google Maps on 2026-10-05 returned a Google bot check page, so the listing was not read and that source was dropped for this run. Read on the Birdeye mirror instead: 5.0 from 66 reviews all Google, 6570 Hunnicut Rd, website not listed, profile unclaimed.",
+          "url": "https://reviews.birdeye.com/papas-and-ninos-bodyshop-166619692947680"
+        },
+        {
+          "check": "domain probe",
+          "result": "Probe checked 60 guessed domains on 2026-10-05: none resolve, verdict no-owned-domain-found.",
           "url": ""
+        },
+        {
+          "check": "social and third party",
+          "result": "No Facebook, Instagram, Yelp or booking page found in search results for this shop. The Lantern directory page returned an error on direct fetch, so it was not read.",
+          "url": ""
+        },
+        {
+          "check": "status, chain and sanity",
+          "result": "Birdeye shows set weekly hours and reviews from the last week, so the shop appears operating and independent at one location. The phone 469-231-8776 was not found on any independent page read this run, so it is not corroborated; phone line type left unknown.",
+          "url": "https://reviews.birdeye.com/papas-and-ninos-bodyshop-166619692947680"
+        },
+        {
+          "check": "review integrity",
+          "result": "Read on the Birdeye mirror on 2026-10-05: perfect 5.0 across 66 reviews with no 2 to 4 star reviews is one signal; reviews are otherwise specific and varied, newest a week old, no incentive wording or warning banner. Reviewer account detail and owner replies were not visible.",
+          "url": "https://reviews.birdeye.com/papas-and-ninos-bodyshop-166619692947680"
         }
       ],
-      "notes": ""
+      "notes": "Unresolved: no independent source for the phone, Google Maps not readable (bot check), no social presence found, and reviewer account detail unseen. Recheck once Maps or a second directory can be read."
     },
     "outreach": {
       "status": "New",
@@ -1720,6 +1843,12 @@
           "by": "sheet-import",
           "type": "created",
           "text": "Imported from the Google Sheet Lead Pipeline tab."
+        },
+        {
+          "at": "2026-10-05T17:28:53.642Z",
+          "by": "weekly-run",
+          "type": "research",
+          "text": "Reverify 2026-10-05: reviews 60 to 66; website status \"No standalone site found in researched sources\" to \"No website listed on the Birdeye mirror; no owned domain found by search or the domain probe\"; confidence \"High\" to \"Medium\"; rating source blank to \"secondary\"; verification checks refreshed; 1 source rechecked."
         }
       ]
     },
