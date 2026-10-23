@@ -93,6 +93,8 @@ test("the registry lists every direction from the briefs, each a valid direction
     assert.equal(DIRECTIONS[key].status, "implemented", key);
   }
   for (const cat of Object.keys(CATEGORIES)) {
+    // Restaurants are a separate track: their concepts are hand built from Site DNA, not templates.
+    if (CATEGORIES[cat].vertical === "restaurants") continue;
     assert.ok(DIRECTION_LIST.some((d) => d.suits.includes(cat)), `some direction suits ${cat}`);
   }
 });

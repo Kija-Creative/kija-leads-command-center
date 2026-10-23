@@ -40,6 +40,15 @@ Views:
 
 Press `?` in the app for every keyboard shortcut.
 
+## Tracks
+
+Two separate tracks share this app: **Websites** (the original offer) and **Restaurants +
+Cliqbux** (a combined offer with our software partner). Use the switch at the top to move
+between them. Each has its own weekly run, quota, pipeline, research queue, runs and offer, and
+`npm run plan -- --track restaurants` plans the restaurant run. The restaurant offer and the
+Cliqbux details are placeholders in Settings until they are confirmed, and nothing is pitched
+until then. `WEEKLY_RUN.md` has the restaurant run's rules.
+
 ## The weekly flow
 
 1. **Plan.** `npm run plan` prints this week's metros, categories and quota and writes

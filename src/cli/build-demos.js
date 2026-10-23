@@ -15,6 +15,7 @@ import { assignDirections } from "../demo/assign.js";
 import { CATEGORY_VERTICALS, DIRECTIONS } from "../demo/directions/index.js";
 import { checkDemoHtml } from "../demo/guardrails.js";
 import { renderDemo } from "../demo/render.js";
+import { DEFAULT_TRACK, trackOfLead } from "../lib/tracks.js";
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -86,9 +87,12 @@ export async function buildDemos({ store, rootDir, selection, now }) {
   }
 
   const categories = state.categories || {};
+  // Other tracks (restaurants) get hand built concepts from Site DNA, not template pages.
+  const templated = chosen.filter((l) => trackOfLead(l, { tracks: state.tracks, categories }) === DEFAULT_TRACK);
+  if (templated.length !== chosen.length) report.warnings.push(`${chosen.length - templated.length} lead${chosen.length - templated.length === 1 ? "" : "s"} in other tracks skipped: their concepts are hand built from Site DNA, not templates.`);
   const assignments = assignDirections(leads, { directions: DIRECTIONS, categories, verticalMap: CATEGORY_VERTICALS });
 
-  for (const lead of chosen) {
+  for (const lead of templated) {
     let result;
     try {
       result = renderDemo(lead, { categories, settings: state.settings || {}, now: nowIso, assignment: assignments.get(lead.id) });
@@ -134,6 +138,7 @@ export function formatReport(report, selection) {
     lines.push(`  failed  ${f.id}`);
     for (const e of f.errors) lines.push(`          ${e}`);
   }
+  for (const w of report.warnings) lines.push(`  warning ${w}`);
   lines.push(`Demos (${label}): ${report.built.length} built, ${report.failed.length} failed guardrails, ${report.matched} matched.`);
   if (report.built.length) lines.push("Demos are private files. Nothing was published or sent.");
   return lines.join("\n");

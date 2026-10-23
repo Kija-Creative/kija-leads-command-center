@@ -6,12 +6,14 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { RETIRED_LEAD_FIELDS } from "./validate.js";
+import { DEFAULT_TRACK, defaultTracks, runKey } from "./tracks.js";
 
 export const FILES = {
   settings: "config/settings.json",
   categories: "config/categories.json",
   geography: "config/geography.json",
   chains: "config/chains.json",
+  tracks: "config/tracks.json",
   leads: "data/leads.json",
   queue: "data/queue.json",
   rejected: "data/rejected.json",
@@ -33,6 +35,7 @@ export function emptyBenchmarks() {
 const OPTIONAL = {
   geography: () => ({ metros: [] }),
   chains: () => ({ names: [], allow: [] }),
+  tracks: defaultTracks,
   leads: () => [],
   queue: () => [],
   rejected: () => [],
@@ -294,12 +297,13 @@ export function createStore(rootDir, { now = () => new Date(), keepBackups = BAC
     return `${RUNS_DIR}/${runId}.json`;
   }
 
+  // The default track keeps the plain date as its file name; other tracks add their id.
   function saveRun(report) {
-    return writeJson(runPath(report?.runId), report);
+    return writeJson(runPath(runKey(report?.runId, report?.track)), report);
   }
 
-  function readRun(runId) {
-    return readJson(runPath(runId), null);
+  function readRun(runId, track = DEFAULT_TRACK) {
+    return readJson(runPath(runKey(runId, track)), null);
   }
 
   // Newest first.
@@ -313,7 +317,8 @@ export function createStore(rootDir, { now = () => new Date(), keepBackups = BAC
     const runs = [];
     for (const f of files) {
       try {
-        runs.push(readJson(`${RUNS_DIR}/${f}`));
+        const report = readJson(`${RUNS_DIR}/${f}`);
+        runs.push(report && typeof report === "object" && !report.track ? { ...report, track: DEFAULT_TRACK } : report);
       } catch {
         // A half written or hand edited report should not break the app; check.js reports it.
       }

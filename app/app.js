@@ -5,7 +5,7 @@ import { toast } from "./components/feedback.js";
 import { fill, h, isTyping } from "./lib/dom.js";
 import { formatDay, formatTime } from "./lib/format.js";
 import { api } from "./lib/api.js";
-import { isAdmin, latestRun, loadState, onChange, session, SHEET_STAGES, stageCounts, store } from "./lib/state.js";
+import { allLeads, currentTrack, isAdmin, latestRun, leadById, leadTrack, loadState, onChange, queue as trackQueue, session, setTrack, SHEET_STAGES, stageCounts, store, tracks } from "./lib/state.js";
 import { showChangePassword, showLogin } from "./views/login.js";
 import * as coverage from "./views/coverage.js";
 import * as lead from "./views/lead.js";
@@ -133,7 +133,29 @@ function renderRoute({ preserve = false } = {}) {
   }
 }
 
+// The track switch: each track is its own line of work with its own pipeline, queue and runs.
+function renderTrackSwitch() {
+  const sw = document.getElementById("track-switch");
+  if (!sw || !store.data) return;
+  const all = tracks();
+  const ids = Object.keys(all);
+  sw.hidden = ids.length < 2;
+  document.body.dataset.track = currentTrack();
+  fill(
+    sw,
+    ids.map((id) =>
+      h(
+        "button",
+        { type: "button", class: "track-btn", "aria-pressed": String(id === currentTrack()), title: all[id].description ?? "", onclick: () => setTrack(id) },
+        h("span", { class: "track-name" }, all[id].short ?? all[id].label ?? id),
+        h("b", { class: "track-count" }, String(allLeads().filter((l) => leadTrack(l) === id).length)),
+      ),
+    ),
+  );
+}
+
 function renderHeader() {
+  renderTrackSwitch();
   const runEl = document.getElementById("topbar-run");
   const stagesEl = document.getElementById("topbar-stages");
   if (!store.data) return;
@@ -149,7 +171,7 @@ function renderHeader() {
   const q = document.querySelector('[data-nav="queue"]');
   if (q) {
     q.querySelector(".nav-count")?.remove();
-    const n = store.data.queue?.length ?? 0;
+    const n = trackQueue().length;
     if (n) q.append(h("span", { class: "nav-count", "aria-label": `${n} waiting` }, String(n)));
   }
 }
@@ -163,6 +185,13 @@ async function reload() {
 onChange((reason) => {
   renderHeader();
   if (reason === "load") renderRoute({ preserve: Boolean(current) });
+  if (reason === "track") {
+    // A lead page belongs to one track; switching tracks goes back to that track's week.
+    const m = /^\/(?:lead|present)\/([^/?]+)/.exec(parseHash().path);
+    const open = m ? leadById(decodeURIComponent(m[1])) : null;
+    if (open && leadTrack(open) !== currentTrack()) navigate("#/week");
+    else renderRoute();
+  }
   // A failed reload keeps showing the last good data; only a failed first load replaces the view.
   if (reason === "error" && !store.data) renderRoute();
 });

@@ -4,6 +4,7 @@
 
 import { hostname, nameStateKey, normalizePhone, phoneDigits, slugify, dedupeKey } from "./normalize.js";
 import { scoreLead } from "./score.js";
+import { DEFAULT_TRACK, isTrack, settingsForTrack, trackOfCategory, trackOfLead } from "./tracks.js";
 import { PHONE_LINE_TYPES } from "./compliance.js";
 import {
   findDashes, isIsoDate, validateBatch, validateLead, validateQueueItem, validateRejection, CONFIDENCE_LEVELS,
@@ -136,9 +137,10 @@ function uniqueId(base, taken) {
   return id;
 }
 
-function buildLead(prepared, { id, runId, today, nowIso, score }) {
+function buildLead(prepared, { id, runId, today, nowIso, score, track = DEFAULT_TRACK, ticketDefault = 2 }) {
   const lead = {
     id,
+    track,
     business: prepared.business,
     category: prepared.category,
     categoryKey: prepared.categoryKey,
@@ -156,7 +158,7 @@ function buildLead(prepared, { id, runId, today, nowIso, score }) {
     placeId: prepared.placeId ?? "",
     placeIdCheckedAt: prepared.placeIdCheckedAt ?? "",
     websiteGap: prepared.websiteGap,
-    ticketValue: prepared.ticketValue,
+    ticketValue: prepared.ticketValue ?? ticketDefault,
     visualFit: prepared.visualFit,
     websiteStatus: prepared.websiteStatus,
     presence: { ...EMPTY_PRESENCE, ...(prepared.presence ?? {}) },
@@ -350,13 +352,16 @@ function applyReverify(rawEntry, lead, { runId, nowIso }) {
 export function ingestBatch({ batch, state, now }) {
   const nowIso = toIso(now);
   const today = nowIso.slice(0, 10);
-  const settings = state?.settings ?? {};
-  const thresholds = settings.thresholds;
-  const ctx = { settings, categories: state?.categories, chains: state?.chains, geography: state?.geography, now: nowIso };
-
   const b = batch ?? {};
+  const track = b.track ?? DEFAULT_TRACK;
+  const tracks = state?.tracks;
+  const settings = settingsForTrack(state?.settings ?? {}, isTrack(tracks, track) ? track : DEFAULT_TRACK);
+  const thresholds = settings.thresholds;
+  const ctx = { settings, categories: state?.categories, chains: state?.chains, geography: state?.geography, tracks, now: nowIso };
+
   const report = {
     runId: b.runId ?? "",
+    track,
     ingestedAt: nowIso,
     mode: b.mode ?? "weekly",
     plan: b.plan ?? null,
@@ -376,8 +381,10 @@ export function ingestBatch({ batch, state, now }) {
   const unchanged = { ...state, leads: state?.leads ?? [], queue: state?.queue ?? [], rejected: state?.rejected ?? [] };
   const vb = validateBatch(b);
   if (vb.warnings.length) report.warnings.push({ business: "(batch)", warnings: vb.warnings });
-  if (!vb.ok) {
-    report.errors.push({ business: "(batch)", errors: vb.errors });
+  const batchErrors = [...vb.errors];
+  if (b.track !== undefined && !isTrack(tracks, b.track)) batchErrors.push(`The batch track ${JSON.stringify(b.track)} is not in config/tracks.json (${Object.keys(tracks ?? { websites: 1 }).join(", ")}).`);
+  if (batchErrors.length) {
+    report.errors.push({ business: "(batch)", errors: batchErrors });
     report.counts.errors = 1;
     return { state: unchanged, report };
   }
@@ -426,6 +433,11 @@ export function ingestBatch({ batch, state, now }) {
     const business = prepared.business || `Lead ${i + 1}`;
     const v = validateLead(prepared, { ...ctx, mode: "weekly" });
     const hard = v.errors.filter((e) => !v.floors.includes(e));
+    const leadTrack = trackOfCategory(tracks, state?.categories, prepared.categoryKey);
+    if (hard.length === 0 && leadTrack !== track) {
+      fail(business, [`${business} is in the category ${prepared.categoryKey}, which belongs to the ${leadTrack} track, but this batch is for the ${track} track. Put it in a ${leadTrack} batch.`]);
+      return;
+    }
     if (hard.length > 0) {
       fail(business, v.errors);
       return;
@@ -448,7 +460,7 @@ export function ingestBatch({ batch, state, now }) {
       }));
       return;
     }
-    qualified.push({ prepared, score: scoreLead(prepared, { thresholds }).total });
+    qualified.push({ prepared, score: scoreLead(prepared, { thresholds, track }).total });
   });
 
   // 4: rank, fill the quota (minus anything this run already added), overflow to the queue.
@@ -457,7 +469,7 @@ export function ingestBatch({ batch, state, now }) {
     || (b2.prepared.googleRating ?? 0) - (a.prepared.googleRating ?? 0)
     || String(a.prepared.business).localeCompare(String(b2.prepared.business)));
   const quota = Number.isInteger(settings.weeklyQuota) ? settings.weeklyQuota : 10;
-  const thisRun = leads.filter((l) => l.runId === runId && l.origin === "weekly-run");
+  const thisRun = leads.filter((l) => l.runId === runId && l.origin === "weekly-run" && trackOfLead(l, { tracks, categories: state?.categories }) === track);
   let room = Math.max(0, quota - thisRun.length);
   const homeKey = settings.geography?.homeMetro ?? "";
   const homeMax = settings.geography?.homeMaxLeads;
@@ -467,7 +479,7 @@ export function ingestBatch({ batch, state, now }) {
     const isHome = homeKey !== "" && prepared.metro === homeKey;
     if (room > 0 && (!isHome || homeRoom > 0)) {
       const id = uniqueId(slugify(`${prepared.business} ${prepared.city} ${prepared.state}`), leadIds);
-      leads.push(buildLead(prepared, { id, runId, today, nowIso, score }));
+      leads.push(buildLead(prepared, { id, runId, today, nowIso, score, track, ticketDefault: state?.categories?.[prepared.categoryKey]?.ticketValueDefault ?? 2 }));
       report.accepted.push(id);
       report.counts.accepted += 1;
       room -= 1;

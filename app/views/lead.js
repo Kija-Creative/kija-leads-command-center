@@ -32,6 +32,7 @@ import {
 const GAP_WORDS = { 1: "weak own site", 2: "very weak or third party only", 3: "no credible owned site" };
 const TICKET_WORDS = { 1: "low", 2: "medium", 3: "high" };
 const VISUAL_WORDS = { 1: "limited", 2: "good", 3: "excellent" };
+const ORDERING_WORDS = { 1: "own ordering already works", 2: "third party platforms only", 3: "phone only or nothing" };
 const ORIGINS = { "sheet-import": "Sheet import", "weekly-run": "Weekly run", manual: "Added by hand", "queue-promotion": "Promoted from the queue" };
 // ratingSource values. "places-api" is invalid for stored leads (research/places-api.md) and
 // "google-maps" is the older spelling of google-maps-observed.
@@ -97,6 +98,37 @@ function fact(label, value, { big = false, note = null } = {}) {
 
 function scale(value, words) {
   return value ? `${value} of 3, ${words[value] ?? ""}` : "";
+}
+
+// The offer panel for a track that is not the website one (restaurants with Cliqbux). It shows the
+// partner and offer from Settings, and says plainly when they are still placeholders.
+function trackOfferPanel(lead) {
+  const own = store.data.settings?.tracks?.[lead.track] ?? {};
+  const label = store.data.tracks?.[lead.track]?.label ?? lead.track;
+  const partner = own.partner ?? {};
+  const offer = own.offer ?? {};
+  const money = (v) => (typeof v === "number" && v > 0 ? "$" + v.toLocaleString("en-US") : "To confirm");
+  const confirmed = partner.confirmed === true && offer.priceConfirmed === true;
+  return h(
+    "div",
+    { class: "stack" },
+    h(
+      "p",
+      { class: "track-note" },
+      h("strong", null, label + ". "),
+      "This lead is pitched on the " + (offer.name || "combined") + " offer" + (partner.name ? ", run with " + partner.name : "") + ". " +
+        (confirmed ? "" : "The partner details and the price are still placeholders, so no ROI figures or outreach drafts are shown until they are confirmed in Settings."),
+    ),
+    h(
+      "dl",
+      { class: "facts" },
+      fact("Partner", partner.name ? partner.name + (partner.confirmed ? "" : " (to confirm)") : "To confirm"),
+      fact("Offer", offer.name),
+      fact("Bundle price", offer.priceConfirmed ? money(offer.price) : "To confirm"),
+      fact("Software per month", typeof offer.cliqbuxMonthly === "number" ? money(offer.cliqbuxMonthly) : "To confirm"),
+      fact("Includes", offer.includes?.length ? offer.includes : "To confirm"),
+    ),
+  );
 }
 
 function section(title, body, { id, aside = null } = {}) {
@@ -519,13 +551,15 @@ export function render({ params, navigate }) {
       const slot = feedbackSlot();
       const demoHref = `/demos/${encodeURIComponent(id)}/`;
       const pitchHref = `/pitches/${encodeURIComponent(id)}/`;
-      const buildDemo = h("button", { type: "button", class: "btn btn-small", id: "la-demo", disabled: modules.demo === false }, lead.demoExists ? "Rebuild demo" : "Build demo");
-      const buildPitch = h("button", { type: "button", class: "btn btn-small", id: "la-pitch", disabled: modules.pitch === false }, lead.pitchExists ? "Rebuild pitch" : "Build pitch");
+      // Other tracks (restaurants) get hand built concepts from Site DNA, and a pitch once their offer is confirmed.
+      const ownTrack = !lead.track || lead.track === "websites";
+      const buildDemo = h("button", { type: "button", class: "btn btn-small", id: "la-demo", disabled: modules.demo === false || !ownTrack, title: ownTrack ? null : "Hand built from Site DNA, not a template" }, lead.demoExists ? "Rebuild demo" : "Build demo");
+      const buildPitch = h("button", { type: "button", class: "btn btn-small", id: "la-pitch", disabled: modules.pitch === false || !ownTrack, title: ownTrack ? null : "Waits until this track's offer is confirmed in Settings" }, lead.pitchExists ? "Rebuild pitch" : "Build pitch");
       const approve = h("input", { type: "checkbox", id: "la-approve", checked: Boolean(d.shareApproved), disabled: !lead.demoExists && !d.shareApproved });
       const exportBtn = h("button", { type: "button", class: "btn btn-small", id: "la-export", disabled: !d.shareApproved }, "Export share file");
 
       const vertical = store.data.categories?.[lead.categoryKey]?.vertical;
-      const palettes = store.data.templates?.[vertical]?.palettes ?? store.data.templates?.general?.palettes ?? [];
+      const palettes = ownTrack ? (store.data.templates?.[vertical]?.palettes ?? store.data.templates?.general?.palettes ?? []) : [];
       const palette = palettes.length
         ? h(
           "select",
@@ -577,6 +611,7 @@ export function render({ params, navigate }) {
           h("a", { class: "btn btn-small btn-primary", href: `#/present/${encodeURIComponent(id)}`, title: "Present (p)" }, "Present"),
         ),
         h("div", { class: "row", style: { marginTop: "8px" } }, buildDemo, buildPitch),
+        ownTrack ? null : h("p", { class: "muted small", style: { margin: "8px 0 0" } }, "This track's concept is hand built from Site DNA and saved to demos/" + id + "/. Its pitch page waits until the offer is confirmed in Settings."),
         palette ? h("div", { class: "field", style: { marginTop: "14px" } }, h("label", { for: "la-palette" }, "Demo palette"), palette) : null,
         h(
           "div",
@@ -647,7 +682,9 @@ export function render({ params, navigate }) {
           "div",
           { class: "empty" },
           h("h3", null, "No demo yet"),
-          h("p", null, `Build it with Build demo, or run npm run demos -- --id ${id}. Demos are private files in demos/${id}/ and never published.`),
+          h("p", null, !lead.track || lead.track === "websites"
+            ? `Build it with Build demo, or run npm run demos -- --id ${id}. Demos are private files in demos/${id}/ and never published.`
+            : `Restaurant concepts are hand built from Site DNA (docs/site-generation/CONCEPT-BUILD.md) and saved to demos/${id}/. They are private files and never published.`),
         );
       }
       const sw = deviceSwitch(device, (key) => {
@@ -678,7 +715,9 @@ export function render({ params, navigate }) {
     fact("Google rating", rating(lead.googleRating), { big: true, note: ratingNote(lead) }),
     fact("Google reviews", number(lead.googleReviews), { big: true }),
     fact("Website gap", scale(lead.websiteGap, GAP_WORDS)),
-    fact("Ticket value", scale(lead.ticketValue, TICKET_WORDS)),
+    store.data.tracks?.[lead.track]?.scoring === "restaurant"
+      ? fact("Ordering gap", scale(lead.orderingGap, ORDERING_WORDS))
+      : fact("Ticket value", scale(lead.ticketValue, TICKET_WORDS)),
     fact("Visual fit", scale(lead.visualFit, VISUAL_WORDS)),
     fact("Metro", lead.metro ? metroName(lead.metro) : "Outside every metro"),
     fact("Address", lead.address),
@@ -715,9 +754,13 @@ export function render({ params, navigate }) {
       { aside: h("span", { class: "faint small" }, "Computed from the record, never stored") },
     ),
     mounts.research,
-    section("Return on investment", roiCalculator(lead), { aside: h("span", { class: "faint small" }, "Recalculates as you type") }),
+    lead.track && lead.track !== "websites"
+      ? section("Offer", trackOfferPanel(lead))
+      : section("Return on investment", roiCalculator(lead), { aside: h("span", { class: "faint small" }, "Recalculates as you type") }),
     section("Demo preview", mounts.preview),
-    section("Outreach drafts", mounts.drafts),
+    lead.track && lead.track !== "websites"
+      ? section("Outreach drafts", h("p", { class: "muted" }, "Drafts for this track wait until its offer is confirmed in Settings."))
+      : section("Outreach drafts", mounts.drafts),
   );
 
   const el = h(

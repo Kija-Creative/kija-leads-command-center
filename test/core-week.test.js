@@ -87,9 +87,11 @@ test("home metro is left out when homeEveryWeek is false, and home-only mode use
 });
 
 test("categories rotate, skip general and always cover auto, home services and contractors", () => {
-  const order = categoryRotationOrder(categories);
+  // The default (websites) track rotates its own categories; restaurants have a track of their own.
+  const websiteCategories = Object.fromEntries(Object.entries(categories).filter(([, c]) => c.vertical !== "restaurants"));
+  const order = categoryRotationOrder(websiteCategories);
   assert.ok(!order.includes("general"));
-  assert.equal(order.length, Object.keys(categories).length - 1);
+  assert.equal(order.length, Object.keys(websiteCategories).length - 1);
   const covered = new Set();
   for (let week = 0; week < 60; week += 1) {
     const day = new Date(Date.UTC(2026, 8, 28 + week * 7)).toISOString().slice(0, 10);

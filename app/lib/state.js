@@ -2,6 +2,20 @@
 // so the page never refetches everything after a small change.
 
 import { api } from "./api.js";
+import { DEFAULT_TRACK, settingsForTrack, trackOfCategory } from "/src/lib/tracks.js";
+
+export { DEFAULT_TRACK };
+
+const TRACK_KEY = "kija-track";
+
+// The track the person is working in: remembered between visits, never required.
+function savedTrack() {
+  try {
+    return localStorage.getItem(TRACK_KEY) || DEFAULT_TRACK;
+  } catch {
+    return DEFAULT_TRACK;
+  }
+}
 
 export const OUTREACH_STATUSES = ["New", "Research", "Demo Built", "Contacted", "Replied", "Meeting", "Won", "Lost", "Not a fit"];
 // The sheet dashboard's seven stages; the last two are closed outcomes.
@@ -27,6 +41,7 @@ export const isAdmin = () => !session.authEnabled || session.user?.role === "adm
 
 export const store = {
   data: null,
+  track: savedTrack(),
   loadedAt: null,
   error: null,
   // Last list order the person looked at, for j and k on the detail view.
@@ -60,12 +75,65 @@ export async function loadState({ quiet = false } = {}) {
   return true;
 }
 
-export function leads() {
+// Tracks are separate lines of work (websites, restaurants with Cliqbux). Every list the views
+// show is the current track's; a lead opened directly by id may belong to any of them.
+export function tracks() {
+  return store.data?.tracks ?? { [DEFAULT_TRACK]: { label: "Websites", short: "Websites", verticals: [] } };
+}
+
+export function currentTrack() {
+  return Object.hasOwn(tracks(), store.track) ? store.track : DEFAULT_TRACK;
+}
+
+export function setTrack(id) {
+  if (!Object.hasOwn(tracks(), id) || id === store.track) return;
+  store.track = id;
+  try {
+    localStorage.setItem(TRACK_KEY, id);
+  } catch {
+    // remembering the track is a convenience only
+  }
+  emit("track");
+}
+
+export function trackLabel(id = currentTrack()) {
+  return tracks()[id]?.label ?? id;
+}
+
+export function trackOfCategoryKey(key) {
+  return trackOfCategory(store.data?.tracks, store.data?.categories, key);
+}
+
+export function leadTrack(lead) {
+  return lead?.track && Object.hasOwn(tracks(), lead.track) ? lead.track : trackOfCategoryKey(lead?.categoryKey);
+}
+
+// The settings of the current track: the global ones with the track's own quota and offer laid over.
+export function trackSettings(id = currentTrack()) {
+  return settingsForTrack(store.data?.settings, id);
+}
+
+export function allLeads() {
   return store.data?.leads ?? [];
 }
 
+export function leads() {
+  const track = currentTrack();
+  return allLeads().filter((l) => leadTrack(l) === track);
+}
+
 export function leadById(id) {
-  return leads().find((l) => l.id === id) ?? null;
+  return allLeads().find((l) => l.id === id) ?? null;
+}
+
+export function queue() {
+  const track = currentTrack();
+  return (store.data?.queue ?? []).filter((q) => trackOfCategoryKey(q.categoryKey) === track);
+}
+
+export function runs() {
+  const track = currentTrack();
+  return (store.data?.runs ?? []).filter((r) => (r.track ?? DEFAULT_TRACK) === track);
 }
 
 export function putLead(view) {
@@ -109,7 +177,7 @@ export function setNotes(list) {
 }
 
 export function latestRun() {
-  return store.data?.runs?.[0] ?? null;
+  return runs()[0] ?? null;
 }
 
 export function stageCounts(list = leads()) {

@@ -12,6 +12,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { suppressed } from "../pitch/compliance-link.js";
 import { checkPitchHtml, renderPitch } from "../pitch/render.js";
+import { DEFAULT_TRACK, trackOfLead } from "../lib/tracks.js";
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -90,6 +91,13 @@ export async function buildPitches({ store, rootDir, selection, now }) {
 
   const options = { settings: state.settings || {}, benchmarks: state.benchmarks || {}, categories: state.categories || {}, now: nowIso };
   for (const lead of chosen) {
+    // The website offer and ROI model do not describe the other tracks. Restaurants wait for the
+    // Cliqbux offer to be confirmed in settings before they get a pitch page.
+    const leadTrack = trackOfLead(lead, { tracks: state.tracks, categories: options.categories });
+    if (leadTrack !== DEFAULT_TRACK) {
+      report.skipped.push({ id: lead.id, business: lead.business, reason: `Belongs to the ${leadTrack} track, which has its own offer; its pitch page waits until that offer is confirmed.` });
+      continue;
+    }
     if (!safeId(lead.id)) {
       report.failed.push({ id: String(lead.id), business: lead.business, errors: ["The lead id is not a safe folder name, so no pitch was written."] });
       continue;

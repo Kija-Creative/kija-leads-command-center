@@ -58,5 +58,30 @@
   },
   "demoDefaults": {
     "conceptRibbon": true
+  },
+  "tracks": {
+    "restaurants": {
+      "weeklyQuota": 5,
+      "categoriesPerWeek": 3,
+      "partner": {
+        "name": "Cliqbux",
+        "role": "Software partner",
+        "description": "",
+        "website": "",
+        "contactName": "",
+        "contactEmail": "",
+        "confirmed": false
+      },
+      "offer": {
+        "name": "Website + Cliqbux",
+        "price": null,
+        "priceConfirmed": false,
+        "timelineDays": null,
+        "includes": [],
+        "ownershipLine": "",
+        "cliqbuxMonthly": null,
+        "notes": "To confirm with Cliqbux: what the software does, who bills what, and the bundle price. Nothing here is shown to a business until it is confirmed."
+      }
+    }
   }
 }

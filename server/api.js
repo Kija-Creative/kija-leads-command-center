@@ -11,6 +11,7 @@ import { scoreLead } from "../src/lib/score.js";
 import { leadsToCsv } from "../src/lib/csv.js";
 import { dedupeKey, sameBusiness, slugify } from "../src/lib/normalize.js";
 import { dateOf } from "../src/lib/week.js";
+import { DEFAULT_TRACK, settingsForTrack, trackOfCategory, trackOfLead } from "../src/lib/tracks.js";
 import { createNote, editNote, latestRunId, normalizeFreeText, noteId, sortNotesNewestFirst } from "../src/lib/notes.js";
 import {
   callCheck,
@@ -414,7 +415,9 @@ export function createApi({ root, now, loaders, env }) {
   async function regenerateDemo(id) {
     const store = openStore();
     const state = loadData(store);
-    findLeadOr404(state.leads, id);
+    const demoLead = findLeadOr404(state.leads, id);
+    const demoTrack = trackOfLead(demoLead, { tracks: state.tracks, categories: state.categories });
+    if (demoTrack !== DEFAULT_TRACK) throw unprocessable([`${demoLead.business} is in the ${demoTrack} track. Its concept is hand built from Site DNA, so the template generator does not rebuild it.`]);
     const { mod, error } = await tryLoad(loaders, "demoBuild");
     if (typeof mod?.buildDemos !== "function") {
       throw new HttpError(503, `The demo generator is ${error || "unavailable"} (src/cli/build-demos.js), so the demo was not rebuilt.`);
@@ -439,6 +442,8 @@ export function createApi({ root, now, loaders, env }) {
     const store = openStore();
     const state = loadData(store);
     const lead = findLeadOr404(state.leads, id);
+    const pitchTrack = trackOfLead(lead, { tracks: state.tracks, categories: state.categories });
+    if (pitchTrack !== DEFAULT_TRACK) throw unprocessable([`${lead.business} is in the ${pitchTrack} track, which has its own offer. Its pitch page waits until that offer is confirmed in Settings.`]);
     const built = await tryLoad(loaders, "pitchBuild");
     if (typeof built.mod?.buildPitches === "function") {
       const report = await built.mod.buildPitches({ store, rootDir: root, selection: { mode: "id", value: id }, now: clock() });
@@ -547,6 +552,7 @@ export function createApi({ root, now, loaders, env }) {
       phoneLineType: PHONE_LINE_TYPES.includes(research.phoneLineType) ? research.phoneLineType : "unknown",
       websiteGap: research.websiteGap,
       ticketValue: research.ticketValue,
+      orderingGap: research.orderingGap,
       visualFit: research.visualFit,
       websiteStatus: research.websiteStatus,
       presence: { facebook: "", instagram: "", yelp: "", booking: "", other: [], ...(isPlainObject(research.presence) ? research.presence : {}) },
@@ -639,9 +645,13 @@ export function createApi({ root, now, loaders, env }) {
     // Promote.
     const taken = new Set(state.leads.map((l) => l.id));
     const candidate = buildPromotedLead(item, body.lead ?? {}, { today, taken });
+    const track = trackOfCategory(state.tracks, state.categories, candidate.categoryKey);
+    candidate.track = track;
+    if (candidate.ticketValue === undefined) candidate.ticketValue = state.categories?.[candidate.categoryKey]?.ticketValueDefault ?? 2;
     const v = validateLead(candidate, {
       settings: state.settings,
       categories: state.categories,
+      tracks: state.tracks,
       chains: state.chains,
       geography: state.geography,
       mode: "manual",
@@ -654,7 +664,7 @@ export function createApi({ root, now, loaders, env }) {
     if (blockedBy) errors.push(`${candidate.business} is on the do not contact list (${blockedBy.reason}), so it cannot become a lead again. Drop it instead.`);
     if (errors.length) throw unprocessable(errors, v.warnings);
 
-    const total = scoreLead(candidate, { thresholds: state.settings?.thresholds }).total;
+    const total = scoreLead(candidate, { thresholds: settingsForTrack(state.settings, track).thresholds, track }).total;
     candidate.outreach.history.push({
       at: now.toISOString(),
       by: actor(),
@@ -683,7 +693,7 @@ export function createApi({ root, now, loaders, env }) {
     const store = openStore();
     const state = loadData(store);
     const current = state.settings;
-    const known = new Set([...Object.keys(current), "weeklyQuota", "thresholds", "geography", "categoriesPerWeek", "offer", "contact", "demoDefaults", "compliance"]);
+    const known = new Set([...Object.keys(current), "weeklyQuota", "thresholds", "geography", "categoriesPerWeek", "offer", "contact", "demoDefaults", "compliance", "tracks"]);
     const unknown = Object.keys(body).filter((k) => !known.has(k));
     if (unknown.length) throw unprocessable([`Unknown setting ${unknown.join(", ")}. Settings are ${[...known].join(", ")}.`]);
     // A partial compliance change lands on the research defaults when settings predate them.

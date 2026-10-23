@@ -3,6 +3,7 @@
 
 import { DEFAULT_THRESHOLDS } from "./score.js";
 import { isChain, normalizePhone } from "./normalize.js";
+import { scoringOfTrack, trackOfCategory } from "./tracks.js";
 import { INACTIVE_OUTREACH_STATUSES, isSuppressed, PHONE_LINE_TYPES, TEXAS_REGISTRATION_STATUSES } from "./compliance.js";
 
 export const OUTREACH_STATUSES = ["New", "Research", "Demo Built", "Contacted", "Replied", "Meeting", "Won", "Lost", "Not a fit"];
@@ -34,7 +35,7 @@ export const RETIRED_LEAD_FIELDS = ["placesFetchedAt"];
 export const QUEUE_DECISIONS = ["Research", "Promote", "Drop"];
 export const BATCH_MODES = ["weekly", "reverify", "manual"];
 export const REVERIFY_DECISIONS = ["keep", "reject"];
-export const VERTICALS = ["auto", "home-services", "contractor", "personal-care", "general"];
+export const VERTICALS = ["auto", "home-services", "contractor", "personal-care", "restaurants", "general"];
 // "stored" is for records already on disk: floors become warnings, because a reverify can
 // lower a rating after the lead was accepted and that should not break npm run check.
 export const VALIDATION_MODES = ["weekly", "manual", "stored"];
@@ -294,7 +295,11 @@ export function validateLead(lead, ctx = {}) {
 
   if (!VALIDATION_MODES.includes(mode)) errors.push(`Validation mode ${JSON.stringify(mode)} is not one of ${VALIDATION_MODES.join(", ")}.`);
 
-  for (const field of REQUIRED_LEAD_FIELDS) {
+  // A restaurant has no job ticket; it is scored on the ordering gap instead.
+  const restaurant = ctx.categories && !isBlank(lead.categoryKey)
+    && scoringOfTrack(ctx.tracks, trackOfCategory(ctx.tracks, ctx.categories, lead.categoryKey)) === "restaurant";
+  const required = restaurant ? [...REQUIRED_LEAD_FIELDS.filter((f) => f !== "ticketValue"), "orderingGap"] : REQUIRED_LEAD_FIELDS;
+  for (const field of required) {
     if (field === "sources") {
       if (!Array.isArray(lead.sources)) errors.push(`${name} is missing required field sources (a list, empty only while unverified).`);
     } else if (isBlank(lead[field])) {
@@ -321,7 +326,7 @@ export function validateLead(lead, ctx = {}) {
   if (typeof lead.googleRating === "number" && Math.abs(Math.round(lead.googleRating * 10) - lead.googleRating * 10) > 1e-9) {
     warnings.push(`${name} googleRating ${lead.googleRating} has more than one decimal; Google shows one.`);
   }
-  for (const field of ["websiteGap", "ticketValue", "visualFit"]) {
+  for (const field of ["websiteGap", "ticketValue", "visualFit", "orderingGap"]) {
     if (!isBlank(lead[field])) checkScale(lead[field], field, name, errors);
   }
   if (!isBlank(lead.confidence) && !CONFIDENCE_LEVELS.includes(lead.confidence)) {
@@ -330,6 +335,9 @@ export function validateLead(lead, ctx = {}) {
 
   if (!isBlank(lead.categoryKey) && ctx.categories && !Object.hasOwn(ctx.categories, lead.categoryKey)) {
     errors.push(`${name} category key ${JSON.stringify(lead.categoryKey)} is not in config/categories.json.`);
+  }
+  if (!isBlank(lead.track) && ctx.tracks && !Object.hasOwn(ctx.tracks, lead.track)) {
+    errors.push(`${name} track ${JSON.stringify(lead.track)} is not in config/tracks.json.`);
   }
   if (!isBlank(lead.metro) && ctx.geography?.metros && !ctx.geography.metros.some((m) => m.key === lead.metro)) {
     errors.push(`${name} metro ${JSON.stringify(lead.metro)} is not in config/geography.json; use "" for places outside every metro.`);
@@ -647,6 +655,7 @@ export function validateSettings(settings) {
     if (!isBlank(c.email) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(c.email).trim())) errors.push("The contact email must be an email address.");
     if (isBlank(c.address)) warnings.push("The contact mailing address is empty, so email drafts are not ready to send.");
   }
+  errors.push(...validateTrackSettings(settings.tracks, warnings));
   errors.push(...validateCompliance(settings.compliance).errors);
   if (settings.compliance === undefined) warnings.push("Settings have no compliance block, so the safe defaults apply.");
   else if (settings.compliance?.texasRegistration === "unknown") {
@@ -654,6 +663,52 @@ export function validateSettings(settings) {
   }
   errors.push(...dashErrors(settings, "Settings"));
   return result(errors, warnings);
+}
+
+// settings.tracks: per track quota, categories per week, partner and offer. Absent is allowed. A
+// partner or offer that is still a placeholder is a warning, never an error, so a track can be
+// set up before its commercial terms are confirmed.
+function validateTrackSettings(tracks, warnings) {
+  const errors = [];
+  if (tracks === undefined) return errors;
+  if (!isPlainObject(tracks)) return ["Settings tracks must be an object keyed by track."];
+  const posInt = (v) => Number.isInteger(v) && v > 0;
+  for (const [id, t] of Object.entries(tracks)) {
+    const w = `Track ${id}`;
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) errors.push(`${w} must have a lowercase hyphenated id.`);
+    if (!isPlainObject(t)) {
+      errors.push(`${w} settings must be an object.`);
+      continue;
+    }
+    for (const f of ["weeklyQuota", "categoriesPerWeek"]) {
+      if (t[f] !== undefined && !posInt(t[f])) errors.push(`${w} ${f} must be a whole number above 0.`);
+    }
+    if (t.partner !== undefined) {
+      const p = t.partner;
+      if (!isPlainObject(p)) errors.push(`${w} partner must be an object.`);
+      else {
+        if (isBlank(p.name)) errors.push(`${w} partner needs a name.`);
+        if (!isBlank(p.website) && !isHttpUrl(p.website)) errors.push(`${w} partner website must be a full http or https url.`);
+        if (!isBlank(p.contactEmail) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(p.contactEmail).trim())) errors.push(`${w} partner contactEmail must be an email address.`);
+        if (p.confirmed !== true) warnings.push(`${w} partner ${p.name || ""} details are placeholders until they are confirmed.`.replace("  ", " "));
+      }
+    }
+    if (t.offer !== undefined) {
+      const o = t.offer;
+      if (!isPlainObject(o)) errors.push(`${w} offer must be an object.`);
+      else {
+        if (isBlank(o.name)) errors.push(`${w} offer needs a name.`);
+        if (o.price !== null && o.price !== undefined && (typeof o.price !== "number" || !Number.isFinite(o.price) || o.price <= 0)) errors.push(`${w} offer price must be a number above 0, or null until it is confirmed.`);
+        if (o.cliqbuxMonthly !== null && o.cliqbuxMonthly !== undefined && (typeof o.cliqbuxMonthly !== "number" || !Number.isFinite(o.cliqbuxMonthly) || o.cliqbuxMonthly < 0)) errors.push(`${w} offer cliqbuxMonthly must be a number of 0 or more, or null.`);
+        if (typeof o.priceConfirmed !== "boolean") errors.push(`${w} offer priceConfirmed must be true or false.`);
+        if (o.timelineDays !== null && o.timelineDays !== undefined && !posInt(o.timelineDays)) errors.push(`${w} offer timelineDays must be a whole number of days above 0, or null.`);
+        if (!Array.isArray(o.includes) || o.includes.some((x) => typeof x !== "string")) errors.push(`${w} offer includes must be a list of text.`);
+        if (o.priceConfirmed === true && !(o.price > 0)) errors.push(`${w} offer is marked confirmed but has no price.`);
+        if (o.priceConfirmed === false) warnings.push(`${w} offer price is a placeholder until it is confirmed.`);
+      }
+    }
+  }
+  return errors;
 }
 
 // settings.compliance. Absent is allowed (the defaults in compliance.js apply); present must be whole.
@@ -741,6 +796,38 @@ export function validateCategories(categories) {
   }
   if (!Object.hasOwn(categories, "general")) errors.push("Categories must include the general fallback.");
   errors.push(...dashErrors(categories, "Categories"));
+  return result(errors, []);
+}
+
+// config/tracks.json: every track names its verticals, and every vertical belongs to one track.
+export function validateTracks(tracks, categories) {
+  const errors = [];
+  if (!isPlainObject(tracks)) return result(["Tracks must be an object keyed by track id."], []);
+  if (!Object.hasOwn(tracks, "websites")) errors.push("Tracks must include the websites track, the default.");
+  const seen = new Map();
+  for (const [id, t] of Object.entries(tracks)) {
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) errors.push(`Track key ${JSON.stringify(id)} must be lowercase and hyphenated.`);
+    if (!isPlainObject(t)) {
+      errors.push(`Track ${id} must be an object.`);
+      continue;
+    }
+    if (isBlank(t.label)) errors.push(`Track ${id} needs a label.`);
+    if (!Array.isArray(t.verticals) || !t.verticals.length) errors.push(`Track ${id} needs a list of verticals.`);
+    for (const v of Array.isArray(t.verticals) ? t.verticals : []) {
+      if (!VERTICALS.includes(v)) errors.push(`Track ${id} lists the vertical ${JSON.stringify(v)}, which is not one of: ${VERTICALS.join(", ")}.`);
+      if (seen.has(v)) errors.push(`The vertical ${v} is in both the ${seen.get(v)} and ${id} tracks.`);
+      seen.set(v, id);
+    }
+    if (t.requiredVerticals !== undefined && (!Array.isArray(t.requiredVerticals) || t.requiredVerticals.some((v) => !(t.verticals ?? []).includes(v)))) {
+      errors.push(`Track ${id} requiredVerticals must be a list of its own verticals.`);
+    }
+    if (!["website", "restaurant"].includes(t.scoring)) errors.push(`Track ${id} scoring must be website or restaurant.`);
+  }
+  for (const v of VERTICALS) if (!seen.has(v)) errors.push(`The vertical ${v} is not in any track.`);
+  if (isPlainObject(categories)) {
+    for (const [key, c] of Object.entries(categories)) if (isPlainObject(c) && c.vertical && !seen.has(c.vertical)) errors.push(`Category ${key} has the vertical ${c.vertical}, which is not in any track.`);
+  }
+  errors.push(...dashErrors(tracks, "Tracks"));
   return result(errors, []);
 }
 

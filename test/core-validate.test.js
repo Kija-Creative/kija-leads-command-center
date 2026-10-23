@@ -358,6 +358,8 @@ test("categories.json has every key from the spec table with the right vertical,
     ["painting", "contractor", 2, 3], ["foundation-repair", "contractor", 3, 2], ["remodeling", "contractor", 3, 3],
     ["tree-service", "contractor", 2, 3], ["barber", "personal-care", 1, 3], ["hair-salon", "personal-care", 2, 3],
     ["nail-salon", "personal-care", 1, 3], ["tattoo", "personal-care", 2, 3], ["pet-grooming", "personal-care", 1, 3],
+    ["restaurant", "restaurants", 2, 3], ["mexican-restaurant", "restaurants", 2, 3], ["pizzeria", "restaurants", 2, 3],
+    ["bbq-smokehouse", "restaurants", 2, 3], ["cafe", "restaurants", 2, 3], ["bakery", "restaurants", 2, 3],
     ["general", "general", 2, 2],
   ];
   assert.deepEqual(Object.keys(categories).sort(), table.map((t) => t[0]).sort());
@@ -405,6 +407,8 @@ test("categories carry the reviewed Places Table A types from research", () => {
     "auto-repair": ["car_repair"], "tire-shop": ["tire_shop"], barber: ["barber_shop"], "hair-salon": ["hair_salon"],
     "nail-salon": ["nail_salon"], tattoo: ["body_art_service"], "pet-grooming": ["pet_care"], general: ["service"],
     plumbing: ["plumber"], electrical: ["electrician"], roofing: ["roofing_contractor"], painting: ["painter"],
+    restaurant: ["restaurant"], "mexican-restaurant": ["mexican_restaurant"], pizzeria: ["pizza_restaurant"],
+    "bbq-smokehouse": ["barbecue_restaurant"], cafe: ["cafe"], bakery: ["bakery"],
   };
   for (const [key, c] of Object.entries(categories)) {
     assert.deepEqual(c.placesTypes, expected[key] ?? [], key);
@@ -423,6 +427,8 @@ test("benchmarks: rentedCustomer and pitchPriority are validated, and the resear
   assert.equal(benchmarks.categories["garage-door"].rentedCustomer.typical, 198);
   assert.equal(benchmarks.categories.roofing.rentedCustomer.typical, 731);
   for (const [key, c] of Object.entries(categories)) {
+    // The restaurants track has no researched benchmarks yet, so it has no entry to read.
+    if (c.vertical === "restaurants") continue;
     const rc = benchmarks.categories[key].rentedCustomer;
     if (c.vertical === "home-services" || c.vertical === "contractor") {
       assert.ok(rc && rc.sources.length > 0, `${key} has a sourced cost per paying customer`);

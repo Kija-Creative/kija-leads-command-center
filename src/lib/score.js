@@ -60,8 +60,27 @@ export const SCORING_RULES = [
   },
 ];
 
+// The restaurant track swaps the job ticket (a restaurant has no job size) for the ordering gap:
+// how far the business is from taking orders or reservations on its own site. Same 100 points.
+export const RESTAURANT_SCORING_RULES = SCORING_RULES.map((r) => (r.key === "ticketValue"
+  ? {
+    key: "orderingGap",
+    label: "Ordering gap",
+    field: "orderingGap",
+    max: 15,
+    formula: "Ordering gap score divided by 3, times 15.",
+    why: "A restaurant with no ordering or reservations of its own is the one Cliqbux changes most.",
+    scale: "1 own ordering or reservations already work, 2 third party platforms only (commission on every order), 3 phone only or nothing.",
+  }
+  : r));
+
+export function scoringRulesFor(track) {
+  return track === "restaurants" ? RESTAURANT_SCORING_RULES : SCORING_RULES;
+}
+
 const GAP_WORDS = { 1: "weak own site", 2: "very weak or third party only", 3: "no credible owned site" };
 const TICKET_WORDS = { 1: "low", 2: "medium", 3: "high" };
+const ORDERING_WORDS = { 1: "own ordering already works", 2: "third party platforms only", 3: "phone only or nothing" };
 const VISUAL_WORDS = { 1: "limited", 2: "good", 3: "excellent" };
 
 function round1(n) {
@@ -93,7 +112,8 @@ function scaleDetail(value, words, label, earned, max, why) {
   return `${label} ${fmt(value)} of 3${word} earns ${fmt(earned)} of ${max}. ${why}`;
 }
 
-export function scoreLead(lead, { thresholds } = {}) {
+export function scoreLead(lead, { thresholds, track } = {}) {
+  const restaurant = track === "restaurants";
   const t = { ...DEFAULT_THRESHOLDS, ...(thresholds ?? {}) };
   const warnings = [];
   const l = lead ?? {};
@@ -101,7 +121,9 @@ export function scoreLead(lead, { thresholds } = {}) {
   const rating = readNumber(l.googleRating, { min: 0, max: 5, label: "Google rating", warnings });
   const reviews = readNumber(l.googleReviews, { min: 0, max: Number.MAX_SAFE_INTEGER, label: "Google review count", warnings });
   const gap = readNumber(l.websiteGap, { min: 0, max: 3, label: "Website gap", warnings });
-  const ticket = readNumber(l.ticketValue, { min: 0, max: 3, label: "Ticket value", warnings });
+  const ticket = restaurant
+    ? readNumber(l.orderingGap, { min: 0, max: 3, label: "Ordering gap", warnings })
+    : readNumber(l.ticketValue, { min: 0, max: 3, label: "Ticket value", warnings });
   const visual = readNumber(l.visualFit, { min: 0, max: 3, label: "Visual fit", warnings });
 
   const raw = {
@@ -120,16 +142,18 @@ export function scoreLead(lead, { thresholds } = {}) {
     rating: `${rating.toFixed(1)} stars earns ${fmt(raw.rating)} of 30. Trust already exists; Kija is converting it, not inventing it.`,
     reviews: `${reviews} Google reviews earns ${fmt(raw.reviews)} of 25. ${reviewTail}`,
     websiteGap: scaleDetail(gap, GAP_WORDS, "Website gap", raw.websiteGap, 20, "The bigger the gap, the more an owned site changes what a searcher finds."),
-    ticketValue: scaleDetail(ticket, TICKET_WORDS, "Ticket value", raw.ticketValue, 15, "Higher tickets mean fewer extra jobs pay for the site."),
+    ticketValue: restaurant
+      ? scaleDetail(ticket, ORDERING_WORDS, "Ordering gap", raw.ticketValue, 15, "A restaurant with no ordering or reservations of its own is the one Cliqbux changes most.")
+      : scaleDetail(ticket, TICKET_WORDS, "Ticket value", raw.ticketValue, 15, "Higher tickets mean fewer extra jobs pay for the site."),
     visualFit: scaleDetail(visual, VISUAL_WORDS, "Visual fit", raw.visualFit, 10, "Work people can see makes a private demo persuasive."),
   };
 
-  const parts = SCORING_RULES.map((rule) => ({
+  const parts = scoringRulesFor(track).map((rule) => ({
     key: rule.key,
     label: rule.label,
-    points: round1(raw[rule.key]),
+    points: round1(raw[rule.key === "orderingGap" ? "ticketValue" : rule.key]),
     max: rule.max,
-    detail: details[rule.key],
+    detail: details[rule.key === "orderingGap" ? "ticketValue" : rule.key],
   }));
 
   const sum = Object.values(raw).reduce((a, b) => a + b, 0);

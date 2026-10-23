@@ -6,7 +6,7 @@ import { listNav } from "../components/listnav.js";
 import { scoreBlock } from "../components/score.js";
 import { fill, h } from "../lib/dom.js";
 import { formatDay, number, place, rating } from "../lib/format.js";
-import { byScore, categoryLabel, leads, metroName, OUTREACH_STATUSES, stageCounts, store } from "../lib/state.js";
+import { byScore, categoryLabel, leads, metroName, OUTREACH_STATUSES, runs, stageCounts, store } from "../lib/state.js";
 
 const SORTS = {
   score: (a, b) => (a.score?.total ?? 0) - (b.score?.total ?? 0),
@@ -278,7 +278,7 @@ export function render({ query, setQuery, navigate }) {
   const states = uniq(all.map((l) => l.state)).sort();
   const metros = uniq(all.map((l) => l.metro || "none"));
   const cats = uniq(all.map((l) => l.categoryKey)).sort((a, b) => categoryLabel(a).localeCompare(categoryLabel(b)));
-  const runIds = uniq([...(store.data.runs ?? []).map((r) => r.runId), ...all.map((l) => l.runId).filter(Boolean)]).sort().reverse();
+  const runIds = uniq([...runs().map((r) => r.runId), ...all.map((l) => l.runId).filter(Boolean)]).sort().reverse();
 
   const stateSel = select("pl-state", "State", f.state, [["", "Any state"], ...states.map((s) => [s, s])], (v) => { f.state = v; commit(); });
   const metroSel = select("pl-metro", "Metro", f.metro, [["", "Any metro"], ...metros.map((m) => [m, m === "none" ? "Outside every metro" : metroName(m)])], (v) => { f.metro = v; commit(); });

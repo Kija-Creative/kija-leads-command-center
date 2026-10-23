@@ -1,5 +1,6 @@
 // npm run ingest -- data/inbox/<runId>.json [--dry-run] [--json]
-// Ingests a weekly batch, saves leads, queue and rejected, and writes data/runs/<runId>.json.
+// Ingests a weekly batch, saves leads, queue and rejected, and writes data/runs/<runId>.json
+// (data/runs/<runId>.<track>.json for a batch whose "track" is not the default websites track).
 // Ingesting the same batch again changes nothing and keeps the first run report.
 
 import fs from "node:fs";
@@ -8,13 +9,14 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { ingestBatch } from "../lib/ingest.js";
 import { createStore, RUNS_DIR } from "../lib/store.js";
+import { runKey } from "../lib/tracks.js";
 
 const PROJECT_ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const USAGE = "Usage: npm run ingest -- <batch.json> [--dry-run] [--json] [--root <dir>]";
 
 function summarize(report, say) {
   const c = report.counts;
-  say(`Run ${report.runId} (${report.mode}): ${c.candidates} candidates, ${c.accepted} accepted, ${c.queued} queued, ${c.rejected} rejected, ${c.duplicates} duplicates, ${c.reverified} reverified, ${c.errors} with errors.`);
+  say(`Run ${report.runId}${report.track && report.track !== "websites" ? `, track ${report.track}` : ""} (${report.mode}): ${c.candidates} candidates, ${c.accepted} accepted, ${c.queued} queued, ${c.rejected} rejected, ${c.duplicates} duplicates, ${c.reverified} reverified, ${c.errors} with errors.`);
   if (report.accepted.length) say(`Accepted: ${report.accepted.join(", ")}.`);
   if (report.queued.length) say(`Queued: ${report.queued.join(", ")}.`);
   for (const d of report.duplicates) say(`Duplicate: ${d.business} matches ${d.in} ${d.matched}.`);
@@ -92,10 +94,10 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
     store.saveQueue(next.queue);
     store.saveRejected(next.rejected);
   }
-  const existing = store.readRun(report.runId);
+  const existing = store.readRun(report.runId, report.track);
   if (report.changed || !existing) {
     store.saveRun(report);
-    if (!values.json) say(`Wrote ${RUNS_DIR}/${report.runId}.json.`);
+    if (!values.json) say(`Wrote ${RUNS_DIR}/${runKey(report.runId, report.track)}.json.`);
   } else if (!values.json) {
     say(`Nothing changed, so the run report from ${existing.ingestedAt} was kept.`);
   }

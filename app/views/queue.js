@@ -5,11 +5,12 @@ import { feedbackSlot, showFeedback, toast, withBusy } from "../components/feedb
 import { api } from "../lib/api.js";
 import { external, fill, h, nextId } from "../lib/dom.js";
 import { formatDay, number, rating } from "../lib/format.js";
-import { categoryLabel, CONFIDENCE_LEVELS, putLead, putQueueItem, removeQueueItem, store } from "../lib/state.js";
+import { categoryLabel, CONFIDENCE_LEVELS, putLead, putQueueItem, queue as trackQueue, removeQueueItem, store, trackOfCategoryKey } from "../lib/state.js";
 
 const SCALES = {
   websiteGap: ["Website gap", { 1: "1, weak own site", 2: "2, very weak or third party only", 3: "3, no credible owned site" }],
   ticketValue: ["Ticket value", { 1: "1, low", 2: "2, medium", 3: "3, high" }],
+  orderingGap: ["Ordering gap", { 1: "1, own ordering already works", 2: "2, third party platforms only", 3: "3, phone only or nothing" }],
   visualFit: ["Visual fit", { 1: "1, limited", 2: "2, good", 3: "3, excellent" }],
 };
 
@@ -36,7 +37,9 @@ function promoteForm(item, done) {
   const carried = item.lead ?? {};
   const cat = store.data.categories?.[item.categoryKey] ?? {};
   const gap = scaleSelect("websiteGap", carried.websiteGap);
-  const ticket = scaleSelect("ticketValue", carried.ticketValue ?? cat.ticketValueDefault);
+  // Restaurants are scored on the ordering gap instead of a job ticket.
+  const restaurant = store.data.tracks?.[trackOfCategoryKey(item.categoryKey)]?.scoring === "restaurant";
+  const ticket = restaurant ? scaleSelect("orderingGap", carried.orderingGap) : scaleSelect("ticketValue", carried.ticketValue ?? cat.ticketValueDefault);
   const visual = scaleSelect("visualFit", carried.visualFit ?? cat.visualFitDefault);
   const confId = nextId("qp");
   const conf = h("select", { id: confId }, h("option", { value: "" }, "Choose"), CONFIDENCE_LEVELS.map((c) => h("option", { value: c, selected: c === carried.confidence }, c)));
@@ -55,7 +58,7 @@ function promoteForm(item, done) {
         e.preventDefault();
         const lead = {
           websiteGap: gap.read(),
-          ticketValue: ticket.read(),
+          [restaurant ? "orderingGap" : "ticketValue"]: ticket.read(),
           visualFit: visual.read(),
           confidence: conf.value || null,
           websiteStatus: status.read(),
@@ -193,7 +196,7 @@ function queueItem(item, rerender) {
 }
 
 export function render({ rerender }) {
-  const queue = store.data.queue ?? [];
+  const queue = trackQueue();
   const reasons = {};
   for (const q of queue) reasons[q.reason || "No reason recorded"] = (reasons[q.reason || "No reason recorded"] ?? 0) + 1;
   const list = [...queue].sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)) || String(a.candidate).localeCompare(String(b.candidate)));

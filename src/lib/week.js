@@ -1,6 +1,7 @@
 // Week identity and the weekly rotation plan. Pure: callers pass now.
 
 import { dedupeKey, nameStateKey, phoneDigits } from "./normalize.js";
+import { categoriesOfTrack, DEFAULT_TRACK, defaultTracks, isTrack, partnerFor, settingsForTrack } from "./tracks.js";
 
 const DAY_MS = 86400000;
 const REQUIRED_VERTICALS = ["auto", "home-services", "contractor"];
@@ -70,7 +71,7 @@ function windowAt(list, index, size) {
 
 // Round robin by vertical so a window of six naturally mixes auto, home services,
 // contractors and personal care instead of six auto categories in a row.
-export function categoryRotationOrder(categories) {
+export function categoryRotationOrder(categories, requiredVerticals = REQUIRED_VERTICALS) {
   const byVertical = new Map();
   for (const [key, c] of Object.entries(categories ?? {})) {
     if (key === "general") continue;
@@ -78,7 +79,8 @@ export function categoryRotationOrder(categories) {
     if (!byVertical.has(v)) byVertical.set(v, []);
     byVertical.get(v).push(key);
   }
-  const verticalOrder = [...REQUIRED_VERTICALS, "personal-care"].filter((v) => byVertical.has(v));
+  const first = requiredVerticals === REQUIRED_VERTICALS ? [...REQUIRED_VERTICALS, "personal-care"] : requiredVerticals;
+  const verticalOrder = first.filter((v) => byVertical.has(v));
   for (const v of byVertical.keys()) if (!verticalOrder.includes(v)) verticalOrder.push(v);
   const out = [];
   let added = true;
@@ -95,14 +97,14 @@ export function categoryRotationOrder(categories) {
   return out;
 }
 
-function pickCategories(categories, index, perWeek) {
-  const order = categoryRotationOrder(categories);
+function pickCategories(categories, index, perWeek, requiredVerticals = REQUIRED_VERTICALS) {
+  const order = categoryRotationOrder(categories, requiredVerticals);
   const chosen = windowAt(order, index, perWeek);
   if (chosen.length === 0) return chosen;
   const verticalOf = (k) => categories[k]?.vertical;
   const count = Math.min(perWeek, order.length);
   const start = mod(index * count, order.length);
-  for (const v of REQUIRED_VERTICALS) {
+  for (const v of requiredVerticals) {
     if (chosen.some((k) => verticalOf(k) === v)) continue;
     // Next category of the missing vertical after this window, in rotation order.
     let replacement = null;
@@ -115,7 +117,7 @@ function pickCategories(categories, index, perWeek) {
     const counts = (k) => chosen.filter((c) => verticalOf(c) === verticalOf(k)).length;
     let drop = -1;
     for (let i = chosen.length - 1; i >= 0 && drop < 0; i -= 1) {
-      if (!REQUIRED_VERTICALS.includes(verticalOf(chosen[i]))) drop = i;
+      if (!requiredVerticals.includes(verticalOf(chosen[i]))) drop = i;
     }
     for (let i = chosen.length - 1; i >= 0 && drop < 0; i -= 1) {
       if (counts(chosen[i]) > 1) drop = i;
@@ -150,7 +152,10 @@ function knownBusinesses({ leads, queue, rejected, suppression }) {
   return { keys: [...keys].sort(), names: names.sort((a, b) => a.localeCompare(b)) };
 }
 
-export function planWeek({ now, settings, geography, categories, leads, queue, rejected, suppression } = {}) {
+export function planWeek({ now, settings: globalSettings, geography, categories, leads, queue, rejected, suppression, tracks, track = DEFAULT_TRACK } = {}) {
+  const trackConfigs = tracks ?? defaultTracks();
+  if (!isTrack(trackConfigs, track)) throw new Error(`Unknown track ${JSON.stringify(track)}; known tracks: ${Object.keys(trackConfigs).join(", ")}.`);
+  const settings = settingsForTrack(globalSettings, track);
   const runId = runIdFor(now);
   const geo = settings?.geography ?? {};
   const index = weekIndex(runId, geo.rotationStart ?? runId);
@@ -168,11 +173,17 @@ export function planWeek({ now, settings, geography, categories, leads, queue, r
     if (geo.homeEveryWeek !== false && home) chosenMetros = [home, ...chosenMetros];
   }
 
-  const chosenCategories = pickCategories(categories ?? {}, index, settings?.categoriesPerWeek ?? 6);
+  // Only this track's categories rotate; the default track keeps every category it always had.
+  const inTrack = Object.fromEntries(categoriesOfTrack(trackConfigs, categories, track).map((k) => [k, categories[k]]));
+  const required = track === DEFAULT_TRACK ? REQUIRED_VERTICALS : (trackConfigs[track]?.requiredVerticals ?? []);
+  const chosenCategories = pickCategories(inTrack, index, settings?.categoriesPerWeek ?? 6, required);
   const known = knownBusinesses({ leads, queue, rejected, suppression });
 
   return {
     runId,
+    track,
+    trackLabel: trackConfigs[track]?.label ?? track,
+    partner: partnerFor(globalSettings, track),
     week: isoWeek(runId),
     weekIndex: index,
     metros: chosenMetros,

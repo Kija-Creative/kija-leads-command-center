@@ -22,6 +22,7 @@ import {
   validateRejection,
   validateSettings,
   validateSuppression,
+  validateTracks,
 } from "../lib/validate.js";
 import { dateOf } from "../lib/week.js";
 
@@ -124,10 +125,11 @@ export function checkData(root, { now, clock } = {}) {
     found.errors.push(e.message);
     return { ...found, state: null };
   }
-  const { settings, categories, geography, chains, benchmarks, leads, queue, rejected, suppression } = state;
+  const { settings, categories, geography, chains, benchmarks, leads, queue, rejected, suppression, tracks } = state;
 
   collect(found, FILES.settings, validateSettings(settings));
   collect(found, FILES.categories, validateCategories(categories));
+  collect(found, FILES.tracks, validateTracks(tracks, categories));
   collect(found, FILES.geography, validateGeography(geography));
   const home = settings?.geography?.homeMetro;
   if (home && !(geography?.metros ?? []).some((m) => m.key === home)) {
@@ -140,7 +142,7 @@ export function checkData(root, { now, clock } = {}) {
     collect(found, FILES.benchmarks, validateBenchmarks(benchmarks, { categories }));
   }
 
-  const ctx = { settings, categories, chains, geography, now, mode: "stored" };
+  const ctx = { settings, categories, chains, geography, tracks, now, mode: "stored" };
   if (!Array.isArray(leads)) {
     found.errors.push(`${FILES.leads} must be a list of leads.`);
   } else {

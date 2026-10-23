@@ -57,6 +57,54 @@ The research rules below come from `research/places-api.md` (what Google's terms
 15. **Purge Places working data at the end of every run** (step 11), including a run that stops
     early or fails.
 
+## Tracks: websites and restaurants
+
+The command center runs two separate tracks. Everything above and below describes the default
+**websites** track. The **restaurants** track (Restaurants + Cliqbux) is a separate line of
+work with its own weekly run, quota, pipeline, queue and offer: restaurants are pitched as a
+combined offer with Cliqbux, our software partner. `config/tracks.json` lists the tracks, and a
+category belongs to a track through its `vertical` in `config/categories.json` (the six
+restaurant categories have the vertical `restaurants`).
+
+Run a track by naming it. Each track is its own run, so both can run on the same Monday:
+
+- Plan: `npm run plan -- --track restaurants` writes
+  `data/inbox/<runId>.restaurants.plan.json`. Only restaurant categories rotate, with the
+  quota and categories per week from `settings.tracks.restaurants`. The plan names the partner.
+  The websites plan never includes a restaurant category.
+- Batch: write `data/inbox/<runId>.restaurants.json` with `"track": "restaurants"` at the top
+  (same shape as the websites batch). A batch holds one track only: ingest refuses a lead whose
+  category belongs to the other track, and tells you which batch it belongs in.
+- Ingest: `npm run ingest -- data/inbox/<runId>.restaurants.json`. The run report is
+  `data/runs/<runId>.restaurants.json`; the websites report keeps the plain date. Each track
+  counts its own quota, so a restaurant run never uses up the websites quota.
+- Switch: the Websites and Restaurants switch at the top of the app changes every list (week,
+  pipeline, queue, runs, coverage) to that track. Settings has a form per track.
+
+How restaurant leads differ:
+
+- **Same verification.** Run the same checks and the same thresholds (rating, reviews, no
+  credible owned site). Chains and franchise locations are skipped as before. A restaurant on
+  Toast, ChowNow, DoorDash, Uber Eats or a similar platform page only is `websiteGap` 2 at best.
+- **`orderingGap` replaces `ticketValue`** (1 to 3). It scores how far the restaurant is from
+  taking orders or reservations on a site of its own: `1` own ordering or reservations already
+  work (that is not a lead for this track), `2` third party platforms only (commission on every
+  order), `3` phone only or nothing. Check the Maps listing's order and reserve links and the
+  restaurant's social profiles, and write the reason in `verification.notes`. Do not send
+  `ticketValue`; ingest fills it from the category default and the score ignores it.
+- **Score** is still out of 100: rating 30, reviews 25, websiteGap 20, orderingGap 15, visualFit 10.
+- **Never state what Cliqbux does.** Cliqbux's features, pricing and terms are not confirmed, so
+  `whyKija`, `pitchAngle` and `demoConcept` talk about the restaurant (its reviews, its missing
+  site, its missing ordering), never about the software. Say "an owned website plus ordering",
+  not what Cliqbux provides. The partner and offer fields in Settings stay placeholders until
+  Jamey confirms them with Cliqbux.
+- **No ROI numbers, outreach drafts or pitch pages** are made for restaurant leads until the
+  Cliqbux offer and price are confirmed in Settings (`partner.confirmed` and
+  `offer.priceConfirmed`). `npm run pitches` skips them and says so. Demos are not template
+  pages either: `npm run demos` skips restaurant leads, and a restaurant concept is hand built
+  from Site DNA with the `restaurant` industry profile, following
+  `docs/site-generation/CONCEPT-BUILD.md`.
+
 ## Preconditions
 
 1. You are in the project root. Run `node --version`: it must be v24 or later. There is no

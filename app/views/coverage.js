@@ -5,7 +5,7 @@ import { planWeek, runIdFor } from "/src/lib/week.js";
 import { STATE_NAMES, tileMap } from "../components/tilemap.js";
 import { fill, h } from "../lib/dom.js";
 import { addDays, formatDay } from "../lib/format.js";
-import { byScore, categoryLabel, leads, store } from "../lib/state.js";
+import { byScore, categoryLabel, currentTrack, leads, runs, store } from "../lib/state.js";
 
 const UPCOMING_WEEKS = 6;
 
@@ -17,14 +17,14 @@ function metroOf(ref) {
 
 function upcomingPlans() {
   const data = store.data;
-  const ran = new Set((data.runs ?? []).map((r) => r.runId));
+  const ran = new Set(runs().map((r) => r.runId));
   const start = runIdFor(data.now ?? new Date().toISOString());
   const plans = [];
   for (let i = 0; plans.length < UPCOMING_WEEKS && i < UPCOMING_WEEKS + 2; i += 1) {
     const monday = addDays(start, i * 7);
     if (ran.has(monday)) continue;
     try {
-      plans.push(planWeek({ now: monday, settings: data.settings, geography: data.geography, categories: data.categories, leads: [], queue: [], rejected: [] }));
+      plans.push(planWeek({ now: monday, settings: data.settings, geography: data.geography, categories: data.categories, tracks: data.tracks, track: currentTrack(), leads: [], queue: [], rejected: [] }));
     } catch {
       break;
     }
@@ -39,7 +39,7 @@ export function render({ query, setQuery }) {
 
   const covered = new Set();
   const coveredBy = {};
-  for (const run of store.data.runs ?? []) {
+  for (const run of runs()) {
     for (const ref of run.plan?.metros ?? []) {
       const m = metroOf(ref);
       for (const s of m?.states ?? []) {
@@ -125,7 +125,7 @@ export function render({ query, setQuery }) {
   drawMap();
   drawSide();
 
-  const runsList = (store.data.runs ?? []).map((r) => {
+  const runsList = runs().map((r) => {
     const names = (r.plan?.metros ?? []).map((ref) => metroOf(ref)?.name ?? (typeof ref === "string" ? ref : ref?.key)).filter(Boolean);
     return h("li", null, h("div", { class: "wk" }, formatDay(r.runId), h("small", null, `${r.counts?.accepted ?? 0} accepted`)), h("div", null, names.join(", ") || h("span", { class: "faint" }, "No metros recorded")));
   });

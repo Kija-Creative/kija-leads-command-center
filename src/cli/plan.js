@@ -1,15 +1,17 @@
-// npm run plan [-- --date YYYY-MM-DD]
-// Prints this week's rotation and writes data/inbox/<runId>.plan.json for the weekly run.
+// npm run plan [-- --date YYYY-MM-DD] [--track websites|restaurants]
+// Prints this week's rotation and writes data/inbox/<runId>.plan.json for the weekly run. Other
+// tracks write data/inbox/<runId>.<track>.plan.json, so two tracks can run the same Monday.
 
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { createStore, INBOX_DIR } from "../lib/store.js";
 import { isIsoDate } from "../lib/validate.js";
+import { isTrack, runKey, DEFAULT_TRACK } from "../lib/tracks.js";
 import { dateOf, planWeek } from "../lib/week.js";
 
 const PROJECT_ROOT = fileURLToPath(new URL("../../", import.meta.url));
-const USAGE = "Usage: npm run plan [-- --date YYYY-MM-DD] [--json] [--root <dir>]";
+const USAGE = "Usage: npm run plan [-- --date YYYY-MM-DD] [--track <track>] [--json] [--root <dir>]";
 
 export async function main(argv = process.argv.slice(2), deps = {}) {
   const out = deps.stdout ?? process.stdout;
@@ -22,6 +24,7 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
       args: argv,
       options: {
         date: { type: "string" },
+        track: { type: "string", default: DEFAULT_TRACK },
         json: { type: "boolean", default: false },
         root: { type: "string" },
         help: { type: "boolean", short: "h" },
@@ -46,19 +49,23 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
   const clock = deps.now ? new Date(deps.now) : new Date();
   const date = values.date ?? dateOf(clock);
   const state = store.load();
-  const plan = planWeek({ now: date, ...state });
+  if (!isTrack(state.tracks, values.track)) {
+    err.write(`--track must be one of ${Object.keys(state.tracks).join(", ")}; got ${JSON.stringify(values.track)}.\n`);
+    return 2;
+  }
+  const plan = planWeek({ now: date, ...state, track: values.track });
 
   const file = {
     ...plan,
     generatedAt: clock.toISOString(),
-    thresholds: state.settings.thresholds,
+    thresholds: { ...state.settings.thresholds, ...(state.settings.tracks?.[plan.track]?.thresholds ?? {}) },
     categoryDetails: plan.categories.map((key) => {
       const c = state.categories[key] ?? {};
       return { key, label: c.label ?? key, vertical: c.vertical ?? "", searchTerms: c.searchTerms ?? [], placesTypes: c.placesTypes ?? [], focusNote: c.focusNote ?? "" };
     }),
     chainsFile: "config/chains.json",
   };
-  const rel = `${INBOX_DIR}/${plan.runId}.plan.json`;
+  const rel = `${INBOX_DIR}/${runKey(plan.runId, plan.track)}.plan.json`;
   store.writeJson(rel, file, { backup: false });
 
   if (values.json) {
@@ -66,7 +73,8 @@ export async function main(argv = process.argv.slice(2), deps = {}) {
     return 0;
   }
   const home = plan.metros.find((m) => m.key === plan.homeMetro);
-  say(`Week ${plan.week}, run ${plan.runId} (rotation week ${plan.weekIndex}).`);
+  say(`Week ${plan.week}, run ${plan.runId}, track ${plan.trackLabel} (rotation week ${plan.weekIndex}).`);
+  if (plan.partner?.name) say(`Partner: ${plan.partner.name}${plan.partner.confirmed ? "" : " (details still to confirm)"}.`);
   say(`Metros: ${plan.metros.map((m) => `${m.name} (${m.states.join(", ")})`).join("; ") || "none"}.`);
   if (home) say(`Home metro ${home.name} is included, capped at ${plan.homeMaxLeads ?? "no"} new leads.`);
   say(`Categories: ${file.categoryDetails.map((c) => c.label).join(", ") || "none"}.`);

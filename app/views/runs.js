@@ -2,7 +2,7 @@
 
 import { h } from "../lib/dom.js";
 import { formatDateTime, formatDay } from "../lib/format.js";
-import { leadById, store } from "../lib/state.js";
+import { leadById, runs as trackRuns, store } from "../lib/state.js";
 import { planNames, runCounts } from "./week.js";
 
 function idList(ids, { linkLeads = false } = {}) {
@@ -90,7 +90,7 @@ function runBlock(run, open) {
 }
 
 export function render() {
-  const runs = store.data.runs ?? [];
+  const runs = trackRuns();
   const el = h(
     "div",
     null,

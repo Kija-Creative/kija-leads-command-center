@@ -1,0 +1,18 @@
+{
+  "websites": {
+    "label": "Websites",
+    "short": "Websites",
+    "description": "Local service businesses that need an owned website: auto, home services, contractors and personal care.",
+    "verticals": ["auto", "home-services", "contractor", "personal-care", "general"],
+    "requiredVerticals": ["auto", "home-services", "contractor"],
+    "scoring": "website"
+  },
+  "restaurants": {
+    "label": "Restaurants + Cliqbux",
+    "short": "Restaurants",
+    "description": "Restaurants and food businesses pitched as a combined offer with Cliqbux, our software partner: an owned website plus Cliqbux.",
+    "verticals": ["restaurants"],
+    "requiredVerticals": [],
+    "scoring": "restaurant"
+  }
+}

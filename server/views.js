@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { scoreLead } from "../src/lib/score.js";
 import { benchmarkFor, computeRoi } from "../src/lib/roi.js";
+import { DEFAULT_TRACK, settingsForTrack, trackOfLead } from "../src/lib/tracks.js";
 import { callCheck, canText, emailReady, isSuppressed, PHONE_LINE_TYPES, suppressionFor } from "../src/lib/compliance.js";
 
 export { PHONE_LINE_TYPES, suppressionFor };
@@ -50,15 +51,19 @@ export function complianceView(lead, state, { now }) {
 // drafts is buildDrafts from src/pitch/drafts.js, or null while that module is missing.
 export function leadView(lead, state, { root, buildDrafts = null, now = new Date().toISOString() }) {
   const settings = state.settings ?? {};
-  const score = scoreLead(lead, { thresholds: settings.thresholds });
-  const roi = computeRoi({
+  const track = trackOfLead(lead, { tracks: state.tracks, categories: state.categories });
+  const score = scoreLead(lead, { thresholds: settingsForTrack(settings, track).thresholds, track });
+  // The ROI model and outreach drafts describe the website offer. Other tracks have their own
+  // offer, still to be confirmed, so they get neither until it is.
+  const ownOffer = track === DEFAULT_TRACK;
+  const roi = ownOffer ? computeRoi({
     lead,
     benchmark: benchmarkFor(state.benchmarks, lead.categoryKey),
     offer: settings.offer,
     overrides: lead.roiOverrides ?? {},
-  });
+  }) : null;
   let drafts = null;
-  if (typeof buildDrafts === "function") {
+  if (ownOffer && typeof buildDrafts === "function") {
     try {
       drafts = buildDrafts(lead, { settings, roi, categories: state.categories, suppression: state.suppression ?? [], now }) ?? null;
     } catch {
@@ -69,6 +74,7 @@ export function leadView(lead, state, { root, buildDrafts = null, now = new Date
   const { placesFetchedAt: _retired, ...rest } = lead;
   return {
     ...rest,
+    track,
     phoneLineType: PHONE_LINE_TYPES.includes(lead.phoneLineType) ? lead.phoneLineType : "unknown",
     score,
     roi,
@@ -110,6 +116,7 @@ export function stateView(state, runs, { root, buildDrafts, placesKey, now, temp
     suppressionCount: countList(state.suppression),
     settings: state.settings,
     categories: state.categories,
+    tracks: state.tracks,
     geography: state.geography,
     benchmarks: state.benchmarks,
     templates: templates ?? null,

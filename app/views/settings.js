@@ -59,6 +59,84 @@ function sectionForm({ title, desc, fields, read, success = "Settings saved.", i
   );
 }
 
+// One form per track that is not the website one (restaurants with Cliqbux): its own quota, the
+// partner and the offer. Partner details and the price stay placeholders until confirmed, and
+// nothing from this track reaches a business before then.
+function trackForm(id, def, own) {
+  const partner = own.partner ?? {};
+  const offer = own.offer ?? {};
+  const label = def.label ?? id;
+  const check = (checked) => h("input", { type: "checkbox", checked: Boolean(checked), id: nextId("st") });
+  const area = (value, rows) => {
+    const ta = h("textarea", { rows: String(rows) });
+    ta.value = value ?? "";
+    return ta;
+  };
+  const wQ = num(own.weeklyQuota, { min: "1", step: "1" });
+  const wC = num(own.categoriesPerWeek, { min: "1", step: "1" });
+  const pName = text(partner.name);
+  const pRole = text(partner.role);
+  const pSite = h("input", { type: "url", value: partner.website ?? "", autocomplete: "off", placeholder: "https://" });
+  const pContact = text(partner.contactName);
+  const pEmail = h("input", { type: "email", value: partner.contactEmail ?? "", autocomplete: "off" });
+  const pDesc = area(partner.description, 3);
+  const pOk = check(partner.confirmed);
+  const oName = text(offer.name);
+  const oPrice = num(offer.price, { min: "1", step: "50", placeholder: "To confirm" });
+  const oOk = check(offer.priceConfirmed);
+  const oMonthly = num(offer.cliqbuxMonthly, { min: "0", step: "5", placeholder: "To confirm" });
+  const oDays = num(offer.timelineDays, { min: "1", step: "1", placeholder: "To confirm" });
+  const oIncludes = area((offer.includes ?? []).join("\n"), 5);
+  const oOwn = text(offer.ownershipLine);
+  const oNotes = area(offer.notes, 3);
+  return sectionForm({
+    title: label,
+    id: "st-track-" + id,
+    desc: [
+      "This track has its own weekly run, quota, offer and pipeline. Pick it in the switch at the top.",
+      "Nothing here is shown to a business until it is confirmed: leave the price empty and the box unchecked until " + (partner.name || "the partner") + " and Kija have agreed the terms. Until then the lead pages show these as to confirm, and no ROI numbers, outreach drafts or pitch pages are made.",
+    ],
+    fields: [
+      field("Weekly quota", wQ, { hint: "leads" }),
+      field("Categories per week", wC),
+      field("Partner name", pName),
+      field("Partner role", pRole),
+      field("Partner website", pSite),
+      field("Partner contact", pContact),
+      field("Partner contact email", pEmail),
+      h("div", { class: "field", style: { alignSelf: "end" } }, h("label", { class: "check", for: pOk.id }, pOk, "Partner details confirmed")),
+      field("What the partner does", pDesc, { span: true, hint: "in plain words, as the partner would say it" }),
+      field("Offer name", oName),
+      field("Bundle price", oPrice, { hint: "dollars" }),
+      h("div", { class: "field", style: { alignSelf: "end" } }, h("label", { class: "check", for: oOk.id }, oOk, "Price confirmed")),
+      field("Partner software per month", oMonthly, { hint: "dollars, 0 if included" }),
+      field("Timeline", oDays, { hint: "days" }),
+      field("What is included", oIncludes, { hint: "one per line", span: true }),
+      field("Ownership line", oOwn, { span: true }),
+      field("Notes to confirm", oNotes, { span: true }),
+    ],
+    read: () => {
+      const track = {
+        partner: { name: pName.value.trim(), role: pRole.value.trim(), description: pDesc.value.trim(), website: pSite.value.trim(), contactName: pContact.value.trim(), contactEmail: pEmail.value.trim(), confirmed: pOk.checked },
+        offer: {
+          name: oName.value.trim(),
+          price: toNumber(oPrice),
+          priceConfirmed: oOk.checked,
+          timelineDays: toNumber(oDays),
+          includes: oIncludes.value.split("\n").map((x) => x.trim()).filter(Boolean),
+          ownershipLine: oOwn.value.trim(),
+          cliqbuxMonthly: toNumber(oMonthly),
+          notes: oNotes.value.trim(),
+        },
+      };
+      if (toNumber(wQ) !== null) track.weeklyQuota = toNumber(wQ);
+      if (toNumber(wC) !== null) track.categoriesPerWeek = toNumber(wC);
+      return { tracks: { [id]: track } };
+    },
+    success: label + " saved.",
+  });
+}
+
 const TEXAS_OPTIONS = [
   ["unknown", "Unknown, not confirmed"],
   ["registered", "Registered with the Texas Secretary of State"],
@@ -107,8 +185,8 @@ export function render({ query } = {}) {
   const cDesc = text(care.description);
 
   const offerForm = sectionForm({
-    title: "Offer",
-    desc: "What the pitch pages sell. The price shows on pitches only once it is confirmed; until then they say pricing is to confirm, and the ROI math marks it as a placeholder.",
+    title: "Websites offer",
+    desc: "What the website pitch pages sell. The price shows on pitches only once it is confirmed; until then they say pricing is to confirm, and the ROI math marks it as a placeholder.",
     fields: [
       field("Offer name", oName),
       field("Price", oPrice, { hint: "dollars" }),
@@ -172,8 +250,8 @@ export function render({ query } = {}) {
   const tStrong = num(t.strongReviews, { min: "0", step: "1" });
   const tGap = h("select", null, [1, 2, 3].map((n) => h("option", { value: String(n), selected: n === t.minWebsiteGap }, String(n))));
   const researchForm = sectionForm({
-    title: "Weekly research",
-    desc: "How many leads a Monday run aims for, and the floors a lead must clear. Below a floor, a candidate goes to the research queue instead of the pipeline.",
+    title: "Websites weekly research",
+    desc: "How many website leads a Monday run aims for, and the floors a lead must clear. Below a floor, a candidate goes to the research queue instead of the pipeline.",
     fields: [
       field("Weekly quota", wQuota, { hint: "leads" }),
       field("Categories per week", wCats),
@@ -343,11 +421,15 @@ export function render({ query } = {}) {
     ),
   );
 
+  const otherTracks = Object.entries(data.tracks ?? {})
+    .filter(([id]) => id !== "websites")
+    .map(([id, def]) => trackForm(id, def, s.tracks?.[id] ?? {}));
+
   const el = h(
     "div",
     null,
     h("header", { class: "page-head" }, h("div", null, h("h1", { class: "page-title", tabindex: "-1" }, "Settings"), h("p", { class: "page-sub" }, "Saved to config/settings.json. The weekly run reads these each Monday."))),
-    h("div", { class: "settings" }, offerForm, contactForm, complianceForm, researchForm, geoForm, session.authEnabled ? teamPanel(session.user) : null, status, about),
+    h("div", { class: "settings" }, offerForm, ...otherTracks, contactForm, complianceForm, researchForm, geoForm, session.authEnabled ? teamPanel(session.user) : null, status, about),
   );
   // Deep links from the lead page: #/settings?focus=address or ?focus=compliance. Runs after the
   // router's own heading focus.

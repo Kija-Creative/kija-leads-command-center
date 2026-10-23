@@ -3320,3 +3320,67 @@ a.note-lead:hover {
 .team-row, .team-add { gap: 12px; flex-wrap: wrap; align-items: center; padding: 8px 0; }
 .team-add input, .team-add select { min-width: 140px; }
 [hidden] { display: none !important; }
+
+/* Track switch: the business tracks (websites, restaurants with Cliqbux) are separate lines of work. */
+.track-switch {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-1);
+}
+.track-switch[hidden] {
+  display: none;
+}
+.track-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.track-btn:hover {
+  color: var(--ink);
+}
+.track-btn[aria-pressed="true"] {
+  background: var(--magenta);
+  color: #fff;
+}
+.track-btn .track-count {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+}
+body[data-track="restaurants"] .track-btn[aria-pressed="true"] {
+  background: oklch(0.55 0.13 55);
+}
+.track-note {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid oklch(0.78 0.13 70);
+  border-radius: var(--radius-small);
+  background: var(--surface-1);
+  color: var(--ink-2);
+  font-size: 0.9rem;
+}
+.track-note strong {
+  color: var(--ink);
+}
+@media (max-width: 760px) {
+  .track-btn {
+    padding: 0 10px;
+  }
+}
